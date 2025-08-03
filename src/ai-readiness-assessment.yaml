@@ -1,4 +1,4 @@
-# AI Readiness Assessment v2.0
+ AI Readiness Assessment v2.0
 # Schema-date: 2025-08-03
 
 meta:
@@ -12,7 +12,7 @@ meta:
   max_visible_questions: 60
   tracks:
     TECH:   "Technical / Data-Lead"
-    REG:    "Regulated / Compliance" 
+    REG:    "Regulated / Compliance"
     GEN:    "General Business"
   track_detection:
     precedence:
@@ -23,13 +23,13 @@ meta:
     TECH: {Strategy:20, Data:30, Tools:20, Automation:15, People:5, Governance:10}
     REG:  {Strategy:10, Data:20, Tools:10, Automation:10, People:5, Governance:45}
     GEN:  {Strategy:25, Data:15, Tools:15, Automation:15, People:15, Governance:15}
+
   question_cap:
     max_questions: 60
     auto_hide: [D2, P6]
 
 section_0:
-  title: "Organization Profile"
-  purpose: "Collect context to detect persona and tailor subsequent sections. All always shown."
+  purpose: "Collect organisation profile for track detection."
   questions:
     - id: M1
       text: "Full name"
@@ -40,46 +40,40 @@ section_0:
       type: email
       required: true
     - id: M3
-      text: "Role/Position"
+      text: "Role / Position"
       type: single
-      options: [Founder/CEO, C-level, CTO/Tech Lead, Head Marketing, Head Sales, Head Finance, Head Ops, Legal/Compliance, IT Lead, Data/AI Lead, Product Lead, HR Lead, Customer Support Lead, Other]
+      options: [Founder/CEO, C-level, CIO/CTO, Head Marketing, Head Sales, Head Finance, Head Ops, Legal/Compliance, IT Lead, Data/AI Lead, Product Lead, HR Lead, Customer Support Lead, Other]
       required: true
     - id: M3_other
-      text: "If Other, please specify"
       type: text
-      show_if: 
-        M3: "Other"
+      show_if: {M3: "Other"}
       required: true
     - id: M4
       text: "Department"
       type: single
-      options: [IT, Data/AI, Marketing, Sales, Finance, Operations/Logistics, HR, Product, Customer Support, General management, Multiple, Other]
+      options: [Marketing, Sales, Finance, Operations/Logistics, IT, HR, Product, Customer Support, General management, Multiple, Other]
       required: true
     - id: M4_other
-      text: "If Other, please specify"
       type: text
-      show_if: 
-        M4: "Other"
+      show_if: {M4: "Other"}
       required: true
     - id: M5
       text: "Industry & Sub-sector"
       type: industry_dropdown
       required: true
-      helper: "Two-level dropdown of ~45 sub-sectors"
     - id: M6
       text: "Country"
       type: country_dropdown
       required: true
-      helper: "Dropdown (ISO-3166)"
     - id: M7
       text: "Company size (FTE)"
       type: single
-      options: [1-9, 10-49, 50-249, 250-999, ≥ 1 000]
+      options: [1-9, 10-49, 50-249, 250-999, ≥ 1 000]
       required: true
     - id: M8
       text: "Annual revenue"
       type: single
-      options: ["< €250 k", "€250 k–1 M", "1–5 M", "5–20 M", "20–100 M", "> 100 M", "Prefer not to say"]
+      options: ["< €250 k", "€250 k–1 M", "1–5 M", "5–20 M", "20–100 M", "> 100 M", "Prefer not to say"]
       required: true
     - id: M9
       text: "Is your organisation in a regulated industry?"
@@ -93,423 +87,251 @@ section_0:
       required: true
 
 section_1:
-  title: "Strategy & Use-Case Readiness"
-  purpose: "Anchor AI initiatives in strategy; avoid empty-logic gaps; 70/30 weighting on objectives."
+  purpose: "Assess strategic alignment & planning maturity."
   questions:
     - id: S1
-      text: "Have you listed specific AI opportunities to launch within 12 months?"
+      text: "Have you listed AI opportunities to launch within 12 months?"
       type: single
-      options: 
-        - {value: "None", label: "None", score: 0}
-        - {value: "Idea list only", label: "Idea list only", score: 25}
-        - {value: "1–2 documented use-cases", label: "1–2 documented use-cases", score: 50}
-        - {value: "3–5 prioritised w/owners", label: "3–5 prioritised w/owners", score: 75}
-        - {value: "≥ 6 w/owner + timeline", label: "≥ 6 w/owner + timeline", score: 100}
       score_map: [0,25,50,75,100]
+      options: [None, Idea list only, 1–2 documented use-cases, 3–5 prioritised w/owners, ≥ 6 with owner & timeline]
     - id: S2
-      text: "What prioritization approach does your organization use?"
+      text: "What prioritisation approach does your organisation use?"
       type: single
-      options: 
-        - {value: "No formal process", label: "No formal process", score: 0}
-        - {value: "Ad-hoc based on perceived value", label: "Ad-hoc based on perceived value", score: 25}
-        - {value: "Impact × Effort matrix", label: "Impact × Effort matrix", score: 50}
-        - {value: "Impact × Effort + capacity weighting", label: "Impact × Effort + capacity weighting", score: 75}
-        - {value: "ROI-driven financial model", label: "ROI-driven financial model", score: 90}
-        - {value: "Risk-adjusted model", label: "Risk-adjusted prioritisation model", score: 100}
-      show_if: 
-        S1: 
-          not_in: [None, "Idea list only"]
+      options: [No formal process, Ad-hoc based on perceived value, Impact × Effort matrix, Impact × Effort + capacity weighting, ROI-driven financial model, Risk-adjusted prioritisation model]
+      show_if: {S1: not_in [None, "Idea list only"]}
     - id: S3
-      text: "What is your current KPI/OKR maturity for AI initiatives?"
+      text: "Current KPI/OKR maturity for AI initiatives"
       type: single
-      options:
-        - {value: "No KPIs or OKRs defined", label: "No KPIs or OKRs defined", score: 0}
-        - {value: "KPIs drafted, but not yet tracked", label: "KPIs drafted, but not yet tracked", score: 25}
-        - {value: "KPIs tracked, but not linked to broader OKRs", label: "KPIs tracked, but not linked to broader OKRs", score: 50}
-        - {value: "AI KPIs partially aligned to dept OKRs", label: "AI KPIs partially aligned to dept OKRs", score: 75}
-        - {value: "AI KPIs fully embedded in executive OKRs", label: "AI KPIs fully embedded in executive OKRs", score: 100}
-      show_if: 
-        S1: 
-          not_in: [None, "Idea list only"]
+      options: [No KPIs/OKRs, KPIs drafted not tracked, KPIs tracked not linked, AI KPIs partially in dept OKRs, AI KPIs in executive OKRs]
+      show_if: {S1: not_in [None, "Idea list only"]}
     - id: S4
-      text: "How do you estimate the ROI for your AI projects?"
+      text: "How do you estimate ROI for AI projects?"
       type: single
-      options:
-        - {value: "We don't estimate ROI", label: "We don't estimate ROI", score: 0}
-        - {value: "Rough estimates based on experience", label: "Rough estimates based on experience", score: 25}
-        - {value: "Simple cost vs. benefit comparisons", label: "Simple cost vs. benefit comparisons", score: 50}
-        - {value: "Link ROI to clear KPIs/goals", label: "Link ROI to clear KPIs/goals", score: 75}
-        - {value: "Detailed financial or risk-adjusted models", label: "Detailed financial or risk-adjusted models", score: 100}
-      show_if: 
-        S1: 
-          not_in: [None, "Idea list only"]
-      helper: "Choose the approach that best matches your current practice."
+      options: [We don’t estimate ROI, Rough experience-based estimates, Simple cost-benefit, Link ROI to clear KPIs & goals, Detailed financial or risk-adjusted models]
+      show_if: {S1: not_in [None, "Idea list only"]}
+      helper: "Choose the option that best matches your current practice."
     - id: S5
-      text: "How quickly do you move from idea to measurable AI value?"
+      text: "Speed from idea to measurable AI value"
       type: single
-      options:
-        - {value: "> 12 m", label: "> 12 m", score: 0}
-        - {value: "6–12 m", label: "6–12 m", score: 25}
-        - {value: "3–6 m", label: "3–6 m", score: 50}
-        - {value: "1–3 m", label: "1–3 m", score: 75}
-        - {value: "≤ 30 d", label: "≤ 30 d", score: 100}
+      options: [> 12 m, 6–12 m, 3–6 m, 1–3 m, ≤ 30 d]
       score_map: [0,25,50,75,100]
-      show_if: 
-        S1: 
-          not_in: [None, "Idea list only"]
+      show_if: {S1: not_in [None, "Idea list only"]}
     - id: S6
-      text: "How do you track competitor/industry AI activity?"
+      text: "How do you track competitor or industry AI activity?"
       type: single
-      options:
-        - {value: "Not tracked", label: "Not tracked", score: 0}
-        - {value: "Occasional look-ups", label: "Occasional look-ups", score: 25}
-        - {value: "Annual review", label: "Annual review", score: 50}
-        - {value: "Quarterly reporting", label: "Quarterly reporting", score: 75}
-        - {value: "Continuous dashboard/feed", label: "Continuous dashboard/feed", score: 100}
+      options: [Not tracked, Occasional look-ups, Annual review, Quarterly reporting, Continuous dashboard/feed]
     - id: S7
-      text: "Drag your top two objectives (70 pts primary, 30 pts secondary)"
+      text: "Rank your top two AI objectives"
       type: rank
       max_rank: 2
       weight: [70,30]
       options: [Productivity, Cost reduction, Revenue growth, Customer-experience improvement, Innovation, Regulatory compliance, Investor positioning]
-      helper: "Keyboard accessible drag-and-drop ranking"
     - id: S8
-      text: "How aligned is leadership on AI adoption?"
+      text: "Leadership alignment on AI"
       type: single
-      options:
-        - {value: "No alignment", label: "No alignment", score: 0}
-        - {value: "Occasional discussions", label: "Occasional discussions", score: 25}
-        - {value: "Executive interest no action", label: "Executive interest no action", score: 50}
-        - {value: "Budget approved", label: "Budget approved", score: 75}
-        - {value: "Active executive championing", label: "Active executive championing", score: 100}
+      options: [No alignment, Occasional discussions, Executive interest no action, Budget approved, Active executive championing]
+      score_map: [0,25,50,75,100]
     - id: S9
       text: "Which teams help define AI use-cases?"
       type: multi
-      options: [Executive leadership, Product/Marketing, Operations, Data/IT, Legal/Compliance, HR, Finance, Customer Support, Other]
       score_per: 10
       cap: 100
-      helper: "Multi-select: 10 pts each up to 100"
+      options: [Executive leadership, Product/Marketing, Operations, Data/IT, Legal/Compliance, HR, Finance, Customer Support, Other]
     - id: S10
-      text: "How prepared is change management for AI adoption?"
+      text: "Change-management readiness for AI adoption"
       type: single
-      options:
-        - {value: "Not prepared", label: "Not prepared", score: 0}
-        - {value: "Ad-hoc", label: "Ad-hoc", score: 25}
-        - {value: "Some formal plans", label: "Some formal plans", score: 50}
-        - {value: "Org-wide framework", label: "Org-wide framework", score: 75}
-        - {value: "Continuous-improvement culture", label: "Continuous-improvement culture", score: 100}
+      options: [Not prepared, Ad-hoc, Formal for some projects, Org-wide framework, Continuous-improvement culture]
+      score_map: [0,25,50,75,100]
     - id: S11
-      text: "Defined goals & success metrics per use-case?"
+      text: "Use-case clarity (goals & metrics)"
       type: single
-      options:
-        - {value: "No clear goals", label: "No clear goals", score: 0}
-        - {value: "Goals defined no metrics", label: "Goals defined no metrics", score: 25}
-        - {value: "Some metrics", label: "Some metrics", score: 50}
-        - {value: "Most metrics", label: "Most metrics", score: 75}
-        - {value: "All w/thresholds", label: "All w/thresholds", score: 100}
-      show_if: 
-        S1: 
-          not_in: [None, "Idea list only"]
+      options: [No clear goals, Goals no metrics, Some metrics, Most metrics, All goals+metrics+thresholds]
+      score_map: [0,25,50,75,100]
+      show_if: {S1: not_in [None, "Idea list only"]}
     - id: S12
-      text: "How tolerant is your org of risk when experimenting with AI? (1–5 scale)"
+      text: "AI risk tolerance (1–5)"
       type: single
-      options:
-        - {value: "1 – Proof-of-concept only", label: "1 – Proof-of-concept only", score: 0}
-        - {value: "2 – Low experimentation", label: "2 – Low experimentation", score: 25}
-        - {value: "3 – Moderate experimentation", label: "3 – Moderate experimentation", score: 50}
-        - {value: "4 – High experimentation", label: "4 – High experimentation", score: 75}
-        - {value: "5 – Fail-fast culture", label: "5 – Fail-fast culture", score: 100}
-      show_if: 
-        P2: 
-          not: "Conservative"
+      options: ["1 – Proof-of-concept only", "2 – Low experimentation", "3 – Moderate experimentation", "4 – High experimentation", "5 – Fail-fast culture"]
+      score_map: [0,25,50,75,100]
+      hide_if: {P2: Conservative}
 
 section_2:
-  title: "Financial Commitment & Compliance Context"
-  purpose: "Gauge budget, runway, investor backing & compliance needs."
+  purpose: "Budget, runway, investor support, compliance."
   questions:
     - id: F1
-      text: "Current monthly AI + data budget"
+      text: "Current monthly AI + data budget"
       type: single
-      options:
-        - {value: "< €100", label: "< €100", score: 0}
-        - {value: "€100–500", label: "€100–500", score: 25}
-        - {value: "€500–2 k", label: "€500–2 k", score: 50}
-        - {value: "€2–15 k", label: "€2–15 k", score: 75}
-        - {value: "≥ €15 k", label: "≥ €15 k", score: 100}
+      options: ["< €100", "€100–500", "€500–2 k", "€2–15 k", "≥ €15 k"]
+      score_map: [0,25,50,75,100]
     - id: F3
       text: "Funding runway at current spend"
       type: single
-      options:
-        - {value: "< 3 m", label: "Less than 3 months", score: 0}
-        - {value: "3–6 m", label: "3–6 m", score: 25}
-        - {value: "6–12 m", label: "6–12 m", score: 50}
-        - {value: "12–24 m", label: "12–24 m", score: 75}
-        - {value: "> 24 m", label: "> 24 m", score: 100}
-      helper: "This helps us understand the financial sustainability of AI initiatives."
+      options: ["< 3 m", "3–6 m", "6–12 m", "12–24 m", "> 24 m"]
+      score_map: [0,25,50,75,100]
+      helper: "Shows financial sustainability of AI initiatives."
     - id: F4
-      text: "Board/investor support level"
+      text: "Board / investor support for AI"
       type: single
-      options:
-        - {value: "Not supportive", label: "Not supportive", score: 0}
-        - {value: "Talks only", label: "Talks only", score: 25}
-        - {value: "Open to AI", label: "Open to AI", score: 50}
-        - {value: "Budget approved", label: "Budget approved", score: 75}
-        - {value: "Actively championing", label: "Actively championing", score: 100}
+      options: [Not supportive, Talks only, Open to AI, Budget approved, Actively championing]
+      score_map: [0,25,50,75,100]
     - id: F5
       text: "Applicable regulatory frameworks"
       type: multi
-      options: [GDPR, EU AI Act, ISO 27001, SOC 2, PCI-DSS, HIPAA, MiFID II/MDR, CCPA, LGPD, POPIA, None, Other]
-      helper: "Select all that apply to your data handling and AI."
+      options: [GDPR, EU AI Act, ISO 27001, SOC 2, PCI-DSS, HIPAA, MiFID II/MDR, CCPA, LGPD, POPIA, None, Other]
       tooltip_each: true
     - id: F6
-      text: "Strategic AI partnerships"
+      text: "Strategic partnerships for AI"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Vendor talks", label: "Vendor talks", score: 25}
-        - {value: "1 partner", label: "1 partner", score: 50}
-        - {value: "≥ 2 partners", label: "≥ 2 partners", score: 75}
-        - {value: "Ecosystem (R&D + vendors)", label: "Ecosystem (R&D + vendors)", score: 100}
-      hide_if: 
-        track: 
-          not: REG
-        M7: "1-9"
+      options: [None, Vendor talks, 1 partner, ≥ 2 partners, Ecosystem (R&D + vendors)]
+      score_map: [0,25,50,75,100]
+      show_if:
+        any_of:
+          - {track: TECH}
+          - {track: REG}
+          - {M7: ["10-49", "50-249", "250-999", "≥ 1 000"]}
     - id: F7
       text: "Budget allocated to AI ethics & bias mitigation"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Planned next FY", label: "Planned next FY", score: 25}
-        - {value: "< 5 %", label: "< 5 %", score: 50}
-        - {value: "5–15 %", label: "5–15 %", score: 75}
-        - {value: "> 15 %", label: "> 15 %", score: 100}
-      show_if: 
-        track: REG
-        M9: 
-          in: [Yes, "Not sure"]
-        F5: 
-          not: "None"
+      options: [None, Planned next FY, < 5 %, 5–15 %, > 15 %]
+      score_map: [0,25,50,75,100]
+      show_if:
+        any_of:
+          - {track: REG}
+          - {F5: not "None"}
 
 section_3:
-  title: "Data Foundation & Governance"
-  purpose: "Assess data availability, quality, security & governance."
+  purpose: "Data foundation, security, ethics, compliance."
   questions:
     - id: D1
-      text: "Where is your most critical data stored? (multi-select)"
+      text: "Where is your most critical data stored?"
       type: multi
-      options: ["Files & Spreadsheets (Google Sheets, Excel, local)", "Databases (SQL, NoSQL, BigQuery, Snowflake)", "Cloud & SaaS (Drive, Dropbox, Salesforce, ERP)", "Internal Tools/Legacy", "Analytics/BI (Looker, Tableau)", "Other"]
-      helper: "Critical data includes anything essential to running operations, serving customers, or making decisions. When 'Other' checked → require non-empty text."
+      options: [Files & Spreadsheets, Databases, Cloud & SaaS, Internal Tools/Legacy, Analytics/BI, Other]
+      helper: "Critical data includes anything essential to running operations, serving customers, or making decisions."
     - id: D2
       text: "Monthly data volume generation"
       type: single
-      options:
-        - {value: "Don't know", label: "Don't know", score: 0}
-        - {value: "< 1 GB", label: "< 1 GB", score: 25}
-        - {value: "1–10 GB", label: "1–10 GB", score: 50}
-        - {value: "10–100 GB", label: "10–100 GB", score: 75}
-        - {value: "> 100 GB", label: "> 100 GB", score: 100}
-      hide_if: 
-        total_questions: "> 60"
+      options: ["Don’t know", "< 1 GB", "1–10 GB", "10–100 GB", "> 100 GB"]
+      hide_if: {total_questions: ">60"}
     - id: D3
-      text: "How mature is your data structure & traceability?"
+      text: "Data management maturity"
       type: single
-      options:
-        - {value: "No standards/visibility", label: "No standards/visibility", score: 0}
-        - {value: "Naming conventions & partial docs", label: "Naming conventions & partial docs", score: 25}
-        - {value: "Defined standards; manual tracking", label: "Defined standards; manual tracking", score: 50}
-        - {value: "Schema tools & tracking", label: "Schema tools & tracking", score: 75}
-        - {value: "Version-controlled models + automated lineage", label: "Version-controlled models + automated lineage", score: 100}
-      show_if: 
-        track: 
-          in: [TECH, REG]
+      options: [No standards/visibility, Naming conventions & partial docs, Defined standards & manual tracking, Schema tools & tracking, Version-controlled models + automated lineage]
+      show_if: {track: [TECH, REG]}
+      hide_if:
+        all_of:
+          - {M7: "1-9"}
+          - {D1: subset_of ["Files & Spreadsheets"]}
     - id: D4
-      text: "Visibility into data flows?"
+      text: "Data lineage tracking"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Partial manual docs", label: "Partial manual docs", score: 25}
-        - {value: "Automated for critical", label: "Automated for critical pipelines", score: 50}
-        - {value: "Automated major sources", label: "Automated across major sources", score: 75}
-        - {value: "Automated + impact analysis", label: "Automated + impact analysis", score: 100}
-      show_if: 
-        track: 
-          in: [TECH, REG]
+      options: [None, Partial manual docs, Automated for critical pipelines, Automated across major sources, Automated + impact analysis]
+      show_if: {track: [TECH, REG]}
+      hide_if:
+        all_of:
+          - {M7: "1-9"}
+          - {D1: subset_of ["Files & Spreadsheets"]}
     - id: D5
-      text: "Level of trust in data accuracy?"
+      text: "Data confidence & freshness"
       type: single
-      options:
-        - {value: "Low", label: "Low", score: 0}
-        - {value: "Medium w/ manual checks", label: "Medium w/ manual checks", score: 25}
-        - {value: "High w/ periodic tests", label: "High w/ periodic tests", score: 50}
-        - {value: "High w/ automated alerts", label: "High w/ automated alerts", score: 75}
-        - {value: "High w/ real-time monitoring", label: "High w/ real-time monitoring", score: 100}
-      show_if: 
-        track: 
-          in: [TECH, REG]
+      options: [Low, Medium w/ manual checks, High w/ periodic tests, High w/ automated alerts, High w/ real-time monitoring]
+      show_if: {track: [TECH, REG]}
+      hide_if:
+        all_of:
+          - {M7: "1-9"}
+          - {D1: subset_of ["Files & Spreadsheets"]}
     - id: D6
-      text: "Which security controls apply? (multi-select)"
+      text: "Security controls applied"
       type: multi
-      options: ["Encryption at rest", "TLS/HTTPS", "Role-based access (RBAC)", "Audit logs", "Data Loss Prevention (DLP)", "Tokenisation", "Differential privacy", "None"]
+      options: [Encryption at rest, TLS/HTTPS, Role-based access, Audit logs, DLP, Tokenisation, Differential privacy, None]
       score_per: 15
       cap: 100
-      helper: "+15 pts each, cap 100"
     - id: D7
       text: "Data stewardship & cleaning cadence"
       type: single
-      options:
-        - {value: "No owner", label: "No owner", score: 0}
-        - {value: "Occasional clean-ups", label: "Occasional clean-ups", score: 25}
-        - {value: "Owner + periodic", label: "Owner + periodic", score: 50}
-        - {value: "Steward + monthly", label: "Steward + monthly", score: 75}
-        - {value: "Continuous stewarding", label: "Continuous stewarding", score: 100}
+      options: [No owner, Occasional clean-ups, Owner + periodic, Steward + monthly, Continuous stewarding]
     - id: D8
-      text: "GDPR / AI Act audit capability?"
+      text: "Audit readiness for GDPR / AI Act"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Basic logs", label: "Basic logs", score: 25}
-        - {value: "Audit trail for critical", label: "Audit trail for critical", score: 50}
-        - {value: "+ explainability", label: "+ explainability", score: 75}
-        - {value: "+ automated checks", label: "+ automated checks", score: 100}
+      options: [None, Basic logs, Audit trail for critical, + explainability, + automated checks]
     - id: D9
       text: "Data labelling & annotation maturity"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Ad-hoc labels", label: "Ad-hoc labels", score: 25}
-        - {value: "Defined guidelines", label: "Defined guidelines", score: 50}
-        - {value: "Standard taxonomy", label: "Standard taxonomy", score: 75}
-        - {value: "Automated labeling & ontologies", label: "Automated labeling & ontologies", score: 100}
-      show_if: 
-        track: 
-          in: [TECH, REG]
+      options: [None, Ad-hoc labels, Defined guidelines, Standard taxonomy, Automated labelling & ontologies]
+      show_if: {track: [TECH, REG]}
     - id: D10
       text: "Synthetic or external data usage"
       type: single
-      options:
-        - {value: "No", label: "No", score: 0}
-        - {value: "Exploring", label: "Exploring", score: 25}
-        - {value: "Limited pilots", label: "Limited pilots", score: 50}
-        - {value: "Regular in production", label: "Regular in production", score: 75}
-        - {value: "Extensive synthetic pipeline", label: "Extensive synthetic pipeline", score: 100}
-      hide_if: 
-        track: GEN
+      options: [No, Exploring, Limited pilots, Regular in production, Extensive synthetic pipeline]
+      show_if: {track: TECH}
     - id: D11
       text: "AI ethics & privacy policies"
       type: single
-      options:
-        - {value: "No policies", label: "No policies", score: 0}
-        - {value: "High-level principles", label: "High-level principles", score: 25}
-        - {value: "Documented guidelines", label: "Documented guidelines", score: 50}
-        - {value: "+ training & oversight", label: "+ training & oversight", score: 75}
-        - {value: "Audited & improved", label: "Audited & improved", score: 100}
+      options: [No policies, High-level principles, Documented guidelines, + training & oversight, Audited & improved]
 
 section_4:
-  title: "Tool Inventory & Integration Infrastructure"
-  purpose: "Capture tool usage breadth and integration maturity."
+  purpose: "Tool stack & integration maturity."
   questions:
     - id: 4A
-      text: "Select all tools you regularly use (Other specify)"
+      text: "Role-adaptive tool inventory"
       type: multi
-      options: [Salesforce, HubSpot, Pipedrive, Slack, Teams, Notion, Airtable, Monday.com, Asana, Trello, Google Workspace, Office 365, Zoom, Calendly, Mailchimp, Intercom, Zendesk, Shopify, WordPress, Zapier, Make, n8n, Power Automate, Tableau, PowerBI, Looker, Excel, Google Sheets, AWS, Azure, GCP, Heroku, Docker, Kubernetes, GitHub, GitLab, Jenkins, CircleCI, Jira, Confluence, Figma, Canva, Adobe Creative Suite, QuickBooks, Xero, Stripe, PayPal, Other]
-      helper: "Score: 1 tool→0; 2–3→25; 4–6→50; 7–9→75; ≥ 10→100"
+      options: [CRM, Marketing automation, Data warehouse, BI dashboard, Low-code builder, Project management, Chat/Collaboration, Other]
+      score_by_count:
+        "1": 0
+        "2-3": 25
+        "4-6": 50
+        "7-9": 75
+        ">=10": 100
     - id: T1
       text: "System integration level"
       type: single
-      options:
-        - {value: "Siloed/no connections", label: "Siloed/no connections", score: 0}
-        - {value: "CSV exports/imports", label: "CSV exports/imports", score: 25}
-        - {value: "Batch sync", label: "Batch sync", score: 50}
-        - {value: "API-platform", label: "API-platform", score: 75}
-        - {value: "Real-time data mesh", label: "Real-time data mesh", score: 100}
+      options: [Siloed/no connections, CSV exports/imports, Batch sync, API-platform, Real-time data mesh]
     - id: T2
       text: "Integration reliability"
       type: single
-      options:
-        - {value: "Weekly failures", label: "Weekly failures", score: 0}
-        - {value: "Monthly", label: "Monthly failures", score: 25}
-        - {value: "Quarterly", label: "Quarterly failures", score: 50}
-        - {value: "Rarely", label: "Rarely", score: 75}
-        - {value: "Never", label: "Never", score: 100}
+      options: [Weekly failures, Monthly failures, Quarterly failures, Rarely, Never]
     - id: T3
       text: "Ownership of integrations"
       type: single
-      options:
-        - {value: "No owner", label: "No clear owner", score: 0}
-        - {value: "External agency", label: "External agency", score: 25}
-        - {value: "Ops/Product", label: "Ops/Product", score: 50}
-        - {value: "Internal tech team", label: "Internal tech team", score: 75}
-        - {value: "Dedicated integration team", label: "Dedicated integration team", score: 100}
+      options: [No owner, External agency, Ops/Product, Internal tech team, Dedicated integration team]
     - id: T4
       text: "External AI-API connectivity"
       type: single
-      options:
-        - {value: "Not possible", label: "Not possible", score: 0}
-        - {value: "Prototype only", label: "Prototype only", score: 25}
-        - {value: "Limited pilots", label: "Limited pilots", score: 50}
-        - {value: "One API in production", label: "One API in production", score: 75}
-        - {value: "Multiple in production", label: "Multiple in production", score: 100}
+      options: [Not possible, Prototype only, Limited pilots, One API in production, Multiple in production]
     - id: T5
       text: "Compute availability (GPU/TPU)"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Colab only", label: "Colab only", score: 25}
-        - {value: "Cloud GPU on demand", label: "Cloud GPU on demand", score: 50}
-        - {value: "Dedicated GPU budget", label: "Dedicated GPU budget", score: 75}
-        - {value: "Managed cluster", label: "Managed cluster", score: 100}
-      hide_if: 
-        track: GEN
+      options: [None, Colab only, Cloud GPU on demand, Dedicated GPU budget, Managed cluster]
+      show_if: {track: [TECH, REG]}
     - id: T6
       text: "Architecture documentation"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "High-level sketch", label: "High-level sketch", score: 25}
-        - {value: "Critical systems map", label: "Critical systems map", score: 50}
-        - {value: "Full diagram", label: "Full diagram", score: 75}
-        - {value: "Auto-generated docs", label: "Auto-generated docs", score: 100}
-      hide_if: 
-        track: GEN
+      options: [None, High-level sketch, Critical systems map, Full diagram, Auto-generated docs]
+      show_if: {track: [TECH, REG]}
     - id: T7
       text: "Disaster-recovery plan for data/AI"
       type: single
-      options:
-        - {value: "No plan", label: "No plan", score: 0}
-        - {value: "Back-ups only", label: "Back-ups only", score: 25}
-        - {value: "Manual failover", label: "Manual failover", score: 50}
-        - {value: "Automated failover", label: "Automated failover", score: 75}
-        - {value: "AI-aware playbook", label: "AI-aware playbook", score: 100}
-      hide_if: 
-        track: GEN
+      options: [No plan, Back-ups only, Manual failover, Automated failover, AI-aware playbook]
+      show_if: {track: [TECH, REG]}
     - id: T8
       text: "Low/no-code platforms in use"
       type: multi
-      options: [Zapier, Make, n8n, Power Automate, UiPath, Workato, Airbyte, Fivetran, dbt, Retool, Bubble, Webflow, Airtable, Monday.com, None, Other]
+      options: [Zapier, Make, n8n, Power Automate, UiPath, Workato, Airbyte, Fivetran, dbt, None, Other]
       score_per: 10
       cap: 100
-      helper: "+10 pts each, cap 100"
 
 section_5:
-  title: "AI Agents & Automation Assessment"
-  purpose: "Measure automation maturity, agent adoption, monitoring & governance."
+  purpose: "Automation maturity & AI agent governance."
   questions:
     - id: A1
-      text: "Task pain-point ranking (drag-drop)"
+      text: "Task pain-point ranking"
       type: rank
-      options: [Reporting, Scheduling, Data entry, FAQ responses, Ticket triage, Contract generation, Inventory management, Compliance checks, Other]
+      options: [Reporting, Scheduling, Data entry, FAQ, Ticket triage, Contract gen, Inventory mgmt, Compliance checks, Other]
       max_rank: 3
       weight: [40,30,20]
-      helper: "Top 3 = 40/30/20 pts, rest 0"
     - id: A2
       text: "Overall automation maturity"
       type: single
-      options:
-        - {value: "1", label: "1 (manual)", score: 0}
-        - {value: "2", label: "2", score: 25}
-        - {value: "3", label: "3", score: 50}
-        - {value: "4", label: "4", score: 75}
-        - {value: "5", label: "5 (self-optimizing)", score: 100}
+      options: [1,2,3,4,5]
       score_map: [0,25,50,75,100]
     - id: A3
       text: "Integration/automation platforms"
@@ -517,378 +339,204 @@ section_5:
       options: [Zapier, Make, n8n, Power Automate, UiPath, Workato, Custom scripts, None, Other]
       score_per: 10
       cap: 100
-      helper: "+10 pts each, cap 100"
     - id: A4
       text: "AI agents implementation status"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Prototype", label: "Prototype", score: 25}
-        - {value: "One live", label: "One live", score: 50}
-        - {value: "A few", label: "A few live", score: 75}
-        - {value: "Multiple", label: "Multiple live", score: 100}
+      options: [None, Prototype, One live, A few, Multiple]
     - id: A5
       text: "Tasks suitable for agents"
       type: multi
-      options: [Customer support, Report generation, Email drafting, Lead scoring, Meeting summary, Market research, Quality control, None, Other]
+      options: [Customer support, Report gen, Email drafting, Lead scoring, Meeting summary, Market research, Quality control, None, Other]
       score_per: 10
-      helper: "+10 pts each"
     - id: A6
       text: "Desired agent autonomy"
       type: single
-      options:
-        - {value: "Suggest only", label: "Suggest only", score: 0}
-        - {value: "Human-approve", label: "Human-approve", score: 33}
-        - {value: "Semi-auto", label: "Semi-auto", score: 66}
-        - {value: "Full auto", label: "Full auto", score: 100}
-      hide_if: 
-        A4: "None"
-        P2: "Conservative"
+      options: [Suggest only, Human-approve, Semi-auto, Full auto]
+      hide_if:
+        all_of:
+          - {A4: "None"}
+          - {P2: Conservative}
     - id: A7
       text: "Monitoring & alerting setup"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Manual checks", label: "Manual checks", score: 25}
-        - {value: "KPI dashboard", label: "KPI dashboard", score: 50}
-        - {value: "Automated alerts", label: "Automated alerts", score: 75}
-        - {value: "Full observability", label: "Full observability", score: 100}
+      options: [None, Manual checks, KPI dashboard, Automated alerts, Full observability]
     - id: A8
       text: "Implementation blockers"
       type: multi
       options: [Data silos, Lack tech resources, Team buy-in, Compliance concerns, ROI unclear, Budget constraints, Control concerns, Integration complexity, Other]
-      helper: "Score = 100–10×n (inverse scoring)"
+      score_formula: 100 - 10*count
     - id: A9
       text: "Preferred agent interface"
       type: multi
       options: [Slack/Teams bot, Embedded widget, Dashboard, Email assistant, API/CLI, Voice assistant, Need guidance, Other]
       score_per: 10
-      helper: "+10 pts each"
     - id: A10
       text: "Agent governance & audit"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Spot checks", label: "Spot checks", score: 25}
-        - {value: "Review process", label: "Review process", score: 50}
-        - {value: "Logging w/ oversight", label: "Logging w/ oversight", score: 75}
-        - {value: "Continuous auditing", label: "Continuous auditing", score: 100}
-      show_if: 
-        A4: 
-          not: "None"
+      options: [None, Spot checks, Review process, Logging w/ oversight, Continuous auditing]
+      hide_if: {A4: "None"}
     - id: A11
       text: "Recovery & rollback strategy"
       type: single
-      options:
-        - {value: "No plan", label: "No plan", score: 0}
-        - {value: "Manual rollback", label: "Manual rollback", score: 25}
-        - {value: "Pre-defined failover", label: "Pre-defined failover", score: 50}
-        - {value: "Automated rollback", label: "Automated rollback triggers", score: 75}
-        - {value: "Self-correction loops", label: "Self-correction loops", score: 100}
-      show_if: 
-        A4: 
-          not: "None"
+      options: [No plan, Manual rollback, Pre-defined failover, Automated rollback, Self-correction loops]
+      hide_if: {A4: "None"}
     - id: A12
       text: "Agent output accuracy monitoring"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Manual reviews", label: "Manual reviews", score: 25}
-        - {value: "Release tests", label: "Release tests", score: 50}
-        - {value: "Ongoing tests + spot checks", label: "Ongoing tests + spot checks", score: 75}
-        - {value: "Continuous self-correction", label: "Continuous self-correction", score: 100}
-      show_if: 
-        A4: 
-          not: "None"
+      options: [None, Manual reviews, Release tests, Ongoing tests + spot checks, Continuous self-correction]
+      hide_if: {A4: "None"}
 
 section_6:
-  title: "People & Skills Assessment"
-  purpose: "Assess team capability, learning culture & psychological safety."
+  purpose: "Team capability & learning culture."
   questions:
     - id: C1
       text: "AI tool usage frequency"
       type: single
-      options:
-        - {value: "Never", label: "Never", score: 0}
-        - {value: "Rarely", label: "Rarely", score: 25}
-        - {value: "Monthly", label: "Monthly", score: 50}
-        - {value: "Weekly", label: "Weekly", score: 75}
-        - {value: "Daily", label: "Daily", score: 100}
+      options: [Never, Rarely, Monthly, Weekly, Daily]
       score_map: [0,25,50,75,100]
     - id: C2
       text: "Prompt-writing confidence"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Copy/paste", label: "Copy/paste", score: 25}
-        - {value: "Edit existing", label: "Edit existing", score: 50}
-        - {value: "Structured", label: "Structured", score: 75}
-        - {value: "Chains", label: "Chains", score: 100}
+      options: [None, Copy/paste, Edit existing, Structured, Chains]
     - id: C3
       text: "Internal knowledge sharing"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Occasional tips", label: "Occasional tips", score: 25}
-        - {value: "Chat channel", label: "Chat channel", score: 50}
-        - {value: "Workshops", label: "Workshops", score: 75}
-        - {value: "CoP", label: "Community of Practice", score: 100}
+      options: [None, Occasional tips, Chat channel, Workshops, CoP]
     - id: C4
       text: "Upskilling budget per FTE (€ / yr)"
       type: single
-      options:
-        - {value: "0", label: "0", score: 0}
-        - {value: "<200", label: "< 200", score: 25}
-        - {value: "200–500", label: "200–500", score: 50}
-        - {value: "500–1k", label: "500–1 k", score: 75}
-        - {value: ">1k", label: "> 1 k", score: 100}
+      options: [0, <200, 200–500, 500–1k, >1k]
     - id: C5
       text: "Preferred learning style"
       type: single
       options: [Text guides, Short videos, Workshops, Self-paced, Mixed]
-      hide_if: 
-        track: TECH
-      helper: "Always shown (hidden for IT/Data roles)"
+      hide_if: {track: TECH}
     - id: C6
-      text: "Training topic priority (drag-drop)"
+      text: "Training topic priority"
       type: rank
-      options: [Prompt engineering, AI tool mastery, Data literacy, Change management, Ethics & governance, Technical implementation, Business case development, Leadership alignment, Other]
+      options: [Prompt engineering, AI tool mastery, Data literacy, Change management, Ethics & governance, Technical implementation, Business case, Leadership, Other]
       max_rank: 5
       weight: [20,20,20,20,20]
-      helper: "+20 pts each for top 5"
     - id: C7
       text: "External AI expertise engagement"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Occasional", label: "Occasional consultation", score: 25}
-        - {value: "Regular advisors", label: "Regular advisors", score: 50}
-        - {value: "Network", label: "Dedicated partnerships", score: 75}
-        - {value: "Board", label: "In-house expertise", score: 100}
+      options: [None, Occasional, Regular advisors, Network, Board]
     - id: C8
       text: "Pilot project openness"
       type: single
-      options:
-        - {value: "Resistant", label: "Resistant", score: 0}
-        - {value: "Cautious", label: "Cautious", score: 25}
-        - {value: "Interested", label: "Interested", score: 50}
-        - {value: "Proactive", label: "Proactive", score: 75}
-        - {value: "Piloting", label: "Innovation champions", score: 100}
+      options: [Resistant, Cautious, Interested, Proactive, Piloting]
     - id: C9
       text: "Cross-functional collaboration frequency"
       type: single
-      options:
-        - {value: "Never", label: "Rarely", score: 0}
-        - {value: "Occasionally", label: "Occasionally", score: 25}
-        - {value: "Quarterly", label: "Quarterly", score: 50}
-        - {value: "Squads", label: "Squads", score: 75}
-        - {value: "Embedded practice", label: "Embedded practice", score: 100}
+      options: [Never, Occasionally, Quarterly, Squads, Embedded practice]
     - id: C10
       text: "Psychological safety for AI experimentation"
       type: single
-      options:
-        - {value: "Not at all", label: "Risk-averse", score: 0}
-        - {value: "Rarely", label: "Careful", score: 25}
-        - {value: "Sometimes", label: "Balanced", score: 50}
-        - {value: "Often", label: "Encouraging", score: 75}
-        - {value: "Always", label: "Failure OK", score: 100}
+      options: [Not at all, Rarely, Sometimes, Often, Always]
 
 section_7:
-  title: "Governance, Risk & Ethics"
-  purpose: "Evaluate risk management, auditability, transparency & ethics."
+  purpose: "Governance, risk & ethics."
   questions:
     - id: G1
       text: "Risk & bias management maturity"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Ad-hoc fixes", label: "Ad-hoc fixes", score: 25}
-        - {value: "Release checks", label: "Model checks", score: 50}
-        - {value: "Framework", label: "Formal framework", score: 75}
-        - {value: "AI-Act compliant", label: "AI-Act compliant", score: 100}
+      options: [None, Ad-hoc fixes, Release checks, Framework, AI-Act compliant]
     - id: G2
       text: "Explainability & audit depth"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Critical models", label: "Explain for critical", score: 25}
-        - {value: "Logs+scripts", label: "Logs+scripts", score: 50}
-        - {value: "All models", label: "All models", score: 75}
-        - {value: "Audit-ready", label: "Audit-ready", score: 100}
+      options: [None, Critical models only, Logs+scripts, All models, Audit-ready]
     - id: G3
       text: "Stakeholder transparency"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Policy mention", label: "Policy mention", score: 25}
-        - {value: "Docs+FAQs", label: "Docs+FAQs", score: 50}
-        - {value: '"Explain" buttons', label: '"Explain" buttons', score: 75}
-        - {value: "Full disclosure", label: "Full disclosure", score: 100}
+      options: [None, Policy mention, Docs+FAQs, "Explain" buttons, Full disclosure]
     - id: G4
       text: "Incident response plan"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "IT plan", label: "Generic IT plan", score: 25}
-        - {value: "Manual rollback", label: "Manual rollback", score: 50}
-        - {value: "Automated", label: "Automated rollback", score: 75}
-        - {value: "Playbook", label: "AI-specific playbook", score: 100}
+      options: [None, IT plan, Manual rollback, Automated rollback, Playbook]
     - id: G5
       text: "Human oversight threshold"
       type: single
-      options:
-        - {value: "No oversight", label: "None", score: 0}
-        - {value: "Final review", label: "Final review only", score: 25}
-        - {value: "Spot checks", label: "Spot checks", score: 50}
-        - {value: "H-in-loop", label: "Human-in-loop", score: 75}
-        - {value: "Escalation", label: "Escalation protocols", score: 100}
+      options: [No oversight, Final review, Spot checks, Human-in-loop, Escalation]
     - id: G6
       text: "Privacy-by-design level"
       type: single
-      options:
-        - {value: "Basic compliance", label: "Basic compliance", score: 0}
-        - {value: "Enhanced", label: "Enhanced practices", score: 25}
-        - {value: "PETs", label: "Privacy Enhancing Technologies", score: 50}
-        - {value: "Design", label: "Privacy-by-design", score: 75}
-        - {value: "Automated", label: "Automated privacy controls", score: 100}
+      options: [Basic compliance, Enhanced, PETs, Design, Automated]
     - id: G7
       text: "Third-party audit status"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Planned", label: "Planned", score: 25}
-        - {value: "In progress", label: "In progress", score: 50}
-        - {value: "Completed", label: "Completed", score: 75}
-        - {value: "Ongoing", label: "Ongoing", score: 100}
-      show_if: 
-        track: 
-          in: [TECH, REG]
+      options: [None, Planned, In progress, Completed, Ongoing]
+      hide_if: {track: GEN}
     - id: G8
       text: "EU AI Act risk mapping"
       type: single
-      options:
-        - {value: "Not aware", label: "Not aware", score: 0}
-        - {value: "Aware", label: "Aware", score: 25}
-        - {value: "Mapping started", label: "Mapping started", score: 50}
-        - {value: "Completed", label: "Mapping completed", score: 75}
-        - {value: "Reported to board", label: "Board reported", score: 100}
+      options: [Not aware, Aware, Mapping started, Completed, Reported to board]
     - id: G9
       text: "Algorithmic fairness testing"
       type: single
-      options:
-        - {value: "Never", label: "Never", score: 0}
-        - {value: "After incidents", label: "After incidents", score: 25}
-        - {value: "Release", label: "At release", score: 50}
-        - {value: "Quarterly", label: "Quarterly", score: 75}
-        - {value: "Continuous", label: "Continuous", score: 100}
-      show_if: 
-        track: 
-          in: [TECH, REG]
+      options: [Never, After incidents, Release, Quarterly, Continuous]
+      hide_if: {track: GEN}
     - id: G10
       text: "Ethics committee or oversight board"
       type: single
-      options:
-        - {value: "None", label: "None", score: 0}
-        - {value: "Informal", label: "Informal", score: 25}
-        - {value: "Ad-hoc", label: "Ad-hoc", score: 50}
-        - {value: "Quarterly", label: "Quarterly meetings", score: 75}
-        - {value: "External experts", label: "External experts", score: 100}
+      options: [None, Informal, Ad-hoc, Quarterly, External experts]
 
 section_8:
-  title: "Implementation & Roadmap Planning"
-  purpose: "Define timeline, risk appetite, KPIs, resources & change readiness."
+  purpose: "Implementation horizon, KPIs & vision."
   questions:
     - id: P1
       text: "Implementation timeframe"
       type: single
-      options:
-        - {value: "< 3 m", label: "< 3 m", score: 100}
-        - {value: "3–6 m", label: "3–6 m", score: 75}
-        - {value: "6–12 m", label: "6–12 m", score: 50}
-        - {value: "> 12 m", label: "> 12 m", score: 25}
+      options: ["< 3 m", "3–6 m", "6–12 m", "> 12 m"]
       score_map: [100,75,50,25]
     - id: P2
       text: "Risk appetite"
       type: single
-      options:
-        - {value: "Conservative", label: "Conservative", score: 0}
-        - {value: "Balanced", label: "Balanced", score: 33}
-        - {value: "Progressive", label: "Progressive", score: 66}
-        - {value: "Aggressive", label: "Aggressive", score: 100}
+      options: [Conservative, Balanced, Progressive, Aggressive]
       score_map: [0,33,66,100]
     - id: P3
-      text: "Success KPIs (select up to 3)"
+      text: "Success KPIs"
       type: multi
-      options: [ROI, Cost reduction, Efficiency gains, Customer experience, Productivity improvements, Innovation metrics, Compliance adherence, Sustainability goals]
+      options: [ROI, Cost reduction, Efficiency, CX, Productivity, Innovation, Compliance, Sustainability]
       max_select: 3
       score_per: 34
       cap: 100
-      helper: "34 pts each, cap 100"
     - id: P4
       text: "Resource allocation strategy"
       type: single
-      options:
-        - {value: "Internal build", label: "Internal build", score: 100}
-        - {value: "Mixed", label: "Mixed approach", score: 50}
-        - {value: "External", label: "External providers", score: 0}
+      options: [Internal build, Mixed, External]
       score_map: [100,50,0]
     - id: P5
       text: "Technology preferences & architectures"
       type: multi
-      options: [Cloud-native, Hybrid/on-premises, API-first architecture, Low/no-code platforms, Open-source solutions, Enterprise software suites]
+      options: [Cloud-native, Hybrid/on-prem, API-first, Low/no-code, Open-source, Enterprise suite]
       score_per: 20
-      helper: "20 pts each"
     - id: P6
       text: "External support requirements"
       type: single
       options: [None needed, Occasional consulting, Regular support, Managed services, Full outsourcing]
-      hide_if: 
-        total_questions: "> 60"
+      hide_if: {total_questions: ">60"}
     - id: P7
       text: "Change threshold & readiness"
       type: single
-      options:
-        - {value: "Not willing", label: "Not willing", score: 0}
-        - {value: "Minor tweaks", label: "Minor tweaks", score: 25}
-        - {value: "Moderate", label: "Moderate changes", score: 50}
-        - {value: "Major transformation", label: "Major transformation", score: 75}
-        - {value: "Continuous", label: "Continuous evolution", score: 100}
+      options: [Not willing, Minor tweaks, Moderate, Major transformation, Continuous]
       score_map: [0,25,50,75,100]
 
 add_ons:
   - id: T9
-    show_if: 
-      track: TECH
+    show_if: {track: TECH}
     text: "How do you deploy and monitor ML models in production?"
     type: single
-    options: 
-      - {value: "No deployment", label: "No deployment", score: 0}
-      - {value: "Manual scripts", label: "Manual scripts", score: 25}
-      - {value: "CI/CD pipeline", label: "CI/CD pipeline", score: 50}
-      - {value: "MLOps platform with monitoring", label: "MLOps platform with monitoring", score: 75}
-      - {value: "Fully automated blue-green + rollback", label: "Fully automated blue-green + rollback", score: 100}
+    options: [No deployment, Manual scripts, CI/CD pipeline, MLOps platform with monitoring, Fully automated blue-green + rollback]
   - id: F8
-    show_if: 
-      track: REG
+    show_if: {track: REG}
     text: "Do you rely on mechanisms (e.g., SCCs, BCRs) for cross-border data transfer?"
     type: single
-    options:
-      - {value: "No cross-border transfer", label: "No cross-border transfer", score: 0}
-      - {value: "Ad-hoc contracts", label: "Ad-hoc contracts", score: 25}
-      - {value: "Standard Contractual Clauses", label: "Standard Contractual Clauses", score: 50}
-      - {value: "Binding Corporate Rules", label: "Binding Corporate Rules", score: 75}
-      - {value: "Adequacy decision + continuous monitoring", label: "Adequacy decision + continuous monitoring", score: 100}
+    options: [No cross-border transfer, Ad-hoc contracts, Standard Contractual Clauses, Binding Corporate Rules, Adequacy decision + continuous monitoring]
   - id: S13
-    show_if: 
-      track: GEN
+    show_if: {track: GEN}
     text: "Have you realised tangible ROI from any AI pilot?"
     type: single
-    options:
-      - {value: "No pilots yet", label: "No pilots yet", score: 0}
-      - {value: "Pilots in progress", label: "Pilots in progress", score: 25}
-      - {value: "Early benefits observed", label: "Early benefits observed", score: 50}
-      - {value: "Break-even achieved", label: "Break-even achieved", score: 75}
-      - {value: "Significant ROI realised", label: "Significant ROI realised", score: 100}
+    options: [No pilots yet, Pilots in progress, Early benefits observed, Break-even achieved, Significant ROI realised]
 
 ui:
   progress_counter: true
@@ -898,14 +546,13 @@ ui:
   auto_deselect_none: true
 
 validation:
-  rules:
-    - "Other selected → text field required"
-    - "All visible questions required"
-    - "Cap visible questions at 60; auto-hide D2 then P6"
+  - rule: "Other selected → text field required"
+  - rule: "All visible questions required"
+  - rule: "Cap visible questions at 60; auto-hide D2 then P6"
 
 scoring:
-  per_question: "0-100"
-  weight_by_track: true
+  per_question: 0-100
+  weight_by_track: weight_vectors
   neutral_for_hidden: 50
   confidence_penalty:
     apply_to: [D2, unknown_like]
@@ -913,6 +560,8 @@ scoring:
 reporting:
   show_hidden_explanation: true
   benchmarks: by_track
+  store_only: true               # scores hidden from respondents
+  admin_endpoint: /api/admin/assessment
 
 version:
   assessment_version: "2.0"
