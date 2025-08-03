@@ -13,14 +13,12 @@ interface AssessmentFlowProps {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [completedSections, setCompletedSections] = useState<string[]>([]);
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
   const { toast } = useToast();
 
   const currentSection = assessmentSections[currentSectionIndex];
-  const currentQuestion = currentSection?.questions[currentQuestionIndex];
   const totalQuestions = assessmentSections.reduce((total, section) => total + section.questions.length, 0);
   const completedQuestions = Object.keys(responses).length;
 
@@ -42,52 +40,46 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     }
   }, [responses.M3, responses.M9]);
 
-  const handleAnswerChange = (value: any) => {
+  const handleAnswerChange = (questionId: string, value: any) => {
     setResponses(prev => ({
       ...prev,
-      [currentQuestion.id]: value
+      [questionId]: value
     }));
   };
 
-  const isCurrentQuestionAnswered = () => {
-    const answer = responses[currentQuestion.id];
-    if (currentQuestion.required) {
-      if (currentQuestion.type === "checkbox") {
+  const isCurrentSectionComplete = () => {
+    const requiredQuestions = currentSection.questions.filter(q => q.required);
+    return requiredQuestions.every(question => {
+      const answer = responses[question.id];
+      if (question.type === "checkbox") {
         return answer === true;
       }
       return answer && answer !== "";
-    }
-    return true;
+    });
   };
 
-  const goToNextQuestion = () => {
-    if (!isCurrentQuestionAnswered()) {
+  const goToNextSection = () => {
+    if (!isCurrentSectionComplete()) {
       toast({
-        title: "Answer required",
-        description: "Please answer this question before continuing.",
+        title: "Section incomplete",
+        description: "Please answer all required questions before continuing.",
         variant: "destructive"
       });
       return;
     }
 
-    if (currentQuestionIndex < currentSection.questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1);
-    } else if (currentSectionIndex < assessmentSections.length - 1) {
+    if (currentSectionIndex < assessmentSections.length - 1) {
       setCompletedSections(prev => [...prev, currentSection.id]);
       setCurrentSectionIndex(currentSectionIndex + 1);
-      setCurrentQuestionIndex(0);
     } else {
       // Assessment complete
       handleAssessmentComplete();
     }
   };
 
-  const goToPreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1);
-    } else if (currentSectionIndex > 0) {
+  const goToPreviousSection = () => {
+    if (currentSectionIndex > 0) {
       setCurrentSectionIndex(currentSectionIndex - 1);
-      setCurrentQuestionIndex(assessmentSections[currentSectionIndex - 1].questions.length - 1);
     }
   };
 
@@ -116,7 +108,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     onComplete(assessmentResponses, profile, detectedTrack);
   };
 
-  if (!currentSection || !currentQuestion) {
+  if (!currentSection) {
     return null;
   }
 
@@ -130,35 +122,40 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       />
 
       <div className="mb-8">
-        <div className="mb-4">
+        <div className="mb-6">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
             <span className="bg-primary/10 text-primary px-2 py-1 rounded-md font-medium">
               {currentSection.title}
             </span>
             <span>•</span>
-            <span>Question {currentQuestionIndex + 1} of {currentSection.questions.length}</span>
+            <span>Section {currentSectionIndex + 1} of {assessmentSections.length}</span>
           </div>
           <p className="text-sm text-muted-foreground">
             {currentSection.purpose}
           </p>
         </div>
 
-        <QuestionCard
-          question={currentQuestion}
-          value={responses[currentQuestion.id]}
-          onChange={handleAnswerChange}
-        />
+        <div className="space-y-6">
+          {currentSection.questions.map((question) => (
+            <QuestionCard
+              key={question.id}
+              question={question}
+              value={responses[question.id]}
+              onChange={(value) => handleAnswerChange(question.id, value)}
+            />
+          ))}
+        </div>
       </div>
 
       <div className="flex justify-between items-center">
         <Button
           variant="outline"
-          onClick={goToPreviousQuestion}
-          disabled={currentSectionIndex === 0 && currentQuestionIndex === 0}
+          onClick={goToPreviousSection}
+          disabled={currentSectionIndex === 0}
           className="flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Previous
+          Previous Section
         </Button>
 
         <div className="text-sm text-muted-foreground">
@@ -173,16 +170,15 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         </div>
 
         <Button
-          onClick={goToNextQuestion}
-          disabled={!isCurrentQuestionAnswered()}
+          onClick={goToNextSection}
+          disabled={!isCurrentSectionComplete()}
           className="flex items-center gap-2 bg-gradient-primary hover:shadow-glow transition-all duration-300"
         >
-          {currentSectionIndex === assessmentSections.length - 1 && 
-           currentQuestionIndex === currentSection.questions.length - 1 ? (
+          {currentSectionIndex === assessmentSections.length - 1 ? (
             "Complete Assessment"
           ) : (
             <>
-              Next
+              Next Section
               <ArrowRight className="h-4 w-4" />
             </>
           )}
