@@ -256,7 +256,7 @@ section_2:
         - {value: "1 partner", label: "1 partner", score: 50}
         - {value: "≥ 2 partners", label: "≥ 2 partners", score: 75}
         - {value: "Ecosystem (R&D + vendors)", label: "Ecosystem (R&D + vendors)", score: 100}
-      hide_if: {M7: "1-9"}
+      hide_if: {track: not REG, M7: "1-9"}
     - id: F7
       text: "Budget allocated to AI ethics & bias mitigation"
       type: single
@@ -266,7 +266,7 @@ section_2:
         - {value: "< 5 %", label: "< 5 %", score: 50}
         - {value: "5–15 %", label: "5–15 %", score: 75}
         - {value: "> 15 %", label: "> 15 %", score: 100}
-      show_if: {M9: in [Yes, "Not sure"], F5: not "None"}
+      show_if: {track: REG}
 
 section_3:
   title: "Data Foundation & Governance"
@@ -296,7 +296,7 @@ section_3:
         - {value: "Defined standards; manual tracking", label: "Defined standards; manual tracking", score: 50}
         - {value: "Schema tools & tracking", label: "Schema tools & tracking", score: 75}
         - {value: "Version-controlled models + automated lineage", label: "Version-controlled models + automated lineage", score: 100}
-      show_if: {track: TECH}
+      show_if: {track: in [TECH, REG]}
     - id: D4
       text: "Visibility into data flows?"
       type: single
@@ -306,7 +306,7 @@ section_3:
         - {value: "Automated for critical", label: "Automated for critical pipelines", score: 50}
         - {value: "Automated major sources", label: "Automated across major sources", score: 75}
         - {value: "Automated + impact analysis", label: "Automated + impact analysis", score: 100}
-      show_if: {track: TECH}
+      show_if: {track: in [TECH, REG]}
     - id: D5
       text: "Level of trust in data accuracy?"
       type: single
@@ -316,7 +316,7 @@ section_3:
         - {value: "High w/ periodic tests", label: "High w/ periodic tests", score: 50}
         - {value: "High w/ automated alerts", label: "High w/ automated alerts", score: 75}
         - {value: "High w/ real-time monitoring", label: "High w/ real-time monitoring", score: 100}
-      show_if: {track: TECH}
+      show_if: {track: in [TECH, REG]}
     - id: D6
       text: "Which security controls apply? (multi-select)"
       type: multi
@@ -351,7 +351,7 @@ section_3:
         - {value: "Defined guidelines", label: "Defined guidelines", score: 50}
         - {value: "Standard taxonomy", label: "Standard taxonomy", score: 75}
         - {value: "Automated labeling & ontologies", label: "Automated labeling & ontologies", score: 100}
-      show_if: {track: TECH}
+      show_if: {track: in [TECH, REG]}
     - id: D10
       text: "Synthetic or external data usage"
       type: single
@@ -361,7 +361,7 @@ section_3:
         - {value: "Limited pilots", label: "Limited pilots", score: 50}
         - {value: "Regular in production", label: "Regular in production", score: 75}
         - {value: "Extensive synthetic pipeline", label: "Extensive synthetic pipeline", score: 100}
-      show_if: {track: TECH}
+      show_if: {track: in [TECH, REG]}
     - id: D11
       text: "AI ethics & privacy policies"
       type: single
@@ -817,6 +817,16 @@ add_ons:
       - {value: "CI/CD pipeline", label: "CI/CD pipeline", score: 50}
       - {value: "MLOps platform with monitoring", label: "MLOps platform with monitoring", score: 75}
       - {value: "Fully automated blue-green + rollback", label: "Fully automated blue-green + rollback", score: 100}
+  - id: F8
+    show_if: {track: REG}
+    text: "Do you rely on mechanisms (e.g., SCCs, BCRs) for cross-border data transfer?"
+    type: single
+    options:
+      - {value: "No cross-border transfer", label: "No cross-border transfer", score: 0}
+      - {value: "Ad-hoc contracts", label: "Ad-hoc contracts", score: 25}
+      - {value: "Standard Contractual Clauses", label: "Standard Contractual Clauses", score: 50}
+      - {value: "Binding Corporate Rules", label: "Binding Corporate Rules", score: 75}
+      - {value: "Adequacy decision + continuous monitoring", label: "Adequacy decision + continuous monitoring", score: 100}
 
 ui:
   progress_counter: true
