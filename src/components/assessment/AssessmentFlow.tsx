@@ -2,10 +2,15 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { AssessmentProgress } from "./AssessmentProgress";
 import { QuestionCard } from "./QuestionCard";
+import { ProgressCounter } from "./ProgressCounter";
 import { assessmentSections } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile } from "@/types/assessment";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
+import { validateSection } from "@/utils/validation";
+import { scoreAnswers } from "@/utils/scoring";
 
 interface AssessmentFlowProps {
   onComplete: (responses: AssessmentResponse[], profile: OrganizationProfile, track: Track) => void;
@@ -13,14 +18,34 @@ interface AssessmentFlowProps {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
-  const [completedSections, setCompletedSections] = useState<string[]>([]);
+  const [responses, setResponses, clearResponses] = useLocalStorage<Record<string, any>>(
+    'ai-assessment-responses', 
+    {}
+  );
+  const [completedSections, setCompletedSections] = useLocalStorage<string[]>(
+    'ai-assessment-completed', 
+    []
+  );
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   const currentSection = assessmentSections[currentSectionIndex];
-  const totalQuestions = assessmentSections.reduce((total, section) => total + section.questions.length, 0);
-  const completedQuestions = Object.keys(responses).length;
+  
+  // Calculate visible questions with 60-question cap
+  const allVisibleQuestions = assessmentSections.flatMap(section => 
+    section.questions.filter(q => isQuestionVisible(q, responses, detectedTrack, 0))
+  );
+  const totalVisibleQuestions = Math.min(allVisibleQuestions.length, 60);
+  
+  // Apply cap by hiding D2 and P6 if needed
+  const visibleQuestions = currentSection.questions.filter(q => 
+    isQuestionVisible(q, responses, detectedTrack, totalVisibleQuestions)
+  );
+  
+  const answeredQuestions = Object.keys(responses).filter(key => 
+    responses[key] !== undefined && responses[key] !== ''
+  ).length;
 
   // Detect track based on organization profile
   useEffect(() => {
@@ -40,22 +65,51 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     }
   }, [responses.M3, responses.M9]);
 
+  // Auto-save responses
+  useEffect(() => {
+    if (Object.keys(responses).length > 0) {
+      toast({
+        title: "Progress saved",
+        description: "Your responses are automatically saved.",
+        duration: 2000,
+      });
+    }
+  }, [responses, toast]);
+
   const handleAnswerChange = (questionId: string, value: any) => {
-    setResponses(prev => ({
-      ...prev,
-      [questionId]: value
-    }));
+    setResponses(prev => {
+      const updated = { ...prev, [questionId]: value };
+      
+      // Auto-deselect "None" in multi-selects
+      if (Array.isArray(value) && value.includes('None') && value.length > 1) {
+        updated[questionId] = value.filter(v => v !== 'None');
+      }
+      
+      return updated;
+    });
+    
+    // Clear validation error for this field
+    if (validationErrors[questionId]) {
+      setValidationErrors(prev => {
+        const updated = { ...prev };
+        delete updated[questionId];
+        return updated;
+      });
+    }
+  };
+
+  const saveProgress = () => {
+    toast({
+      title: "Progress saved",
+      description: "You can resume this assessment later.",
+    });
   };
 
   const isCurrentSectionComplete = () => {
-    const requiredQuestions = currentSection.questions.filter(q => q.required);
-    return requiredQuestions.every(question => {
-      const answer = responses[question.id];
-      if (question.type === "checkbox") {
-        return answer === true;
-      }
-      return answer && answer !== "";
-    });
+    const visibleQuestionIds = visibleQuestions.map(q => q.id);
+    const validation = validateSection(visibleQuestions, responses, visibleQuestionIds);
+    setValidationErrors(validation.errors);
+    return validation.isValid;
   };
 
   const goToNextSection = () => {
@@ -114,11 +168,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <AssessmentProgress
-        currentQuestion={completedQuestions + 1}
-        totalQuestions={totalQuestions}
-        currentSection={currentSection.title}
+      <ProgressCounter
+        currentSection={currentSectionIndex}
+        totalSections={assessmentSections.length}
+        answeredQuestions={answeredQuestions}
+        totalQuestions={totalVisibleQuestions}
         completedSections={completedSections}
+        sectionTitles={assessmentSections.map(s => s.title)}
       />
 
       <div className="mb-8">
@@ -136,18 +192,24 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         </div>
 
         <div className="space-y-6">
-          {currentSection.questions.map((question) => (
-            <QuestionCard
-              key={question.id}
-              question={question}
-              value={responses[question.id]}
-              onChange={(value) => handleAnswerChange(question.id, value)}
-            />
+          {visibleQuestions.map((question) => (
+            <div key={question.id}>
+              <QuestionCard
+                question={question}
+                value={responses[question.id]}
+                onChange={(value) => handleAnswerChange(question.id, value)}
+              />
+              {validationErrors[question.id] && (
+                <p className="text-sm text-destructive mt-1">
+                  {validationErrors[question.id]}
+                </p>
+              )}
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-4">
         <Button
           variant="outline"
           onClick={goToPreviousSection}
@@ -155,7 +217,16 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           className="flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Previous Section
+          Previous
+        </Button>
+
+        <Button
+          variant="outline"
+          onClick={saveProgress}
+          className="flex items-center gap-2"
+        >
+          <Save className="h-4 w-4" />
+          Save Progress
         </Button>
 
         <div className="text-sm text-muted-foreground">
@@ -171,7 +242,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
         <Button
           onClick={goToNextSection}
-          disabled={!isCurrentSectionComplete()}
+          disabled={validationErrors && Object.keys(validationErrors).length > 0}
           className="flex items-center gap-2 bg-gradient-primary hover:shadow-glow transition-all duration-300"
         >
           {currentSectionIndex === assessmentSections.length - 1 ? (
