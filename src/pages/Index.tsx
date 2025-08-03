@@ -34,21 +34,30 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-accent">
+      <div className="p-8 text-center">
+        <h1 className="text-4xl font-bold mb-4">AI Readiness Assessment v2.0</h1>
+        <p className="text-lg text-muted-foreground mb-8">Testing the application setup</p>
+        <button 
+          onClick={() => setAppState("assessment")}
+          className="bg-primary text-primary-foreground px-6 py-3 rounded-lg"
+        >
+          Test Button
+        </button>
+        <div className="mt-4 text-sm">
+          Current state: {appState}
+        </div>
+      </div>
+      
       {appState === "welcome" && (
-        <AssessmentWelcome onStart={handleStartAssessment} />
+        <div className="p-4 border rounded">Welcome component would load here</div>
       )}
       
       {appState === "assessment" && (
-        <AssessmentFlow onComplete={handleAssessmentComplete} />
+        <div className="p-4 border rounded">Assessment component would load here</div>
       )}
       
       {appState === "results" && assessmentData && (
-        <AssessmentResults
-          responses={assessmentData.responses}
-          profile={assessmentData.profile}
-          track={assessmentData.track}
-          onRestart={handleRestart}
-        />
+        <div className="p-4 border rounded">Results component would load here</div>
       )}
     </div>
   );
