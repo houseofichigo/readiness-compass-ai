@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,18 +37,21 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
 
   const currentSection = sections[currentSectionIndex];
 
-  // Get visible questions for current section
-  const visibleQuestions = currentSection?.questions?.filter((question: any) => 
-    isQuestionVisible(question, responses, detectedTrack, getTotalVisibleQuestions())
-  ) || [];
-
-  function getTotalVisibleQuestions(): number {
+  // Memoize total visible questions calculation to prevent infinite loops
+  const totalVisibleQuestions = useMemo(() => {
     return sections.reduce((total, section) => {
       return total + (section.questions?.filter((q: any) => 
-        isQuestionVisible(q, responses, detectedTrack, 0)
+        isQuestionVisible(q, responses, detectedTrack, 0) // Pass 0 to prevent circular dependency
       ).length || 0);
     }, 0);
-  }
+  }, [sections, responses, detectedTrack]);
+
+  // Get visible questions for current section
+  const visibleQuestions = useMemo(() => {
+    return currentSection?.questions?.filter((question: any) => 
+      isQuestionVisible(question, responses, detectedTrack, totalVisibleQuestions)
+    ) || [];
+  }, [currentSection, responses, detectedTrack, totalVisibleQuestions]);
 
   // Track detection based on M3 and M9 responses
   useEffect(() => {
