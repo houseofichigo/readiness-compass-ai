@@ -67,7 +67,7 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
         duration: 2000,
       });
     }
-  }, [responses, toast]);
+  }, [responses]);
 
   const handleAnswerChange = (questionId: string, value: any) => {
     setResponses(prev => {
