@@ -1,4 +1,4 @@
-import { assessmentMeta } from '@/data/assessmentQuestions';
+import { schema } from '@/data/schema';
 
 export interface ScoringResult {
   questionScores: Record<string, number>;
@@ -28,9 +28,9 @@ export function scoreAnswers(values: Record<string, any>, track: string): Scorin
   });
 
   // Apply track-specific weights
-  const weights = assessmentMeta.weight_vectors[track as keyof typeof assessmentMeta.weight_vectors];
+  const weights = schema.weight_vectors?.[track] || {};
   const totalScore = sections.reduce((sum, section) => {
-    return sum + (sectionScores[section] * (weights[section as keyof typeof weights] / 100));
+    return sum + (sectionScores[section] * ((weights[section] || 0) / 100));
   }, 0);
 
   return {
