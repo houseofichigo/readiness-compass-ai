@@ -266,7 +266,7 @@ section_2:
         - {value: "< 5 %", label: "< 5 %", score: 50}
         - {value: "5–15 %", label: "5–15 %", score: 75}
         - {value: "> 15 %", label: "> 15 %", score: 100}
-      show_if: {track: REG}
+      show_if: {track: REG, M9: in [Yes, "Not sure"], F5: not "None"}
 
 section_3:
   title: "Data Foundation & Governance"
@@ -361,7 +361,7 @@ section_3:
         - {value: "Limited pilots", label: "Limited pilots", score: 50}
         - {value: "Regular in production", label: "Regular in production", score: 75}
         - {value: "Extensive synthetic pipeline", label: "Extensive synthetic pipeline", score: 100}
-      show_if: {track: in [TECH, REG]}
+      hide_if: {track: GEN}
     - id: D11
       text: "AI ethics & privacy policies"
       type: single
@@ -426,7 +426,7 @@ section_4:
         - {value: "Cloud GPU on demand", label: "Cloud GPU on demand", score: 50}
         - {value: "Dedicated GPU budget", label: "Dedicated GPU budget", score: 75}
         - {value: "Managed cluster", label: "Managed cluster", score: 100}
-      show_if: {track: TECH}
+      hide_if: {track: GEN}
     - id: T6
       text: "Architecture documentation"
       type: single
@@ -436,7 +436,7 @@ section_4:
         - {value: "Critical systems map", label: "Critical systems map", score: 50}
         - {value: "Full diagram", label: "Full diagram", score: 75}
         - {value: "Auto-generated docs", label: "Auto-generated docs", score: 100}
-      show_if: {track: TECH}
+      hide_if: {track: GEN}
     - id: T7
       text: "Disaster-recovery plan for data/AI"
       type: single
@@ -446,7 +446,7 @@ section_4:
         - {value: "Manual failover", label: "Manual failover", score: 50}
         - {value: "Automated failover", label: "Automated failover", score: 75}
         - {value: "AI-aware playbook", label: "AI-aware playbook", score: 100}
-      show_if: {track: TECH}
+      hide_if: {track: GEN}
     - id: T8
       text: "Low/no-code platforms in use"
       type: multi
@@ -827,6 +827,16 @@ add_ons:
       - {value: "Standard Contractual Clauses", label: "Standard Contractual Clauses", score: 50}
       - {value: "Binding Corporate Rules", label: "Binding Corporate Rules", score: 75}
       - {value: "Adequacy decision + continuous monitoring", label: "Adequacy decision + continuous monitoring", score: 100}
+  - id: S13
+    show_if: {track: GEN}
+    text: "Have you realised tangible ROI from any AI pilot?"
+    type: single
+    options:
+      - {value: "No pilots yet", label: "No pilots yet", score: 0}
+      - {value: "Pilots in progress", label: "Pilots in progress", score: 25}
+      - {value: "Early benefits observed", label: "Early benefits observed", score: 50}
+      - {value: "Break-even achieved", label: "Break-even achieved", score: 75}
+      - {value: "Significant ROI realised", label: "Significant ROI realised", score: 100}
 
 ui:
   progress_counter: true
