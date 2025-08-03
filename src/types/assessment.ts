@@ -22,6 +22,9 @@ export interface Question {
   score_map?: number[];
   score_per?: number;
   cap?: number;
+  max_select?: number;
+  label?: string;
+  tooltip_each?: boolean;
 }
 
 export interface Section {
