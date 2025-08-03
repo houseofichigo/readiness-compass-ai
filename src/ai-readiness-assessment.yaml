@@ -114,7 +114,9 @@ section_1:
         - {value: "Impact × Effort + capacity weighting", label: "Impact × Effort + capacity weighting", score: 75}
         - {value: "ROI-driven financial model", label: "ROI-driven financial model", score: 90}
         - {value: "Risk-adjusted model", label: "Risk-adjusted prioritisation model", score: 100}
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if: 
+        S1: 
+          not_in: [None, "Idea list only"]
     - id: S3
       text: "What is your current KPI/OKR maturity for AI initiatives?"
       type: single
@@ -124,7 +126,9 @@ section_1:
         - {value: "KPIs tracked, but not linked to broader OKRs", label: "KPIs tracked, but not linked to broader OKRs", score: 50}
         - {value: "AI KPIs partially aligned to dept OKRs", label: "AI KPIs partially aligned to dept OKRs", score: 75}
         - {value: "AI KPIs fully embedded in executive OKRs", label: "AI KPIs fully embedded in executive OKRs", score: 100}
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if: 
+        S1: 
+          not_in: [None, "Idea list only"]
     - id: S4
       text: "How do you estimate the ROI for your AI projects?"
       type: single
@@ -134,7 +138,9 @@ section_1:
         - {value: "Simple cost vs. benefit comparisons", label: "Simple cost vs. benefit comparisons", score: 50}
         - {value: "Link ROI to clear KPIs/goals", label: "Link ROI to clear KPIs/goals", score: 75}
         - {value: "Detailed financial or risk-adjusted models", label: "Detailed financial or risk-adjusted models", score: 100}
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if: 
+        S1: 
+          not_in: [None, "Idea list only"]
       helper: "Choose the approach that best matches your current practice."
     - id: S5
       text: "How quickly do you move from idea to measurable AI value?"
@@ -146,7 +152,9 @@ section_1:
         - {value: "1–3 m", label: "1–3 m", score: 75}
         - {value: "≤ 30 d", label: "≤ 30 d", score: 100}
       score_map: [0,25,50,75,100]
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if: 
+        S1: 
+          not_in: [None, "Idea list only"]
     - id: S6
       text: "How do you track competitor/industry AI activity?"
       type: single
@@ -197,7 +205,9 @@ section_1:
         - {value: "Some metrics", label: "Some metrics", score: 50}
         - {value: "Most metrics", label: "Most metrics", score: 75}
         - {value: "All w/thresholds", label: "All w/thresholds", score: 100}
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if: 
+        S1: 
+          not_in: [None, "Idea list only"]
     - id: S12
       text: "How tolerant is your org of risk when experimenting with AI? (1–5 scale)"
       type: single
@@ -207,7 +217,9 @@ section_1:
         - {value: "3 – Moderate experimentation", label: "3 – Moderate experimentation", score: 50}
         - {value: "4 – High experimentation", label: "4 – High experimentation", score: 75}
         - {value: "5 – Fail-fast culture", label: "5 – Fail-fast culture", score: 100}
-      show_if: {P2: not "Conservative"}
+      show_if: 
+        P2: 
+          not: "Conservative"
 
 section_2:
   title: "Financial Commitment & Compliance Context"
@@ -256,7 +268,10 @@ section_2:
         - {value: "1 partner", label: "1 partner", score: 50}
         - {value: "≥ 2 partners", label: "≥ 2 partners", score: 75}
         - {value: "Ecosystem (R&D + vendors)", label: "Ecosystem (R&D + vendors)", score: 100}
-      hide_if: {track: not REG, M7: "1-9"}
+      hide_if: 
+        track: 
+          not: REG
+        M7: "1-9"
     - id: F7
       text: "Budget allocated to AI ethics & bias mitigation"
       type: single
@@ -266,7 +281,12 @@ section_2:
         - {value: "< 5 %", label: "< 5 %", score: 50}
         - {value: "5–15 %", label: "5–15 %", score: 75}
         - {value: "> 15 %", label: "> 15 %", score: 100}
-      show_if: {track: REG, M9: in [Yes, "Not sure"], F5: not "None"}
+      show_if: 
+        track: REG
+        M9: 
+          in: [Yes, "Not sure"]
+        F5: 
+          not: "None"
 
 section_3:
   title: "Data Foundation & Governance"
@@ -536,7 +556,9 @@ section_5:
         - {value: "Review process", label: "Review process", score: 50}
         - {value: "Logging w/ oversight", label: "Logging w/ oversight", score: 75}
         - {value: "Continuous auditing", label: "Continuous auditing", score: 100}
-      show_if: {A4: not "None"}
+      show_if: 
+        A4: 
+          not: "None"
     - id: A11
       text: "Recovery & rollback strategy"
       type: single
@@ -546,7 +568,9 @@ section_5:
         - {value: "Pre-defined failover", label: "Pre-defined failover", score: 50}
         - {value: "Automated rollback", label: "Automated rollback triggers", score: 75}
         - {value: "Self-correction loops", label: "Self-correction loops", score: 100}
-      show_if: {A4: not "None"}
+      show_if: 
+        A4: 
+          not: "None"
     - id: A12
       text: "Agent output accuracy monitoring"
       type: single
@@ -556,7 +580,9 @@ section_5:
         - {value: "Release tests", label: "Release tests", score: 50}
         - {value: "Ongoing tests + spot checks", label: "Ongoing tests + spot checks", score: 75}
         - {value: "Continuous self-correction", label: "Continuous self-correction", score: 100}
-      show_if: {A4: not "None"}
+      show_if: 
+        A4: 
+          not: "None"
 
 section_6:
   title: "People & Skills Assessment"
