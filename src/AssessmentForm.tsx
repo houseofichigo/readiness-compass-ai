@@ -17,7 +17,7 @@ interface AssessmentFormProps {
 export default function AssessmentForm({ schema }: AssessmentFormProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useLocalStorage<Record<string, any>>("assessment-responses", {});
-  const [completedSections, setCompletedSections] = useLocalStorage<Set<number>>("completed-sections", new Set());
+  const [completedSections, setCompletedSections] = useLocalStorage<number[]>("completed-sections", []);
   const [detectedTrack, setDetectedTrack] = useState<string>("GEN");
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const { toast } = useToast();
@@ -61,16 +61,21 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
     }
   }, [responses.M3, responses.M9]);
 
-  // Auto-save responses
+  // Auto-save responses (only show toast on first load and actual changes)
   useEffect(() => {
-    if (Object.keys(responses).length > 0) {
-      toast({
-        title: "Progress saved",
-        description: "Your responses are automatically saved.",
-        duration: 2000,
-      });
+    const hasResponses = Object.keys(responses).length > 0;
+    if (hasResponses) {
+      // Only show toast if this isn't the initial load
+      const timeoutId = setTimeout(() => {
+        toast({
+          title: "Progress saved",
+          description: "Your responses are automatically saved.",
+          duration: 2000,
+        });
+      }, 100);
+      return () => clearTimeout(timeoutId);
     }
-  }, [responses]);
+  }, [Object.keys(responses).length]);
 
   const handleAnswerChange = (questionId: string, value: any) => {
     setResponses(prev => {
@@ -101,7 +106,7 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
     });
   };
 
-  const isCurrentSectionComplete = () => {
+  const validateCurrentSection = () => {
     const visibleQuestionIds = visibleQuestions.map((q: any) => q.id);
     const validation = validateSection(visibleQuestions, responses, visibleQuestionIds);
     setValidationErrors(validation.errors);
@@ -109,7 +114,7 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
   };
 
   const goToNextSection = () => {
-    if (!isCurrentSectionComplete()) {
+    if (!validateCurrentSection()) {
       toast({
         title: "Section incomplete",
         description: "Please answer all required questions before continuing.",
@@ -119,7 +124,7 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
     }
 
     if (currentSectionIndex < sections.length - 1) {
-      setCompletedSections(prev => new Set([...prev, currentSectionIndex]));
+      setCompletedSections(prev => [...prev.filter(i => i !== currentSectionIndex), currentSectionIndex]);
       setCurrentSectionIndex(currentSectionIndex + 1);
     } else {
       // Assessment complete
@@ -143,7 +148,7 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
     console.log("Assessment completed:", {
       responses,
       detectedTrack,
-      completedSections: Array.from(completedSections)
+      completedSections
     });
   };
 
@@ -184,8 +189,8 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
 
             {/* Section indicators */}
             <div className="flex gap-2 flex-wrap">
-              {sections.map((section, index) => {
-                const isCompleted = completedSections.has(index);
+            {sections.map((section, index) => {
+                const isCompleted = completedSections.includes(index);
                 const isCurrent = index === currentSectionIndex;
                 
                 return (
@@ -275,11 +280,11 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
           {isLastSection ? (
             <Button
               onClick={() => {
-                if (isCurrentSectionComplete()) {
+                if (validateCurrentSection()) {
                   handleAssessmentComplete();
                 }
               }}
-              disabled={!isCurrentSectionComplete()}
+              disabled={Object.keys(validationErrors).length > 0}
               className="flex items-center gap-2"
             >
               Complete Assessment
@@ -288,7 +293,7 @@ export default function AssessmentForm({ schema }: AssessmentFormProps) {
           ) : (
             <Button
               onClick={goToNextSection}
-              disabled={!isCurrentSectionComplete()}
+              disabled={Object.keys(validationErrors).length > 0}
               className="flex items-center gap-2"
             >
               Next Section
