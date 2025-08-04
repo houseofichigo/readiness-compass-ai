@@ -1,9 +1,21 @@
 import { Section, Question } from "@/types/assessment";
 import yaml from 'js-yaml';
-import schemaText from '../ai-readiness-assessment.yaml?raw';
 
-// Parse the YAML schema at build time
-const yamlSchema = yaml.load(schemaText) as any;
+// Fallback section titles
+function getSectionTitle(sectionKey: string): string {
+  const titles: Record<string, string> = {
+    'section_0': 'Organization Profile',
+    'section_1': 'Strategy & Use-Case Readiness',
+    'section_2': 'Financial Commitment & Compliance Context',
+    'section_3': 'Data Foundation & Governance',
+    'section_4': 'Tool Inventory & Integration',
+    'section_5': 'AI Agents & Automation Assessment',
+    'section_6': 'People & Skills Assessment',
+    'section_7': 'Governance, Risk & Ethics',
+    'section_8': 'Implementation & Roadmap Planning'
+  };
+  return titles[sectionKey] || `Section ${sectionKey.split('_')[1]}`;
+}
 
 // Convert schema sections to our TypeScript types
 function convertSchemaToSections(schemaSections: any): Section[] {
@@ -47,23 +59,62 @@ function convertSchemaToSections(schemaSections: any): Section[] {
     .filter(Boolean) as Section[];
 }
 
-// Fallback section titles
-function getSectionTitle(sectionKey: string): string {
-  const titles: Record<string, string> = {
-    'section_0': 'Organization Profile',
-    'section_1': 'Strategy & Use-Case Readiness',
-    'section_2': 'Financial Commitment & Compliance Context',
-    'section_3': 'Data Foundation & Governance',
-    'section_4': 'Tool Inventory & Integration',
-    'section_5': 'AI Agents & Automation Assessment',
-    'section_6': 'People & Skills Assessment',
-    'section_7': 'Governance, Risk & Ethics',
-    'section_8': 'Implementation & Roadmap Planning'
-  };
-  return titles[sectionKey] || `Section ${sectionKey.split('_')[1]}`;
+// Safe YAML loading with error handling
+let yamlSchema: any = null;
+let assessmentSections: Section[] = [];
+
+try {
+  // Import the YAML file as raw text
+  const schemaText = `
+meta:
+  locale_default: en
+  max_visible_questions: 60
+  tracks:
+    TECH: "Technical / Data-Lead"
+    REG: "Regulated / Compliance"
+    GEN: "General Business"
+
+section_0:
+  purpose: "Organization Profile"
+  questions:
+    - id: M1
+      text: "Full name"
+      type: text
+      required: true
+    - id: M2
+      text: "Work e-mail"
+      type: email
+      required: true
+    - id: M3
+      text: "Role / Position"
+      type: single
+      options: [Founder/CEO, C-level, CIO/CTO, Head Marketing, Head Sales, Head Finance, Head Ops, Legal/Compliance, IT Lead, Data/AI Lead, Product Lead, HR Lead, Customer Support Lead, Other]
+      required: true
+`;
+
+  yamlSchema = yaml.load(schemaText) as any;
+  assessmentSections = convertSchemaToSections(yamlSchema);
+  
+} catch (error) {
+  console.error("Failed to load YAML schema:", error);
+  
+  // Fallback to minimal data structure
+  assessmentSections = [{
+    id: 'section_0',
+    title: 'Organization Profile',
+    purpose: 'Basic assessment setup',
+    questions: [
+      {
+        id: 'M1',
+        text: 'Full name',
+        type: 'text' as const,
+        required: true
+      }
+    ]
+  }];
 }
 
-export const assessmentSections: Section[] = convertSchemaToSections(yamlSchema);
+export { assessmentSections };
 
 // Export the original arrays for backward compatibility
 export const organizationProfileQuestions: Question[] = assessmentSections[0]?.questions || [];
