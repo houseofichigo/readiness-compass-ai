@@ -101,7 +101,7 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return 0;
   }
 
-  const { type, score_map, score_per, cap, weight, options } = question;
+  const { type, scoreMap, scorePer, cap, weight, options } = question;
 
   if (Array.isArray(answer)) {
     // ranked
@@ -111,14 +111,14 @@ function scoreQuestion(question: Question, answer: unknown): number {
       return max ? (used / max) * 100 : 0;
     }
     // per-item
-    if (score_per !== undefined) {
-      return Math.min(answer.length * score_per, cap ?? 100);
+    if (scorePer !== undefined) {
+      return Math.min(answer.length * scorePer, cap ?? 100);
     }
     // mapped choices
-    if (score_map && options) {
+    if (scoreMap && options) {
       const scores = (answer as string[]).map((val) => {
         const idx = options.findIndex((opt) => opt.value === val);
-        return idx >= 0 && score_map[idx] != null ? score_map[idx] : 0;
+        return idx >= 0 && scoreMap[idx] != null ? scoreMap[idx] : 0;
       });
       return scores.length
         ? scores.reduce((a, b) => a + b, 0) / scores.length
@@ -130,9 +130,9 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return answer ? 100 : 0;
   }
 
-  if (score_map && options && typeof answer === "string") {
+  if (scoreMap && options && typeof answer === "string") {
     const idx = options.findIndex((opt) => opt.value === answer);
-    if (idx >= 0 && score_map[idx] != null) return score_map[idx];
+    if (idx >= 0 && scoreMap[idx] != null) return scoreMap[idx];
   }
 
   if (typeof answer === "number") {

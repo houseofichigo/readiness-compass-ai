@@ -5,30 +5,43 @@ export interface QuestionOption {
   label: string;
 }
 
+export type QuestionType =
+  | "text"
+  | "email"
+  | "single"
+  | "multi"
+  | "multi_group"
+  | "rank"
+  | "industry_dropdown"
+  | "matrix"
+  | "checkbox";
+
 export interface QuestionGroup {
   label: string;
-  show_if?: Record<string, unknown>;
+  showIf?: Record<string, unknown>;
   options: QuestionOption[];
 }
 
 export interface Question {
   id: string;
   text: string;
-  type: string;
+  type: QuestionType;
   helper?: string;
   required?: boolean;
   options?: QuestionOption[];
+  rows?: string[];
+  columns?: string[];
   groups?: QuestionGroup[];
-  show_if?: Record<string, unknown>;
-  hide_if?: Record<string, unknown>;
-  score_map?: number[];
-  score_per?: number;
+  showIf?: Record<string, unknown>;
+  hideIf?: Record<string, unknown>;
+  scoreMap?: number[];
+  scorePer?: number;
   cap?: number;
   weight?: number[];
-  max_rank?: number;
-  max_select?: number;
-  score_formula?: string;
-  score_by_count?: Record<string, number>;
+  maxRank?: number;
+  maxSelect?: number;
+  scoreFormula?: string;
+  scoreByCount?: Record<string, number>;
 }
 
 export interface ConsentBanner {
@@ -47,7 +60,7 @@ export interface Section {
   title: string;
   purpose: string;
   questions: Question[];
-  consent_banner?: ConsentBanner;
+  consentBanner?: ConsentBanner;
   computed?: ComputedField[];
 }
 

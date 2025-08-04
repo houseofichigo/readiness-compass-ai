@@ -24,11 +24,11 @@ export function isQuestionVisible(
 
   const ctx: EvalContext = { responses, track: detectedTrack, computed };
 
-  if (question.show_if) {
-    return evaluateCondition(question.show_if, ctx);
+  if (question.showIf) {
+    return evaluateCondition(question.showIf, ctx);
   }
-  if (question.hide_if) {
-    return !evaluateCondition(question.hide_if, ctx);
+  if (question.hideIf) {
+    return !evaluateCondition(question.hideIf, ctx);
   }
   return true;
 }

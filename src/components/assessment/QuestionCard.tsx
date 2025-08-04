@@ -145,7 +145,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
             options={rankOpts}
             value={value || []}
             onChange={onChange}
-            maxRank={question.max_rank || 3}
+            maxRank={question.maxRank || 3}
           />
         );
 

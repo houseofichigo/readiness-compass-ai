@@ -8,6 +8,7 @@ import type {
   QuestionOption,
   ConsentBanner,
   ComputedField,
+  QuestionType,
 } from "@/types/assessment";
 
 // Titles for each section derived from the assessment YAML
@@ -23,13 +24,30 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
-interface RawQuestion extends Omit<Question, "options" | "groups"> {
+interface RawQuestion {
+  id: string;
+  text: string;
+  type: QuestionType | string;
+  helper?: string;
+  required?: boolean;
   options?: Array<string | QuestionOption>;
+  rows?: string[];
+  columns?: string[];
   groups?: Array<{
     label: string;
     show_if?: Record<string, unknown>;
     options: Array<string | QuestionOption>;
   }>;
+  show_if?: Record<string, unknown>;
+  hide_if?: Record<string, unknown>;
+  score_map?: number[];
+  score_per?: number;
+  cap?: number;
+  weight?: number[];
+  max_rank?: number;
+  max_select?: number;
+  score_formula?: string;
+  score_by_count?: Record<string, number>;
 }
 
 interface RawSection {
@@ -71,22 +89,38 @@ const assessmentSections: Section[] = Object.entries(schema)
       computed = [],
     } = raw ?? {};
 
-    // normalize flat and grouped options
+    // normalize flat and grouped options and convert to camelCase
     const normalizedQuestions: Question[] = questions.map((q) => {
-      const base: any = { ...q };
+      const base: Question = {
+        id: q.id,
+        text: q.text,
+        type: q.type as QuestionType,
+        helper: q.helper,
+        required: q.required,
+        options: normalizeOptions(q.options),
+        rows: q.rows,
+        columns: q.columns,
+        showIf: q.show_if,
+        hideIf: q.hide_if,
+        scoreMap: q.score_map,
+        scorePer: q.score_per,
+        cap: q.cap,
+        weight: q.weight,
+        maxRank: q.max_rank,
+        maxSelect: q.max_select,
+        scoreFormula: q.score_formula,
+        scoreByCount: q.score_by_count,
+      };
 
-      if (q.options) {
-        base.options = normalizeOptions(q.options);
-      }
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
-          show_if: g.show_if,
+          showIf: g.show_if,
           options: normalizeOptions(g.options) || [],
         }));
       }
 
-      return base as Question;
+      return base;
     });
 
     // assemble the Section object
@@ -98,7 +132,7 @@ const assessmentSections: Section[] = Object.entries(schema)
     };
 
     if (consent_banner) {
-      section.consent_banner = consent_banner;
+      section.consentBanner = consent_banner;
     }
     if (computed.length) {
       section.computed = computed;
@@ -109,18 +143,34 @@ const assessmentSections: Section[] = Object.entries(schema)
 
 // Top-level add-ons (if any)
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
-  const base: any = { ...q };
-  if (q.options) {
-    base.options = normalizeOptions(q.options);
-  }
+  const base: Question = {
+    id: q.id,
+    text: q.text,
+    type: q.type as QuestionType,
+    helper: q.helper,
+    required: q.required,
+    options: normalizeOptions(q.options),
+    rows: q.rows,
+    columns: q.columns,
+    showIf: q.show_if,
+    hideIf: q.hide_if,
+    scoreMap: q.score_map,
+    scorePer: q.score_per,
+    cap: q.cap,
+    weight: q.weight,
+    maxRank: q.max_rank,
+    maxSelect: q.max_select,
+    scoreFormula: q.score_formula,
+    scoreByCount: q.score_by_count,
+  };
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
       label: g.label,
-      show_if: g.show_if,
+      showIf: g.show_if,
       options: normalizeOptions(g.options) || [],
     }));
   }
-  return base as Question;
+  return base;
 });
 
 export { assessmentSections };
