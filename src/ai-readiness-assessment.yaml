@@ -330,7 +330,7 @@ section_2:
       text: "Other regulatory or security framework (please specify)"
       type: text
       show_if:
-      F5: subset_of ["Other (please specify)"]
+        F5: subset_of ["Other (please specify)"]
       required: true
 
 
