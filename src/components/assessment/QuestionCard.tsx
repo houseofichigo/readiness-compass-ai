@@ -107,7 +107,7 @@ export function QuestionCard({
         // Otherwise render as radio buttons
         return (
           <RadioGroup
-            value={value}
+            value={value || ""}
             onValueChange={onChange}
             className="mt-4 space-y-3"
           >
