@@ -1,4 +1,4 @@
-// src/data/assessmentQuestions.ts
+// src/data/schema.ts
 
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";

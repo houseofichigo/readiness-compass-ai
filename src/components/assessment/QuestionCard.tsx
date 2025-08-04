@@ -54,7 +54,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
           </div>
         );
 
-      case "single":
+      case "single": {
         // Also used for industry_dropdown & country_dropdown
         const flatOptions =
           question.options ||
@@ -90,6 +90,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
                 ))}
           </RadioGroup>
         );
+      }
 
       case "multi":
         return (
@@ -100,12 +101,16 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
           />
         );
 
-      case "multi_group":
+      case "multi_group": {
         // Grouped checkboxes
         const selected: string[] = value || [];
         const handleGroupChange = (optValue: string, checked: boolean) => {
           const set = new Set(selected);
-          checked ? set.add(optValue) : set.delete(optValue);
+          if (checked) {
+            set.add(optValue);
+          } else {
+            set.delete(optValue);
+          }
           onChange(Array.from(set));
         };
         return (
@@ -134,6 +139,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
             ))}
           </div>
         );
+      }
 
       case "matrix":
         return (
@@ -145,7 +151,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
           />
         );
 
-      case "rank":
+      case "rank": {
         const rankOpts =
           question.options ||
           question.groups?.flatMap((g) => g.options) ||
@@ -158,6 +164,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
             maxRank={question.maxRank || 3}
           />
         );
+      }
 
       default:
         return null;

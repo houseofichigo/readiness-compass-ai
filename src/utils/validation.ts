@@ -6,8 +6,8 @@ export interface ValidationResult {
 }
 
 export function validateSection(
-  questions: Question[], 
-  responses: Record<string, any>,
+  questions: Question[],
+  responses: Record<string, unknown>,
   visibleQuestionIds: string[]
 ): ValidationResult {
   const errors: Record<string, string> = {};

@@ -1,7 +1,7 @@
 // src/utils/visibilityAndTrack.ts
 
 import { Question } from '@/types/assessment';
-import { assessmentMeta, assessmentSections } from '@/data/assessmentQuestions';
+import { assessmentMeta, assessmentSections } from '@/data/schema';
 
 interface EvalContext {
   responses: Record<string, unknown>;
@@ -102,7 +102,7 @@ function matchValue(source: unknown, rule: unknown): boolean {
     }
     // nested object match
     return Object.entries(r).every(([k, v]) =>
-      matchValue((source as any)?.[k], v)
+      matchValue((source as Record<string, unknown> | undefined)?.[k], v)
     );
   }
   // array equality
@@ -124,12 +124,15 @@ const parseListLiteral = (literal: string): string[] => {
 
 /** Pull tech-roles from the track_detection rules */
 function getTechRoles(): string[] {
-  const precedence = (assessmentMeta as any).track_detection?.precedence || [];
-  const techRule = (precedence as any[]).find(r =>
-    typeof r.if === 'string' && r.if.includes('-> TECH')
+  const precedence = (
+    (assessmentMeta as { track_detection?: { precedence?: TrackRule[] } })
+      .track_detection?.precedence ?? []
+  ) as TrackRule[];
+  const techRule = precedence.find(
+    r => typeof r.if === 'string' && (r.if as string).includes('-> TECH')
   );
-  if (!techRule) return [];
-  return parseListLiteral((techRule.if as string));
+  if (!techRule || typeof techRule.if !== 'string') return [];
+  return parseListLiteral(techRule.if);
 }
 
 /** Pull regulated industries from the computed logic */
@@ -149,15 +152,16 @@ export function detectTrack(
   computed: Record<string, unknown> = {}
 ): string {
   // first, apply any YAML rules
-  const precedence = (assessmentMeta as any).track_detection?.precedence as
-    | Array<Record<string, unknown>>
-    | undefined;
+  const precedence = (
+    (assessmentMeta as { track_detection?: { precedence?: TrackRule[] } })
+      .track_detection?.precedence
+  );
   if (Array.isArray(precedence)) {
     for (const rule of precedence) {
-      const { track, if: cond, ...rest } = rule as any;
+      const { track, if: cond, ...rest } = rule;
       const condition = cond ?? rest;
       if (track && evaluateCondition(condition, { responses, computed })) {
-        return track as string;
+        return track;
       }
     }
   }

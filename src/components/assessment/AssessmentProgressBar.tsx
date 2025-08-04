@@ -3,7 +3,7 @@
 import React from "react";
 import { CheckCircle2, Clock, HelpCircle } from "lucide-react";
 import { Track } from "@/types/assessment";
-import { assessmentSections } from "@/data/assessmentQuestions";
+import { assessmentSections } from "@/data/schema";
 
 interface AssessmentProgressBarProps {
   currentSectionIndex: number;

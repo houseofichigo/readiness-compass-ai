@@ -97,7 +97,7 @@ export interface OrganizationProfile {
   M0?: string;
   M1?: string;
   M3?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface AssessmentResponse {

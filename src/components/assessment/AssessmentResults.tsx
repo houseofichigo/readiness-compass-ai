@@ -7,7 +7,7 @@ import {
   Track,
   WeightVector,
 } from "@/types/assessment";
-import { assessmentMeta } from "@/data/assessmentQuestions";
+import { assessmentMeta } from "@/data/schema";
 import { Badge } from "@/components/ui/badge";
 import { Download, Share2, BarChart3 } from "lucide-react";
 import { scoreAnswers } from "@/utils/scoring";

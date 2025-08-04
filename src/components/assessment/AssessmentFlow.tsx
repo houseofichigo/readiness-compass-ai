@@ -9,7 +9,7 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 
-import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns } from "@/data/schema";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import {
   AssessmentResponse,
@@ -27,13 +27,13 @@ const parseListLiteral = (lit: string): string[] => {
 // Evaluate computed fields for a section
 const evaluateComputed = (
   fields: ComputedField[] | undefined,
-  rs: Record<string, any>
-): Record<string, any> => {
-  const values: Record<string, any> = {};
+  rs: Record<string, unknown>
+): Record<string, unknown> => {
+  const values: Record<string, unknown> = {};
   fields?.forEach(f => {
     if (f.id === "regulated") {
-      const industries = parseListLiteral(f.logic as unknown as string || "");
-      values[f.id] = industries.includes(rs.M4_industry);
+      const industries = parseListLiteral((f.logic as string) || "");
+      values[f.id] = industries.includes(rs.M4_industry as string);
     }
   });
   return values;
@@ -49,7 +49,7 @@ interface AssessmentFlowProps {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, unknown>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
   const [bannerConsent, setBannerConsent] = useState<Record<string, boolean>>({});
 
@@ -102,7 +102,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   });
 
   // Handle answer changes and re-compute track for persona fields
-  const handleAnswerChange = (qid: string, val: any) => {
+  const handleAnswerChange = (qid: string, val: unknown) => {
     setResponses(prev => {
       const updated = { ...prev, [qid]: val };
       if (qid === "M3" || qid === "M4_industry") {

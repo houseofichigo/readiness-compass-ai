@@ -8,7 +8,7 @@ import {
   OrganizationProfile,
   Track
 } from "@/types/assessment";
-import { assessmentSections } from "@/data/assessmentQuestions";
+import { assessmentSections } from "@/data/schema";
 
 type AppState = "welcome" | "assessment" | "results";
 

@@ -1,6 +1,6 @@
 // src/utils/scoring.ts
 
-import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentMeta } from "@/data/schema";
 import type { Question, WeightVector } from "@/types/assessment";
 
 export interface ScoringResult {
