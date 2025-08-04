@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
@@ -55,7 +55,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "single":
-        // also used for industry_dropdown & country_dropdown
+        // Also used for industry_dropdown & country_dropdown
         const flatOptions =
           question.options ||
           question.groups?.flatMap((g) => g.options) ||
@@ -92,7 +92,6 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "multi":
-        // plain multiselect
         return (
           <MultiSelectQuestion
             options={question.options || []}
@@ -102,13 +101,12 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "multi_group":
-        // grouped checkboxes
+        // Grouped checkboxes
         const selected: string[] = value || [];
-        const handleGroupChange = (optionValue: string, checked: boolean) => {
-          const newSet = new Set(selected);
-          if (checked) newSet.add(optionValue);
-          else newSet.delete(optionValue);
-          onChange(Array.from(newSet));
+        const handleGroupChange = (optValue: string, checked: boolean) => {
+          const set = new Set(selected);
+          checked ? set.add(optValue) : set.delete(optValue);
+          onChange(Array.from(set));
         };
         return (
           <div className="mt-4 space-y-6">
@@ -138,13 +136,13 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "rank":
-        const rankOptions =
+        const rankOpts =
           question.options ||
           question.groups?.flatMap((g) => g.options) ||
           [];
         return (
           <DragDropQuestionRank
-            options={rankOptions}
+            options={rankOpts}
             value={value || []}
             onChange={onChange}
             maxRank={question.max_rank || 3}
