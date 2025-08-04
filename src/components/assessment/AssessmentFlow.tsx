@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
+import { ConsentBanner } from "./ConsentBanner";
 import { assessmentSections } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile } from "@/types/assessment";
 
@@ -16,6 +17,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
+  const [bannerConsent, setBannerConsent] = useState<Record<string, boolean>>({});
 
   const currentSection = assessmentSections[currentSectionIndex];
   
@@ -103,6 +105,8 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const answeredInSection = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
+  const consentRequired = currentSection.consentBanner?.required;
+  const consentAccepted = bannerConsent[currentSection.id];
 
   return (
     <div className="min-h-screen bg-gradient-accent p-4">
@@ -129,6 +133,18 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
+            {currentSection.consentBanner && (
+              <ConsentBanner
+                id={`consent_${currentSection.id}`}
+                text={currentSection.consentBanner.text}
+                required={currentSection.consentBanner.required}
+                accepted={bannerConsent[currentSection.id] || false}
+                onChange={(val) =>
+                  setBannerConsent(prev => ({ ...prev, [currentSection.id]: val }))
+                }
+              />
+            )}
+
             {/* Render ALL questions for the current section */}
             {visibleQuestions.map((question, questionIndex) => (
               <div key={question.id} className="space-y-2">
@@ -167,6 +183,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           <Button
             onClick={goToNextSection}
             className="flex items-center gap-2"
+            disabled={!!consentRequired && !consentAccepted}
           >
             {currentSectionIndex === assessmentSections.length - 1 ? "Complete" : "Next"}
             <ArrowRight className="h-4 w-4" />

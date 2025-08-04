@@ -27,11 +27,17 @@ export interface Question {
   tooltip_each?: boolean;
 }
 
+export interface ConsentBanner {
+  text: string;
+  required?: boolean;
+}
+
 export interface Section {
   id: string;
   title: string;
   purpose: string;
   questions: Question[];
+  consentBanner?: ConsentBanner;
 }
 
 export interface OrganizationProfile {
