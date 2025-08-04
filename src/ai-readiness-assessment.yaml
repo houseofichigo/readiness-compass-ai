@@ -81,12 +81,6 @@ section_0:
         - "Risk Manager"
         - "Audit Lead"
         - "Governance Officer"
-        - "Other (please specify)"
-      required: true
-    - id: M3_other
-      text: "Primary role (other)"
-      type: text
-      show_if: { M3: "Other (please specify)" }
       required: true
 
     - id: M4_industry
@@ -112,13 +106,8 @@ section_0:
         "Accommodation & Food Services",
         "Public Administration",
         "Non-profit & NGO",
-        "Other (please specify)"
+        "Non-profit & NGO"
       ]
-      required: true
-    - id: M4_sub
-      text: "Industry & sub-sector (other)"
-      type: text
-      show_if: { M4_industry: "Other (please specify)" }
       required: true
 
     - id: M5_country
@@ -274,15 +263,9 @@ section_1:
     - id: S9
       text: "Which teams are involved in defining AI use cases?"
       type: multi
-      options: ["Executive leadership", "Product & marketing", "Operations", "Data & IT", "Legal & compliance", "HR", "Finance", "Customer support", "Other (please specify)"]
+      options: ["Executive leadership", "Product & marketing", "Operations", "Data & IT", "Legal & compliance", "HR", "Finance", "Customer support"]
       score_per: 10
       cap: 100
-      required: true
-    - id: S9_other
-      text: "Team involved (other)"
-      type: text
-      show_if:
-        S9: subset_of ["Other (please specify)"]
       required: true
 
     - id: S10
@@ -341,13 +324,7 @@ section_2:
       text: "Which additional regulatory or security frameworks apply to your organization?"
       type: multi
       helper: "GDPR and EU AI Act apply by default."
-      options: ["MiFID II / MDR – Finance & medical (EU)", "ISO 27001 – Information security", "PCI-DSS – Payment data security", "HIPAA – US health data", "CCPA – California privacy", "LGPD – Brazilian privacy", "POPIA – South African privacy", "None apply", "Other (please specify)"]
-      required: true
-    - id: F5_other
-      text: "Other regulatory or security framework (please specify)"
-      type: text
-      show_if:
-        F5: subset_of ["Other (please specify)"]
+      options: ["MiFID II / MDR – Finance & medical (EU)", "ISO 27001 – Information security", "PCI-DSS – Payment data security", "HIPAA – US health data", "CCPA – California privacy", "LGPD – Brazilian privacy", "POPIA – South African privacy", "None apply"]
       required: true
 
 
@@ -382,13 +359,7 @@ section_3:
       text: "Where is your most critical data primarily stored?"
       type: multi
       helper: "Critical data drives operations, decisions, and compliance."
-      options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)", "Other (please specify)"]
-      required: true
-    - id: D1_other
-      text: "Other data storage location (please specify)"
-      type: text
-      show_if:
-        D1: subset_of ["Other (please specify)"]
+      options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)"]
       required: true
 
 
@@ -428,11 +399,6 @@ section_3:
       score_per: 15
       cap: 100
       options: ["Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don’t know", "Other (please specify)"]
-    - id: D5_other
-      text: "Other security control (please specify)"
-      type: text
-      show_if:
-        D5: subset_of ["Other (please specify)"]
       required: true
 
     - id: D6
@@ -647,14 +613,8 @@ section_4:
           options: [
             "SharePoint", "DocuSign", "Box",
             "Dropbox Business", "M-Files", "FileHold",
-            "Other document management tool (please specify)"
           ]
 
-    - id: T0_other
-      text: "Other tool (please specify)"
-      type: text
-      show_if:
-        T0_tools: subset_of ["Other performance monitoring tool (please specify)", "Other infrastructure monitoring tool (please specify)", "Other cloud monitoring tool (please specify)", "Other web analytics tool (please specify)", "Other data management tool (please specify)", "Other automation tool (please specify)", "Other email marketing tool (please specify)", "Other CRM tool (please specify)", "Other e-commerce tool (please specify)", "Other advertising tool (please specify)", "Other BI tool (please specify)", "Other productivity tool (please specify)", "Other financial tool (please specify)", "Other workflow tool (please specify)", "Other privacy tool (please specify)", "Other security tool (please specify)", "Other GRC tool (please specify)", "Other regulatory tool (please specify)", "Other document management tool (please specify)"]
 
     - id: T1
       text: "How well are your tools and systems connected?"
@@ -735,14 +695,9 @@ section_4:
       text: "Which low-code or no-code platforms do you use for automation?"
       type: multi
       helper: "Select all platforms you actively use; choose None if you don't use any."
-      options: ["None – no low-code/no-code tools", "Zapier – connect apps with workflows", "Make – multi-step automation builder", "n8n – self-hosted workflow automation", "Power Automate – Microsoft flow automation", "UiPath – RPA for desktop & web", "Workato – enterprise integration platform", "Airbyte – ELT data pipelines", "Fivetran – automated data connectors", "dbt – analytics engineering", "Other (please specify)"]
+      options: ["None – no low-code/no-code tools", "Zapier – connect apps with workflows", "Make – multi-step automation builder", "n8n – self-hosted workflow automation", "Power Automate – Microsoft flow automation", "UiPath – RPA for desktop & web", "Workato – enterprise integration platform", "Airbyte – ELT data pipelines", "Fivetran – automated data connectors", "dbt – analytics engineering"]
       score_per: 10
       cap: 100
-    - id: T8_other
-      text: "Other low-code/no-code platform (please specify)"
-      type: text
-      show_if:
-        T8: subset_of ["Other (please specify)"]
       required: true
 
 
@@ -755,14 +710,9 @@ section_5:
       text: "Which three tasks would most benefit from automation in your organization?"
       type: rank
       helper: "Rank your top priorities for automation."
-      options: ["Reporting", "Scheduling", "Data entry", "FAQ handling", "Ticket triage", "Contract generation", "Inventory management", "Compliance checks", "Other (please specify)"]
+      options: ["Reporting", "Scheduling", "Data entry", "FAQ handling", "Ticket triage", "Contract generation", "Inventory management", "Compliance checks"]
       max_rank: 3
       weight: [40,30,20]
-    - id: A1_other
-      text: "Other automation task (please specify)"
-      type: text
-      show_if:
-        A1: subset_of ["Other (please specify)"]
       required: true
 
 
@@ -783,14 +733,9 @@ section_5:
       text: "Which tasks are you considering for AI-agent automation?"
       type: multi
       helper: "Select all that apply to identify your first agent use cases."
-      options: ["Customer support – automated responses", "Report generation – auto-create summaries", "Email drafting – compose routine emails", "Lead scoring – prioritize prospects", "Meeting summaries – automated notes", "Market research – gather insights", "Quality control – flag issues", "Other (please specify)"]
+      options: ["Customer support – automated responses", "Report generation – auto-create summaries", "Email drafting – compose routine emails", "Lead scoring – prioritize prospects", "Meeting summaries – automated notes", "Market research – gather insights", "Quality control – flag issues"]
       score_per: 10
       cap: 100
-    - id: A4_other
-      text: "Other agent task (please specify)"
-      type: text
-      show_if:
-        A4: subset_of ["Other (please specify)"]
       required: true
 
     - id: A5
@@ -813,13 +758,8 @@ section_5:
       text: "What are the main blockers to automating tasks and deploying AI agents?"
       type: multi
       helper: "Select all that apply."
-      options: ["Data silos", "Lack of technical resources", "Insufficient buy-in", "Compliance concerns", "Unclear ROI", "Budget constraints", "Integration complexity", "Other (please specify)"]
+      options: ["Data silos", "Lack of technical resources", "Insufficient buy-in", "Compliance concerns", "Unclear ROI", "Budget constraints", "Integration complexity"]
       score_formula: "100 - 10 * count"
-    - id: A7_other
-      text: "Other blocker (please specify)"
-      type: text
-      show_if:
-        A7: subset_of ["Other (please specify)"]
       required: true
 
 
@@ -827,14 +767,9 @@ section_5:
       text: "Which interface do you prefer for interacting with AI agents?"
       type: multi
       helper: "Helps tailor agent UI recommendations."
-      options: ["Chatbot (Slack/Teams)", "Embedded widget", "Dashboard", "Email assistant", "API/CLI", "Voice assistant", "Need guidance", "Other (please specify)"]
+      options: ["Chatbot (Slack/Teams)", "Embedded widget", "Dashboard", "Email assistant", "API/CLI", "Voice assistant", "Need guidance"]
       score_per: 10
       cap: 100
-    - id: A8_other
-      text: "Other interface (please specify)"
-      type: text
-      show_if:
-        A8: subset_of ["Other (please specify)"]
       required: true
 
     - id: A9
@@ -893,14 +828,9 @@ section_6:
     - id: C3a
       text: "Which AI training topics should you and your team prioritize? (Rank top 3)"
       type: rank
-      options: ["Prompt engineering", "AI tool mastery", "Data literacy", "Model fine-tuning", "Retrieval-augmented generation", "Agent orchestration", "Ethics & governance", "Other"]
+      options: ["Prompt engineering", "AI tool mastery", "Data literacy", "Model fine-tuning", "Retrieval-augmented generation", "Agent orchestration", "Ethics & governance"]
       max_rank: 3
       weight: [50, 30, 20]
-    - id: C3a_other
-      text: "Other training topic (please specify)"
-      type: text
-      show_if:
-        C3a: subset_of ["Other"]
       required: true
 
 
@@ -929,12 +859,7 @@ section_6:
     - id: C8
       text: "What stops you and your team from piloting more AI projects?"
       type: multi
-      options: ["Budget constraints", "Lack of skills", "Data silos", "Compliance concerns", "Unclear ROI", "Tech complexity", "Other (please specify)"]
-    - id: C8_other
-      text: "Other barrier (please specify)"
-      type: text
-      show_if:
-        C8: subset_of ["Other (please specify)"]
+      options: ["Budget constraints", "Lack of skills", "Data silos", "Compliance concerns", "Unclear ROI", "Tech complexity"]
       required: true
 
     - id: C9

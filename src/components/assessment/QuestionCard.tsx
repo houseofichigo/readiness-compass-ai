@@ -198,12 +198,12 @@ export function QuestionCard({
   return (
     <Card className="mb-6 p-4">
       <Label className="font-semibold">{question.text}</Label>
-      {renderQuestionInput()}
       {question.helper && (
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 mb-4 text-sm text-muted-foreground">
           {question.helper}
         </p>
       )}
+      {renderQuestionInput()}
     </Card>
   );
 }
