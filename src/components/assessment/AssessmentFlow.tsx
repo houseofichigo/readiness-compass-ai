@@ -10,7 +10,7 @@ import { ConsentBanner } from "./ConsentBanner";
 import { assessmentSections, assessmentAddOns, assessmentMeta } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { AssessmentResponse, Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
-import { validateSection } from "@/utils/validation";
+import { validateSection } from "@/utils/validation"; // Updated import
 import { useToast } from "@/hooks/use-toast";
 
 interface AssessmentFlowProps {
