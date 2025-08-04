@@ -20,8 +20,9 @@ export function validateSection(
 
     const answer = responses[question.id];
     
-    // Required field validation
-    if (question.required) {
+    // Required field validation - treat all questions as required by default
+    const isRequired = question.required !== false; // Default to true unless explicitly false
+    if (isRequired) {
       if (question.type === 'checkbox') {
         if (!answer) {
           errors[question.id] = 'This field is required';
@@ -31,11 +32,11 @@ export function validateSection(
       }
     }
 
-    // "Other" field validation
+    // "Other" field validation - handle various "Other" patterns
     if (question.options) {
       const hasOtherSelected = Array.isArray(answer) 
-        ? answer.includes('Other')
-        : answer === 'Other';
+        ? answer.some(a => String(a).includes('Other (please specify)') || String(a) === 'Other')
+        : String(answer).includes('Other (please specify)') || answer === 'Other';
         
       if (hasOtherSelected) {
         const otherFieldId = `${question.id}_other`;

@@ -209,6 +209,7 @@ section_1:
       helper: "Defines your planning maturity and readiness."
       options: ["None", "Ideas listed only", "1–2 documented use cases", "3–5 prioritized with owners", "6 or more with owners and timelines"]
       score_map: [0, 25, 50, 75, 100]
+      required: true
 
     - id: S2
       text: "How do you decide which AI opportunities to pursue first?"
@@ -218,6 +219,7 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
+      required: true
 
     - id: S3
       text: "How integrated are your AI performance metrics with corporate KPIs or OKRs?"
@@ -226,6 +228,7 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
+      required: true
 
     - id: S4
       text: "How do you estimate ROI for AI projects?"
@@ -235,6 +238,7 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
+      required: true
 
     - id: S5
       text: "What is your typical time from idea to measurable AI impact?"
@@ -244,11 +248,13 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
+      required: true
 
     - id: S6
       text: "How do you monitor competitor or industry AI developments?"
       type: single
       options: ["Not tracked", "Occasional ad hoc research", "Annual review", "Quarterly reporting", "Continuous dashboard or feed"]
+      required: true
 
     - id: S7
       text: "Rank your top four strategic objectives for AI initiatives"
@@ -256,12 +262,14 @@ section_1:
       options: ["Productivity", "Cost reduction", "Revenue growth", "Customer experience", "Innovation", "Regulatory compliance", "Investor positioning"]
       max_rank: 4
       weight: [40, 30, 20, 10]
+      required: true
 
     - id: S8
       text: "How aligned is your leadership team on AI strategy?"
       type: single
       options: ["No alignment", "Occasional discussions", "Executive interest without action", "Budget approved", "Active executive sponsorship"]
       score_map: [0, 25, 50, 75, 100]
+      required: true
 
     - id: S9
       text: "Which teams are involved in defining AI use cases?"
@@ -269,17 +277,20 @@ section_1:
       options: ["Executive leadership", "Product & marketing", "Operations", "Data & IT", "Legal & compliance", "HR", "Finance", "Customer support", "Other (please specify)"]
       score_per: 10
       cap: 100
+      required: true
     - id: S9_other
       text: "Team involved (other)"
       type: text
       show_if:
         S9: subset_of ["Other (please specify)"]
+      required: true
 
     - id: S10
       text: "How prepared is your organization to manage change from AI adoption?"
       type: single
       options: ["Not prepared", "Ad hoc readiness", "Formal process for some projects", "Organization-wide framework", "Continuous improvement culture"]
       score_map: [0, 25, 50, 75, 100]
+      required: true
 
     - id: S11
       text: "How clear are the goals and metrics for your AI use cases?"
@@ -289,6 +300,7 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
+      required: true
 
     - id: S12
       text: "What best describes your approach to piloting and deploying AI projects?"
@@ -297,6 +309,7 @@ section_1:
       score_map: [0, 25, 50, 75, 100]
       hide_if:
         P2: "Conservative – preferring pilot tests before scaling"
+      required: true
 
 section_2:
   purpose: "Budget, runway, investor support, compliance."
@@ -307,6 +320,7 @@ section_2:
       type: single
       options: ["< €100", "€100–500", "€500–2 000", "€2 000–15 000", "Over €15 000"]
       score_map: [0,25,50,75,100]
+      required: true
 
     - id: F3
       text: "How long can you fund your AI and data efforts without new investment or revenue?"
@@ -314,18 +328,21 @@ section_2:
       helper: "Indicates financial runway for AI projects."
       options: ["Less than 3 months", "3–6 months", "6–12 months", "12–24 months", "Over 24 months"]
       score_map: [0,25,50,75,100]
+      required: true
 
     - id: F4
       text: "How supportive are your board or investors of your AI initiatives?"
       type: single
       options: ["Not supportive", "Discussion only, no commitments", "Open to AI initiatives", "Budget approved", "Active championing"]
       score_map: [0,25,50,75,100]
+      required: true
 
     - id: F5
       text: "Which additional regulatory or security frameworks apply to your organization?"
       type: multi
       helper: "GDPR and EU AI Act apply by default."
       options: ["MiFID II / MDR – Finance & medical (EU)", "ISO 27001 – Information security", "PCI-DSS – Payment data security", "HIPAA – US health data", "CCPA – California privacy", "LGPD – Brazilian privacy", "POPIA – South African privacy", "None apply", "Other (please specify)"]
+      required: true
     - id: F5_other
       text: "Other regulatory or security framework (please specify)"
       type: text
@@ -366,6 +383,7 @@ section_3:
       type: multi
       helper: "Critical data drives operations, decisions, and compliance."
       options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)", "Other (please specify)"]
+      required: true
     - id: D1_other
       text: "Other data storage location (please specify)"
       type: text
