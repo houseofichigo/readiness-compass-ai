@@ -114,7 +114,6 @@ export function AssessmentFlow({
         M5_country: responses.M5_country || "",
         M6_size: responses.M6_size || "",
         M7_revenue: responses.M7_revenue || "",
-        M8_consent: responses.M8_consent || false
       };
       onComplete(allResponses, profile, detectedTrack);
     }
