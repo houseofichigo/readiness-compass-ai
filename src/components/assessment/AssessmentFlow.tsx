@@ -88,9 +88,6 @@ export function AssessmentFlow({
   const goNext = () => {
     if (isLastSection && hasAddOns) {
       setCurrentPage(assessmentSections.length); // Go to add-ons
-    } else if (currentPage === assessmentSections.length) {
-      // Completed add-ons, finish
-      completeAssessment();
     } else {
       setCurrentPage(i => Math.min(assessmentSections.length - 1, i + 1));
     }
@@ -98,7 +95,9 @@ export function AssessmentFlow({
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const completeAssessment = () => {
+  const completeAssessment = async () => {
+    console.log("🎉 Starting assessment completion...");
+    
     const profile: OrganizationProfile = {
       M0: responses.M0 as string || "",
       M4_industry: responses.M4_industry as string || "",
@@ -107,23 +106,34 @@ export function AssessmentFlow({
       track: detectedTrack || "GEN"
     };
     
-    // Save assessment data
-    onComplete(responses, profile);
-    
-    // Navigate to thank you page with data
-    navigate("/thank-you", {
-      state: {
-        profile: {
-          ...profile,
-          M1: responses.M1 as string,
-          M2: responses.M2 as string,
-          M5_country: responses.M5_country as string,
-        },
-        track: detectedTrack || "GEN",
-        responses,
-        submissionId: null
-      }
-    });
+    try {
+      // Save assessment data
+      console.log("💾 Saving assessment data...");
+      await onComplete(responses, profile);
+      
+      console.log("🚀 Navigating to thank you page...");
+      // Navigate to thank you page with data
+      navigate("/thank-you", {
+        state: {
+          profile: {
+            ...profile,
+            M1: responses.M1 as string,
+            M2: responses.M2 as string,
+            M5_country: responses.M5_country as string,
+          },
+          track: detectedTrack || "GEN",
+          responses,
+          submissionId: null
+        }
+      });
+    } catch (error) {
+      console.error("❌ Error completing assessment:", error);
+      toast({
+        title: "Error completing assessment",
+        description: "Please try again or contact support if the issue persists.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleAnswerChange = (questionId: string, value: AssessmentValue) => {
@@ -144,8 +154,20 @@ export function AssessmentFlow({
       const visibleQuestions = section.questions.filter(q =>
         isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
       );
-      const visibleIds = visibleQuestions.map(q => q.id);
-      return validateSection(visibleQuestions, responses, visibleIds).isValid;
+      
+      // Add consent banner to validation if it exists and is required
+      const questionsToValidate = [...visibleQuestions];
+      if (section.consentBanner?.required) {
+        questionsToValidate.push({
+          id: `consent_${section.id}`,
+          text: "Consent",
+          type: "checkbox",
+          required: true
+        } as any);
+      }
+      
+      const visibleIds = questionsToValidate.map(q => q.id);
+      return validateSection(questionsToValidate, responses, visibleIds).isValid;
     } else {
       // Add-ons page
       const visibleIds = visibleAddOns.map(q => q.id);
@@ -184,6 +206,34 @@ export function AssessmentFlow({
   };
 
   const handleNext = () => {
+    // Check if we're on the final step and should complete
+    if (isFinalStep) {
+      // Validate before completing
+      const currentQuestions = isAddOnPage
+        ? visibleAddOns
+        : currentSection!.questions.filter(q =>
+            isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
+          );
+      
+      const visibleIds = currentQuestions.map(q => q.id);
+      const validation = validateSection(currentQuestions, responses, visibleIds);
+      
+      if (!validation.isValid) {
+        scrollToFirstError();
+        toast({
+          title: "Please complete all required questions",
+          description: "Some questions still need to be answered before you can complete the assessment.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Complete the assessment
+      completeAssessment();
+      return;
+    }
+    
+    // For regular next steps, validate and proceed
     if (!canProceed()) {
       scrollToFirstError();
       toast({
