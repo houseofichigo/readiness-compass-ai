@@ -273,7 +273,7 @@ section_1:
       text: "Team involved (other)"
       type: text
       show_if:
-      S9: subset_of ["Other (please specify)"]
+        S9: subset_of ["Other (please specify)"]
 
     - id: S10
       text: "How prepared is your organization to manage change from AI adoption?"
@@ -772,7 +772,7 @@ section_5:
       text: "Other agent task (please specify)"
       type: text
       show_if:
-      A4: subset_of ["Other (please specify)"]
+        A4: subset_of ["Other (please specify)"]
       required: true
 
     - id: A5
@@ -801,7 +801,7 @@ section_5:
       text: "Other blocker (please specify)"
       type: text
       show_if:
-      A7: subset_of ["Other (please specify)"]
+        A7: subset_of ["Other (please specify)"]
       required: true
 
 
@@ -816,7 +816,7 @@ section_5:
       text: "Other interface (please specify)"
       type: text
       show_if:
-      A8: subset_of ["Other (please specify)"]
+        A8: subset_of ["Other (please specify)"]
       required: true
 
     - id: A9
@@ -882,7 +882,7 @@ section_6:
       text: "Other training topic (please specify)"
       type: text
       show_if:
-      C3a: subset_of ["Other"]
+        C3a: subset_of ["Other"]
       required: true
 
 
@@ -916,7 +916,7 @@ section_6:
       text: "Other barrier (please specify)"
       type: text
       show_if:
-      C8: subset_of ["Other (please specify)"]
+        C8: subset_of ["Other (please specify)"]
       required: true
 
     - id: C9
