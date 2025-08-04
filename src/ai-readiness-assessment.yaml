@@ -81,6 +81,12 @@ section_0:
         - "Risk Manager"
         - "Audit Lead"
         - "Governance Officer"
+        - "Other (please specify)"
+      required: true
+    - id: M3_other
+      text: "Primary role (other)"
+      type: text
+      show_if: { M3: "Other (please specify)" }
       required: true
 
     - id: M4_industry
@@ -92,327 +98,1037 @@ section_0:
         "Utilities (Electricity, Gas, Water & Waste)",
         "Construction",
         "Manufacturing",
-        "Wholesale & Retail Trade",
-        "Transportation & Storage",
-        "Accommodation & Food Services",
-        "Information & Communication",
-        "Financial & Insurance Activities",
-        "Real Estate Activities",
+        "Wholesale Trade",
+        "Retail Trade",
+        "Transportation & Warehousing",
+        "Information & Communication Technology",
+        "Finance & Insurance",
+        "Real Estate & Rental & Leasing",
         "Professional, Scientific & Technical Services",
-        "Administrative & Support Services",
-        "Public Administration & Defense",
-        "Education",
-        "Human Health & Social Work",
+        "Administrative & Support & Waste Management Services",
+        "Educational Services",
+        "Health Care & Social Assistance",
         "Arts, Entertainment & Recreation",
-        "Other Service Activities",
-        "Extraterritorial Organizations"
+        "Accommodation & Food Services",
+        "Public Administration",
+        "Non-profit & NGO",
+        "Other (please specify)"
       ]
+      required: true
+    - id: M4_sub
+      text: "Industry & sub-sector (other)"
+      type: text
+      show_if: { M4_industry: "Other (please specify)" }
       required: true
 
     - id: M5_country
-      text: "Country / region"
+      text: "Country"
       type: dropdown
-      options: ["United States", "Canada", "United Kingdom", "Germany", "France", "Netherlands", "Spain", "Italy", "Switzerland", "Australia", "Japan", "Singapore", "Brazil", "Mexico", "India", "China", "South Africa", "Other"]
+      options: [
+        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+        "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
+        "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
+        "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei Darussalam", "Bulgaria",
+        "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada",
+        "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros",
+        "Congo (Brazzaville)", "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Cyprus",
+        "Czech Republic", "Democratic Republic of the Congo", "Denmark", "Djibouti",
+        "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
+        "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
+        "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece",
+        "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras",
+        "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
+        "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
+        "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia",
+        "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi",
+        "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+        "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia",
+        "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal",
+        "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia",
+        "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay",
+        "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
+        "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
+        "Samoa", "San Marino", "São Tomé and Príncipe", "Saudi Arabia", "Senegal",
+        "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
+        "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka",
+        "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Thailand",
+        "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
+        "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
+        "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen",
+        "Zambia", "Zimbabwe"
+      ]
       required: true
 
     - id: M6_size
-      text: "Team size"
+      text: "Company size (FTE)"
       type: single
-      options: ["1-9 employees", "10-49 employees", "50-249 employees", "250-999 employees", "1000+ employees"]
+      options: ["1–9", "10–49", "50–249", "250–999", "≥ 1 000", "Prefer not to say"]
       required: true
 
-    - id: M7_age
-      text: "Organization age"
+    - id: M7_revenue
+      text: "Annual revenue"
       type: single
-      options: ["Less than 1 year", "1-2 years", "3-5 years", "6-10 years", "11-20 years", "More than 20 years"]
-      required: true
-
-    - id: M8_location
-      text: "Business location"
-      type: single
-      options: ["Fully remote", "Hybrid (remote + office)", "Fully in-office", "Multiple physical locations"]
+      options: ["< €250 k", "€250 k–1 M", "€1 M–€5 M", "€5 M–€20 M", "€20 M–€100 M", "> €100 M", "Prefer not to say"]
       required: true
 
   computed:
     - id: regulated
-      logic: "['Financial & Insurance Activities', 'Human Health & Social Work', 'Public Administration & Defense', 'Education', 'Utilities (Electricity, Gas, Water & Waste)']"
+      logic: |
+        regulated_industries = [
+          "Finance & Insurance",
+          "Health Care & Social Assistance",
+          "Utilities (Electricity, Gas, Water & Waste)",
+          "Transportation & Warehousing",
+          "Manufacturing",
+          "Information & Communication Technology",
+          "Professional, Scientific & Technical Services",
+          "Administrative & Support & Waste Management Services",
+          "Accommodation & Food Services"
+        ]
+        return M4_industry in regulated_industries
+
+    - id: track
+      logic: |
+        tech_roles = ["CIO / CTO", "IT Lead", "Data / AI Lead", "ML Engineer", "Data Engineer", "DevOps Engineer", "Security Architect", "Infrastructure Manager"]
+        reg_roles = ["Legal / Compliance Lead", "Privacy Officer", "Compliance Manager", "Risk Manager", "Audit Lead", "Governance Officer"]
+        if M3 in tech_roles:
+          return "TECH"
+        elif computed.regulated or M3 in reg_roles:
+          return "REG"
+        else:
+          return "GENERAL"
 
 section_1:
-  title: "Leadership & Strategy"
-  purpose: "Evaluate the organization's understanding, commitment, and strategic approach to AI implementation."
-
+  category: strategy
+  purpose: "Assess strategic alignment & planning maturity."
   questions:
 
     - id: S1
-      text: "Which best describes your organization's understanding of AI potential?"
+      text: "How many AI use cases have you identified for implementation within the next 12 months?"
       type: single
-      options: ["No understanding", "Basic understanding (AI as a tool)", "Good understanding (AI for competitive advantage)", "Advanced understanding (AI-driven business transformation)", "AI expert / practitioner"]
+      helper: "Defines your planning maturity and readiness."
+      options: ["None", "Ideas listed only", "1–2 documented use cases", "3–5 prioritized with owners", "6 or more with owners and timelines"]
+      score_map: [0, 25, 50, 75, 100]
       required: true
 
     - id: S2
-      text: "What are your organization's top 3 AI use-case priorities?"
-      type: rank
-      maxRank: 3
-      options: ["Customer service automation", "Sales & marketing optimization", "Business process automation", "Data analytics & insights", "Content generation & management", "Product recommendation systems", "Risk assessment & compliance", "Supply chain optimization", "Personalization & customer experience", "Fraud detection & security"]
+      text: "How do you decide which AI opportunities to pursue first?"
+      type: single
+      helper: "Select the process you currently use."
+      options: ["No formal process", "Ad hoc based on perceived value", "Impact × Effort matrix", "Impact × Effort + capacity weighting", "ROI-driven financial model", "Risk-adjusted prioritization"]
+      show_if:
+        S1:
+          not_in: ["None", "Ideas listed only"]
       required: true
 
     - id: S3
-      text: "Who are the AI champions in your organization?"
-      type: multi
-      helper: "Select all departments currently involved or interested in AI initiatives."
-      options: ["Executive leadership", "Product & marketing", "Operations", "Data & IT", "Legal & compliance", "HR", "Finance", "Customer support"]
+      text: "How integrated are your AI performance metrics with corporate KPIs or OKRs?"
+      type: single
+      options: ["No AI KPIs/OKRs defined", "KPIs drafted but not tracked", "KPIs tracked but not linked", "Partially aligned with departmental OKRs", "Fully embedded in executive OKRs"]
+      show_if:
+        S1:
+          not_in: ["None", "Ideas listed only"]
       required: true
 
     - id: S4
-      text: "What is your expected timeline for first AI implementation?"
+      text: "How do you estimate ROI for AI projects?"
       type: single
-      options: ["Already implemented", "Within 3 months", "3-6 months", "6-12 months", "1-2 years", "2+ years", "No timeline / not planned"]
+      helper: "Choose the method that matches your current practice."
+      options: ["Don’t estimate ROI", "Rough experience-based estimates", "Simple cost–benefit analysis", "Linked ROI to clear KPIs and goals", "Detailed financial or risk-adjusted models"]
+      show_if:
+        S1:
+          not_in: ["None", "Ideas listed only"]
       required: true
 
     - id: S5
-      text: "What is your planned AI investment range for the next 12 months?"
+      text: "What is your typical time from idea to measurable AI impact?"
       type: single
-      options: ["$0", "$1-5K", "$5-20K", "$20-50K", "$50-100K", "$100K+", "I don't know"]
+      options: ["Over 12 months", "6–12 months", "3–6 months", "1–3 months", "Under 30 days"]
+      score_map: [0, 25, 50, 75, 100]
+      show_if:
+        S1:
+          not_in: ["None", "Ideas listed only"]
       required: true
 
     - id: S6
-      text: "Which factors are most important for your AI vendor selection?"
+      text: "How do you monitor competitor or industry AI developments?"
+      type: single
+      options: ["Not tracked", "Occasional ad hoc research", "Annual review", "Quarterly reporting", "Continuous dashboard or feed"]
+      required: true
+
+    - id: S7
+      text: "Rank your top four strategic objectives for AI initiatives"
       type: rank
-      maxRank: 3
-      options: ["Cost & ROI", "Ease of implementation", "Data security & privacy", "Integration with existing tools", "Scalability & performance", "Vendor support & training", "Compliance & regulatory alignment", "Customization capabilities"]
+      options: ["Productivity", "Cost reduction", "Revenue growth", "Customer experience", "Innovation", "Regulatory compliance", "Investor positioning"]
+      max_rank: 4
+      weight: [40, 30, 20, 10]
+      required: true
+
+    - id: S8
+      text: "How aligned is your leadership team on AI strategy?"
+      type: single
+      options: ["No alignment", "Occasional discussions", "Executive interest without action", "Budget approved", "Active executive sponsorship"]
+      score_map: [0, 25, 50, 75, 100]
+      required: true
+
+    - id: S9
+      text: "Which teams are involved in defining AI use cases?"
+      type: multi
+      options: ["Executive leadership", "Product & marketing", "Operations", "Data & IT", "Legal & compliance", "HR", "Finance", "Customer support", "Other (please specify)"]
+      score_per: 10
+      cap: 100
+      required: true
+    - id: S9_other
+      text: "Team involved (other)"
+      type: text
+      show_if:
+        S9: subset_of ["Other (please specify)"]
+      required: true
+
+    - id: S10
+      text: "How prepared is your organization to manage change from AI adoption?"
+      type: single
+      options: ["Not prepared", "Ad hoc readiness", "Formal process for some projects", "Organization-wide framework", "Continuous improvement culture"]
+      score_map: [0, 25, 50, 75, 100]
+      required: true
+
+    - id: S11
+      text: "How clear are the goals and metrics for your AI use cases?"
+      type: single
+      options: ["No clear goals", "Goals defined with no metrics", "Some metrics tracked", "Most goals with metrics", "All goals have metrics and thresholds"]
+      score_map: [0, 25, 50, 75, 100]
+      show_if:
+        S1:
+          not_in: ["None", "Ideas listed only"]
+      required: true
+
+    - id: S12
+      text: "What best describes your approach to piloting and deploying AI projects?"
+      type: single
+      options: ["POC only with strict compliance checks", "Small pilots with controlled access", "Case-by-case security review for deployments", "Agile testing with integrated oversight", "Fast iterations with production readiness and risk management"]
+      score_map: [0, 25, 50, 75, 100]
+      hide_if:
+        P2: "Conservative – preferring pilot tests before scaling"
       required: true
 
 section_2:
-  title: "Data Foundation"
-  purpose: "Assess your organization's data readiness, quality, and management capabilities for AI applications."
+  purpose: "Budget, runway, investor support, compliance."
+  questions:
 
+    - id: F1
+      text: "What is your current monthly budget for AI and data initiatives?"
+      type: single
+      options: ["< €100", "€100–500", "€500–2 000", "€2 000–15 000", "Over €15 000"]
+      score_map: [0,25,50,75,100]
+      required: true
+
+    - id: F3
+      text: "How long can you fund your AI and data efforts without new investment or revenue?"
+      type: single
+      helper: "Indicates financial runway for AI projects."
+      options: ["Less than 3 months", "3–6 months", "6–12 months", "12–24 months", "Over 24 months"]
+      score_map: [0,25,50,75,100]
+      required: true
+
+    - id: F4
+      text: "How supportive are your board or investors of your AI initiatives?"
+      type: single
+      options: ["Not supportive", "Discussion only, no commitments", "Open to AI initiatives", "Budget approved", "Active championing"]
+      score_map: [0,25,50,75,100]
+      required: true
+
+    - id: F5
+      text: "Which additional regulatory or security frameworks apply to your organization?"
+      type: multi
+      helper: "GDPR and EU AI Act apply by default."
+      options: ["MiFID II / MDR – Finance & medical (EU)", "ISO 27001 – Information security", "PCI-DSS – Payment data security", "HIPAA – US health data", "CCPA – California privacy", "LGPD – Brazilian privacy", "POPIA – South African privacy", "None apply", "Other (please specify)"]
+      required: true
+    - id: F5_other
+      text: "Other regulatory or security framework (please specify)"
+      type: text
+      show_if:
+        F5: subset_of ["Other (please specify)"]
+      required: true
+
+
+    - id: F6
+      text: "What level of strategic partnerships do you have for AI?"
+      type: single
+      helper: "Choose the option that best describes your existing AI partnership activity."
+      options: ["None", "Exploratory discussions", "One active partnership", "Multiple partnerships", "Ecosystem collaboration (R&D + vendors)"]
+      score_map: [0,25,50,75,100]
+      show_if:
+        any_of:
+          - { track: "TECH" }
+          - { track: "REG" }
+          - { M6_size: ["10–49", "50–249", "250–999", "≥ 1 000"] }
+
+    - id: F7
+      text: "What percentage of your AI budget is allocated to ethics and bias mitigation?"
+      type: single
+      options: ["None", "Planned next fiscal year", "Under 5 %", "5–15 %", "Over 15 %"]
+      score_map: [0,25,50,75,100]
+      show_if:
+        any_of:
+          - { track: "REG" }
+          - { F5: { not: ["None apply"] } }
+
+section_3:
+  category: data
+  purpose: "Data foundation, security, ethics, compliance."
   questions:
 
     - id: D1
-      text: "Where is your organization's data primarily stored?"
+      text: "Where is your most critical data primarily stored?"
       type: multi
-      helper: "Select all that apply to your current data storage approach."
-      options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)"]
+      helper: "Critical data drives operations, decisions, and compliance."
+      options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)", "Other (please specify)"]
       required: true
+    - id: D1_other
+      text: "Other data storage location (please specify)"
+      type: text
+      show_if:
+        D1: subset_of ["Other (please specify)"]
+      required: true
+
 
     - id: D2
-      text: "How would you rate your organization's data quality?"
+      text: "How much data does your organization generate or collect each month?"
       type: single
-      options: ["Excellent (clean, accurate, complete)", "Good (mostly clean with minor issues)", "Fair (some quality issues)", "Poor (significant quality problems)", "Very poor (major data quality issues)", "I don't know"]
-      required: true
+      options: ["Don’t know", "< 1 GB", "1–10 GB", "10–100 GB", "> 100 GB"]
+      hide_if:
+        total_questions: ">60"
 
     - id: D3
-      text: "Does your organization have a data governance framework?"
+      text: "How mature is your data management (structure, tools, and lineage)?"
       type: single
-      options: ["Yes, comprehensive framework", "Yes, basic framework", "In development", "Planned", "No framework", "I don't know"]
-      required: true
+      show_if:
+        track: [TECH, REG]
+      hide_if:
+        all_of:
+          - { M6_size: "1–9" }
+          - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
+      options: ["No standards or visibility", "Basic naming conventions & partial docs", "Defined standards with manual processes", "Schema tools & automated tracking for key systems", "Version-controlled models with full lineage & governance"]
 
     - id: D4
-      text: "How accessible is your data for analysis and AI purposes?"
+      text: "How confident are you in the accuracy and freshness of your critical data?"
       type: single
-      options: ["Highly accessible (real-time APIs, automated pipelines)", "Moderately accessible (regular exports, some automation)", "Limited accessibility (manual processes, periodic exports)", "Poor accessibility (difficult to extract, manual only)", "Not accessible (data silos, no standardized access)", "I don't know"]
-      required: true
+      show_if:
+        track: [TECH, REG]
+      hide_if:
+        all_of:
+          - { M6_size: "1–9" }
+          - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
+      options: ["Low – data often outdated or unreliable", "Medium – manual checks for accuracy", "High – periodic data quality tests", "Very high – automated alerts for data issues", "Excellent – real-time monitoring & validation"]
 
     - id: D5
-      text: "Which data security controls does your organization currently have?"
+      text: "Which security controls protect your data infrastructure?"
       type: multi
-      helper: "Select all security measures currently implemented for your data."
-      options: ["Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don't know"]
+      helper: "Security controls are measures that keep your data safe—encrypting it, controlling access, and monitoring usage."
+      score_per: 15
+      cap: 100
+      options: ["Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don’t know", "Other (please specify)"]
+    - id: D5_other
+      text: "Other security control (please specify)"
+      type: text
+      show_if:
+        D5: subset_of ["Other (please specify)"]
       required: true
 
-section_3:
-  title: "Technology & Infrastructure"
-  purpose: "Evaluate your current technology stack and its readiness to support AI implementations."
-
-  questions:
-
-    - id: T1
-      text: "What is your organization's primary cloud infrastructure approach?"
+    - id: D6
+      text: "How is data stewardship and cleaning managed?"
       type: single
-      options: ["Fully cloud-based (AWS, Azure, GCP)", "Hybrid (cloud + on-premise)", "Primarily on-premise with some cloud", "Fully on-premise", "No dedicated infrastructure", "I don't know"]
-      required: true
+      options: ["No owner", "Occasional clean-ups", "Assigned owner with periodic review", "Dedicated steward with monthly routines", "Continuous stewardship and monitoring"]
 
-    - id: T2
-      text: "How would you rate your organization's technical expertise?"
+    - id: D7
+      text: "How prepared are you for GDPR or EU AI Act audits?"
       type: single
-      options: ["High (dedicated technical team, advanced capabilities)", "Medium (some technical staff, basic to intermediate capabilities)", "Low (limited technical staff, basic capabilities)", "Very low (no dedicated technical staff)", "Outsourced (rely on external providers)", "I don't know"]
-      required: true
+      helper: "All companies can face audits—regulators, investors, or internal risk teams may review your controls.Indicate your readiness level for upcoming compliance or security audits."
+      options: ["None – no audit readiness", "Basic logs only", "Audit trail for critical systems", "Explainability logs + scripts", "Automated compliance checks", "I don’t know"]
 
-    - id: T3
-      text: "What is your organization's approach to software integration?"
+    - id: D8
+      text: "How mature is your data labeling and annotation process?"
       type: single
-      options: ["Advanced (APIs, automated workflows, custom integrations)", "Intermediate (some APIs, basic integrations)", "Basic (manual processes, minimal integration)", "Limited (mostly standalone tools)", "Ad-hoc (no standardized approach)", "I don't know"]
-      required: true
+      show_if:
+        track: [TECH, REG]
+      options: ["None", "Ad-hoc manual labeling", "Defined guidelines", "Standard taxonomy across datasets", "Automated labeling & ontology management"]
 
-    - id: T4
-      text: "Does your organization have experience with machine learning or AI tools?"
+    - id: D9
+      text: "Do you use synthetic or third-party data to augment your datasets?"
       type: single
-      options: ["Extensive experience (custom ML models, AI infrastructure)", "Some experience (basic ML tools, AI experimentation)", "Limited experience (simple AI tools, pilot projects)", "No experience (considering first AI implementation)", "I don't know"]
-      required: true
+      show_if:
+        track: "TECH"
+      options: ["No", "Exploring options", "Limited pilots", "Regular production use", "Extensive synthetic data pipelines"]
+
+    - id: D10
+      text: "How developed are your AI ethics and data privacy policies?"
+      type: single
+      helper:  "Select the maturity stage of your policies and enforcement(e.g. ‘Policies + training & oversight’ means you’ve documented guidelines and run staff workshops)."
+      options: ["No formal policies", "High-level principles only (no detailed guidance)", "Documented guidelines (but no training or oversight)", "Guidelines + training & oversight (staff workshops, reviews)", "Audited & continuously improved (regular audits + updates)"]
 
 section_4:
-  title: "Process Automation"
-  purpose: "Assess your organization's current automation maturity and potential for AI-driven process improvements."
+  category: tools
+  purpose: "Tool stack & integration maturity (to power workflow and AI agent recommendations)."
+  questions:
 
+    - id: T0_tools
+      text: "Which tools are actively used by you and your team?"
+      type: multi_group
+      helper: "Select all tools your team uses—this drives tailored workflow and AI agent suggestions."
+      score_by_count:
+        "1": 0
+        "2-3": 25
+        "4-6": 50
+        "7-9": 75
+        ">=10": 100
+      groups:
+
+        # Tech Track – Performance Monitoring
+        - label: "Performance Monitoring"
+          show_if: { track: "TECH" }
+          options: [
+            "New Relic", "Datadog", "Dynatrace", "AppDynamics",
+            "Elastic APM", "Sentry", "Splunk APM", "Pingdom",
+            "Bubble", "Mistral", "Other performance monitoring tool (please specify)"
+          ]
+
+        # Tech Track – Infrastructure & Network Monitoring
+        - label: "Infrastructure & Network Monitoring"
+          show_if: { track: "TECH" }
+          options: [
+            "Zabbix", "Nagios", "PRTG", "SolarWinds",
+            "Site24x7", "ManageEngine", "Grafana", "Prometheus",
+            "Checkmk", "Other infrastructure monitoring tool (please specify)"
+          ]
+
+        # Tech Track – Cloud & DevOps Monitoring
+        - label: "Cloud & DevOps Monitoring"
+          show_if: { track: "TECH" }
+          options: [
+            "AWS CloudWatch", "Azure Monitor", "Google Cloud Operations",
+            "LogicMonitor", "Sumo Logic", "PagerDuty", "StatusPage",
+            "Other cloud monitoring tool (please specify)"
+          ]
+
+        # Tech Track – Web Analytics & User Experience
+        - label: "Web Analytics & User Experience"
+          show_if: { track: "TECH" }
+          options: [
+            "Google Analytics", "Adobe Analytics", "Hotjar", "Mixpanel",
+            "Amplitude", "Tealium", "Webflow", "Matomo", "Plausible",
+            "Other web analytics tool (please specify)"
+          ]
+
+        # Tech Track – Data Management & ETL
+        - label: "Data Management & ETL"
+          show_if: { track: "TECH" }
+          options: [
+            "Snowflake", "Databricks", "Fivetran", "Stitch",
+            "Talend", "Apache Airflow", "Other data management tool (please specify)"
+          ]
+
+        # Tech Track – API Integration & Workflow Automation
+        - label: "API Integration & Workflow Automation"
+          show_if: { track: "TECH" }
+          options: [
+            "Zapier", "Power Automate", "MuleSoft", "Make",
+            "n8n", "Workato", "Tray.io", "Other automation tool (please specify)"
+          ]
+
+        # General Track – Email Marketing & Communication
+        - label: "Email Marketing & Communication"
+          show_if: { track: "GEN" }
+          options: [
+            "Mailchimp", "Constant Contact", "SendGrid",
+            "Campaign Monitor", "ConvertKit", "ActiveCampaign",
+            "GetResponse", "Cordial", "Brevo (Sendinblue)",
+            "AWeber", "Other email marketing tool (please specify)"
+          ]
+
+        # General Track – Customer Relations & Sales Management
+        - label: "Customer Relations & Sales Management"
+          show_if: { track: "GEN" }
+          options: [
+            "Salesforce", "HubSpot", "Pipedrive", "Zoho CRM",
+            "Freshsales", "Monday.com", "Close.io", "Zendesk",
+            "Intercom", "Other CRM tool (please specify)"
+          ]
+
+        # General Track – E-commerce & Payment Processing
+        - label: "E-commerce & Payment Processing"
+          show_if: { track: "GEN" }
+          options: [
+            "Shopify", "WooCommerce", "Stripe", "PayPal",
+            "BigCommerce", "Magento", "Square",
+            "Other e-commerce tool (please specify)"
+          ]
+
+        # General Track – Digital Advertising & Marketing
+        - label: "Digital Advertising & Marketing"
+          show_if: { track: "GEN" }
+          options: [
+            "Google Ads", "Facebook Ads", "LinkedIn Ads",
+            "Microsoft Advertising", "Twitter Ads",
+            "Pinterest Ads", "TikTok Ads", "Other advertising tool (please specify)"
+          ]
+
+        # General Track – Business Intelligence & Analytics
+        - label: "Business Intelligence & Analytics"
+          show_if: { track: "GEN" }
+          options: [
+            "Tableau", "Power BI", "Looker", "Qlik Sense",
+            "Sisense", "Domo", "SurveyMonkey",
+            "Other BI tool (please specify)"
+          ]
+
+        # General Track – Project Management & Productivity
+        - label: "Project Management & Productivity"
+          show_if: { track: "GEN" }
+          options: [
+            "Asana", "Trello", "Jira", "Slack",
+            "Microsoft Teams", "Notion", "ClickUp",
+            "Other productivity tool (please specify)"
+          ]
+
+        # General Track – Financial Management & Accounting
+        - label: "Financial Management & Accounting"
+          show_if: { track: "GEN" }
+          options: [
+            "QuickBooks", "Xero", "FreshBooks", "Sage",
+            "Wave", "Odoo", "Henrri.net",
+            "Other financial tool (please specify)"
+          ]
+
+        # General Track – Business Process Management
+        - label: "Business Process Management"
+          show_if: { track: "GEN" }
+          options: [
+            "Kissflow", "Nintex", "Pipefy", "ProcessMaker",
+            "Appian", "Pegasystems", "Other workflow tool (please specify)"
+          ]
+
+        # Reg Track – Data Privacy & GDPR Compliance
+        - label: "Data Privacy & GDPR Compliance"
+          show_if: { track: "REG" }
+          options: [
+            "OneTrust", "TrustArc", "CookieYes",
+            "Usercentrics", "Didomi", "Cookiebot",
+            "DataGrail", "Other privacy tool (please specify)"
+          ]
+
+        # Reg Track – Security & Risk Management
+        - label: "Security & Risk Management"
+          show_if: { track: "REG" }
+          options: [
+            "Qualys", "Rapid7", "Tenable", "CrowdStrike",
+            "SentinelOne", "Splunk", "Other security tool (please specify)"
+          ]
+
+        # Reg Track – Audit & Governance
+        - label: "Audit & Governance"
+          show_if: { track: "REG" }
+          options: [
+            "AuditBoard", "MetricStream", "ServiceNow GRC",
+            "RSA Archer", "LogicGate", "Resolver",
+            "Other GRC tool (please specify)"
+          ]
+
+        # Reg Track – Industry-Specific Compliance
+        - label: "Industry-Specific Compliance"
+          show_if: { track: "REG" }
+          options: [
+            "Fenergo", "RegEd", "Thomson Reuters",
+            "Other regulatory tool (please specify)"
+          ]
+
+        # Reg Track – Document & Records Management
+        - label: "Document & Records Management"
+          show_if: { track: "REG" }
+          options: [
+            "SharePoint", "DocuSign", "Box",
+            "Dropbox Business", "M-Files", "FileHold",
+            "Other document management tool (please specify)"
+          ]
+
+    - id: T0_other
+      text: "Other tool (please specify)"
+      type: text
+      show_if:
+        T0_tools: subset_of ["Other performance monitoring tool (please specify)", "Other infrastructure monitoring tool (please specify)", "Other cloud monitoring tool (please specify)", "Other web analytics tool (please specify)", "Other data management tool (please specify)", "Other automation tool (please specify)", "Other email marketing tool (please specify)", "Other CRM tool (please specify)", "Other e-commerce tool (please specify)", "Other advertising tool (please specify)", "Other BI tool (please specify)", "Other productivity tool (please specify)", "Other financial tool (please specify)", "Other workflow tool (please specify)", "Other privacy tool (please specify)", "Other security tool (please specify)", "Other GRC tool (please specify)", "Other regulatory tool (please specify)", "Other document management tool (please specify)"]
+
+    - id: T1
+      text: "How well are your tools and systems connected?"
+      type: single
+      options: [
+        "Siloed – no connections",
+        "Manual – CSV imports/exports",
+        "Batch – scheduled syncs",
+        "API – platform integrations",
+        "Real-time – event-driven mesh"
+      ]
+
+    - id: T2
+      text: "How often do data connections fail or cause issues?"
+      type: single
+      options: [
+        "Weekly – frequent failures",
+        "Monthly – occasional errors",
+        "Quarterly – rare problems",
+        "Almost never – very stable",
+        "Never – fully reliable"
+      ]
+
+    - id: T3
+      text: "Who owns and maintains your system integrations?"
+      type: single
+      options: [
+        "No clear owner",
+        "External agency/freelancer",
+        "Ops/Product team",
+        "Internal tech team",
+        "Dedicated integration team"
+      ]
+
+    - id: T4
+      text: "How well are you connected to external AI services and LLMs?"
+      type: single
+      helper: "Indicates which large-language models (LLMs) you’re allowed to use and any internal models you access.Examples: OpenAI (ChatGPT), Anthropic Claude, Mistral, GitHub Copilot, or your own on-premise LLM."
+      options: ["Not allowed to use any external LLMs", "Exploratory tests only (e.g., trying ChatGPT, Claude, Mistral in sandbox)", "Pilot deployments (small projects using APIs)", "One API in production (e.g., ChatGPT or Copilot embedded in a workflow)", "Multiple APIs in production + internal LLM access"]
+
+    - id: T5
+      text: "What access do you have to GPU/TPU compute?"
+      type: single
+      show_if: { track: [TECH, REG] }
+      options: [
+        "None",
+        "Colab only",
+        "On-demand cloud GPUs/TPUs",
+        "Dedicated GPU/TPU budget",
+        "Managed AI compute cluster"
+      ]
+
+    - id: T6
+      text: "How well is your technical or data architecture documented?"
+      type: single
+      show_if: { track: [TECH, REG] }
+      options: [
+        "None",
+        "High-level sketches",
+        "Critical systems mapped",
+        "Full architecture diagrams",
+        "Auto-generated & maintained docs"
+      ]
+
+    - id: T7
+      text: "What level of disaster recovery planning exists for data & AI?"
+      type: single
+      show_if: { track: [TECH, REG] }
+      options: [
+        "No plan",
+        "Backups only",
+        "Manual failover",
+        "Automated failover",
+        "AI-aware recovery playbook"
+      ]
+
+    - id: T8
+      text: "Which low-code or no-code platforms do you use for automation?"
+      type: multi
+      helper: "Select all platforms you actively use; choose None if you don't use any."
+      options: ["None – no low-code/no-code tools", "Zapier – connect apps with workflows", "Make – multi-step automation builder", "n8n – self-hosted workflow automation", "Power Automate – Microsoft flow automation", "UiPath – RPA for desktop & web", "Workato – enterprise integration platform", "Airbyte – ELT data pipelines", "Fivetran – automated data connectors", "dbt – analytics engineering", "Other (please specify)"]
+      score_per: 10
+      cap: 100
+    - id: T8_other
+      text: "Other low-code/no-code platform (please specify)"
+      type: text
+      show_if:
+        T8: subset_of ["Other (please specify)"]
+      required: true
+
+
+section_5:
+  category: automation
+  purpose: "Automation maturity & AI agent governance."
   questions:
 
     - id: A1
-      text: "What percentage of your business processes are currently automated?"
-      type: single
-      options: ["0-10% (mostly manual)", "11-25% (some basic automation)", "26-50% (moderate automation)", "51-75% (high automation)", "76-90% (very high automation)", "90%+ (almost fully automated)", "I don't know"]
+      text: "Which three tasks would most benefit from automation in your organization?"
+      type: rank
+      helper: "Rank your top priorities for automation."
+      options: ["Reporting", "Scheduling", "Data entry", "FAQ handling", "Ticket triage", "Contract generation", "Inventory management", "Compliance checks", "Other (please specify)"]
+      max_rank: 3
+      weight: [40,30,20]
+    - id: A1_other
+      text: "Other automation task (please specify)"
+      type: text
+      show_if:
+        A1: subset_of ["Other (please specify)"]
       required: true
+
 
     - id: A2
-      text: "Which business areas have the most automation potential?"
-      type: rank
-      maxRank: 3
-      options: ["Customer service & support", "Sales & marketing", "Finance & accounting", "HR & recruitment", "Operations & logistics", "Data analysis & reporting", "Content creation & management", "Quality assurance & testing"]
-      required: true
+      text: "How mature are your current automation efforts?"
+      type: single
+      helper: "Choose the description that best fits how automated your processes are, from no automation to fully autonomous."
+      options: ["None – no automation", "1 – ad-hoc scripts only", "2 – basic tools with manual oversight", "3 – integrated workflows across functions", "4 – continuous automation with monitoring", "5 – fully autonomous processes"]
+      score_map: [0,25,50,75,100]
 
     - id: A3
-      text: "What types of automation tools does your organization currently use?"
-      type: multi
-      helper: "Select all automation tools or approaches currently implemented."
-      options: ["Workflow automation (e.g. Zapier, Microsoft Power Automate)", "Robotic Process Automation (RPA) (e.g. UiPath, Blue Prism)", "Email marketing automation (e.g. Mailchimp, HubSpot)", "Customer service chatbots", "Document management automation", "Financial process automation", "HR process automation", "Social media automation", "No automation tools", "I don't know"]
-      required: true
+      text: "What is the current status of AI agents in your operations?"
+      type: single
+      helper: "Helps us recommend the right agent training modules."
+      options: ["None implemented – no AI agents", "Prototype built – early proof of concept", "One agent in production – single live agent", "Multiple agents live – several agents running", "Organization-wide deployment – agents across teams"]
 
     - id: A4
-      text: "What are the main barriers to automation in your organization?"
+      text: "Which tasks are you considering for AI-agent automation?"
       type: multi
-      helper: "Select the primary challenges preventing or limiting automation adoption."
-      options: ["Lack of technical expertise", "Budget constraints", "Resistance to change", "Complex existing processes", "Data quality issues", "Integration challenges", "Security concerns", "Regulatory compliance requirements", "No clear use cases identified", "Management buy-in"]
+      helper: "Select all that apply to identify your first agent use cases."
+      options: ["Customer support – automated responses", "Report generation – auto-create summaries", "Email drafting – compose routine emails", "Lead scoring – prioritize prospects", "Meeting summaries – automated notes", "Market research – gather insights", "Quality control – flag issues", "Other (please specify)"]
+      score_per: 10
+      cap: 100
+    - id: A4_other
+      text: "Other agent task (please specify)"
+      type: text
+      show_if:
+        A4: subset_of ["Other (please specify)"]
       required: true
 
     - id: A5
-      text: "How does your organization typically approach process improvement?"
+      text: "What level of autonomy do you want for your AI agents?"
       type: single
-      options: ["Systematic, data-driven approach", "Regular process reviews and optimization", "Ad-hoc improvements as needed", "Reactive improvements when problems arise", "No formal process improvement approach", "I don't know"]
+      helper: "Define how independent your agents should be."
+      options: ["Suggest only", "Require human approval", "Semi-automated", "Fully automated"]
+      hide_if:
+        all_of:
+          - { A3: "None implemented" }
+          - { P2: "Conservative – preferring pilot tests before scaling" }
+
+    - id: A6
+      text: "How do you monitor and alert on your automated processes?"
+      type: single
+      helper: "Ensures reliability and rapid issue resolution."
+      options: ["No monitoring", "Manual checks", "KPI dashboards", "Automated alerts", "Full observability & logging"]
+
+    - id: A7
+      text: "What are the main blockers to automating tasks and deploying AI agents?"
+      type: multi
+      helper: "Select all that apply."
+      options: ["Data silos", "Lack of technical resources", "Insufficient buy-in", "Compliance concerns", "Unclear ROI", "Budget constraints", "Integration complexity", "Other (please specify)"]
+      score_formula: "100 - 10 * count"
+    - id: A7_other
+      text: "Other blocker (please specify)"
+      type: text
+      show_if:
+        A7: subset_of ["Other (please specify)"]
       required: true
 
-section_5:
-  title: "People & Culture"
-  purpose: "Evaluate your organization's readiness for AI adoption from a human resources and cultural perspective."
 
-  questions:
-
-    - id: P1
-      text: "How would you describe your organization's attitude toward new technology?"
-      type: single
-      options: ["Very progressive (early adopter, innovation-focused)", "Progressive (open to new technology, cautious adoption)", "Moderate (balanced approach, proven technology)", "Conservative (slow to adopt, prefer established solutions)", "Very conservative (resistance to change, traditional methods)", "I don't know"]
+    - id: A8
+      text: "Which interface do you prefer for interacting with AI agents?"
+      type: multi
+      helper: "Helps tailor agent UI recommendations."
+      options: ["Chatbot (Slack/Teams)", "Embedded widget", "Dashboard", "Email assistant", "API/CLI", "Voice assistant", "Need guidance", "Other (please specify)"]
+      score_per: 10
+      cap: 100
+    - id: A8_other
+      text: "Other interface (please specify)"
+      type: text
+      show_if:
+        A8: subset_of ["Other (please specify)"]
       required: true
 
-    - id: P2
-      text: "What is your organization's approach to employee training and development?"
+    - id: A9
+      text: "What governance processes do you have for AI agents?"
       type: single
-      options: ["Comprehensive (regular training, skill development programs)", "Good (periodic training, some development opportunities)", "Basic (minimal training, limited development)", "Ad-hoc (training only when necessary)", "None (no formal training programs)", "I don't know"]
-      required: true
+      helper: "Ensures safe, compliant agent operations."
+      options: ["None", "Ad-hoc spot checks", "Formal review process", "Logging with oversight", "Continuous auditing"]
+      hide_if:
+        A3: "None implemented"
 
-    - id: P3
-      text: "How comfortable are your employees with learning new technologies?"
+    - id: A10
+      text: "What recovery or rollback strategy exists for failed automations or AI agents?"
       type: single
-      options: ["Very comfortable (enthusiastic, quick learners)", "Comfortable (willing learners, some guidance needed)", "Moderately comfortable (hesitant but willing)", "Uncomfortable (resistant, need significant support)", "Very uncomfortable (strong resistance to change)", "Mixed (varies significantly by individual)", "I don't know"]
-      required: true
+      helper: "Defines resilience and business continuity."
+      options: ["No plan", "Manual rollback steps", "Pre-defined failover procedures", "Automated rollback", "Self-healing loops"]
+      hide_if:
+        A3: "None implemented"
 
-    - id: P4
-      text: "Does your organization have dedicated roles for digital transformation?"
+    - id: A11
+      text: "How do you track the accuracy and quality of AI agent outputs?"
       type: single
-      options: ["Yes, dedicated team/department", "Yes, designated individuals", "Partial (shared responsibilities)", "Planned (roles being created)", "No (no dedicated roles)", "I don't know"]
-      required: true
-
-    - id: P5
-      text: "How does your organization typically manage change?"
-      type: single
-      options: ["Structured change management process", "Informal but effective approach", "Ad-hoc change management", "Reactive change management", "No formal change management", "I don't know"]
-      required: true
+      helper: "Drives training on output validation and testing."
+      options: ["No tracking", "Manual spot checks", "Release testing", "Ongoing tests + spot checks", "Continuous accuracy monitoring"]
+      hide_if:
+        A3: "None implemented"
 
 section_6:
-  title: "Governance & Compliance"
-  purpose: "Assess your organization's governance framework and compliance readiness for AI implementation."
+  category: people
+  purpose: "Team capability & learning culture (to drive targeted training recommendations)."
+  questions:
 
+    # 1. Self-assessment: AI tool usage
+    - id: C1
+      text: "How often do you and your team use AI tools in your daily work?"
+      type: single
+      options: ["Never", "Rarely", "Monthly", "Weekly", "Daily"]
+      score_map: [0, 25, 50, 75, 100]
+
+    # 2. Self-assessment: Prompt-writing skills
+    - id: C2
+      text: "How confident are you and your team at these prompt-writing skills?"
+      type: matrix
+      rows:
+        - "Writing basic prompts"
+        - "Using few-shot examples"
+        - "Formatting structured prompts"
+        - "Designing multi-step prompt chains"
+      columns: ["No confidence", "Some confidence", "Confident", "Very confident"]
+
+    # 3. Knowledge sharing and priority topics
+    - id: C3
+      text: "How do you and your team share AI learnings internally?"
+      type: single
+      options: ["None – no sharing", "Informal tips & tricks", "Dedicated chat channel", "Regular workshops", "Active Community of Practice"]
+
+    - id: C3a
+      text: "Which AI training topics should you and your team prioritize? (Rank top 3)"
+      type: rank
+      options: ["Prompt engineering", "AI tool mastery", "Data literacy", "Model fine-tuning", "Retrieval-augmented generation", "Agent orchestration", "Ethics & governance", "Other"]
+      max_rank: 3
+      weight: [50, 30, 20]
+    - id: C3a_other
+      text: "Other training topic (please specify)"
+      type: text
+      show_if:
+        C3a: subset_of ["Other"]
+      required: true
+
+
+    # 4. Logistics: Budget & time
+    - id: C4
+      text: "What annual budget do you and your team allocate per person for AI upskilling?"
+      type: single
+      options: ["0 €", "< 200 €", "200–500 €", "500–1 000 €", "> 1 000 €"]
+
+    - id: C5
+      text: "How many hours per month can you and your team dedicate to AI training?"
+      type: single
+      options: ["None", "< 1 hr", "1–3 hrs", "3–5 hrs", "> 5 hrs"]
+
+    - id: C6
+      text: "What format do you and your team prefer for AI training delivery?"
+      type: single
+      options: ["Text guides", "Short videos", "Live workshops", "Self-paced courses", "Mixed formats"]
+
+    # 5. Culture & support
+    - id: C7
+      text: "How often do you and your team engage external AI experts?"
+      type: single
+      options: ["None – no external support", "Occasional advice", "Regular advisory sessions", "Access to expert network", "Dedicated AI advisory board"]
+
+    - id: C8
+      text: "What stops you and your team from piloting more AI projects?"
+      type: multi
+      options: ["Budget constraints", "Lack of skills", "Data silos", "Compliance concerns", "Unclear ROI", "Tech complexity", "Other (please specify)"]
+    - id: C8_other
+      text: "Other barrier (please specify)"
+      type: text
+      show_if:
+        C8: subset_of ["Other (please specify)"]
+      required: true
+
+    - id: C9
+      text: "How open are you and your team to piloting new AI projects?"
+      type: single
+      options: ["Resistant", "Cautious", "Interested", "Proactive", "Active pilots"]
+
+    # 6. Collaboration & safety
+    - id: C10
+      text: "How frequently do you and your team collaborate across functions on AI initiatives?"
+      type: single
+      options: ["Never", "Occasionally", "Quarterly", "In squads", "Embedded practice"]
+
+    - id: C11
+      text: "How safe do you and your team feel to experiment and fail with AI?"
+      type: single
+      helper: "Everyone makes small mistakes (e.g. minor bugs, wrong outputs)—how safe do you feel experimenting and learning with AI?"
+      options: ["No safety – fear of repercussions", "Low safety – rarely comfortable", "Moderate safety – sometimes comfortable", "High safety – often comfortable", "Full safety – always encouraged"]
+
+
+
+section_7:
+  category: governance
+  purpose: "Governance, risk & ethics (to drive targeted policy, oversight, and training recommendations)."
   questions:
 
     - id: G1
-      text: "Does your organization have an AI ethics policy or guidelines?"
+      text: "How mature are your processes for identifying and mitigating AI risks and biases?"
       type: single
-      options: ["Yes, comprehensive policy", "Yes, basic guidelines", "In development", "Planned", "No policy", "Not applicable", "I don't know"]
-      required: true
+      options: ["None – no risk or bias management", "Reactive fixes – ad-hoc corrections after issues", "Pre-release checks – bias tests before deployments", "Formal framework – defined policies and workflows", "AI Act–compliant – meets EU AI Act standards"]
 
     - id: G2
-      text: "How does your organization handle data privacy and protection?"
+      text: "How well can you explain and audit AI model decisions?"
       type: single
-      options: ["Comprehensive privacy program (policies, procedures, training)", "Good privacy practices (basic policies and procedures)", "Basic privacy measures (minimal policies)", "Ad-hoc privacy handling", "No formal privacy program", "I don't know"]
-      required: true
-
+      helper: "Explanation means you can trace why a model made a decision (e.g. feature importances, logs);auditing means you can review records later. For example, logging inputs/outputs for each prediction."
+      options: ["None – no logging or explanations", "High-risk only – explain critical models", "Audit logs – structured logs for scripts", "All models – explanations for every model", "Audit-ready – tools & docs for compliance audits"]
+      score_map: [0,25,50,75,100]
+      
     - id: G3
-      text: "What regulatory frameworks apply to your organization?"
-      type: multi
-      helper: "Select all regulatory frameworks that apply to your organization's operations."
-      options: ["GDPR – EU data protection", "CCPA – California privacy", "HIPAA – US health data", "SOX – US financial reporting", "PCI-DSS – Payment data security", "ISO 27001 – Information security", "NIST Framework – Cybersecurity", "Industry-specific regulations", "None apply", "I don't know"]
-      required: true
+      text: "How transparent are you with users and stakeholders about AI use?"
+      type: single
+      options: ["None – no communication", "Policy only – AI mentioned in policies", "Docs & FAQs – published guides and FAQs", "Explain button – users can request details", "Full disclosure – proactive dashboards and alerts"]
 
     - id: G4
-      text: "How does your organization approach risk management?"
+      text: "What level of incident response planning exists for AI failures or harms?"
       type: single
-      options: ["Comprehensive risk management framework", "Good risk assessment processes", "Basic risk management", "Ad-hoc risk handling", "No formal risk management", "I don't know"]
-      required: true
+      options: ["None – no response plan", "General IT plan – covers all incidents", "Manual rollback – human-driven recovery", "Automated rollback – system-driven recovery", "Playbook – comprehensive AI incident response"]
 
     - id: G5
-      text: "Does your organization have experience with AI or algorithm auditing?"
+      text: "What level of human oversight do you enforce on AI outputs?"
       type: single
-      options: ["Yes, regular auditing processes", "Yes, basic auditing", "Some experience", "Planned", "No experience", "Not applicable", "I don't know"]
-      required: true
+      options: ["None – AI runs without checks", "Final review – humans review before release", "Spot checks – random output audits", "Human-in-loop – humans embedded in workflow", "Escalation – automatic escalation to experts"]
 
-# Add-on questions based on detected tracks and responses
-section_add_ons:
-  title: "Additional Questions"
-  purpose: "Track-specific and context-aware questions for personalized recommendations."
+    - id: G6
+      text: "How deeply is privacy built into your AI development process?"
+      type: single
+      options: ["Basic compliance – meets minimum legal requirements", "Enhanced controls – best-practice privacy measures", "PETs – uses privacy-enhancing technologies", "By design – privacy embedded in design phases", "Automated – privacy checks in CI/CD pipelines"]
 
+    - id: G7
+      text: "What is the status of independent audits for your AI systems?"
+      type: single
+      show_if:
+        track: [Reg, Tech]
+      options: ["None – no audits conducted", "Planned – audit scheduled", "In progress – audit underway", "Completed – initial audit done", "Ongoing – regular audit cycle"]
+
+    - id: G8
+      text: "How far along are you in mapping AI risks under the EU AI Act?"
+      type: single
+      helper: "Mapping means identifying and documenting risks under EU rules (e.g. creating a risk register of AI use cases)."
+      options: ["Not aware – haven’t reviewed requirements", "Aware – know obligations but not mapped", "Mapping started – risk register in progress", "Completed – risk register finished", "Reported – findings shared with leadership"]
+
+
+    - id: G9
+      text: "How regularly do you test your AI models for fairness?"
+      type: single
+      show_if:
+        track: [Reg, Tech]
+      options: ["Never – no fairness tests", "Ad-hoc – tests only after incidents", "Pre-release – tests before each deployment", "Quarterly – scheduled fairness reviews", "Continuous – automated monitoring"]
+
+    - id: G10
+      text: "What governance body oversees your AI ethics and compliance?"
+      type: single
+      helper: "Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel."
+      options: ["None – no oversight body", "Informal – occasional advisor reviews", "Ad-hoc – project-based ethics reviews", "Scheduled – regular ethics committee meetings", "External – includes independent ethics experts"]
+
+
+section_8:
+  purpose: "Implementation horizon, KPIs & vision (to align training and strategic planning)."
   questions:
 
-    - id: TECH_T1
-      text: "What machine learning frameworks does your team use?"
-      type: multi
-      options: ["TensorFlow", "PyTorch", "Scikit-learn", "Keras", "XGBoost", "H2O.ai", "MLflow", "Kubeflow", "Apache Spark MLlib", "AWS SageMaker", "Azure ML", "Google Cloud AI Platform", "None", "I don't know"]
-      show_if:
-        track: "TECH"
-      required: true
-
-    - id: TECH_T2
-      text: "What is your organization's data pipeline maturity?"
+    - id: P1
+      text: "When do you plan to roll out your AI initiatives?"
       type: single
-      options: ["Advanced (real-time pipelines, MLOps)", "Intermediate (batch processing, some automation)", "Basic (manual data processing)", "No data pipelines", "I don't know"]
-      show_if:
-        track: "TECH"
-      required: true
+      helper: "Determines urgency and timing for targeted training."
+      options: ["Within 3 months", "3–6 months", "6–12 months", "Over 12 months"]
+      score_map: [100, 75, 50, 25]
 
-    - id: REG_G1
-      text: "How does your organization approach AI explainability and transparency?"
+    - id: P2
+      text: "What level of risk are you comfortable taking on AI projects?"
       type: single
-      options: ["Comprehensive explainability requirements", "Basic transparency measures", "Some explainability considerations", "No specific requirements", "I don't know"]
-      show_if:
-        track: "REG"
-      required: true
+      helper: "Risk tolerance means how much you’re willing to try new AI ideas, knowing minor setbacks (e.g., small budget overruns or model hiccups) can happen.For example, “Cautious” means you’ll run a small pilot first; “Bold” means you’ll launch a larger experiment with clear rollback plans."
+      options: ["Conservative – pilot tests before scaling", "Cautious – open to small experiments", "Balanced – willing to try new approaches with oversight", "Bold – ready for larger experiments with safeguards"]
+      score_map: [0,33,66,100]
 
-    - id: REG_G2
-      text: "What compliance documentation do you maintain for AI systems?"
+    - id: P3
+      text: "Which success metrics are most important for your AI work? (Select up to 3)"
       type: multi
-      options: ["Model documentation", "Data lineage records", "Audit trails", "Risk assessments", "Impact assessments", "Bias testing reports", "Performance monitoring", "None", "I don't know"]
-      show_if:
-        track: "REG"
-      required: true
+      helper: "We’ll recommend training that drives these outcomes."
+      options: ["Return on Investment (ROI)", "Cost reduction", "Operational efficiency", "Customer experience", "Employee productivity", "Innovation outcomes", "Regulatory compliance", "Sustainability impact"]
+      max_select: 3
+      score_per: 34
+      cap: 100
 
-    - id: GEN_S1
-      text: "What is your primary motivation for AI adoption?"
+    - id: P4
+      text: "What is your preferred resource strategy for AI projects?"
       type: single
-      options: ["Cost reduction", "Revenue growth", "Competitive advantage", "Customer experience improvement", "Operational efficiency", "Innovation", "Market pressure", "I don't know"]
-      show_if:
-        track: "GEN"
-      required: true
+      helper: "Determines focus on internal skill-building vs. external support."
+      options: ["Fully in-house build", "Hybrid – in-house + external", "Fully outsourced"]
+      score_map: [100, 50, 0]
 
-    - id: GEN_S2
-      text: "How do you plan to measure AI success?"
+    - id: P5
+      text: "Which technology architectures do you prefer for AI solutions? (Select all)"
       type: multi
-      options: ["Cost savings", "Revenue increase", "Productivity improvement", "Customer satisfaction", "Time to market reduction", "Error reduction", "Process automation percentage", "Employee satisfaction", "I don't know"]
-      show_if:
-        track: "GEN"
-      required: true
+      helper: "Guides technical workshops on relevant platforms."
+      options: ["Cloud-native", "Hybrid/on-premise", "API-first", "Low-code/no-code", "Open-source frameworks", "Enterprise software suites"]
+      score_per: 17
+      cap: 100
+
+    - id: P6
+      text: "What level of external support do you expect for AI implementation?"
+      type: single
+      helper: "Helps determine consultant-led vs. self-paced learning."
+      options: ["None – fully self-service", "Occasional consulting", "Ongoing advisory", "Managed services", "Full outsourcing"]
+      hide_if:
+        total_questions: ">60"
+
+    - id: P7
+      text: "How significant of an organizational change are you prepared for to adopt AI?"
+      type: single
+      helper: "Matches change-management training to readiness level."
+      options: ["Minimal changes", "Minor tweaks", "Moderate transformation", "Major transformation", "Continuous evolution"]
+      score_map: [0, 25, 50, 75, 100]
+
+
+add_ons:
+  - id: T9
+    show_if: { track: "TECH" }
+    text: "How do you deploy ML models and monitor them in production?"
+    type: single
+    helper: "Deployment and monitoring ensure reliability and fast issue detection."
+    options:
+      - "No deployment – models not in production"
+      - "Manual scripts – ad-hoc launches"
+      - "CI/CD pipeline – automated builds & deploys"
+      - "MLOps platform (e.g. Kubeflow, MLflow) with monitoring"
+      - "Fully automated blue/green deployments + rollback"
+
+  - id: F8
+    show_if: { track: "REG" }
+    text: "Which mechanisms do you use for cross-border data transfers?"
+    type: single
+    helper: "GDPR requires lawful transfer—select your standard approach."
+    options:
+      - "No cross-border transfers"
+      - "Ad-hoc contracts"
+      - "Standard Contractual Clauses (SCCs)"
+      - "Binding Corporate Rules (BCRs)"
+      - "Adequacy decision + continuous monitoring"
+
+ui:
+  progress_counter: true
+  save_resume: true
+  ranking_accessible: true
+  mobile_touch_tested: true
+  auto_deselect_none: true
+
+validation:
+  - rule: "Other selected → text field required"
+  - rule: "All visible questions required"
+  - rule: "Cap visible questions at 60; auto-hide D2 then P6"
+
+scoring:
+  per_question: 0-100
+  weight_by_track: weight_vectors
+  neutral_for_hidden: 50
+  confidence_penalty:
+    apply_to: [D2, unknown_like]
+
+reporting:
+  show_hidden_explanation: true
+  benchmarks: by_track
+  store_only: true               # scores hidden from respondents
+  admin_endpoint: /api/admin/assessment
+
+version:
+  assessment_version: "2.0"
+  schema_date: "2025-08-03"

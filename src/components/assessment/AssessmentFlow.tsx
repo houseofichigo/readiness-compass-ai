@@ -105,7 +105,7 @@ export function AssessmentFlow({
       track: detectedTrack || "GEN"
     };
     
-    // Call onComplete to save the data and redirect to thank you page
+    setIsCompleted(true);
     onComplete(responses, profile);
   };
 

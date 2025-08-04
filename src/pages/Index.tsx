@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { AssessmentWelcome } from "@/components/assessment/AssessmentWelcome";
 import { AssessmentFlow } from "@/components/assessment/AssessmentFlow";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
@@ -22,7 +21,6 @@ const Index = () => {
   );
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const { saveAssessment, isLoading } = useAssessment();
-  const navigate = useNavigate();
 
   const handleAssessmentComplete = async (
     responses: Record<string, AssessmentValue>,
@@ -35,7 +33,7 @@ const Index = () => {
       setSubmissionId(savedSubmissionId);
     }
 
-    // Create assessment data for navigation
+    // Create local data for immediate display
     const data: AssessmentData = {
       id: savedSubmissionId || `${Date.now()}`,
       sections: assessmentSections,
@@ -52,12 +50,8 @@ const Index = () => {
       updatedAt: new Date()
     };
 
-    // Navigate to thank you page with assessment data
-    navigate('/thank-you', { 
-      state: { 
-        assessmentData: data 
-      } 
-    });
+    setAssessmentData(data);
+    setAppState("results");
   };
 
   const handleRestart = () => {
