@@ -25,31 +25,39 @@ interface QuestionIndexEntry {
   section: keyof WeightVector;
 }
 
-const buildQuestionIndex = (): Record<string, QuestionIndexEntry> => {
+/** Build a map from question ID → { question, its weight‐vector category } */
+function buildQuestionIndex(): Record<string, QuestionIndexEntry> {
   const index: Record<string, QuestionIndexEntry> = {};
-  assessmentSections.forEach((section) => {
+  for (const section of assessmentSections) {
     const category = SECTION_CATEGORY_MAP[section.title];
-    if (!category) return;
-    section.questions.forEach((q) => {
+    if (!category) continue;
+    for (const q of section.questions) {
       index[q.id] = { question: q, section: category };
-    });
-  });
+    }
+  }
   return index;
-};
+}
 
 const QUESTION_INDEX = buildQuestionIndex();
 
-// YAML provides a `weight_vectors` map under `assessmentMeta`
+/**
+ * The YAML provides `weight_vectors` under assessmentMeta.
+ * Fallback to an empty object if missing.
+ */
 const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
   string,
   WeightVector
 >;
 
+/**
+ * Score all answers, returning per‐question, per‐section, and total weighted score.
+ */
 export function scoreAnswers(
   values: Record<string, unknown>,
   track: string
 ): ScoringResult {
   const questionScores: Record<string, number> = {};
+  // Totals & counts per weight‐vector dimension
   const sectionTotals: Record<keyof WeightVector, number> = {
     Strategy: 0,
     Data: 0,
@@ -67,49 +75,54 @@ export function scoreAnswers(
     Governance: 0,
   };
 
+  // Score each indexed question
   for (const [id, { question, section }] of Object.entries(QUESTION_INDEX)) {
-    const answer = values[id];
-    const score = scoreQuestion(question, answer);
+    const ans = values[id];
+    const score = scoreQuestion(question, ans);
     questionScores[id] = score;
     sectionTotals[section] += score;
     sectionCounts[section] += 1;
   }
 
-  // Compute average per section
+  // Compute average score per section
   const sectionScores: Record<string, number> = {};
-  (Object.keys(sectionTotals) as Array<keyof WeightVector>).forEach(
-    (section) => {
-      const count = sectionCounts[section] || 0;
-      sectionScores[section] = count > 0 ? sectionTotals[section] / count : 0;
-    }
-  );
+  for (const dim of Object.keys(sectionTotals) as Array<keyof WeightVector>) {
+    const count = sectionCounts[dim];
+    sectionScores[dim] = count > 0 ? sectionTotals[dim] / count : 0;
+  }
 
-  // Apply track-specific weights
+  // Grab the vector for this track (fallback to GEN)
   const weights =
     WEIGHT_VECTORS[track as keyof typeof WEIGHT_VECTORS] ??
     WEIGHT_VECTORS.GEN;
 
-  // Compute weighted total
+  // Weighted total across dimensions
   const totalScore = (Object.keys(sectionScores) as Array<
     keyof WeightVector
-  >).reduce((sum, section) => {
-    const w = weights[section] ?? 0;
-    return sum + sectionScores[section] * (w / 100);
-  }, 0);
+  >).reduce((sum, dim) => sum + sectionScores[dim] * (weights[dim] / 100), 0);
 
   return {
     questionScores,
-    totalScore,
     sectionScores,
+    totalScore,
     track,
   };
 }
 
+/**
+ * Score a single answer according to its question definition.
+ * - Unanswered → 50
+ * - “Don’t know” text → 0
+ * - Arrays (ranked, multi) → various strategies
+ * - Boolean → 100 / 0
+ * - Mapped selects → score_map
+ * - Numeric → clamped to [0,100]
+ * - Else → 50
+ */
 function scoreQuestion(question: Question, answer: unknown): number {
   if (answer === undefined || answer === null || answer === "") {
     return 50;
   }
-
   if (
     typeof answer === "string" &&
     answer.toLowerCase().includes("don't know")
@@ -119,26 +132,25 @@ function scoreQuestion(question: Question, answer: unknown): number {
 
   const { type, score_map, score_per, cap, weight, options } = question;
 
-  // Arrays (multi, rank, etc.)
+  // Multi‐value answers
   if (Array.isArray(answer)) {
-    // Ranked
+    // “rank” type uses its own weight array
     if (type === "rank" && weight) {
       const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
       const max = weight.reduce((a, b) => a + b, 0);
       return max === 0 ? 0 : (used / max) * 100;
     }
-    // Per-item
+    // per-selection scoring
     if (score_per !== undefined) {
-      const raw = answer.length * score_per;
-      return Math.min(raw, cap ?? 100);
+      return Math.min(answer.length * score_per, cap ?? 100);
     }
-    // Mapped options
+    // map selections via score_map
     if (score_map && options) {
       const scores = (answer as string[]).map((val) => {
         const idx = options.findIndex((opt) => opt.value === val);
-        return idx >= 0 && score_map[idx] !== undefined ? score_map[idx] : 0;
+        return idx >= 0 && score_map[idx] != null ? score_map[idx] : 0;
       });
-      return scores.length
+      return scores.length > 0
         ? scores.reduce((a, b) => a + b, 0) / scores.length
         : 50;
     }
@@ -149,10 +161,10 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return answer ? 100 : 0;
   }
 
-  // Single select mapped
-  if (score_map && options) {
+  // Single‐select mapping
+  if (score_map && options && typeof answer === "string") {
     const idx = options.findIndex((opt) => opt.value === answer);
-    if (idx >= 0 && score_map[idx] !== undefined) {
+    if (idx >= 0 && score_map[idx] != null) {
       return score_map[idx];
     }
   }
