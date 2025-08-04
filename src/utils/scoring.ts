@@ -1,3 +1,5 @@
+// src/utils/scoring.ts
+
 import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
 import type { Question, WeightVector } from "@/types/assessment";
 
@@ -15,7 +17,7 @@ const SECTION_CATEGORY_MAP: Record<string, keyof WeightVector> = {
   "Tool Stack & Integration": "Tools",
   "Automation & AI Agents": "Automation",
   "Team Capability & Culture": "People",
-  "Governance, Risk & Ethics": "Governance"
+  "Governance, Risk & Ethics": "Governance",
 };
 
 interface QuestionIndexEntry {
@@ -53,7 +55,7 @@ export function scoreAnswers(
     Tools: 0,
     Automation: 0,
     People: 0,
-    Governance: 0
+    Governance: 0,
   };
   const sectionCounts: Record<keyof WeightVector, number> = {
     Strategy: 0,
@@ -61,7 +63,7 @@ export function scoreAnswers(
     Tools: 0,
     Automation: 0,
     People: 0,
-    Governance: 0
+    Governance: 0,
   };
 
   Object.entries(QUESTION_INDEX).forEach(([id, { question, section }]) => {
@@ -84,17 +86,18 @@ export function scoreAnswers(
     WEIGHT_VECTORS[track as keyof typeof WEIGHT_VECTORS] ??
     WEIGHT_VECTORS.GEN;
 
-  const totalScore = (Object.keys(sectionScores) as Array<keyof WeightVector>)
-    .reduce((sum, section) => {
-      const weight = weights?.[section] ?? 0;
-      return sum + sectionScores[section] * (weight / 100);
-    }, 0);
+  const totalScore = (Object.keys(sectionScores) as Array<
+    keyof WeightVector
+  >).reduce((sum, section) => {
+    const weight = weights?.[section] ?? 0;
+    return sum + sectionScores[section] * (weight / 100);
+  }, 0);
 
   return {
     questionScores,
     totalScore,
     sectionScores,
-    track
+    track,
   };
 }
 
@@ -103,24 +106,30 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return 50;
   }
 
-  if (typeof answer === "string" && answer.toLowerCase().includes("don't know")) {
+  if (
+    typeof answer === "string" &&
+    answer.toLowerCase().includes("don't know")
+  ) {
     return 0;
   }
 
   const { type, score_map, score_per, cap, weight, options } = question;
 
   if (Array.isArray(answer)) {
+    // ranked lists
     if (type === "rank" && weight) {
       const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
       const max = weight.reduce((a, b) => a + b, 0);
       return max === 0 ? 0 : (used / max) * 100;
     }
 
+    // per-item scoring
     if (score_per !== undefined) {
       const raw = answer.length * score_per;
       return Math.min(raw, cap ?? 100);
     }
 
+    // map selected options to scores
     if (score_map && options) {
       const scores = (answer as string[]).map((val) => {
         const idx = options.findIndex((opt) =>
@@ -152,4 +161,3 @@ function scoreQuestion(question: Question, answer: unknown): number {
 
   return 50;
 }
-

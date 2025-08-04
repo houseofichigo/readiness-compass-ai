@@ -7,14 +7,25 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
-import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
-import { AssessmentResponse, Track, OrganizationProfile, ComputedField } from "@/types/assessment";
 
-// Helpers to parse the YAML-declared computed logic
+import {
+  assessmentSections,
+  assessmentAddOns,
+  assessmentMeta,
+} from "@/data/assessmentQuestions";
+import { isQuestionVisible } from "@/utils/questionVisibility";
+import {
+  AssessmentResponse,
+  Track,
+  OrganizationProfile,
+  ComputedField,
+} from "@/types/assessment";
+
+// Helpers to parse the YAML‐declared computed logic
 const parseListLiteral = (literal: string): string[] => {
   const match = literal.match(/\[(.*?)\]/s);
   if (!match) return [];
-  return match[1].split(",").map(s => s.trim().replace(/['"]/g, ""));
+  return match[1].split(",").map((s) => s.trim().replace(/['"]/g, ""));
 };
 
 const parseTechRoles = (rules: any[]): string[] => {
@@ -26,7 +37,11 @@ const parseTechRoles = (rules: any[]): string[] => {
 };
 
 interface AssessmentFlowProps {
-  onComplete: (responses: AssessmentResponse[], profile: OrganizationProfile, track: Track) => void;
+  onComplete: (
+    responses: AssessmentResponse[],
+    profile: OrganizationProfile,
+    track: Track
+  ) => void;
 }
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
@@ -34,19 +49,25 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
 
-  // 1) Extract the computed field for "regulated" from section_0
-  const profileSection = assessmentSections.find(s => s.id === "section_0");
+  //
+  // 1) Pull out “regulated” computed logic from section_0
+  //
+  const profileSection = assessmentSections.find((s) => s.id === "section_0");
   const regulatedLogic =
-    profileSection?.computed?.find((c: ComputedField) => c.id === "regulated")
-      ?.logic ?? "";
+    profileSection?.computed?.find((c) => c.id === "regulated")?.logic ?? "";
   const regulatedIndustries = parseListLiteral(regulatedLogic);
 
-  // 2) Extract the YAML-defined track_detection rules
-  const trackRules = (assessmentMeta as any)?.track_detection?.precedence || [];
+  //
+  // 2) Pull out YAML‐defined track_detection rules
+  //
+  const trackRules =
+    (assessmentMeta as any)?.track_detection?.precedence ?? ([] as any[]);
   const techRoles = parseTechRoles(trackRules);
   const legalRole = "Legal / Compliance Lead";
 
-  // Fallback/simple track compute
+  //
+  // 3) Compute track fallback
+  //
   const computeTrack = (res: Record<string, any>): Track => {
     const role = res.M3 as string;
     const industry = res.M4_industry as string;
@@ -56,15 +77,44 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     return "GEN";
   };
 
-  const currentSection = assessmentSections[currentSectionIndex];
-  if (!currentSection) return <div>Loading sections…</div>;
+  //
+  // 4) Filter any add-on questions by your visibility logic
+  //
+  const visibleAddOns = assessmentAddOns.filter((q) =>
+    isQuestionVisible(q, responses, detectedTrack, /* totalVisible= */ 0, {})
+  );
+
+  // total pages = base sections + optional add-ons page
+  const totalSections =
+    assessmentSections.length + (visibleAddOns.length > 0 ? 1 : 0);
+
+  // if we're on the “add-ons” page
+  const isAddOnPage =
+    visibleAddOns.length > 0 &&
+    currentSectionIndex === assessmentSections.length;
+
+  // choose the correct “section”
+  const currentSection = isAddOnPage
+    ? {
+        id: "add_ons",
+        title: "Additional Questions",
+        purpose: "",
+        questions: visibleAddOns,
+      }
+    : assessmentSections[currentSectionIndex];
+
+  if (!currentSection) {
+    return <div>Loading sections…</div>;
+  }
 
   const visibleQuestions = currentSection.questions;
 
+  //
+  // keep your persona fields in sync with track        
+  //
   const handleAnswerChange = (questionId: string, value: any) => {
-    setResponses(prev => {
+    setResponses((prev) => {
       const updated = { ...prev, [questionId]: value };
-      // re-compute track when persona fields change
       if (questionId === "M3" || questionId === "M4_industry") {
         setDetectedTrack(computeTrack(updated));
       }
@@ -72,19 +122,24 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     });
   };
 
+  //
+  // Navigation
+  //
   const goToNextSection = () => {
-    if (currentSectionIndex < assessmentSections.length - 1) {
-      setCurrentSectionIndex(idx => idx + 1);
+    if (currentSectionIndex < totalSections - 1) {
+      setCurrentSectionIndex((idx) => idx + 1);
     } else {
-      // finalize
+      // wrap up
       const allResponses: AssessmentResponse[] = Object.entries(responses).map(
         ([questionId, val]) => ({
           questionId,
           value: val,
           sectionId:
-            assessmentSections.find(s =>
-              s.questions.some(q => q.id === questionId)
-            )?.id ?? "unknown",
+            currentSectionIndex === assessmentSections.length
+              ? "add_ons"
+              : assessmentSections.find((s) =>
+                  s.questions.some((q) => q.id === questionId)
+                )?.id ?? "unknown",
         })
       );
 
@@ -105,34 +160,41 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       onComplete(allResponses, profile, detectedTrack);
     }
   };
+  const goToPreviousSection = () =>
+    setCurrentSectionIndex((idx) => Math.max(0, idx - 1));
 
-  const goToPreviousSection = () => {
-    setCurrentSectionIndex(idx => Math.max(0, idx - 1));
-  };
-
-  const answeredCount = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
-  const personaDone = Boolean(responses.M3 && responses.M4_industry);
+  const answeredCount = visibleQuestions.filter(
+    (q) => responses[q.id] !== undefined
+  ).length;
+  const showTrackInfo = Boolean(responses.M3 && responses.M4_industry);
 
   return (
     <div className="min-h-screen bg-gradient-accent p-4">
       <div className="container mx-auto max-w-6xl">
         <AssessmentProgressBar
           currentSectionIndex={currentSectionIndex}
-          totalSections={assessmentSections.length}
+          totalSections={totalSections}
           completedSections={currentSectionIndex}
           detectedTrack={detectedTrack}
-          showTrackInfo={personaDone}
+          showTrackInfo={showTrackInfo}
         />
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-2xl">{currentSection.title}</CardTitle>
-            <p className="text-muted-foreground">{currentSection.purpose}</p>
+            <CardTitle className="text-2xl">
+              {currentSection.title}
+            </CardTitle>
+            <p className="text-muted-foreground">
+              {currentSection.purpose}
+            </p>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Questions in this section</span>
-              <span>{answeredCount} / {visibleQuestions.length} answered</span>
+              <span>
+                {answeredCount} / {visibleQuestions.length} answered
+              </span>
             </div>
           </CardHeader>
+
           <CardContent className="space-y-6">
             {visibleQuestions.map((q, idx) => (
               <div key={q.id} className="space-y-2">
@@ -144,7 +206,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
                     <QuestionCard
                       question={q}
                       value={responses[q.id]}
-                      onChange={val => handleAnswerChange(q.id, val)}
+                      onChange={(val) => handleAnswerChange(q.id, val)}
                     />
                   </div>
                 </div>
@@ -162,10 +224,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             >
               <ArrowLeft className="h-4 w-4" /> Previous
             </Button>
-          ) : <div />}
+          ) : (
+            <div />
+          )}
 
-          <Button onClick={goToNextSection} className="flex items-center gap-2">
-            {currentSectionIndex === assessmentSections.length - 1 ? "Complete" : "Next"}
+          <Button
+            onClick={goToNextSection}
+            className="flex items-center gap-2"
+          >
+            {currentSectionIndex === totalSections - 1
+              ? "Complete"
+              : "Next"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
