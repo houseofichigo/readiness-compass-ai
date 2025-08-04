@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { AssessmentProgress } from "./AssessmentProgress";
 import { QuestionCard } from "./QuestionCard";
 import { ProgressCounter } from "./ProgressCounter";
 import { assessmentSections } from "@/data/assessmentQuestions";
@@ -18,7 +17,7 @@ interface AssessmentFlowProps {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [responses, setResponses, clearResponses] = useLocalStorage<Record<string, any>>(
+  const [responses, setResponses] = useLocalStorage<Record<string, any>>(
     'ai-assessment-responses', 
     {}
   );
@@ -31,6 +30,18 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const { toast } = useToast();
 
   const currentSection = assessmentSections[currentSectionIndex];
+  
+  // Safety check for no sections loaded
+  if (!assessmentSections || assessmentSections.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center space-y-4">
+          <h2 className="text-xl font-semibold">Loading Assessment...</h2>
+          <p className="text-muted-foreground">Please wait while we load the assessment questions.</p>
+        </div>
+      </div>
+    );
+  }
   
   // Calculate visible questions with 60-question cap
   const allVisibleQuestions = assessmentSections.flatMap(section => 
@@ -65,16 +76,20 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     }
   }, [responses.M3, responses.M9]);
 
-  // Auto-save responses
+  // Auto-save responses (limited to prevent infinite loops)
   useEffect(() => {
-    if (Object.keys(responses).length > 0) {
-      toast({
-        title: "Progress saved",
-        description: "Your responses are automatically saved.",
-        duration: 2000,
-      });
+    const hasResponses = Object.keys(responses).length > 0;
+    if (hasResponses) {
+      const timeoutId = setTimeout(() => {
+        toast({
+          title: "Progress saved",
+          description: "Your responses are automatically saved.",
+          duration: 2000,
+        });
+      }, 100);
+      return () => clearTimeout(timeoutId);
     }
-  }, [responses, toast]);
+  }, [Object.keys(responses).length]);
 
   const handleAnswerChange = (questionId: string, value: any) => {
     setResponses(prev => {
