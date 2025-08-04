@@ -1,4 +1,29 @@
 import { Question } from '@/types/assessment';
+import { assessmentMeta, assessmentSections } from '@/data/assessmentQuestions';
+
+const parseRegulatedIndustries = (logic: string): string[] => {
+  const match = logic.match(/\[(.*?)\]/s);
+  if (!match) return [];
+  return match[1].split(',').map((s) => s.trim().replace(/['"]/g, ''));
+};
+
+const parseTechRoles = (rules: any[]): string[] => {
+  const techRule = rules.find(
+    (r: any) => typeof r.if === 'string' && r.if.includes('-> TECH')
+  );
+  if (!techRule) return [];
+  const match = techRule.if.match(/role in \[(.*?)\]/);
+  if (!match) return [];
+  return match[1].split(',').map((r: string) => r.trim());
+};
+
+const profileSection = assessmentSections.find((s) => s.id === 'section_0');
+const regulatedLogic =
+  profileSection?.computed?.find((c) => c.id === 'regulated')?.logic || '';
+const regulatedIndustries = parseRegulatedIndustries(regulatedLogic);
+const trackRules = (assessmentMeta as any)?.track_detection?.precedence || [];
+const techRoles = parseTechRoles(trackRules);
+const legalRole = 'Legal / Compliance Lead';
 
 export function isQuestionVisible(
   question: Question, 
@@ -79,18 +104,8 @@ function evaluateCondition(
 
 export function detectTrack(responses: Record<string, any>): string {
   const role = responses.M3;
-  const regulated = responses.M9;
-
-  // Technical track detection
-  if (['Data/AI Lead', 'IT Lead', 'CTO/Tech Lead'].includes(role)) {
-    return 'TECH';
-  }
-
-  // Regulated track detection
-  if (regulated === 'Yes' || regulated === 'Not sure' || role === 'Legal/Compliance') {
-    return 'REG';
-  }
-
-  // Default to General Business
+  const industry = responses.M4_industry;
+  if (techRoles.includes(role)) return 'TECH';
+  if (regulatedIndustries.includes(industry) || role === legalRole) return 'REG';
   return 'GEN';
 }
