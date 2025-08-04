@@ -39,9 +39,18 @@ export function AssessmentResults({
   );
 
   const weightVectors = (
-    assessmentMeta as { weight_vectors: Record<Track, WeightVector> }
-  ).weight_vectors;
-  const weights = weightVectors[track];
+    assessmentMeta as { weight_vectors?: Record<Track, WeightVector> }
+  ).weight_vectors ?? {};
+  const defaultWeights: WeightVector = {
+    strategy: 0,
+    data: 0,
+    tools: 0,
+    automation: 0,
+    people: 0,
+    governance: 0,
+  };
+  const weights =
+    weightVectors[track] ?? weightVectors.GEN ?? defaultWeights;
   const roundedScore = Math.round(totalScore);
 
   const getReadinessLevel = (score: number) => {
@@ -87,20 +96,28 @@ export function AssessmentResults({
 
       {/* Section Breakdown */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.entries(sectionScores).map(([section, score]) => (
-          <Card key={section} className="p-6 hover:shadow-elegant transition-all duration-300">
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="font-semibold text-lg">{section}</h3>
-                <span className="text-2xl font-bold text-primary">{score}</span>
+        {Object.entries(sectionScores).map(([section, score]) => {
+          const weight = (weights as Partial<WeightVector>)[
+            section as keyof WeightVector
+          ];
+          return (
+            <Card
+              key={section}
+              className="p-6 hover:shadow-elegant transition-all duration-300"
+            >
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-semibold text-lg">{section}</h3>
+                  <span className="text-2xl font-bold text-primary">{score}</span>
+                </div>
+                <Progress value={score} className="h-2" />
+                <div className="text-sm text-muted-foreground">
+                  Weight: {weight !== undefined ? `${weight}%` : "N/A"}
+                </div>
               </div>
-              <Progress value={score} className="h-2" />
-              <div className="text-sm text-muted-foreground">
-                Weight: {weights[section as keyof typeof weights]}%
-              </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          );
+        })}
       </div>
 
       {/* Recommendations */}
