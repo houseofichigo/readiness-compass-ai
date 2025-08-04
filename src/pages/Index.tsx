@@ -2,28 +2,43 @@ import { useState } from "react";
 import { AssessmentWelcome } from "@/components/assessment/AssessmentWelcome";
 import { AssessmentFlow } from "@/components/assessment/AssessmentFlow";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
-import { AssessmentResponse, OrganizationProfile, Track } from "@/types/assessment";
+import {
+  AssessmentData,
+  AssessmentResponse,
+  OrganizationProfile,
+  Track
+} from "@/types/assessment";
 
 type AppState = "welcome" | "assessment" | "results";
 
 const Index = () => {
   const [appState, setAppState] = useState<AppState>("welcome");
-  const [assessmentData, setAssessmentData] = useState<{
-    responses: AssessmentResponse[];
-    profile: OrganizationProfile;
-    track: Track;
-  } | null>(null);
+  const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(
+    null
+  );
 
   const handleStartAssessment = () => {
     setAppState("assessment");
   };
 
   const handleAssessmentComplete = (
-    responses: AssessmentResponse[], 
-    profile: OrganizationProfile, 
+    responses: AssessmentResponse[],
+    profile: OrganizationProfile,
     track: Track
   ) => {
-    setAssessmentData({ responses, profile, track });
+    const data: AssessmentData = {
+      id: `${Date.now()}`,
+      profile,
+      track,
+      responses,
+      completedSections: [],
+      totalScore: 0,
+      sectionScores: {},
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    setAssessmentData(data);
     setAppState("results");
   };
 
