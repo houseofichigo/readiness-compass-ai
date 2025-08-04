@@ -46,7 +46,8 @@ section_0:
       required: true
     - id: M3_other
       type: text
-      show_if: {M3: "Other"}
+      show_if:
+        M3: "Other"
       required: true
     - id: M4
       text: "Department"
@@ -55,7 +56,8 @@ section_0:
       required: true
     - id: M4_other
       type: text
-      show_if: {M4: "Other"}
+      show_if:
+        M4: "Other"
       required: true
     - id: M5
       text: "Industry & Sub-sector"
@@ -98,24 +100,32 @@ section_1:
       text: "What prioritisation approach does your organisation use?"
       type: single
       options: [No formal process, Ad-hoc based on perceived value, Impact × Effort matrix, Impact × Effort + capacity weighting, ROI-driven financial model, Risk-adjusted prioritisation model]
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if:
+        S1:
+          not_in: [None, "Idea list only"]
     - id: S3
       text: "Current KPI/OKR maturity for AI initiatives"
       type: single
       options: [No KPIs/OKRs, KPIs drafted not tracked, KPIs tracked not linked, AI KPIs partially in dept OKRs, AI KPIs in executive OKRs]
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if:
+        S1:
+          not_in: [None, "Idea list only"]
     - id: S4
       text: "How do you estimate ROI for AI projects?"
       type: single
       options: [We don’t estimate ROI, Rough experience-based estimates, Simple cost-benefit, Link ROI to clear KPIs & goals, Detailed financial or risk-adjusted models]
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if:
+        S1:
+          not_in: [None, "Idea list only"]
       helper: "Choose the option that best matches your current practice."
     - id: S5
       text: "Speed from idea to measurable AI value"
       type: single
       options: [> 12 m, 6–12 m, 3–6 m, 1–3 m, ≤ 30 d]
       score_map: [0,25,50,75,100]
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if:
+        S1:
+          not_in: [None, "Idea list only"]
     - id: S6
       text: "How do you track competitor or industry AI activity?"
       type: single
@@ -147,13 +157,16 @@ section_1:
       type: single
       options: [No clear goals, Goals no metrics, Some metrics, Most metrics, All goals+metrics+thresholds]
       score_map: [0,25,50,75,100]
-      show_if: {S1: not_in [None, "Idea list only"]}
+      show_if:
+        S1:
+          not_in: [None, "Idea list only"]
     - id: S12
       text: "AI risk tolerance (1–5)"
       type: single
       options: ["1 – Proof-of-concept only", "2 – Low experimentation", "3 – Moderate experimentation", "4 – High experimentation", "5 – Fail-fast culture"]
       score_map: [0,25,50,75,100]
-      hide_if: {P2: Conservative}
+      hide_if:
+        P2: Conservative
 
 section_2:
   purpose: "Budget, runway, investor support, compliance."
@@ -211,12 +224,14 @@ section_3:
       text: "Monthly data volume generation"
       type: single
       options: ["Don’t know", "< 1 GB", "1–10 GB", "10–100 GB", "> 100 GB"]
-      hide_if: {total_questions: ">60"}
+      hide_if:
+        total_questions: ">60"
     - id: D3
       text: "Data management maturity"
       type: single
       options: [No standards/visibility, Naming conventions & partial docs, Defined standards & manual tracking, Schema tools & tracking, Version-controlled models + automated lineage]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
       hide_if:
         all_of:
           - {M7: "1-9"}
@@ -225,7 +240,8 @@ section_3:
       text: "Data lineage tracking"
       type: single
       options: [None, Partial manual docs, Automated for critical pipelines, Automated across major sources, Automated + impact analysis]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
       hide_if:
         all_of:
           - {M7: "1-9"}
@@ -234,7 +250,8 @@ section_3:
       text: "Data confidence & freshness"
       type: single
       options: [Low, Medium w/ manual checks, High w/ periodic tests, High w/ automated alerts, High w/ real-time monitoring]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
       hide_if:
         all_of:
           - {M7: "1-9"}
@@ -257,12 +274,14 @@ section_3:
       text: "Data labelling & annotation maturity"
       type: single
       options: [None, Ad-hoc labels, Defined guidelines, Standard taxonomy, Automated labelling & ontologies]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
     - id: D10
       text: "Synthetic or external data usage"
       type: single
       options: [No, Exploring, Limited pilots, Regular in production, Extensive synthetic pipeline]
-      show_if: {track: TECH}
+      show_if:
+        track: TECH
     - id: D11
       text: "AI ethics & privacy policies"
       type: single
@@ -301,17 +320,20 @@ section_4:
       text: "Compute availability (GPU/TPU)"
       type: single
       options: [None, Colab only, Cloud GPU on demand, Dedicated GPU budget, Managed cluster]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
     - id: T6
       text: "Architecture documentation"
       type: single
       options: [None, High-level sketch, Critical systems map, Full diagram, Auto-generated docs]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
     - id: T7
       text: "Disaster-recovery plan for data/AI"
       type: single
       options: [No plan, Back-ups only, Manual failover, Automated failover, AI-aware playbook]
-      show_if: {track: [TECH, REG]}
+      show_if:
+        track: [TECH, REG]
     - id: T8
       text: "Low/no-code platforms in use"
       type: multi
@@ -374,17 +396,20 @@ section_5:
       text: "Agent governance & audit"
       type: single
       options: [None, Spot checks, Review process, Logging w/ oversight, Continuous auditing]
-      hide_if: {A4: "None"}
+      hide_if:
+        A4: "None"
     - id: A11
       text: "Recovery & rollback strategy"
       type: single
       options: [No plan, Manual rollback, Pre-defined failover, Automated rollback, Self-correction loops]
-      hide_if: {A4: "None"}
+      hide_if:
+        A4: "None"
     - id: A12
       text: "Agent output accuracy monitoring"
       type: single
       options: [None, Manual reviews, Release tests, Ongoing tests + spot checks, Continuous self-correction]
-      hide_if: {A4: "None"}
+      hide_if:
+        A4: "None"
 
 section_6:
   purpose: "Team capability & learning culture."
@@ -410,7 +435,8 @@ section_6:
       text: "Preferred learning style"
       type: single
       options: [Text guides, Short videos, Workshops, Self-paced, Mixed]
-      hide_if: {track: TECH}
+      hide_if:
+        track: TECH
     - id: C6
       text: "Training topic priority"
       type: rank
@@ -465,7 +491,8 @@ section_7:
       text: "Third-party audit status"
       type: single
       options: [None, Planned, In progress, Completed, Ongoing]
-      hide_if: {track: GEN}
+      hide_if:
+        track: GEN
     - id: G8
       text: "EU AI Act risk mapping"
       type: single
@@ -474,7 +501,8 @@ section_7:
       text: "Algorithmic fairness testing"
       type: single
       options: [Never, After incidents, Release, Quarterly, Continuous]
-      hide_if: {track: GEN}
+      hide_if:
+        track: GEN
     - id: G10
       text: "Ethics committee or oversight board"
       type: single
@@ -514,7 +542,8 @@ section_8:
       text: "External support requirements"
       type: single
       options: [None needed, Occasional consulting, Regular support, Managed services, Full outsourcing]
-      hide_if: {total_questions: ">60"}
+      hide_if:
+        total_questions: ">60"
     - id: P7
       text: "Change threshold & readiness"
       type: single
@@ -523,17 +552,20 @@ section_8:
 
 add_ons:
   - id: T9
-    show_if: {track: TECH}
+    show_if:
+      track: TECH
     text: "How do you deploy and monitor ML models in production?"
     type: single
     options: [No deployment, Manual scripts, CI/CD pipeline, MLOps platform with monitoring, Fully automated blue-green + rollback]
   - id: F8
-    show_if: {track: REG}
+    show_if:
+      track: REG
     text: "Do you rely on mechanisms (e.g., SCCs, BCRs) for cross-border data transfer?"
     type: single
     options: [No cross-border transfer, Ad-hoc contracts, Standard Contractual Clauses, Binding Corporate Rules, Adequacy decision + continuous monitoring]
   - id: S13
-    show_if: {track: GEN}
+    show_if:
+      track: GEN
     text: "Have you realised tangible ROI from any AI pilot?"
     type: single
     options: [No pilots yet, Pilots in progress, Early benefits observed, Break-even achieved, Significant ROI realised]
