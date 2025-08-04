@@ -29,19 +29,25 @@ export function AssessmentProgressBar({
   responses = {},
   globalComputed = {},
 }: AssessmentProgressBarProps) {
-  // Calculate total questions dynamically based on current responses and track
-  const calculateTotalQuestions = () => {
+  // Calculate remaining questions dynamically based on current responses and track
+  const calculateRemainingQuestions = () => {
     if (!detectedTrack) return null;
     
     let totalQuestions = 0;
+    let answeredQuestions = 0;
     
     // Count questions in all sections
-    assessmentSections.forEach(section => {
+    assessmentSections.forEach((section, sectionIndex) => {
       let sectionVisible = 0;
       section.questions.forEach(question => {
         if (isQuestionVisible(question, responses, detectedTrack, sectionVisible, globalComputed)) {
           sectionVisible++;
           totalQuestions++;
+          
+          // Count answered questions
+          if (responses[question.id] !== undefined && responses[question.id] !== null && responses[question.id] !== "") {
+            answeredQuestions++;
+          }
         }
       });
     });
@@ -50,18 +56,32 @@ export function AssessmentProgressBar({
     assessmentAddOns.forEach(question => {
       if (isQuestionVisible(question, responses, detectedTrack, totalQuestions, globalComputed)) {
         totalQuestions++;
+        if (responses[question.id] !== undefined && responses[question.id] !== null && responses[question.id] !== "") {
+          answeredQuestions++;
+        }
       }
     });
     
-    return totalQuestions;
+    return {
+      total: totalQuestions,
+      remaining: totalQuestions - answeredQuestions,
+      answered: answeredQuestions
+    };
   };
 
-  const totalQuestions = calculateTotalQuestions();
+  // Check if we should show the question count (role filled in + on section 2 or later)
+  const shouldShowQuestionCount = () => {
+    const hasRole = responses.M3 && responses.M3 !== "";
+    const isOnSection2OrLater = currentSectionIndex >= 1;
+    return hasRole && isOnSection2OrLater && detectedTrack;
+  };
+
+  const questionData = calculateRemainingQuestions();
+  const showQuestionCount = shouldShowQuestionCount();
   const totalSections = assessmentSections.length;
   const progressPercentage = Math.round(
     (completedSections / totalSections) * 100
   );
-  const remainingSections = totalSections - completedSections;
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-sm border">
@@ -94,7 +114,7 @@ export function AssessmentProgressBar({
           <Clock className="h-5 w-5 text-orange-600" />
           <div>
             <div className="text-2xl font-bold text-orange-600">
-              {remainingSections}
+              {totalSections - completedSections}
             </div>
             <div className="text-sm text-orange-700">Sections Remaining</div>
           </div>
@@ -104,12 +124,14 @@ export function AssessmentProgressBar({
           <HelpCircle className="h-5 w-5 text-gray-600" />
           <div>
             <div className="text-2xl font-bold text-gray-600">
-              {totalQuestions || "?"}
+              {showQuestionCount && questionData ? questionData.remaining : "?"}
             </div>
             <div className="text-sm text-gray-700">
-              {showTrackInfo && detectedTrack && totalQuestions
-                ? `Total Questions (${trackLabels[detectedTrack]})`
-                : "Complete Profile First"}
+              {showQuestionCount && detectedTrack && questionData
+                ? `Questions Remaining (${trackLabels[detectedTrack]})`
+                : currentSectionIndex === 0 
+                  ? "Complete Profile First"
+                  : "Select Role to See Count"}
             </div>
           </div>
         </div>
@@ -121,9 +143,14 @@ export function AssessmentProgressBar({
           Section {currentSectionIndex + 1} of {totalSections}:{" "}
           {assessmentSections[currentSectionIndex]?.title}
         </div>
-        {!showTrackInfo && (
+        {!showQuestionCount && currentSectionIndex === 0 && (
           <div className="text-sm text-muted-foreground">
             Complete your profile to see personalized question count
+          </div>
+        )}
+        {!showQuestionCount && currentSectionIndex > 0 && !responses.M3 && (
+          <div className="text-sm text-muted-foreground">
+            Select your role to see remaining questions
           </div>
         )}
       </div>
