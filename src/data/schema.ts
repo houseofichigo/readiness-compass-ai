@@ -75,78 +75,54 @@ export const mockSchema: AssessmentSchema = {
   sections: {
     'section_0': {
       title: 'Organization Profile',
-      purpose: 'Detect persona & gather context. All always shown; M10 consent required.',
+      purpose: 'Detect persona & gather context.',
       questions: [
-        {
-          id: 'M1',
-          text: 'Full name',
-          type: 'text',
-          required: true
-        },
-        {
-          id: 'M2', 
-          text: 'Work email',
-          type: 'text',
-          required: true
-        },
+        { id: 'M0', text: 'Organization name', type: 'text', required: true },
+        { id: 'M1', text: 'Full name', type: 'text', required: true },
+        { id: 'M2', text: 'Business e-mail', type: 'text', required: true },
         {
           id: 'M3',
-          text: 'Role/Position',
+          text: 'Primary role',
           type: 'single',
           required: true,
           options: [
-            'Founder/CEO', 'C-level', 'CIO/CTO', 'Head Marketing', 'Head Sales', 
-            'Head Finance', 'Head Ops', 'Legal/Compliance', 'IT Manager', 
-            'Data/AI Lead', 'Product Lead', 'HR Lead', 'Customer Support Lead', 'Other'
+            'Founder / CEO', 'C-level executive', 'CIO / CTO', 'Head of Marketing', 'Head of Sales',
+            'Head of Finance', 'Head of Operations', 'Legal / Compliance Lead', 'IT Lead',
+            'Data / AI Lead', 'Product Lead', 'HR Lead', 'Customer Support Lead', 'Other'
           ]
         },
+        { id: 'M3_other', text: 'Primary role (other)', type: 'text', show_if: { M3: 'Other' }, required: true },
         {
-          id: 'M4',
-          text: 'Department',
-          type: 'single',
-          required: true,
-          options: [
-            'Marketing', 'Sales', 'Finance', 'Operations/Logistics', 'IT', 
-            'HR', 'Product', 'Customer Support', 'General management', 'Multiple', 'Other'
-          ]
-        },
-        {
-          id: 'M5',
+          id: 'M4_industry',
           text: 'Industry & Sub-sector',
           type: 'single',
           required: true,
-          options: ['Technology', 'Finance', 'Healthcare', 'Retail', 'Manufacturing', 'Other']
+          options: ['Technology', 'Finance & Insurance', 'Healthcare & Social Assistance', 'Retail Trade', 'Manufacturing', 'Other']
         },
+        { id: 'M4_sub', text: 'Industry & sub-sector (other)', type: 'text', show_if: { M4_industry: 'Other' }, required: true },
         {
-          id: 'M6',
+          id: 'M5_country',
           text: 'Country',
           type: 'single',
           required: true,
           options: ['United States', 'United Kingdom', 'Germany', 'France', 'Other']
         },
         {
-          id: 'M7',
+          id: 'M6_size',
           text: 'Company size (FTE)',
           type: 'single',
           required: true,
-          options: ['1–9', '10–49', '50–249', '250–999', '≥ 1,000']
+          options: ['1–9', '10–49', '50–249', '250–999', '≥ 1 000']
         },
         {
-          id: 'M8',
+          id: 'M7_revenue',
           text: 'Annual revenue',
           type: 'single',
           required: true,
           options: ['< €250k', '€250k–1M', '1–5M', '5–20M', '20–100M', '> 100M', 'Prefer not to say']
         },
         {
-          id: 'M9',
-          text: 'Regulated industry?',
-          type: 'single',
-          required: true,
-          options: ['Yes', 'No', 'Not sure']
-        },
-        {
-          id: 'M10',
+          id: 'M8_consent',
           text: 'I agree to processing my data for the readiness report and related communications',
           type: 'checkbox',
           required: true

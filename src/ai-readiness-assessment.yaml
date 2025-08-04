@@ -16,8 +16,8 @@ meta:
     GEN:    "General Business"
   track_detection:
     precedence:
-      - if: role in [Data/AI Lead, IT Lead, CTO/Tech Lead] -> TECH
-      - if: (M9_regulated == Yes OR Not sure) OR role == Legal/Compliance -> REG
+      - if: role in [Data / AI Lead, IT Lead, CIO / CTO] -> TECH
+      - if: (role == Legal / Compliance Lead) OR M4_industry in [Finance & Insurance, Health Care & Social Assistance, Utilities (Electricity, Gas, Water & Waste), Transportation & Warehousing, Manufacturing, Information & Communication Technology, Professional, Scientific & Technical Services, Administrative & Support & Waste Management Services, Accommodation & Food Services] -> REG
       - else: GEN
   weight_vectors:
     TECH: {Strategy:20, Data:30, Tools:20, Automation:15, People:5, Governance:10}

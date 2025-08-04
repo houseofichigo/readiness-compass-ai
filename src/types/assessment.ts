@@ -35,19 +35,17 @@ export interface Section {
 }
 
 export interface OrganizationProfile {
-  M0: string; // Company name
+  M0: string; // Organization name
   M1: string; // Full name
-  M2: string; // Work email
-  M3: string; // Role/Position
+  M2: string; // Business e-mail
+  M3: string; // Primary role
   M3_other?: string;
-  M4: string; // Department
-  M4_other?: string;
-  M5: string; // Industry
-  M6: string; // Country
-  M7: string; // Company size
-  M8: string; // Annual revenue
-  M9: string; // Regulated industry
-  M10: boolean; // Consent
+  M4_industry: string; // Industry & sub-sector
+  M4_sub?: string; // Industry & sub-sector (other)
+  M5_country: string; // Country
+  M6_size: string; // Company size
+  M7_revenue: string; // Annual revenue
+  M8_consent: boolean; // Consent
 }
 
 export interface AssessmentResponse {

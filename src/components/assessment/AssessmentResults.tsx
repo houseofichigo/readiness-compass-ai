@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { AssessmentResponse, OrganizationProfile, Track, TRACK_WEIGHTS } from "@/types/assessment";
+import { scoreAnswers } from "@/utils/scoring";
 import { Badge } from "@/components/ui/badge";
 import { Download, Share2, BarChart3 } from "lucide-react";
 
@@ -12,28 +13,20 @@ interface AssessmentResultsProps {
   onRestart: () => void;
 }
 
-export function AssessmentResults({ 
-  responses, 
-  profile, 
-  track, 
-  onRestart 
+export function AssessmentResults({
+  responses,
+  profile,
+  track,
+  onRestart
 }: AssessmentResultsProps) {
-  // Calculate mock scores for demonstration
-  const sectionScores = {
-    Strategy: Math.floor(Math.random() * 40) + 60,
-    Data: Math.floor(Math.random() * 40) + 50,
-    Tools: Math.floor(Math.random() * 40) + 55,
-    Automation: Math.floor(Math.random() * 40) + 45,
-    People: Math.floor(Math.random() * 40) + 65,
-    Governance: Math.floor(Math.random() * 40) + 40
-  };
-
-  const weights = TRACK_WEIGHTS[track];
-  const overallScore = Math.round(
-    Object.entries(sectionScores).reduce((total, [section, score]) => {
-      return total + (score * weights[section as keyof typeof weights]) / 100;
-    }, 0)
+  const values = responses.reduce(
+    (acc, { questionId, value }) => ({ ...acc, [questionId]: value }),
+    {} as Record<string, any>
   );
+
+  const { sectionScores, totalScore } = scoreAnswers(values, track);
+  const weights = TRACK_WEIGHTS[track];
+  const overallScore = Math.round(totalScore);
 
   const getReadinessLevel = (score: number) => {
     if (score >= 80) return { level: "Advanced", color: "bg-green-500", description: "Excellent AI readiness" };
@@ -52,7 +45,7 @@ export function AssessmentResults({
           <h1 className="text-4xl font-bold">AI Readiness Assessment Results</h1>
         </div>
         <p className="text-lg text-muted-foreground">
-          {profile.M1} • {profile.M3} at {profile.M5}
+          {profile.M3} at {profile.M0} • {profile.M4_industry}
         </p>
         <Badge variant="outline" className="text-sm">
           {track === "TECH" ? "Technical Track" : track === "REG" ? "Regulated Track" : "General Business Track"}
@@ -83,7 +76,7 @@ export function AssessmentResults({
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="font-semibold text-lg">{section}</h3>
-                <span className="text-2xl font-bold text-primary">{score}</span>
+                <span className="text-2xl font-bold text-primary">{Math.round(score)}</span>
               </div>
               <Progress value={score} className="h-2" />
               <div className="text-sm text-muted-foreground">

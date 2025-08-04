@@ -8,6 +8,18 @@ import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { assessmentSections } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile } from "@/types/assessment";
 
+const REGULATED_INDUSTRIES = [
+  "Finance & Insurance",
+  "Health Care & Social Assistance",
+  "Utilities (Electricity, Gas, Water & Waste)",
+  "Transportation & Warehousing",
+  "Manufacturing",
+  "Information & Communication Technology",
+  "Professional, Scientific & Technical Services",
+  "Administrative & Support & Waste Management Services",
+  "Accommodation & Food Services",
+];
+
 interface AssessmentFlowProps {
   onComplete: (responses: AssessmentResponse[], profile: OrganizationProfile, track: Track) => void;
 }
@@ -31,31 +43,31 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     
     // Enhanced track detection based on YAML logic
     if (questionId === 'M3') {
-      // TECH track: Data/AI Lead, IT Lead, CIO/CTO
-      if (['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(value)) {
+      if (['Data / AI Lead', 'IT Lead', 'CIO / CTO'].includes(value)) {
         setDetectedTrack('TECH');
-      } else if (value === 'Legal/Compliance') {
+      } else if (value === 'Legal / Compliance Lead') {
         setDetectedTrack('REG');
       } else {
-        // Default to GEN unless regulated industry is detected
-        if (responses.M9 !== 'Yes' && responses.M9 !== 'Not sure') {
+        if (!REGULATED_INDUSTRIES.includes(responses.M4_industry)) {
           setDetectedTrack('GEN');
         }
       }
     }
-    
-    // REG track: Regulated industry or Legal/Compliance role
-    if (questionId === 'M9') {
-      if (['Yes', 'Not sure'].includes(value)) {
+
+    if (questionId === 'M4_industry') {
+      if (REGULATED_INDUSTRIES.includes(value)) {
         setDetectedTrack('REG');
-      } else if (responses.M3 !== 'Legal/Compliance' && !['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(responses.M3)) {
+      } else if (
+        responses.M3 !== 'Legal / Compliance Lead' &&
+        !['Data / AI Lead', 'IT Lead', 'CIO / CTO'].includes(responses.M3)
+      ) {
         setDetectedTrack('GEN');
       }
     }
   };
 
-  // Check if persona questions (M3, M9) are completed to show track info
-  const personaCompleted = responses.M3 && responses.M9;
+  // Check if persona questions (M3, M4_industry) are completed to show track info
+  const personaCompleted = responses.M3 && responses.M4_industry;
   const completedSections = currentSectionIndex; // sections fully completed
   
   const goToNextSection = () => {
@@ -74,13 +86,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         M1: responses.M1 || "",
         M2: responses.M2 || "",
         M3: responses.M3 || "",
-        M4: responses.M4 || "",
-        M5: responses.M5 || "",
-        M6: responses.M6 || "",
-        M7: responses.M7 || "",
-        M8: responses.M8 || "",
-        M9: responses.M9 || "",
-        M10: responses.M10 || false
+        M3_other: responses.M3_other || "",
+        M4_industry: responses.M4_industry || "",
+        M4_sub: responses.M4_sub || "",
+        M5_country: responses.M5_country || "",
+        M6_size: responses.M6_size || "",
+        M7_revenue: responses.M7_revenue || "",
+        M8_consent: responses.M8_consent || false,
       };
 
       onComplete(allResponses, profile, detectedTrack);

@@ -79,18 +79,26 @@ function evaluateCondition(
 
 export function detectTrack(responses: Record<string, any>): string {
   const role = responses.M3;
-  const regulated = responses.M9;
+  const industry = responses.M4_industry;
+  const REGULATED_INDUSTRIES = [
+    'Finance & Insurance',
+    'Health Care & Social Assistance',
+    'Utilities (Electricity, Gas, Water & Waste)',
+    'Transportation & Warehousing',
+    'Manufacturing',
+    'Information & Communication Technology',
+    'Professional, Scientific & Technical Services',
+    'Administrative & Support & Waste Management Services',
+    'Accommodation & Food Services',
+  ];
 
-  // Technical track detection
-  if (['Data/AI Lead', 'IT Lead', 'CTO/Tech Lead'].includes(role)) {
+  if (['Data / AI Lead', 'IT Lead', 'CIO / CTO'].includes(role)) {
     return 'TECH';
   }
 
-  // Regulated track detection
-  if (regulated === 'Yes' || regulated === 'Not sure' || role === 'Legal/Compliance') {
+  if (REGULATED_INDUSTRIES.includes(industry) || role === 'Legal / Compliance Lead') {
     return 'REG';
   }
 
-  // Default to General Business
   return 'GEN';
 }
