@@ -57,7 +57,7 @@ section_0:
       text: "Primary role"
       type: single
       helper: "Determines your recommendation track."
-      options: [
+      options:
         - "Founder / CEO"
         - "C-level executive"
         - "Head of Marketing"
@@ -82,7 +82,6 @@ section_0:
         - "Audit Lead"
         - "Governance Officer"
         - "Other (please specify)"
-      ]
       required: true
     - id: M3_other
       text: "Primary role (other)"
