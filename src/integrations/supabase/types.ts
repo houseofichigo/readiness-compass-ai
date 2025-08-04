@@ -579,6 +579,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: Json
       }
+      get_admin_role: {
+        Args: { user_email: string }
+        Returns: string
+      }
       get_assessment_progress: {
         Args: { assessment_id: string }
         Returns: Json
