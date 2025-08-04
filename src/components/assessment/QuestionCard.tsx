@@ -4,13 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { useState } from "react";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
@@ -60,7 +53,9 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
           </div>
         );
 
-      case "single": {
+        case "single":
+        case "industry_dropdown":
+        case "country_dropdown": {
         const flatOptions =
           question.options ||
           question.groups?.flatMap((g) => g.options) ||
@@ -111,34 +106,55 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
       }
 
-      case "multi":
-        if (question.groups?.length) {
+        case "multi":
+          return (
+            <MultiSelectQuestion
+              options={question.options || []}
+              value={value || []}
+              onChange={onChange}
+            />
+          );
+
+        case "multi_group": {
+          const selected: string[] = value || [];
+          const handleGroupChange = (optionValue: string, checked: boolean) => {
+            const newValue = new Set(selected);
+            if (checked) {
+              newValue.add(optionValue);
+            } else {
+              newValue.delete(optionValue);
+            }
+            onChange(Array.from(newValue));
+          };
           return (
             <div className="mt-4 space-y-6">
-              {question.groups.map((group) => (
+              {question.groups?.map((group) => (
                 <div key={group.label} className="space-y-2">
                   <Label className="text-sm font-medium">{group.label}</Label>
-                  <MultiSelectQuestion
-                    options={group.options}
-                    value={value || []}
-                    onChange={onChange}
-                    hideSelectAllLabel
-                    hideSelected
-                  />
+                  {group.options.map((opt) => (
+                    <div key={opt.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`${group.label}-${opt.value}`}
+                        checked={selected.includes(opt.value)}
+                        onCheckedChange={(checked) =>
+                          handleGroupChange(opt.value, checked as boolean)
+                        }
+                      />
+                      <Label
+                        htmlFor={`${group.label}-${opt.value}`}
+                        className="font-normal cursor-pointer text-sm"
+                      >
+                        {opt.label}
+                      </Label>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
           );
         }
-        return (
-          <MultiSelectQuestion
-            options={question.options || []}
-            value={value || []}
-            onChange={onChange}
-          />
-        );
 
-      case "rank": {
+        case "rank": {
         const rankOptions =
           question.options ||
           question.groups?.flatMap((g) => g.options) ||
@@ -153,37 +169,51 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
       }
 
-      case "industry_dropdown":
-        return (
-          <Select value={value || ""} onValueChange={onChange}>
-            <SelectTrigger className="mt-2 bg-background border-input">
-              <SelectValue placeholder="Select industry..." />
-            </SelectTrigger>
-            <SelectContent className="z-50 bg-background border border-border">
-              {/*
-                Replace with dynamic list or keep static options as needed:
-              */}
-              <SelectItem value="Agriculture">Agriculture</SelectItem>
-              <SelectItem value="Automotive">Automotive</SelectItem>
-              <SelectItem value="Banking & Finance">
-                Banking & Finance
-              </SelectItem>
-              <SelectItem value="Construction">Construction</SelectItem>
-              <SelectItem value="Consulting">Consulting</SelectItem>
-              <SelectItem value="Education">Education</SelectItem>
-              <SelectItem value="Energy & Utilities">
-                Energy & Utilities
-              </SelectItem>
-              <SelectItem value="Entertainment & Media">
-                Entertainment & Media
-              </SelectItem>
-              <SelectItem value="Fashion & Retail">Fashion & Retail</SelectItem>
-              <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
-              <SelectItem value="Government">Government</SelectItem>
-              <SelectItem value="Healthcare">Healthcare</SelectItem>
-            </SelectContent>
-          </Select>
-        );
+        case "matrix": {
+          const rows = question.rows || [];
+          const cols = question.columns || [];
+          const matrixValue: Record<string, string> = value || {};
+
+          const handleMatrixChange = (row: string, col: string) => {
+            onChange({ ...matrixValue, [row]: col });
+          };
+
+          return (
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr>
+                    <th className="p-2 text-left"></th>
+                    {cols.map((col) => (
+                      <th key={col} className="p-2 text-center">
+                        {col}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row}>
+                      <td className="p-2 font-medium">{row}</td>
+                      {cols.map((col) => (
+                        <td key={col} className="p-2 text-center">
+                          <input
+                            type="radio"
+                            name={row}
+                            value={col}
+                            checked={matrixValue[row] === col}
+                            onChange={() => handleMatrixChange(row, col)}
+                            className="h-4 w-4"
+                          />
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
+        }
 
       default:
         return null;

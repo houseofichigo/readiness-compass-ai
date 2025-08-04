@@ -1,7 +1,12 @@
 // src/data/assessmentQuestions.ts
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
-import type { Section, Question, QuestionOption } from "@/types/assessment";
+import type {
+  Section,
+  Question,
+  QuestionOption,
+  QuestionGroup,
+} from "@/types/assessment";
 
 // Titles for each section derived from the assessment YAML
 const SECTION_TITLES: Record<string, string> = {
@@ -16,8 +21,13 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision"
 };
 
-interface RawQuestion extends Omit<Question, "options"> {
+interface RawGroup extends Omit<QuestionGroup, "options"> {
+  options: Array<string | QuestionOption>;
+}
+
+interface RawQuestion extends Omit<Question, "options" | "groups"> {
   options?: Array<string | QuestionOption>;
+  groups?: RawGroup[];
 }
 
 interface RawSection {
@@ -40,6 +50,12 @@ const normalizeOptions = (
     typeof opt === "string" ? { value: opt, label: opt } : opt
   );
 
+const normalizeGroups = (groups?: RawGroup[]): QuestionGroup[] | undefined =>
+  groups?.map((g) => ({
+    ...g,
+    options: normalizeOptions(g.options) || [],
+  }));
+
 // Extract section_* entries and map to application Section objects
 const assessmentSections: Section[] = Object.entries(schema)
   .filter(([key]): key is `section_${string}` => key.startsWith("section_"))
@@ -47,7 +63,8 @@ const assessmentSections: Section[] = Object.entries(schema)
     const { purpose = "", questions = [] } = (value as RawSection) ?? {};
     const normalizedQuestions: Question[] = questions.map((q) => ({
       ...q,
-      options: normalizeOptions(q.options)
+      options: normalizeOptions(q.options),
+      groups: normalizeGroups(q.groups),
     }));
 
     return {
@@ -60,7 +77,8 @@ const assessmentSections: Section[] = Object.entries(schema)
 
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => ({
   ...q,
-  options: normalizeOptions(q.options)
+  options: normalizeOptions(q.options),
+  groups: normalizeGroups(q.groups),
 }));
 
 export { assessmentSections };

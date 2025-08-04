@@ -1,6 +1,17 @@
 export type Track = "TECH" | "REG" | "GEN";
 
-export type QuestionType = "text" | "email" | "single" | "multi" | "rank" | "checkbox" | "industry_dropdown" | "country_dropdown" | "multi_group";
+export type QuestionType =
+  | "text"
+  | "email"
+  | "number"
+  | "single"
+  | "multi"
+  | "multi_group"
+  | "rank"
+  | "checkbox"
+  | "matrix"
+  | "industry_dropdown"
+  | "country_dropdown";
 
 export interface QuestionOption {
   value: string;
@@ -8,11 +19,19 @@ export interface QuestionOption {
   score?: number;
 }
 
+export interface QuestionGroup {
+  label: string;
+  options: QuestionOption[];
+}
+
 export interface Question {
   id: string;
   text: string;
   type: QuestionType;
   options?: QuestionOption[];
+  groups?: QuestionGroup[];
+  rows?: string[];
+  columns?: string[];
   required?: boolean;
   helper?: string;
   show_if?: Record<string, any>;
