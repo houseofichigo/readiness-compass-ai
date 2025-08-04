@@ -200,6 +200,7 @@ section_0:
           return "GENERAL"
 
 section_1:
+  category: strategy
   purpose: "Assess strategic alignment & planning maturity."
   questions:
 
@@ -357,6 +358,7 @@ section_2:
           - { F5: { not: ["None apply"] } }
 
 section_3:
+  category: data
   purpose: "Data foundation, security, ethics, compliance."
   questions:
 
@@ -448,6 +450,7 @@ section_3:
       options: ["No formal policies", "High-level principles only (no detailed guidance)", "Documented guidelines (but no training or oversight)", "Guidelines + training & oversight (staff workshops, reviews)", "Audited & continuously improved (regular audits + updates)"]
 
 section_4:
+  category: tools
   purpose: "Tool stack & integration maturity (to power workflow and AI agent recommendations)."
   questions:
 
@@ -727,6 +730,7 @@ section_4:
 
 
 section_5:
+  category: automation
   purpose: "Automation maturity & AI agent governance."
   questions:
 
@@ -841,6 +845,7 @@ section_5:
         A3: "None implemented"
 
 section_6:
+  category: people
   purpose: "Team capability & learning culture (to drive targeted training recommendations)."
   questions:
 
@@ -935,6 +940,7 @@ section_6:
 
 
 section_7:
+  category: governance
   purpose: "Governance, risk & ethics (to drive targeted policy, oversight, and training recommendations)."
   questions:
 

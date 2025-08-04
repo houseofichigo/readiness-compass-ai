@@ -9,6 +9,7 @@ import type {
   ConsentBanner,
   ComputedField,
   QuestionType,
+  WeightVector,
 } from "@/types/assessment";
 
 // Titles for each section derived from the assessment YAML
@@ -51,6 +52,7 @@ interface RawQuestion {
 }
 
 interface RawSection {
+  category?: keyof WeightVector | string;
   purpose?: string;
   questions?: RawQuestion[];
   consent_banner?: ConsentBanner;
@@ -86,6 +88,7 @@ const assessmentSections: Section[] = Object.entries(schema)
   )
   .map(([id, rawSec]) => {
     const {
+      category,
       purpose = "",
       questions = [],
       consent_banner,
@@ -137,6 +140,7 @@ const assessmentSections: Section[] = Object.entries(schema)
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
+      ...(category ? { category } : {}),
       questions: normalizedQuestions,
       ...(consent_banner ? { consentBanner: consent_banner } : {}),
       ...(computed.length ? { computed } : {}),

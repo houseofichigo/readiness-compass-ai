@@ -10,16 +10,6 @@ export interface ScoringResult {
   track: string;
 }
 
-/** Map section titles to the categories used in weight vectors */
-const SECTION_CATEGORY_MAP: Record<string, keyof WeightVector> = {
-  "Strategy & Use-Case Readiness": "strategy",
-  "Data Foundation & Security": "data",
-  "Tool Stack & Integration": "tools",
-  "Automation & AI Agents": "automation",
-  "Team Capability & Culture": "people",
-  "Governance, Risk & Ethics": "governance",
-};
-
 interface QuestionIndexEntry {
   question: Question;
   section: keyof WeightVector;
@@ -28,7 +18,7 @@ interface QuestionIndexEntry {
 const buildQuestionIndex = (): Record<string, QuestionIndexEntry> => {
   const index: Record<string, QuestionIndexEntry> = {};
   assessmentSections.forEach((section) => {
-    const category = SECTION_CATEGORY_MAP[section.title];
+    const category = section.category;
     if (!category) return;
     section.questions.forEach((q) => {
       index[q.id] = { question: q, section: category };
