@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       answers: {
         Row: {
           answered_at: string
@@ -538,7 +562,17 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      admin_analytics: {
+        Row: {
+          active_organizations: number | null
+          completed_submissions: number | null
+          completion_rate: number | null
+          today_submissions: number | null
+          total_submissions: number | null
+          week_submissions: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       get_admin_dashboard_data: {
@@ -585,6 +619,10 @@ export type Database = {
           _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
         }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: { user_email: string }
         Returns: boolean
       }
       track_analytics_event: {

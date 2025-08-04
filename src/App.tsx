@@ -4,9 +4,16 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { AuthProvider } from "@/components/auth/AuthProvider";
+import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
+import { AdminLayout } from "@/components/admin/AdminLayout";
+import { ExecutiveDashboard } from "@/components/admin/ExecutiveDashboard";
+import { OverviewDashboard } from "@/components/admin/OverviewDashboard";
+import { SubmissionsTable } from "@/components/admin/SubmissionsTable";
+import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
+import { AdminLogin } from "@/pages/AdminLogin";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-import { AssessmentAdmin } from "@/components/admin/AssessmentAdmin";
 
 const queryClient = new QueryClient();
 
@@ -14,16 +21,27 @@ const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/admin" element={<AssessmentAdmin />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/*" element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }>
+                <Route index element={<ExecutiveDashboard />} />
+                <Route path="overview" element={<OverviewDashboard />} />
+                <Route path="submissions" element={<SubmissionsTable />} />
+                <Route path="analytics" element={<AnalyticsDashboard />} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </ErrorBoundary>
