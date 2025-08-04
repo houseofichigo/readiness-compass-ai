@@ -365,7 +365,7 @@ section_3:
       hide_if:
         all_of:
           - { M6_size: "1–9" }
-          - { D1: subset_of ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] }
+          - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
       options: ["No standards or visibility", "Basic naming conventions & partial docs", "Defined standards with manual processes", "Schema tools & automated tracking for key systems", "Version-controlled models with full lineage & governance"]
 
     - id: D4
