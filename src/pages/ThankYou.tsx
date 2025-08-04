@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import Confetti from "react-confetti";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, MessageSquare, Calculator, Shield, Phone, Globe, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
+import { useAssessment } from "@/hooks/useAssessment";
 interface ThankYouPageData {
   profile: OrganizationProfile;
   track: Track;
@@ -16,21 +17,51 @@ interface ThankYouPageData {
 export default function ThankYou() {
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const { loadAssessment } = useAssessment();
+  
   const [showConfetti, setShowConfetti] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  
   const data = location.state as ThankYouPageData;
+  const submissionIdFromUrl = searchParams.get('submissionId');
 
   // Debug logging
   console.log("ThankYou page data:", data);
   console.log("Location state:", location.state);
+  console.log("Submission ID from URL:", submissionIdFromUrl);
   useEffect(() => {
     // Stop confetti after 5 seconds
     const timer = setTimeout(() => setShowConfetti(false), 5000);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      if (submissionIdFromUrl) {
+        console.log("Loading assessment data for submission:", submissionIdFromUrl);
+        try {
+          const loadedData = await loadAssessment(submissionIdFromUrl);
+          if (loadedData) {
+            setAssessmentData({
+              profile: loadedData.profile,
+              track: loadedData.profile.track,
+              responses: loadedData.responses,
+              submissionId: submissionIdFromUrl
+            });
+          }
+        } catch (error) {
+          console.error("Error loading assessment:", error);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    loadData();
+  }, [submissionIdFromUrl, loadAssessment]);
 
   // Create mock data for preview when no real data is available
   const mockData: ThankYouPageData = {
@@ -57,8 +88,20 @@ export default function ThankYou() {
     submissionId: "demo-123"
   };
 
+  // Show loading state
+  if (isLoading && submissionIdFromUrl) {
+    return (
+      <div className="min-h-screen bg-gradient-accent flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold mb-2">Loading your results...</h2>
+          <p className="text-muted-foreground">Please wait while we retrieve your assessment data.</p>
+        </div>
+      </div>
+    );
+  }
+
   // Use real data if available, otherwise use mock data for preview
-  const pageData = data || mockData;
+  const pageData = assessmentData || data || mockData;
   const {
     profile,
     track,

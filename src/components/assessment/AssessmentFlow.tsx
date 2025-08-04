@@ -98,35 +98,32 @@ export function AssessmentFlow({
   const completeAssessment = async () => {
     console.log("🎉 Starting assessment completion...");
     
+    // Create complete profile object with all required fields
     const profile: OrganizationProfile = {
       M0: responses.M0 as string || "",
-      M4_industry: responses.M4_industry as string || "",
+      M1: responses.M1 as string || "",
+      M2: responses.M2 as string || "",
       M3: responses.M3 as string || "",
+      M3_other: responses.M3_other as string || "",
+      M4_industry: responses.M4_industry as string || "",
+      M4_sub: responses.M4_sub as string || "",
+      M5_country: responses.M5_country as string || "",
       M6_size: responses.M6_size as string || "",
-      track: detectedTrack || "GEN"
+      M7_revenue: responses.M7_revenue as string || "",
+      track: detectedTrack || "GEN",
+      regulated: globalComputed.regulated as boolean || false
     };
     
     try {
       console.log("💾 Saving assessment data...");
+      console.log("Complete profile:", profile);
+      console.log("Responses:", responses);
       
-      // Wait for the save to complete before navigating
+      // Call onComplete and wait for it to finish
       await onComplete(responses, profile);
       
-      console.log("🚀 Navigating to thank you page...");
-      // Navigate to thank you page with data
-      navigate("/thank-you", {
-        state: {
-          profile: {
-            ...profile,
-            M1: responses.M1 as string,
-            M2: responses.M2 as string,
-            M5_country: responses.M5_country as string,
-          },
-          track: detectedTrack || "GEN",
-          responses,
-          submissionId: null
-        }
-      });
+      console.log("✅ Assessment completed and saved successfully");
+      
     } catch (error) {
       console.error("❌ Error completing assessment:", error);
       toast({
