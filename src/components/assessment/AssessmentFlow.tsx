@@ -7,7 +7,6 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { AssessmentThankYou } from "./AssessmentThankYou";
 import { ConsentBanner } from "./ConsentBanner";
-import { OrganizationProfileForm } from "./OrganizationProfileForm";
 import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
@@ -197,38 +196,29 @@ export function AssessmentFlow({
         />
       )}
 
-      {/* Special handling for Organization Profile (section_0) */}
-      {currentSection?.id === "section_0" && !isAddOnPage ? (
-        <OrganizationProfileForm
-          questions={visibleQuestions}
-          responses={responses}
-          onChange={handleAnswerChange}
-        />
-      ) : (
-        <Card className="p-6">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">{sectionTitle}</h2>
-              {sectionPurpose && (
-                <p className="text-muted-foreground mb-4">{sectionPurpose}</p>
-              )}
-              <Progress
-                value={(currentPage / assessmentSections.length) * 100}
-                className="w-full"
-              />
-            </div>
-
-            {visibleQuestions.map((question, index) => (
-              <QuestionCard
-                key={question.id}
-                question={question}
-                value={responses[question.id]}
-                onChange={(value) => handleAnswerChange(question.id, value)}
-              />
-            ))}
+      <Card className="p-6">
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">{sectionTitle}</h2>
+            {sectionPurpose && (
+              <p className="text-muted-foreground mb-4">{sectionPurpose}</p>
+            )}
+            <Progress
+              value={(currentPage / assessmentSections.length) * 100}
+              className="w-full"
+            />
           </div>
-        </Card>
-      )}
+
+          {visibleQuestions.map((question, index) => (
+            <QuestionCard
+              key={question.id}
+              question={question}
+              value={responses[question.id]}
+              onChange={(value) => handleAnswerChange(question.id, value)}
+            />
+          ))}
+        </div>
+      </Card>
 
       <div className="flex justify-between">
         <Button
