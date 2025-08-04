@@ -192,9 +192,6 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
       {question.helper && (
         <p className="mt-2 text-sm text-muted-foreground">{question.helper}</p>
       )}
-      <div className="mt-4">
-        <Button onClick={() => onChange(value)}>Save</Button>
-      </div>
     </Card>
   );
 }

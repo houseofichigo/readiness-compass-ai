@@ -83,7 +83,7 @@ section_0:
 
     - id: M4_industry
       text: "Industry & sub-sector"
-      type: single
+      type: dropdown
       options: [
         "Agriculture, Forestry & Fishing",
         "Mining & Quarrying",
