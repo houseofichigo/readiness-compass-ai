@@ -58,7 +58,7 @@ const normalizeOptions = (
 // Build Section[] from YAML
 const assessmentSections: Section[] = Object.entries(schema)
   // keep only keys that start with "section_"
-  .filter(([key]): key is `section_${string}` => key.startsWith("section_"))
+  .filter(([key]) => key.startsWith("section_"))
   // sort by the numeric suffix
   .sort(([a], [b]) =>
     a.localeCompare(b, undefined, { numeric: true })

@@ -163,7 +163,6 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       <div className="container mx-auto max-w-6xl">
         <AssessmentProgressBar
           currentSectionIndex={currentPage}
-          totalSections={totalPages}
           completedSections={currentPage}
           detectedTrack={detectedTrack}
           showTrackInfo={showTrackInfo}
