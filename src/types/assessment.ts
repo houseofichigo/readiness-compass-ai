@@ -52,6 +52,7 @@ export interface OrganizationProfile {
 export interface AssessmentResponse {
   questionId: string;
   value: string | string[] | number | boolean;
+  sectionId: string;
   score?: number;
 }
 
