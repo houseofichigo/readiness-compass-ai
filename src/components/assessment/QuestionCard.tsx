@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
+import { MatrixQuestion } from "./MatrixQuestion";
 
 interface QuestionCardProps {
   question: Question;
@@ -133,6 +133,16 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
               </div>
             ))}
           </div>
+        );
+
+      case "matrix":
+        return (
+          <MatrixQuestion
+            rows={question.rows || []}
+            columns={question.columns || []}
+            value={value || {}}
+            onChange={onChange}
+          />
         );
 
       case "rank":

@@ -23,8 +23,10 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
-interface RawQuestion extends Omit<Question, "options" | "groups"> {
+interface RawQuestion extends Omit<Question, "options" | "groups" | "rows" | "columns"> {
   options?: Array<string | QuestionOption>;
+  rows?: Array<string | QuestionOption>;
+  columns?: Array<string | QuestionOption>;
   groups?: Array<{
     label: string;
     show_if?: Record<string, unknown>;
@@ -82,6 +84,12 @@ const assessmentSections: Section[] = Object.entries(schema)
       if (q.options) {
         base.options = normalizeOptions(q.options);
       }
+      if (q.rows) {
+        base.rows = normalizeOptions(q.rows);
+      }
+      if (q.columns) {
+        base.columns = normalizeOptions(q.columns);
+      }
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
@@ -118,6 +126,12 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   const base = { ...q } as Question;
   if (q.options) {
     base.options = normalizeOptions(q.options);
+  }
+  if (q.rows) {
+    base.rows = normalizeOptions(q.rows);
+  }
+  if (q.columns) {
+    base.columns = normalizeOptions(q.columns);
   }
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
