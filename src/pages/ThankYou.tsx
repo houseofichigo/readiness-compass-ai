@@ -4,44 +4,28 @@ import Confetti from "react-confetti";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { 
-  CheckCircle, 
-  Clock, 
-  Rocket, 
-  FileText, 
-  BookOpen, 
-  Users, 
-  GraduationCap, 
-  MessageSquare,
-  Calculator,
-  Shield,
-  Phone,
-  Globe,
-  ArrowLeft
-} from "lucide-react";
+import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, MessageSquare, Calculator, Shield, Phone, Globe, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
-
 interface ThankYouPageData {
   profile: OrganizationProfile;
   track: Track;
   responses: Record<string, any>;
   submissionId?: string;
 }
-
 export default function ThankYou() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
   const [showConfetti, setShowConfetti] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("English");
-
   const data = location.state as ThankYouPageData;
 
   // Debug logging
   console.log("ThankYou page data:", data);
   console.log("Location state:", location.state);
-
   useEffect(() => {
     // Stop confetti after 5 seconds
     const timer = setTimeout(() => setShowConfetti(false), 5000);
@@ -52,7 +36,7 @@ export default function ThankYou() {
   const mockData: ThankYouPageData = {
     profile: {
       M0: "Demo Company",
-      M1: "John Doe", 
+      M1: "John Doe",
       M2: "john@demo.com",
       M3: "CTO/Tech Lead",
       M4_industry: "Technology",
@@ -64,7 +48,7 @@ export default function ThankYou() {
     responses: {
       M0: "Demo Company",
       M1: "John Doe",
-      M2: "john@demo.com", 
+      M2: "john@demo.com",
       M3: "CTO/Tech Lead",
       M4_industry: "Technology",
       M5_country: "United States",
@@ -75,50 +59,39 @@ export default function ThankYou() {
 
   // Use real data if available, otherwise use mock data for preview
   const pageData = data || mockData;
-  const { profile, track, responses } = pageData;
-
+  const {
+    profile,
+    track,
+    responses
+  } = pageData;
   const getTrackLabel = (track: Track) => {
     switch (track) {
-      case "TECH": return "Technical Track";
-      case "REG": return "Regulated Track";
-      default: return "General Business Track";
+      case "TECH":
+        return "Technical Track";
+      case "REG":
+        return "Regulated Track";
+      default:
+        return "General Business Track";
     }
   };
-
   const handleComingSoon = (feature: string) => {
     toast({
       title: "Coming Soon!",
-      description: `${feature} will be available soon. We'll notify you when it's ready.`,
+      description: `${feature} will be available soon. We'll notify you when it's ready.`
     });
   };
-
   const handleRetakeAssessment = () => {
     navigate("/");
   };
-
   const totalQuestions = Object.keys(responses).length;
-
-  return (
-    <div className="min-h-screen bg-gradient-accent">
-      {showConfetti && (
-        <Confetti
-          width={window.innerWidth}
-          height={window.innerHeight}
-          recycle={false}
-          numberOfPieces={200}
-          gravity={0.1}
-        />
-      )}
+  return <div className="min-h-screen bg-gradient-accent">
+      {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={200} gravity={0.1} />}
 
       {/* Language Selector */}
       <div className="absolute top-4 right-4 z-10">
         <div className="flex items-center gap-2 bg-background/80 backdrop-blur-sm rounded-lg px-3 py-2">
           <Globe className="w-4 h-4" />
-          <select 
-            value={selectedLanguage}
-            onChange={(e) => setSelectedLanguage(e.target.value)}
-            className="bg-transparent border-none outline-none text-sm"
-          >
+          <select value={selectedLanguage} onChange={e => setSelectedLanguage(e.target.value)} className="bg-transparent border-none outline-none text-sm">
             <option value="English">🇺🇸 English</option>
             <option value="Spanish">🇪🇸 Spanish</option>
             <option value="French">🇫🇷 French</option>
@@ -213,45 +186,7 @@ export default function ThankYou() {
         </Card>
 
         {/* Next Steps Section */}
-        <Card className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-center text-foreground">Next Steps</h2>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              size="lg" 
-              className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
-              onClick={() => handleComingSoon("Interactive Report")}
-            >
-              <FileText className="w-5 h-5 mr-2" />
-              Explore Your Interactive Report
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => handleComingSoon("Email Report")}
-            >
-              Email Report
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => handleComingSoon("PDF Download")}
-            >
-              Download PDF
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => handleComingSoon("Consultation")}
-            >
-              <Phone className="w-4 h-4 mr-2" />
-              Schedule Consultation
-            </Button>
-          </div>
-        </Card>
+        
 
         {/* Resource Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -361,10 +296,7 @@ export default function ThankYou() {
             <ArrowLeft className="w-4 h-4" />
             Retake Assessment
           </Button>
-          <Button 
-            className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
-            onClick={() => window.open("https://www.houseofichigo.com", "_blank")}
-          >
+          <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" onClick={() => window.open("https://www.houseofichigo.com", "_blank")}>
             <Globe className="w-4 h-4 mr-2" />
             Visit Our Website
           </Button>
@@ -399,6 +331,5 @@ export default function ThankYou() {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
