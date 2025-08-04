@@ -164,12 +164,6 @@ section_0:
       options: ["< €250 k", "€250 k–1 M", "€1 M–€5 M", "€5 M–€20 M", "€20 M–€100 M", "> €100 M", "Prefer not to say"]
       required: true
 
-    - id: M8_consent
-      text: ""
-      type: checkbox
-      options: ["I agree to processing my data for this report and related communications."]
-      required: true
-
   computed:
     - id: regulated
       logic: |
