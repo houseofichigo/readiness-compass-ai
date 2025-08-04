@@ -1,108 +1,184 @@
-// src/types/assessment.ts
+// src/data/assessmentQuestions.ts
 
-export interface QuestionOption {
-  value: string;
-  label: string;
-}
+import yaml from "js-yaml";
+import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
+import type {
+  Section,
+  Question,
+  QuestionOption,
+  ConsentBanner,
+  ComputedField,
+  QuestionType,
+} from "@/types/assessment";
 
-export type QuestionType =
-  | "text"
-  | "email"
-  | "single"
-  | "multi"
-  | "multi_group"
-  | "rank"
-  | "industry_dropdown"
-  | "matrix"
-  | "checkbox";
+// Section titles
+const SECTION_TITLES: Record<string, string> = {
+  section_0: "Organization Profile",
+  section_1: "Strategy & Use-Case Readiness",
+  section_2: "Budget, Runway & Compliance",
+  section_3: "Data Foundation & Security",
+  section_4: "Tool Stack & Integration",
+  section_5: "Automation & AI Agents",
+  section_6: "Team Capability & Culture",
+  section_7: "Governance, Risk & Ethics",
+  section_8: "Implementation Horizon & Vision",
+};
 
-export interface QuestionGroup {
-  label: string;
-  showIf?: Record<string, unknown>;
-  options: QuestionOption[];
-}
-
-export interface Question {
-  id: string;
-  text: string;
-  type: QuestionType;
+interface RawQuestion extends Omit<Question, "options" | "groups"> {
+  type: QuestionType | string;
   helper?: string;
   required?: boolean;
-  options?: QuestionOption[];
+  options?: Array<string | QuestionOption>;
   rows?: string[];
   columns?: string[];
-  groups?: QuestionGroup[];
-  showIf?: Record<string, unknown>;
-  hideIf?: Record<string, unknown>;
-  scoreMap?: number[];
-  scorePer?: number;
+  groups?: Array<{
+    label: string;
+    show_if?: Record<string, unknown>;
+    options: Array<string | QuestionOption>;
+  }>;
+  show_if?: Record<string, unknown>;
+  hide_if?: Record<string, unknown>;
+  score_map?: number[];
+  score_per?: number;
   cap?: number;
   weight?: number[];
-  maxRank?: number;
-  maxSelect?: number;
-  scoreFormula?: string;
-  scoreByCount?: Record<string, number>;
+  max_rank?: number;
+  max_select?: number;
+  score_by_count?: Record<string, number>;
 }
 
-export interface ConsentBanner {
-  text: string;
-  type: string;
-  required: boolean;
-}
-
-export interface ComputedField {
-  id: string;
-  logic: string;
-}
-
-export interface Section {
-  id: string;
-  title: string;
-  purpose: string;
-  questions: Question[];
-  consentBanner?: ConsentBanner;
+interface RawSection {
+  purpose?: string;
+  consent_banner?: ConsentBanner;
+  questions?: RawQuestion[];
   computed?: ComputedField[];
 }
 
-export interface WeightVector {
-  Strategy: number;
-  Data: number;
-  Tools: number;
-  Automation: number;
-  People: number;
-  Governance: number;
+interface AssessmentYaml {
+  meta?: Record<string, unknown>;
+  add_ons?: RawQuestion[];
+  [key: `section_${number}`]: RawSection | undefined;
 }
 
-export type Track = "TECH" | "REG" | "GEN";
+const schema = yaml.load(schemaRaw) as AssessmentYaml;
 
-export interface OrganizationProfile {
-  M0: string; // Organization name
-  M1: string; // Full name
-  M2: string; // Business email
-  M3: string; // Primary role
-  M3_other: string; // Primary role (other)
-  M4_industry: string; // Industry
-  M4_sub: string; // Industry sub-sector
-  M5_country: string; // Country
-  M6_size: string; // Company size
-  M7_revenue: string; // Annual revenue
-  M8_consent: boolean; // Consent checkbox
+// Normalize mixed string|object arrays into QuestionOption[]
+function normalizeOptions(
+  opts?: Array<string | QuestionOption>
+): QuestionOption[] | undefined {
+  return opts?.map(o =>
+    typeof o === "string" ? { value: o, label: o } : o
+  );
 }
 
-export interface AssessmentResponse {
-  questionId: string;
-  value: any;
-  sectionId: string;
-}
+// Collect section-level consent banners and computed fields
+const assessmentConsentBanners: Record<string, ConsentBanner> = {};
+const assessmentComputed: Record<string, ComputedField[]> = {};
 
-export interface AssessmentData {
-  id: string;
-  profile: OrganizationProfile;
-  track: Track;
-  responses: AssessmentResponse[];
-  completedSections: string[];
-  totalScore: number;
-  sectionScores: Record<string, number>;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Build `Section[]` from the YAML
+const assessmentSections: Section[] = Object.entries(schema)
+  .filter(([key]) => key.startsWith("section_"))
+  .sort(([a], [b]) =>
+    a.localeCompare(b, undefined, { numeric: true })
+  )
+  .map(([id, raw]) => {
+    const {
+      purpose = "",
+      consent_banner,
+      questions = [],
+      computed = [],
+    } = raw ?? {};
+
+    // Normalize each question
+    const normalizedQuestions: Question[] = (questions || []).map(q => {
+      const base: Partial<Question> = {
+        id: q.id,
+        text: q.text,
+        type: q.type as QuestionType,
+        helper: q.helper,
+        required: q.required,
+        showIf: q.show_if,
+        hideIf: q.hide_if,
+        scoreMap: q.score_map,
+        scorePer: q.score_per,
+        cap: q.cap,
+        weight: q.weight,
+        maxRank: q.max_rank,
+        maxSelect: q.max_select,
+        scoreByCount: q.score_by_count,
+      };
+
+      if (q.options)  base.options  = normalizeOptions(q.options);
+      if (q.rows)     base.rows     = [...q.rows];
+      if (q.columns)  base.columns  = [...q.columns];
+
+      if (q.groups) {
+        base.groups = q.groups.map(g => ({
+          label: g.label,
+          showIf: g.show_if,
+          options: normalizeOptions(g.options) || [],
+        }));
+      }
+
+      return base as Question;
+    });
+
+    // Assemble the Section object
+    const section: Section = {
+      id,
+      title: SECTION_TITLES[id] ?? id,
+      purpose,
+      questions: normalizedQuestions,
+      // attach optional fields only when present
+      ...(consent_banner ? { consentBanner: consent_banner } : {}),
+      ...(computed.length   ? { computed }             : {}),
+    };
+
+    if (consent_banner) assessmentConsentBanners[id] = consent_banner;
+    if (computed.length)  assessmentComputed[id] = computed;
+
+    return section;
+  });
+
+// Top‐level “add_on” questions (if any)
+const assessmentAddOns: Question[] = (schema.add_ons ?? []).map(q => {
+  const base: Partial<Question> = {
+    id: q.id,
+    text: q.text,
+    type: q.type as QuestionType,
+    helper: q.helper,
+    required: q.required,
+    showIf: q.show_if,
+    hideIf: q.hide_if,
+    scoreMap: q.score_map,
+    scorePer: q.score_per,
+    cap: q.cap,
+    weight: q.weight,
+    maxRank: q.max_rank,
+    maxSelect: q.max_select,
+    scoreByCount: q.score_by_count,
+  };
+
+  if (q.options)  base.options  = normalizeOptions(q.options);
+  if (q.rows)     base.rows     = [...q.rows];
+  if (q.columns)  base.columns  = [...q.columns];
+
+  if (q.groups) {
+    base.groups = q.groups.map(g => ({
+      label: g.label,
+      showIf: g.show_if,
+      options: normalizeOptions(g.options) || [],
+    }));
+  }
+
+  return base as Question;
+});
+
+export {
+  assessmentSections,
+  assessmentConsentBanners,
+  assessmentComputed,
+  assessmentAddOns,
+};
+export const assessmentMeta = schema.meta ?? {};
+export const assessmentData = { sections: assessmentSections };

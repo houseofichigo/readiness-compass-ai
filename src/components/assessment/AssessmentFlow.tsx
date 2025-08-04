@@ -9,12 +9,8 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 
-import {
-  assessmentSections,
-  assessmentAddOns,
-  assessmentMeta,
-} from "@/data/assessmentQuestions";
-import { isQuestionVisible } from "@/utils/questionVisibility";
+import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
+import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import {
   AssessmentResponse,
   Track,
@@ -28,12 +24,19 @@ const parseListLiteral = (lit: string): string[] => {
   return m ? m[1].split(",").map(s => s.trim().replace(/['"]/g, "")) : [];
 };
 
-// Find TECH roles from the track_detection precedence rules
-const parseTechRoles = (rules: any[]): string[] => {
-  const techRule = rules.find(
-    (r: any) => typeof r.if === "string" && r.if.includes("-> TECH")
-  );
-  return techRule ? parseListLiteral(techRule.if as string) : [];
+// Evaluate computed fields for a section
+const evaluateComputed = (
+  fields: ComputedField[] | undefined,
+  rs: Record<string, any>
+): Record<string, any> => {
+  const values: Record<string, any> = {};
+  fields?.forEach(f => {
+    if (f.id === "regulated") {
+      const industries = parseListLiteral(f.logic);
+      values[f.id] = industries.includes(rs.M4_industry);
+    }
+  });
+  return values;
 };
 
 interface AssessmentFlowProps {
@@ -50,32 +53,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
   const [bannerConsent, setBannerConsent] = useState<Record<string, boolean>>({});
 
-  // 1) Extract “regulated” computed logic from section_0
+  // Precompute global computed fields (e.g., from profile section)
   const profileSection = assessmentSections.find(s => s.id === "section_0");
-  const regulatedLogic =
-    profileSection?.computed?.find((c: ComputedField) => c.id === "regulated")
-      ?.logic ?? "";
-  const regulatedIndustries = parseListLiteral(regulatedLogic);
+  const globalComputed = evaluateComputed(profileSection?.computed, responses);
 
-  // 2) Extract track_detection rules
-  const trackRules =
-    (assessmentMeta as any)?.track_detection?.precedence ?? [];
-  const techRoles = parseTechRoles(trackRules);
-  const legalRole = "Legal / Compliance Lead";
-
-  // 3) Fallback computeTrack for persona changes
-  const computeTrack = (rs: Record<string, any>): Track => {
-    const role = rs.M3 as string;
-    const industry = rs.M4_industry as string;
-    if (techRoles.includes(role)) return "TECH";
-    if (regulatedIndustries.includes(industry) || role === legalRole)
-      return "REG";
-    return "GEN";
-  };
-
-  // 4) Filter visible “add-on” questions
+  // Filter visible “add-on” questions
   const visibleAddOns = assessmentAddOns.filter(q =>
-    isQuestionVisible(q, responses, detectedTrack, /* totalVisible= */ 0, {})
+    isQuestionVisible(q, responses, detectedTrack, /* totalVisible= */ 0, globalComputed)
   );
 
   // Total pages = core sections + optional add-ons page
@@ -101,14 +85,29 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // If still loading...
   if (!currentSection) return <div>Loading sections…</div>;
 
-  const visibleQuestions = currentSection.questions;
+  const sectionComputed = evaluateComputed(currentSection.computed, responses);
+  const computedValues = { ...globalComputed, ...sectionComputed };
+
+  let totalVisible = 0;
+  const visibleQuestions = currentSection.questions.filter(q => {
+    const show = isQuestionVisible(
+      q,
+      responses,
+      detectedTrack,
+      totalVisible,
+      computedValues,
+    );
+    if (show) totalVisible++;
+    return show;
+  });
 
   // Handle answer changes and re-compute track for persona fields
   const handleAnswerChange = (qid: string, val: any) => {
     setResponses(prev => {
       const updated = { ...prev, [qid]: val };
       if (qid === "M3" || qid === "M4_industry") {
-        setDetectedTrack(computeTrack(updated));
+        const comp = evaluateComputed(profileSection?.computed, updated);
+        setDetectedTrack(detectTrack(updated, comp));
       }
       return updated;
     });

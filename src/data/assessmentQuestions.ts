@@ -24,15 +24,11 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
-interface RawQuestion {
-  id: string;
-  text: string;
+interface RawQuestion extends Omit<Question, "options" | "groups"> {
   type: QuestionType | string;
-  helper?: string;
-  required?: boolean;
   options?: Array<string | QuestionOption>;
-  rows?: string[];
-  columns?: string[];
+  rows?: Array<string>;
+  columns?: Array<string>;
   groups?: Array<{
     label: string;
     show_if?: Record<string, unknown>;
@@ -46,7 +42,6 @@ interface RawQuestion {
   weight?: number[];
   max_rank?: number;
   max_select?: number;
-  score_formula?: string;
   score_by_count?: Record<string, number>;
 }
 
@@ -66,114 +61,120 @@ interface AssessmentYaml {
 const schema = yaml.load(schemaRaw) as AssessmentYaml;
 
 // Normalize a mixed array of strings or objects into QuestionOption[]
-const normalizeOptions = (
-  options?: Array<string | QuestionOption>
-): QuestionOption[] | undefined =>
-  options?.map((opt) =>
-    typeof opt === "string" ? { value: opt, label: opt } : opt
+function normalizeOptions(
+  opts?: Array<string | QuestionOption>
+): QuestionOption[] | undefined {
+  return opts?.map((o) =>
+    typeof o === "string" ? { value: o, label: o } : o
   );
+}
 
-// Build Section[] from YAML
+// Top-level maps for consent banners & computed logic
+const assessmentConsentBanners: Record<string, ConsentBanner> = {};
+const assessmentComputed: Record<string, ComputedField[]> = {};
+
+// Build our Section[] from YAML
 const assessmentSections: Section[] = Object.entries(schema)
-  // keep only keys that start with "section_"
   .filter(([key]) => key.startsWith("section_"))
-  // sort by the numeric suffix
   .sort(([a], [b]) =>
     a.localeCompare(b, undefined, { numeric: true })
   )
-  .map(([id, raw]) => {
+  .map(([id, rawSec]) => {
     const {
       purpose = "",
       questions = [],
       consent_banner,
       computed = [],
-    } = raw ?? {};
+    } = rawSec ?? {};
 
-    // normalize flat and grouped options and convert to camelCase
+    // Normalize every question
     const normalizedQuestions: Question[] = questions.map((q) => {
-      const base: Question = {
+      const base: Partial<Question> = {
         id: q.id,
         text: q.text,
         type: q.type as QuestionType,
         helper: q.helper,
         required: q.required,
-        options: normalizeOptions(q.options),
-        rows: q.rows,
-        columns: q.columns,
-        showIf: q.show_if,
-        hideIf: q.hide_if,
-        scoreMap: q.score_map,
-        scorePer: q.score_per,
+        show_if: q.show_if,
+        hide_if: q.hide_if,
+        score_map: q.score_map,
+        score_per: q.score_per,
         cap: q.cap,
         weight: q.weight,
-        maxRank: q.max_rank,
-        maxSelect: q.max_select,
-        scoreFormula: q.score_formula,
-        scoreByCount: q.score_by_count,
+        max_rank: q.max_rank,
+        max_select: q.max_select,
+        score_by_count: q.score_by_count,
       };
+
+      if (q.options) base.options = normalizeOptions(q.options);
+      if (q.rows)    base.rows    = [...q.rows];
+      if (q.columns) base.columns = [...q.columns];
 
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
-          showIf: g.show_if,
+          show_if: g.show_if,
           options: normalizeOptions(g.options) || [],
         }));
       }
 
-      return base;
+      return base as Question;
     });
 
-    // assemble the Section object
     const section: Section = {
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
       questions: normalizedQuestions,
+      // only attach if defined
+      ...(consent_banner ? { consent_banner } : {}),
+      ...(computed.length ? { computed } : {}),
     };
 
-    if (consent_banner) {
-      section.consentBanner = consent_banner;
-    }
-    if (computed.length) {
-      section.computed = computed;
-    }
+    if (consent_banner) assessmentConsentBanners[id] = consent_banner;
+    if (computed.length)  assessmentComputed[id] = computed;
 
     return section;
   });
 
-// Top-level add-ons (if any)
+// Top-level “add_ons” questions, if any
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
-  const base: Question = {
+  const base: Partial<Question> = {
     id: q.id,
     text: q.text,
     type: q.type as QuestionType,
     helper: q.helper,
     required: q.required,
-    options: normalizeOptions(q.options),
-    rows: q.rows,
-    columns: q.columns,
-    showIf: q.show_if,
-    hideIf: q.hide_if,
-    scoreMap: q.score_map,
-    scorePer: q.score_per,
+    show_if: q.show_if,
+    hide_if: q.hide_if,
+    score_map: q.score_map,
+    score_per: q.score_per,
     cap: q.cap,
     weight: q.weight,
-    maxRank: q.max_rank,
-    maxSelect: q.max_select,
-    scoreFormula: q.score_formula,
-    scoreByCount: q.score_by_count,
+    max_rank: q.max_rank,
+    max_select: q.max_select,
+    score_by_count: q.score_by_count,
   };
+
+  if (q.options) base.options = normalizeOptions(q.options);
+  if (q.rows)    base.rows    = [...q.rows];
+  if (q.columns) base.columns = [...q.columns];
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
       label: g.label,
-      showIf: g.show_if,
+      show_if: g.show_if,
       options: normalizeOptions(g.options) || [],
     }));
   }
-  return base;
+
+  return base as Question;
 });
 
-export { assessmentSections };
+export {
+  assessmentSections,
+  assessmentConsentBanners,
+  assessmentComputed,
+  assessmentAddOns,
+};
 export const assessmentMeta = schema.meta ?? {};
-export { assessmentAddOns };
 export const assessmentData = { sections: assessmentSections };
