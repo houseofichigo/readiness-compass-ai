@@ -471,7 +471,7 @@ section_4:
           options: [
             "New Relic", "Datadog", "Dynatrace", "AppDynamics",
             "Elastic APM", "Sentry", "Splunk APM", "Pingdom",
-            "Bubble", "Mistral", "Other tool (please specify)"
+            "Bubble", "Mistral", "Other performance monitoring tool (please specify)"
           ]
 
         # Tech Track – Infrastructure & Network Monitoring
@@ -480,7 +480,7 @@ section_4:
           options: [
             "Zabbix", "Nagios", "PRTG", "SolarWinds",
             "Site24x7", "ManageEngine", "Grafana", "Prometheus",
-            "Checkmk", "Other tool (please specify)"
+            "Checkmk", "Other infrastructure monitoring tool (please specify)"
           ]
 
         # Tech Track – Cloud & DevOps Monitoring
@@ -489,7 +489,7 @@ section_4:
           options: [
             "AWS CloudWatch", "Azure Monitor", "Google Cloud Operations",
             "LogicMonitor", "Sumo Logic", "PagerDuty", "StatusPage",
-            "Other tool (please specify)"
+            "Other cloud monitoring tool (please specify)"
           ]
 
         # Tech Track – Web Analytics & User Experience
@@ -498,7 +498,7 @@ section_4:
           options: [
             "Google Analytics", "Adobe Analytics", "Hotjar", "Mixpanel",
             "Amplitude", "Tealium", "Webflow", "Matomo", "Plausible",
-            "Other tool (please specify)"
+            "Other web analytics tool (please specify)"
           ]
 
         # Tech Track – Data Management & ETL
@@ -506,7 +506,7 @@ section_4:
           show_if: { track: "TECH" }
           options: [
             "Snowflake", "Databricks", "Fivetran", "Stitch",
-            "Talend", "Apache Airflow", "Other tool (please specify)"
+            "Talend", "Apache Airflow", "Other data management tool (please specify)"
           ]
 
         # Tech Track – API Integration & Workflow Automation
@@ -514,7 +514,7 @@ section_4:
           show_if: { track: "TECH" }
           options: [
             "Zapier", "Power Automate", "MuleSoft", "Make",
-            "n8n", "Workato", "Tray.io", "Other tool (please specify)"
+            "n8n", "Workato", "Tray.io", "Other automation tool (please specify)"
           ]
 
         # General Track – Email Marketing & Communication
@@ -524,7 +524,7 @@ section_4:
             "Mailchimp", "Constant Contact", "SendGrid",
             "Campaign Monitor", "ConvertKit", "ActiveCampaign",
             "GetResponse", "Cordial", "Brevo (Sendinblue)",
-            "AWeber", "Other tool (please specify)"
+            "AWeber", "Other email marketing tool (please specify)"
           ]
 
         # General Track – Customer Relations & Sales Management
@@ -533,7 +533,7 @@ section_4:
           options: [
             "Salesforce", "HubSpot", "Pipedrive", "Zoho CRM",
             "Freshsales", "Monday.com", "Close.io", "Zendesk",
-            "Intercom", "Other tool (please specify)"
+            "Intercom", "Other CRM tool (please specify)"
           ]
 
         # General Track – E-commerce & Payment Processing
@@ -542,7 +542,7 @@ section_4:
           options: [
             "Shopify", "WooCommerce", "Stripe", "PayPal",
             "BigCommerce", "Magento", "Square",
-            "Other tool (please specify)"
+            "Other e-commerce tool (please specify)"
           ]
 
         # General Track – Digital Advertising & Marketing
@@ -551,7 +551,7 @@ section_4:
           options: [
             "Google Ads", "Facebook Ads", "LinkedIn Ads",
             "Microsoft Advertising", "Twitter Ads",
-            "Pinterest Ads", "TikTok Ads", "Other tool (please specify)"
+            "Pinterest Ads", "TikTok Ads", "Other advertising tool (please specify)"
           ]
 
         # General Track – Business Intelligence & Analytics
@@ -560,7 +560,7 @@ section_4:
           options: [
             "Tableau", "Power BI", "Looker", "Qlik Sense",
             "Sisense", "Domo", "SurveyMonkey",
-            "Other tool (please specify)"
+            "Other BI tool (please specify)"
           ]
 
         # General Track – Project Management & Productivity
@@ -569,7 +569,7 @@ section_4:
           options: [
             "Asana", "Trello", "Jira", "Slack",
             "Microsoft Teams", "Notion", "ClickUp",
-            "Other tool (please specify)"
+            "Other productivity tool (please specify)"
           ]
 
         # General Track – Financial Management & Accounting
@@ -578,7 +578,7 @@ section_4:
           options: [
             "QuickBooks", "Xero", "FreshBooks", "Sage",
             "Wave", "Odoo", "Henrri.net",
-            "Other tool (please specify)"
+            "Other financial tool (please specify)"
           ]
 
         # General Track – Business Process Management
@@ -586,7 +586,7 @@ section_4:
           show_if: { track: "GEN" }
           options: [
             "Kissflow", "Nintex", "Pipefy", "ProcessMaker",
-            "Appian", "Pegasystems", "Other tool (please specify)"
+            "Appian", "Pegasystems", "Other workflow tool (please specify)"
           ]
 
         # Reg Track – Data Privacy & GDPR Compliance
@@ -595,7 +595,7 @@ section_4:
           options: [
             "OneTrust", "TrustArc", "CookieYes",
             "Usercentrics", "Didomi", "Cookiebot",
-            "DataGrail", "Other tool (please specify)"
+            "DataGrail", "Other privacy tool (please specify)"
           ]
 
         # Reg Track – Security & Risk Management
@@ -603,7 +603,7 @@ section_4:
           show_if: { track: "REG" }
           options: [
             "Qualys", "Rapid7", "Tenable", "CrowdStrike",
-            "SentinelOne", "Splunk", "Other tool (please specify)"
+            "SentinelOne", "Splunk", "Other security tool (please specify)"
           ]
 
         # Reg Track – Audit & Governance
@@ -612,7 +612,7 @@ section_4:
           options: [
             "AuditBoard", "MetricStream", "ServiceNow GRC",
             "RSA Archer", "LogicGate", "Resolver",
-            "Other tool (please specify)"
+            "Other GRC tool (please specify)"
           ]
 
         # Reg Track – Industry-Specific Compliance
@@ -620,7 +620,7 @@ section_4:
           show_if: { track: "REG" }
           options: [
             "Fenergo", "RegEd", "Thomson Reuters",
-            "Other tool (please specify)"
+            "Other regulatory tool (please specify)"
           ]
 
         # Reg Track – Document & Records Management
@@ -629,14 +629,14 @@ section_4:
           options: [
             "SharePoint", "DocuSign", "Box",
             "Dropbox Business", "M-Files", "FileHold",
-            "Other tool (please specify)"
+            "Other document management tool (please specify)"
           ]
 
     - id: T0_other
       text: "Other tool (please specify)"
       type: text
       show_if:
-        T0_tools: subset_of ["Other tool (please specify)"]
+        T0_tools: subset_of ["Other performance monitoring tool (please specify)", "Other infrastructure monitoring tool (please specify)", "Other cloud monitoring tool (please specify)", "Other web analytics tool (please specify)", "Other data management tool (please specify)", "Other automation tool (please specify)", "Other email marketing tool (please specify)", "Other CRM tool (please specify)", "Other e-commerce tool (please specify)", "Other advertising tool (please specify)", "Other BI tool (please specify)", "Other productivity tool (please specify)", "Other financial tool (please specify)", "Other workflow tool (please specify)", "Other privacy tool (please specify)", "Other security tool (please specify)", "Other GRC tool (please specify)", "Other regulatory tool (please specify)", "Other document management tool (please specify)"]
 
     - id: T1
       text: "How well are your tools and systems connected?"
