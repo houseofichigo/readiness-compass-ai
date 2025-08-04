@@ -52,7 +52,7 @@ export function AssessmentResults({
           <h1 className="text-4xl font-bold">AI Readiness Assessment Results</h1>
         </div>
         <p className="text-lg text-muted-foreground">
-          {profile.M1} • {profile.M3} at {profile.M5}
+          {profile.M1} • {profile.M3} at {profile.M0}
         </p>
         <Badge variant="outline" className="text-sm">
           {track === "TECH" ? "Technical Track" : track === "REG" ? "Regulated Track" : "General Business Track"}

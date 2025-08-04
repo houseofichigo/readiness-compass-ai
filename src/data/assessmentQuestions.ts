@@ -54,13 +54,18 @@ const assessmentSections: Section[] = Object.entries(schema)
   .sort(([a], [b]) =>
     a.localeCompare(b, undefined, { numeric: true })
   )
-  .map(([id, raw]) => {
-    const { purpose = "", questions = [], computed = [] } = raw ?? {};
+  .map(([id, rawSection]) => {
+    const { purpose = "", questions = [], computed = [] } = rawSection ?? {};
+
     const normalizedQuestions: Question[] = questions.map((q) => {
       const base: any = { ...q };
+
+      // normalize flat options
       if (q.options) {
         base.options = normalizeOptions(q.options);
       }
+
+      // normalize grouped options
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
@@ -68,6 +73,7 @@ const assessmentSections: Section[] = Object.entries(schema)
           options: normalizeOptions(g.options),
         }));
       }
+
       return base as Question;
     });
 

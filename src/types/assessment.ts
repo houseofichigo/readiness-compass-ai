@@ -19,6 +19,7 @@ export interface QuestionOption {
   score?: number;
 }
 
+/** A piece of logic declared in YAML to compute a derived field */
 export interface ComputedField {
   /** the computed field’s id (e.g. "regulated") */
   id: string;
@@ -31,6 +32,7 @@ export interface Question {
   text: string;
   type: QuestionType;
   options?: QuestionOption[];
+  /** for grouped questions (multi_group or multi) */
   groups?: Array<{
     label: string;
     show_if?: Record<string, any>;
@@ -43,6 +45,7 @@ export interface Question {
   max_rank?: number;
   weight?: number[];
   score_map?: number[];
+  score_by_count?: Record<string, number>;
   score_per?: number;
   cap?: number;
   max_select?: number;
@@ -55,6 +58,7 @@ export interface Section {
   title: string;
   purpose: string;
   questions: Question[];
+  /** any YAML-declared computed logic to run at form-runtime */
   computed?: ComputedField[];
 }
 
