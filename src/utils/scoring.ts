@@ -1,4 +1,4 @@
-import { schema } from '@/data/schema';
+import { TRACK_WEIGHTS } from '@/types/assessment';
 
 export interface ScoringResult {
   questionScores: Record<string, number>;
@@ -28,9 +28,10 @@ export function scoreAnswers(values: Record<string, any>, track: string): Scorin
   });
 
   // Apply track-specific weights
-  const weights = schema.weight_vectors?.[track] || {};
+  const weights = TRACK_WEIGHTS[track as keyof typeof TRACK_WEIGHTS] || TRACK_WEIGHTS.GEN;
   const totalScore = sections.reduce((sum, section) => {
-    return sum + (sectionScores[section] * ((weights[section] || 0) / 100));
+    const sectionKey = section as keyof typeof weights;
+    return sum + (sectionScores[section] * (weights[sectionKey] / 100));
   }, 0);
 
   return {
