@@ -29,16 +29,28 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const handleAnswerChange = (questionId: string, value: any) => {
     setResponses(prev => ({ ...prev, [questionId]: value }));
     
-    // Simple track detection
+    // Enhanced track detection based on YAML logic
     if (questionId === 'M3') {
-      if (['Data/AI Lead', 'IT Lead'].includes(value)) {
+      // TECH track: Data/AI Lead, IT Lead, CIO/CTO
+      if (['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(value)) {
         setDetectedTrack('TECH');
       } else if (value === 'Legal/Compliance') {
         setDetectedTrack('REG');
+      } else {
+        // Default to GEN unless regulated industry is detected
+        if (responses.M9 !== 'Yes' && responses.M9 !== 'Not sure') {
+          setDetectedTrack('GEN');
+        }
       }
     }
-    if (questionId === 'M9' && ['Yes', 'Not sure'].includes(value)) {
-      setDetectedTrack('REG');
+    
+    // REG track: Regulated industry or Legal/Compliance role
+    if (questionId === 'M9') {
+      if (['Yes', 'Not sure'].includes(value)) {
+        setDetectedTrack('REG');
+      } else if (responses.M3 !== 'Legal/Compliance' && !['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(responses.M3)) {
+        setDetectedTrack('GEN');
+      }
     }
   };
 
