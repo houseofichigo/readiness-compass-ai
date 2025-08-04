@@ -86,7 +86,7 @@ export function useAssessment() {
       const answers = Object.entries(responses).map(([questionId, value]) => ({
         submission_id: submission.id,
         question_id: questionId,
-        value: value
+        value: JSON.stringify(value) // Convert value to JSON string for JSONB storage
       }));
 
       console.log(`📊 Inserting ${answers.length} answers...`);
@@ -153,7 +153,13 @@ export function useAssessment() {
 
       // Convert answers back to responses format
       const responses = answers.reduce((acc, answer) => {
-        acc[answer.question_id] = answer.value as AssessmentValue;
+        try {
+          // Parse JSON value back to original format
+          acc[answer.question_id] = JSON.parse(String(answer.value));
+        } catch {
+          // Fallback for non-JSON values
+          acc[answer.question_id] = answer.value as AssessmentValue;
+        }
         return acc;
       }, {} as Record<string, AssessmentValue>);
 
