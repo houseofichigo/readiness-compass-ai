@@ -18,6 +18,8 @@ export interface Question {
   helper?: string;
   required?: boolean;
   options?: QuestionOption[];
+  rows?: QuestionOption[];
+  columns?: QuestionOption[];
   groups?: QuestionGroup[];
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
