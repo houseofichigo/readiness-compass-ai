@@ -167,10 +167,6 @@ export function AssessmentFlow({
           </CardContent>
         </Card>
 
-        <div className="flex justify-between">
-          {currentPage > 0 ? <Button variant="outline" onClick={goPrev} className="flex items-center gap-2">
-              <ArrowLeft className="h-4 w-4" /> Previous
-            </Button> : <div />}
 
           <Button onClick={goNext} className="flex items-center gap-2" disabled={consentReq && !consentGiven}>
             {currentPage === totalPages - 1 ? "Complete" : "Next"}
