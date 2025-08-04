@@ -428,7 +428,7 @@ section_3:
       text: "Do you use synthetic or third-party data to augment your datasets?"
       type: single
       show_if:
-        track: TECH
+        track: "TECH"
       options: ["No", "Exploring options", "Limited pilots", "Regular production use", "Extensive synthetic data pipelines"]
 
     - id: D10
@@ -455,7 +455,7 @@ section_4:
 
         # Tech Track – Performance Monitoring
         - label: "Performance Monitoring"
-          show_if: { track: Tech }
+          show_if: { track: "TECH" }
           options: [
             "New Relic", "Datadog", "Dynatrace", "AppDynamics",
             "Elastic APM", "Sentry", "Splunk APM", "Pingdom",
@@ -464,7 +464,7 @@ section_4:
 
         # Tech Track – Infrastructure & Network Monitoring
         - label: "Infrastructure & Network Monitoring"
-          show_if: { track: Tech }
+          show_if: { track: "TECH" }
           options: [
             "Zabbix", "Nagios", "PRTG", "SolarWinds",
             "Site24x7", "ManageEngine", "Grafana", "Prometheus",
@@ -473,7 +473,7 @@ section_4:
 
         # Tech Track – Cloud & DevOps Monitoring
         - label: "Cloud & DevOps Monitoring"
-          show_if: { track: Tech }
+          show_if: { track: "TECH" }
           options: [
             "AWS CloudWatch", "Azure Monitor", "Google Cloud Operations",
             "LogicMonitor", "Sumo Logic", "PagerDuty", "StatusPage",
@@ -482,7 +482,7 @@ section_4:
 
         # Tech Track – Web Analytics & User Experience
         - label: "Web Analytics & User Experience"
-          show_if: { track: Tech }
+          show_if: { track: "TECH" }
           options: [
             "Google Analytics", "Adobe Analytics", "Hotjar", "Mixpanel",
             "Amplitude", "Tealium", "Webflow", "Matomo", "Plausible",
@@ -491,7 +491,7 @@ section_4:
 
         # Tech Track – Data Management & ETL
         - label: "Data Management & ETL"
-          show_if: { track: Tech }
+          show_if: { track: "TECH" }
           options: [
             "Snowflake", "Databricks", "Fivetran", "Stitch",
             "Talend", "Apache Airflow", "Other tool (please specify)"
@@ -499,7 +499,7 @@ section_4:
 
         # Tech Track – API Integration & Workflow Automation
         - label: "API Integration & Workflow Automation"
-          show_if: { track: Tech }
+          show_if: { track: "TECH" }
           options: [
             "Zapier", "Power Automate", "MuleSoft", "Make",
             "n8n", "Workato", "Tray.io", "Other tool (please specify)"
@@ -507,7 +507,7 @@ section_4:
 
         # General Track – Email Marketing & Communication
         - label: "Email Marketing & Communication"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Mailchimp", "Constant Contact", "SendGrid",
             "Campaign Monitor", "ConvertKit", "ActiveCampaign",
@@ -517,7 +517,7 @@ section_4:
 
         # General Track – Customer Relations & Sales Management
         - label: "Customer Relations & Sales Management"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Salesforce", "HubSpot", "Pipedrive", "Zoho CRM",
             "Freshsales", "Monday.com", "Close.io", "Zendesk",
@@ -526,7 +526,7 @@ section_4:
 
         # General Track – E-commerce & Payment Processing
         - label: "E-commerce & Payment Processing"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Shopify", "WooCommerce", "Stripe", "PayPal",
             "BigCommerce", "Magento", "Square",
@@ -535,7 +535,7 @@ section_4:
 
         # General Track – Digital Advertising & Marketing
         - label: "Digital Advertising & Marketing"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Google Ads", "Facebook Ads", "LinkedIn Ads",
             "Microsoft Advertising", "Twitter Ads",
@@ -544,7 +544,7 @@ section_4:
 
         # General Track – Business Intelligence & Analytics
         - label: "Business Intelligence & Analytics"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Tableau", "Power BI", "Looker", "Qlik Sense",
             "Sisense", "Domo", "SurveyMonkey",
@@ -553,7 +553,7 @@ section_4:
 
         # General Track – Project Management & Productivity
         - label: "Project Management & Productivity"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Asana", "Trello", "Jira", "Slack",
             "Microsoft Teams", "Notion", "ClickUp",
@@ -562,7 +562,7 @@ section_4:
 
         # General Track – Financial Management & Accounting
         - label: "Financial Management & Accounting"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "QuickBooks", "Xero", "FreshBooks", "Sage",
             "Wave", "Odoo", "Henrri.net",
@@ -571,7 +571,7 @@ section_4:
 
         # General Track – Business Process Management
         - label: "Business Process Management"
-          show_if: { track: General }
+          show_if: { track: "GEN" }
           options: [
             "Kissflow", "Nintex", "Pipefy", "ProcessMaker",
             "Appian", "Pegasystems", "Other tool (please specify)"
@@ -579,7 +579,7 @@ section_4:
 
         # Reg Track – Data Privacy & GDPR Compliance
         - label: "Data Privacy & GDPR Compliance"
-          show_if: { track: Reg }
+          show_if: { track: "REG" }
           options: [
             "OneTrust", "TrustArc", "CookieYes",
             "Usercentrics", "Didomi", "Cookiebot",
@@ -588,7 +588,7 @@ section_4:
 
         # Reg Track – Security & Risk Management
         - label: "Security & Risk Management"
-          show_if: { track: Reg }
+          show_if: { track: "REG" }
           options: [
             "Qualys", "Rapid7", "Tenable", "CrowdStrike",
             "SentinelOne", "Splunk", "Other tool (please specify)"
@@ -596,7 +596,7 @@ section_4:
 
         # Reg Track – Audit & Governance
         - label: "Audit & Governance"
-          show_if: { track: Reg }
+          show_if: { track: "REG" }
           options: [
             "AuditBoard", "MetricStream", "ServiceNow GRC",
             "RSA Archer", "LogicGate", "Resolver",
@@ -605,7 +605,7 @@ section_4:
 
         # Reg Track – Industry-Specific Compliance
         - label: "Industry-Specific Compliance"
-          show_if: { track: Reg }
+          show_if: { track: "REG" }
           options: [
             "Fenergo", "RegEd", "Thomson Reuters",
             "Other tool (please specify)"
@@ -613,7 +613,7 @@ section_4:
 
         # Reg Track – Document & Records Management
         - label: "Document & Records Management"
-          show_if: { track: Reg }
+          show_if: { track: "REG" }
           options: [
             "SharePoint", "DocuSign", "Box",
             "Dropbox Business", "M-Files", "FileHold",
