@@ -23,6 +23,7 @@ interface RawQuestion extends Omit<Question, "options"> {
 interface RawSection {
   purpose?: string;
   questions?: RawQuestion[];
+  computed?: { id: string; logic: string }[];
 }
 
 interface AssessmentYaml {
@@ -44,7 +45,7 @@ const normalizeOptions = (
 const assessmentSections: Section[] = Object.entries(schema)
   .filter(([key]): key is `section_${string}` => key.startsWith("section_"))
   .map(([id, value]) => {
-    const { purpose = "", questions = [] } = (value as RawSection) ?? {};
+    const { purpose = "", questions = [], computed = [] } = (value as RawSection) ?? {};
     const normalizedQuestions: Question[] = questions.map((q) => ({
       ...q,
       options: normalizeOptions(q.options)
@@ -54,7 +55,8 @@ const assessmentSections: Section[] = Object.entries(schema)
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
-      questions: normalizedQuestions
+      questions: normalizedQuestions,
+      computed
     };
   });
 

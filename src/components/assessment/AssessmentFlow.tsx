@@ -5,8 +5,26 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
-import { assessmentSections } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile } from "@/types/assessment";
+
+const parseRegulatedIndustries = (logic: string): string[] => {
+  const match = logic.match(/\[(.*?)\]/s);
+  if (!match) return [];
+  return match[1]
+    .split(",")
+    .map((s) => s.trim().replace(/['"]/g, ""));
+};
+
+const parseTechRoles = (rules: any[]): string[] => {
+  const techRule = rules.find(
+    (r: any) => typeof r.if === "string" && r.if.includes("-> TECH")
+  );
+  if (!techRule) return [];
+  const match = techRule.if.match(/role in \[(.*?)\]/);
+  if (!match) return [];
+  return match[1].split(",").map((r: string) => r.trim());
+};
 
 interface AssessmentFlowProps {
   onComplete: (responses: AssessmentResponse[], profile: OrganizationProfile, track: Track) => void;
@@ -16,6 +34,23 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
+
+  const profileSection = assessmentSections.find((s) => s.id === "section_0");
+  const regulatedLogic =
+    profileSection?.computed?.find((c) => c.id === "regulated")?.logic || "";
+  const regulatedIndustries = parseRegulatedIndustries(regulatedLogic);
+  const trackRules =
+    (assessmentMeta as any)?.track_detection?.precedence || [];
+  const techRoles = parseTechRoles(trackRules);
+  const legalRole = "Legal / Compliance Lead";
+
+  const computeTrack = (res: Record<string, any>): Track => {
+    const role = res.M3;
+    const industry = res.M4_industry;
+    if (techRoles.includes(role)) return "TECH";
+    if (regulatedIndustries.includes(industry) || role === legalRole) return "REG";
+    return "GEN";
+  };
 
   const currentSection = assessmentSections[currentSectionIndex];
   
@@ -27,35 +62,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const visibleQuestions = currentSection.questions || [];
 
   const handleAnswerChange = (questionId: string, value: any) => {
-    setResponses(prev => ({ ...prev, [questionId]: value }));
-    
-    // Enhanced track detection based on YAML logic
-    if (questionId === 'M3') {
-      // TECH track: Data/AI Lead, IT Lead, CIO/CTO
-      if (['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(value)) {
-        setDetectedTrack('TECH');
-      } else if (value === 'Legal/Compliance') {
-        setDetectedTrack('REG');
-      } else {
-        // Default to GEN unless regulated industry is detected
-        if (responses.M9 !== 'Yes' && responses.M9 !== 'Not sure') {
-          setDetectedTrack('GEN');
-        }
+    setResponses(prev => {
+      const updated = { ...prev, [questionId]: value };
+      if (questionId === 'M3' || questionId === 'M4_industry') {
+        setDetectedTrack(computeTrack(updated));
       }
-    }
-    
-    // REG track: Regulated industry or Legal/Compliance role
-    if (questionId === 'M9') {
-      if (['Yes', 'Not sure'].includes(value)) {
-        setDetectedTrack('REG');
-      } else if (responses.M3 !== 'Legal/Compliance' && !['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(responses.M3)) {
-        setDetectedTrack('GEN');
-      }
-    }
+      return updated;
+    });
   };
 
-  // Check if persona questions (M3, M9) are completed to show track info
-  const personaCompleted = responses.M3 && responses.M9;
+  // Check if persona questions (M3, M4_industry) are completed to show track info
+  const personaCompleted = responses.M3 && responses.M4_industry;
   const completedSections = currentSectionIndex; // sections fully completed
   
   const goToNextSection = () => {
@@ -74,13 +91,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         M1: responses.M1 || "",
         M2: responses.M2 || "",
         M3: responses.M3 || "",
-        M4: responses.M4 || "",
-        M5: responses.M5 || "",
-        M6: responses.M6 || "",
-        M7: responses.M7 || "",
-        M8: responses.M8 || "",
-        M9: responses.M9 || "",
-        M10: responses.M10 || false
+        M3_other: responses.M3_other || "",
+        M4_industry: responses.M4_industry || "",
+        M4_sub: responses.M4_sub || "",
+        M5_country: responses.M5_country || "",
+        M6_size: responses.M6_size || "",
+        M7_revenue: responses.M7_revenue || "",
+        M8_consent: responses.M8_consent || false
       };
 
       onComplete(allResponses, profile, detectedTrack);
