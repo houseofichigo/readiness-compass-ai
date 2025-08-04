@@ -4,13 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { useState } from "react";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
@@ -34,7 +27,6 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
     switch (question.type) {
       case "text":
       case "email":
-      case "number":
         return (
           <Input
             type={question.type}
@@ -153,37 +145,6 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
       }
 
-      case "industry_dropdown":
-        return (
-          <Select value={value || ""} onValueChange={onChange}>
-            <SelectTrigger className="mt-2 bg-background border-input">
-              <SelectValue placeholder="Select industry..." />
-            </SelectTrigger>
-            <SelectContent className="z-50 bg-background border border-border">
-              {/*
-                Replace with dynamic list or keep static options as needed:
-              */}
-              <SelectItem value="Agriculture">Agriculture</SelectItem>
-              <SelectItem value="Automotive">Automotive</SelectItem>
-              <SelectItem value="Banking & Finance">
-                Banking & Finance
-              </SelectItem>
-              <SelectItem value="Construction">Construction</SelectItem>
-              <SelectItem value="Consulting">Consulting</SelectItem>
-              <SelectItem value="Education">Education</SelectItem>
-              <SelectItem value="Energy & Utilities">
-                Energy & Utilities
-              </SelectItem>
-              <SelectItem value="Entertainment & Media">
-                Entertainment & Media
-              </SelectItem>
-              <SelectItem value="Fashion & Retail">Fashion & Retail</SelectItem>
-              <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
-              <SelectItem value="Government">Government</SelectItem>
-              <SelectItem value="Healthcare">Healthcare</SelectItem>
-            </SelectContent>
-          </Select>
-        );
 
       default:
         return null;
