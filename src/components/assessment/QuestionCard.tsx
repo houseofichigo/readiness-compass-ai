@@ -61,13 +61,15 @@ export function QuestionCard({
           />
         );
 
-      case "single": {
+      case "single":
+      case "dropdown":
+      case "industry_dropdown": {
         // Handles radio groups as well as dropdowns (industry_dropdown & country_dropdown)
         const flatOptions: Array<
           string | { value: string; label: string }
         > = question.options || question.groups?.flatMap((g) => g.options) || [];
 
-        if (question.uiType === "dropdown" || question.type === "dropdown") {
+        if (question.type === "dropdown" || question.type === "industry_dropdown") {
           // Render as <Select> for dropdowns
           return (
             <Select value={value} onValueChange={onChange}>
@@ -168,8 +170,8 @@ export function QuestionCard({
       case "matrix":
         return (
           <MatrixQuestion
-            rows={Array.isArray(question.rows) ? question.rows : []}
-            columns={Array.isArray(question.columns) ? question.columns : []}
+            rows={question.rows?.map(r => typeof r === 'string' ? { value: r, label: r } : r) || []}
+            columns={question.columns?.map(c => typeof c === 'string' ? { value: c, label: c } : c) || []}
             value={value || {}}
             onChange={onChange}
           />

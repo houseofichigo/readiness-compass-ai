@@ -5,6 +5,7 @@ import { AssessmentResults } from "@/components/assessment/AssessmentResults";
 import {
   AssessmentData,
   AssessmentResponse,
+  AssessmentValue,
   OrganizationProfile,
   Track
 } from "@/types/assessment";
@@ -23,16 +24,18 @@ const Index = () => {
   };
 
   const handleAssessmentComplete = (
-    responses: AssessmentResponse[],
-    profile: OrganizationProfile,
-    track: Track
+    responses: Record<string, AssessmentValue>,
+    profile: OrganizationProfile
   ) => {
     const data: AssessmentData = {
       id: `${Date.now()}`,
       sections: assessmentSections,
       profile,
-      track,
-      responses: {},
+      track: profile.track || 'GEN',
+      responses: Object.entries(responses).reduce((acc, [key, value]) => ({
+        ...acc,
+        [key]: { questionId: key, value, sectionId: 'unknown' }
+      }), {}),
       completedSections: [],
       totalScore: 0,
       sectionScores: {},

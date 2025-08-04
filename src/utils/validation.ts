@@ -40,7 +40,7 @@ export function validateSection(
       if (hasOtherSelected) {
         const otherFieldId = `${question.id}_other`;
         const otherValue = responses[otherFieldId];
-        if (!otherValue || otherValue.trim() === '') {
+        if (!otherValue || String(otherValue).trim() === '') {
           errors[otherFieldId] = 'Please specify "Other"';
         }
       }

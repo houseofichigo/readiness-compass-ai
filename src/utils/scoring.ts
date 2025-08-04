@@ -50,23 +50,19 @@ export function scoreAnswers(
   const questionScores: Record<string, number> = {};
   const sectionTotals: Record<keyof WeightVector, number> = {
     strategy: 0,
-    finance: 0,
     data: 0,
     tools: 0,
     automation: 0,
     people: 0,
     governance: 0,
-    planning: 0,
   };
   const sectionCounts: Record<keyof WeightVector, number> = {
     strategy: 0,
-    finance: 0,
     data: 0,
     tools: 0,
     automation: 0,
     people: 0,
     governance: 0,
-    planning: 0,
   };
 
   for (const [id, { question, section }] of Object.entries(QUESTION_INDEX)) {
