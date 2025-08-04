@@ -1,6 +1,14 @@
 export type Track = "TECH" | "REG" | "GEN";
 
-export type QuestionType = "text" | "email" | "single" | "multi" | "rank" | "checkbox" | "industry_dropdown" | "country_dropdown" | "multi_group";
+export type QuestionType =
+  | "text"
+  | "email"
+  | "single"
+  | "multi"
+  | "rank"
+  | "checkbox"
+  | "multi_group"
+  | "matrix";
 
 export interface QuestionOption {
   value: string;
@@ -13,13 +21,21 @@ export interface Question {
   text: string;
   type: QuestionType;
   options?: QuestionOption[];
+  groups?: {
+    label: string;
+    options: QuestionOption[];
+    show_if?: Record<string, unknown>;
+  }[];
+  rows?: string[];
+  columns?: string[];
   required?: boolean;
   helper?: string;
-  show_if?: Record<string, any>;
-  hide_if?: Record<string, any>;
+  show_if?: Record<string, unknown>;
+  hide_if?: Record<string, unknown>;
   max_rank?: number;
   weight?: number[];
   score_map?: number[];
+  score_by_count?: Record<string, number>;
   score_per?: number;
   cap?: number;
   max_select?: number;
@@ -35,19 +51,17 @@ export interface Section {
 }
 
 export interface OrganizationProfile {
-  M0: string; // Company name
+  M0: string; // Organization name
   M1: string; // Full name
-  M2: string; // Work email
-  M3: string; // Role/Position
+  M2: string; // Business e-mail
+  M3: string; // Primary role
   M3_other?: string;
-  M4: string; // Department
-  M4_other?: string;
-  M5: string; // Industry
-  M6: string; // Country
-  M7: string; // Company size
-  M8: string; // Annual revenue
-  M9: string; // Regulated industry
-  M10: boolean; // Consent
+  M4_industry: string; // Industry & sub-sector
+  M4_sub?: string; // Industry (other)
+  M5_country: string; // Country
+  M6_size: string; // Company size (FTE)
+  M7_revenue: string; // Annual revenue
+  M8_consent: boolean; // Consent
 }
 
 export interface AssessmentResponse {

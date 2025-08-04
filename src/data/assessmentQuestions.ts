@@ -47,7 +47,11 @@ const assessmentSections: Section[] = Object.entries(schema)
     const { purpose = "", questions = [] } = (value as RawSection) ?? {};
     const normalizedQuestions: Question[] = questions.map((q) => ({
       ...q,
-      options: normalizeOptions(q.options)
+      options: normalizeOptions(q.options),
+      groups: q.groups?.map((g) => ({
+        ...g,
+        options: normalizeOptions(g.options)
+      }))
     }));
 
     return {
