@@ -744,7 +744,7 @@ section_5:
       text: "Other automation task (please specify)"
       type: text
       show_if:
-      A1: subset_of ["Other (please specify)"]
+        A1: subset_of ["Other (please specify)"]
       required: true
 
 
