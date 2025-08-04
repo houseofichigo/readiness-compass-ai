@@ -12,162 +12,82 @@ import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
 import { MatrixQuestion } from "./MatrixQuestion";
 import { ProgressiveMultiGroupQuestion } from "./ProgressiveMultiGroupQuestion";
-
 interface QuestionCardProps {
   question: Question;
   value?: any;
   onChange: (value: any) => void;
 }
-
-export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
+export function QuestionCard({
+  question,
+  value,
+  onChange
+}: QuestionCardProps) {
   const [inputValue, setInputValue] = useState(value || "");
-
   const handleInputChange = (newValue: string) => {
     setInputValue(newValue);
     onChange(newValue);
   };
-
   const renderQuestionInput = () => {
     switch (question.type) {
       case "text":
       case "email":
-        return (
-          <Input
-            type={question.type}
-            value={inputValue}
-            onChange={(e) => handleInputChange(e.target.value)}
-            placeholder={`Enter your ${question.text.toLowerCase()}`}
-            className="mt-2"
-            required={question.required}
-          />
-        );
-
+        return <Input type={question.type} value={inputValue} onChange={e => handleInputChange(e.target.value)} placeholder={`Enter your ${question.text.toLowerCase()}`} className="mt-2" required={question.required} />;
       case "checkbox":
-        return (
-          <div className="flex items-center space-x-2 mt-4">
-            <Checkbox
-              id={question.id}
-              checked={value || false}
-              onCheckedChange={onChange}
-            />
-            <Label htmlFor={question.id} className="text-sm leading-relaxed">
-              {question.text}
-            </Label>
-          </div>
-        );
-
+        return;
       case "single":
         // Also used for industry_dropdown & country_dropdown
-        const flatOptions =
-          question.options ||
-          question.groups?.flatMap((g) => g.options) ||
-          [];
-        return (
-          <RadioGroup
-            value={value}
-            onValueChange={onChange}
-            className="mt-4 space-y-3"
-          >
-            {question.groups?.length
-              ? question.groups.map((group) => (
-                  <div key={group.label} className="space-y-2">
+        const flatOptions = question.options || question.groups?.flatMap(g => g.options) || [];
+        return <RadioGroup value={value} onValueChange={onChange} className="mt-4 space-y-3">
+            {question.groups?.length ? question.groups.map(group => <div key={group.label} className="space-y-2">
                     <Label className="text-sm font-medium">{group.label}</Label>
-                    {group.options.map((opt) => (
-                      <div key={opt.value} className="flex items-center space-x-2">
+                    {group.options.map(opt => <div key={opt.value} className="flex items-center space-x-2">
                         <RadioGroupItem value={opt.value} id={opt.value} />
                         <Label htmlFor={opt.value} className="font-normal cursor-pointer">
                           {opt.label}
                         </Label>
-                      </div>
-                    ))}
-                  </div>
-                ))
-              : flatOptions.map((opt) => (
-                  <div key={opt.value} className="flex items-center space-x-2">
+                      </div>)}
+                  </div>) : flatOptions.map(opt => <div key={opt.value} className="flex items-center space-x-2">
                     <RadioGroupItem value={opt.value} id={opt.value} />
                     <Label htmlFor={opt.value} className="font-normal cursor-pointer">
                       {opt.label}
                     </Label>
-                  </div>
-                ))}
-          </RadioGroup>
-        );
-
+                  </div>)}
+          </RadioGroup>;
       case "dropdown":
-        const dropdownOptions =
-          question.options ||
-          question.groups?.flatMap((g) => g.options) ||
-          [];
-        return (
-          <Select value={value} onValueChange={onChange}>
+        const dropdownOptions = question.options || question.groups?.flatMap(g => g.options) || [];
+        return <Select value={value} onValueChange={onChange}>
             <SelectTrigger className="mt-4">
               <SelectValue placeholder="Select an option..." />
             </SelectTrigger>
             <SelectContent>
-              {dropdownOptions.map((opt) => (
-                <SelectItem key={typeof opt === 'string' ? opt : opt.value} value={typeof opt === 'string' ? opt : opt.value}>
+              {dropdownOptions.map(opt => <SelectItem key={typeof opt === 'string' ? opt : opt.value} value={typeof opt === 'string' ? opt : opt.value}>
                   {typeof opt === 'string' ? opt : opt.label}
-                </SelectItem>
-              ))}
+                </SelectItem>)}
             </SelectContent>
-          </Select>
-        );
-
+          </Select>;
       case "multi":
-        return (
-          <MultiSelectQuestion
-            options={question.options || []}
-            value={value || []}
-            onChange={onChange}
-          />
-        );
-
+        return <MultiSelectQuestion options={question.options || []} value={value || []} onChange={onChange} />;
       case "multi_group":
         // Progressive disclosure for grouped checkboxes
-        return (
-          <ProgressiveMultiGroupQuestion
-            groups={question.groups || []}
-            value={value || []}
-            onChange={onChange}
-          />
-        );
-
+        return <ProgressiveMultiGroupQuestion groups={question.groups || []} value={value || []} onChange={onChange} />;
       case "matrix":
-        return (
-          <MatrixQuestion
-            rows={Array.isArray(question.rows) ? question.rows.map(r => typeof r === 'string' ? { value: r, label: r } : r) : []}
-            columns={Array.isArray(question.columns) ? question.columns.map(c => typeof c === 'string' ? { value: c, label: c } : c) : []}
-            value={value || {}}
-            onChange={onChange}
-          />
-        );
-
+        return <MatrixQuestion rows={Array.isArray(question.rows) ? question.rows.map(r => typeof r === 'string' ? {
+          value: r,
+          label: r
+        } : r) : []} columns={Array.isArray(question.columns) ? question.columns.map(c => typeof c === 'string' ? {
+          value: c,
+          label: c
+        } : c) : []} value={value || {}} onChange={onChange} />;
       case "rank":
-        const rankOpts =
-          question.options ||
-          question.groups?.flatMap((g) => g.options) ||
-          [];
-        return (
-          <DragDropQuestionRank
-            options={rankOpts}
-            value={value || []}
-            onChange={onChange}
-            maxRank={question.maxRank || 3}
-          />
-        );
-
+        const rankOpts = question.options || question.groups?.flatMap(g => g.options) || [];
+        return <DragDropQuestionRank options={rankOpts} value={value || []} onChange={onChange} maxRank={question.maxRank || 3} />;
       default:
         return null;
     }
   };
-
-  return (
-    <Card className="mb-6 p-4">
+  return <Card className="mb-6 p-4">
       <Label className="font-semibold">{question.text}</Label>
       {renderQuestionInput()}
-      {question.helper && (
-        <p className="mt-2 text-sm text-muted-foreground">{question.helper}</p>
-      )}
-    </Card>
-  );
+      {question.helper && <p className="mt-2 text-sm text-muted-foreground">{question.helper}</p>}
+    </Card>;
 }

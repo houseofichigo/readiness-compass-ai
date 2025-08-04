@@ -8,15 +8,9 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
-
 import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
-import {
-  AssessmentResponse,
-  Track,
-  OrganizationProfile,
-  ComputedField,
-} from "@/types/assessment";
+import { AssessmentResponse, Track, OrganizationProfile, ComputedField } from "@/types/assessment";
 
 // Helpers to parse YAML list literals like "['A','B','C']"
 const parseListLiteral = (lit: string): string[] => {
@@ -25,10 +19,7 @@ const parseListLiteral = (lit: string): string[] => {
 };
 
 // Evaluate computed fields for a section
-const evaluateComputed = (
-  fields: ComputedField[] | undefined,
-  rs: Record<string, any>
-): Record<string, any> => {
+const evaluateComputed = (fields: ComputedField[] | undefined, rs: Record<string, any>): Record<string, any> => {
   const values: Record<string, any> = {};
   fields?.forEach(f => {
     if (f.id === "regulated") {
@@ -38,16 +29,12 @@ const evaluateComputed = (
   });
   return values;
 };
-
 interface AssessmentFlowProps {
-  onComplete: (
-    responses: AssessmentResponse[],
-    profile: OrganizationProfile,
-    track: Track
-  ) => void;
+  onComplete: (responses: AssessmentResponse[], profile: OrganizationProfile, track: Track) => void;
 }
-
-export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
+export function AssessmentFlow({
+  onComplete
+}: AssessmentFlowProps) {
   const [currentPage, setCurrentPage] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
@@ -58,45 +45,34 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const globalComputed = evaluateComputed(profileSection?.computed, responses);
 
   // Filter visible “add-on” questions
-  const visibleAddOns = assessmentAddOns.filter(q =>
-    isQuestionVisible(q, responses, detectedTrack, /* totalVisible= */ 0, globalComputed)
-  );
+  const visibleAddOns = assessmentAddOns.filter(q => isQuestionVisible(q, responses, detectedTrack, /* totalVisible= */0, globalComputed));
 
   // Total pages = core sections + optional add-ons page
-  const totalPages =
-    assessmentSections.length + (visibleAddOns.length > 0 ? 1 : 0);
+  const totalPages = assessmentSections.length + (visibleAddOns.length > 0 ? 1 : 0);
 
   // Are we on the final add-ons page?
-  const isAddOnPage =
-    visibleAddOns.length > 0 && currentPage === assessmentSections.length;
+  const isAddOnPage = visibleAddOns.length > 0 && currentPage === assessmentSections.length;
 
   // Pick current “section”
-  const currentSection = isAddOnPage
-    ? {
-        id: "add_ons",
-        title: "Additional Questions",
-        purpose: "",
-        questions: visibleAddOns,
-        consentBanner: undefined,
-        computed: undefined,
-      }
-    : assessmentSections[currentPage]!;
+  const currentSection = isAddOnPage ? {
+    id: "add_ons",
+    title: "Additional Questions",
+    purpose: "",
+    questions: visibleAddOns,
+    consentBanner: undefined,
+    computed: undefined
+  } : assessmentSections[currentPage]!;
 
   // If still loading...
   if (!currentSection) return <div>Loading sections…</div>;
-
   const sectionComputed = evaluateComputed(currentSection.computed, responses);
-  const computedValues = { ...globalComputed, ...sectionComputed };
-
+  const computedValues = {
+    ...globalComputed,
+    ...sectionComputed
+  };
   let totalVisible = 0;
   const visibleQuestions = currentSection.questions.filter(q => {
-    const show = isQuestionVisible(
-      q,
-      responses,
-      detectedTrack,
-      totalVisible,
-      computedValues,
-    );
+    const show = isQuestionVisible(q, responses, detectedTrack, totalVisible, computedValues);
     if (show) totalVisible++;
     return show;
   });
@@ -104,7 +80,10 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // Handle answer changes and re-compute track for persona fields
   const handleAnswerChange = (qid: string, val: any) => {
     setResponses(prev => {
-      const updated = { ...prev, [qid]: val };
+      const updated = {
+        ...prev,
+        [qid]: val
+      };
       if (qid === "M3" || qid === "M4_industry") {
         const comp = evaluateComputed(profileSection?.computed, updated);
         setDetectedTrack(detectTrack(updated, comp) as Track);
@@ -119,18 +98,11 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       setCurrentPage(i => i + 1);
     } else {
       // Finalize
-      const allResponses: AssessmentResponse[] = Object.entries(responses).map(
-        ([qid, v]) => ({
-          questionId: qid,
-          value: v,
-          sectionId: isAddOnPage
-            ? "add_ons"
-            : assessmentSections.find(s =>
-                s.questions.some(q => q.id === qid)
-              )?.id ?? "unknown",
-        })
-      );
-
+      const allResponses: AssessmentResponse[] = Object.entries(responses).map(([qid, v]) => ({
+        questionId: qid,
+        value: v,
+        sectionId: isAddOnPage ? "add_ons" : assessmentSections.find(s => s.questions.some(q => q.id === qid))?.id ?? "unknown"
+      }));
       const profile: OrganizationProfile = {
         M0: responses.M0 || "",
         M1: responses.M1 || "",
@@ -142,30 +114,21 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         M5_country: responses.M5_country || "",
         M6_size: responses.M6_size || "",
         M7_revenue: responses.M7_revenue || "",
-        M8_consent: responses.M8_consent || false,
+        M8_consent: responses.M8_consent || false
       };
-
       onComplete(allResponses, profile, detectedTrack);
     }
   };
-  const goPrev = () =>
-    setCurrentPage(i => Math.max(0, i - 1));
+  const goPrev = () => setCurrentPage(i => Math.max(0, i - 1));
 
   // UI bits
   const answeredCount = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
   const showTrackInfo = Boolean(responses.M3 && responses.M4_industry);
   const consentReq = currentSection.consentBanner?.required;
   const consentGiven = bannerConsent[currentSection.id] === true;
-
-  return (
-    <div className="min-h-screen bg-gradient-accent p-4">
+  return <div className="min-h-screen bg-gradient-accent p-4">
       <div className="container mx-auto max-w-6xl">
-        <AssessmentProgressBar
-          currentSectionIndex={currentPage}
-          completedSections={currentPage}
-          detectedTrack={detectedTrack}
-          showTrackInfo={showTrackInfo}
-        />
+        <AssessmentProgressBar currentSectionIndex={currentPage} completedSections={currentPage} detectedTrack={detectedTrack} showTrackInfo={showTrackInfo} />
 
         <Card className="mb-6">
           <CardHeader>
@@ -185,61 +148,33 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
           <CardContent className="space-y-6">
             {/* Consent banner if declared */}
-            {currentSection.consentBanner && (
-              <ConsentBanner
-                id={`consent_${currentSection.id}`}
-                text={currentSection.consentBanner.text}
-                required={currentSection.consentBanner.required}
-                accepted={consentGiven}
-                onChange={val =>
-                  setBannerConsent(b => ({ ...b, [currentSection.id]: val }))
-                }
-              />
-            )}
+            {currentSection.consentBanner && <ConsentBanner id={`consent_${currentSection.id}`} text={currentSection.consentBanner.text} required={currentSection.consentBanner.required} accepted={consentGiven} onChange={val => setBannerConsent(b => ({
+            ...b,
+            [currentSection.id]: val
+          }))} />}
 
             {/* All questions for this page */}
-            {visibleQuestions.map((q, idx) => (
-              <div key={q.id} className="space-y-2">
+            {visibleQuestions.map((q, idx) => <div key={q.id} className="space-y-2">
                 <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-1 text-xs">
-                    {idx + 1}
-                  </Badge>
+                  
                   <div className="flex-1">
-                    <QuestionCard
-                      question={q}
-                      value={responses[q.id]}
-                      onChange={v => handleAnswerChange(q.id, v)}
-                    />
+                    <QuestionCard question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} />
                   </div>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </CardContent>
         </Card>
 
         <div className="flex justify-between">
-          {currentPage > 0 ? (
-            <Button
-              variant="outline"
-              onClick={goPrev}
-              className="flex items-center gap-2"
-            >
+          {currentPage > 0 ? <Button variant="outline" onClick={goPrev} className="flex items-center gap-2">
               <ArrowLeft className="h-4 w-4" /> Previous
-            </Button>
-          ) : (
-            <div />
-          )}
+            </Button> : <div />}
 
-          <Button
-            onClick={goNext}
-            className="flex items-center gap-2"
-            disabled={consentReq && !consentGiven}
-          >
+          <Button onClick={goNext} className="flex items-center gap-2" disabled={consentReq && !consentGiven}>
             {currentPage === totalPages - 1 ? "Complete" : "Next"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
