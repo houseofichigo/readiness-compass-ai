@@ -5,8 +5,9 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
-import { assessmentSections } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile } from "@/types/assessment";
+import { isQuestionVisible } from "@/utils/questionVisibility";
 
 interface AssessmentFlowProps {
   onComplete: (responses: AssessmentResponse[], profile: OrganizationProfile, track: Track) => void;
@@ -17,8 +18,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
 
-  const currentSection = assessmentSections[currentSectionIndex];
-  
+  const visibleAddOns = assessmentAddOns.filter(q =>
+    isQuestionVisible(q, responses, detectedTrack, 0)
+  );
+  const totalSections =
+    assessmentSections.length + (visibleAddOns.length > 0 ? 1 : 0);
+  const isAddonSection =
+    visibleAddOns.length > 0 && currentSectionIndex === assessmentSections.length;
+  const currentSection = isAddonSection
+    ? { id: "add_ons", title: "Additional Questions", purpose: "", questions: visibleAddOns }
+    : assessmentSections[currentSectionIndex];
+
   if (!currentSection) {
     return <div>Loading sections...</div>;
   }
@@ -57,9 +67,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // Check if persona questions (M3, M9) are completed to show track info
   const personaCompleted = responses.M3 && responses.M9;
   const completedSections = currentSectionIndex; // sections fully completed
-  
+
   const goToNextSection = () => {
-    if (currentSectionIndex < assessmentSections.length - 1) {
+    if (currentSectionIndex < totalSections - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
     } else {
       // Complete assessment
@@ -99,6 +109,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         return section.id;
       }
     }
+    if (assessmentAddOns.some(q => q.id === questionId)) {
+      return 'add_ons';
+    }
     return 'unknown';
   };
 
@@ -111,7 +124,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         <div className="mb-6">
           <AssessmentProgressBar
             currentSectionIndex={currentSectionIndex}
-            totalSections={assessmentSections.length}
+            totalSections={totalSections}
             completedSections={completedSections}
             detectedTrack={detectedTrack}
             showTrackInfo={personaCompleted}
@@ -168,7 +181,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             onClick={goToNextSection}
             className="flex items-center gap-2"
           >
-            {currentSectionIndex === assessmentSections.length - 1 ? "Complete" : "Next"}
+            {currentSectionIndex === totalSections - 1 ? "Complete" : "Next"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
