@@ -1,4 +1,34 @@
-import { Section, Question } from "@/types/assessment";
+import { Section, Question, Track } from "@/types/assessment";
+
+const TRACK_SECTION_MAP: Record<Track, string> = {
+  TECH: 'section_4',
+  REG: 'section_2',
+  GEN: 'section_1'
+};
+
+// Track-specific question add-ons merged into base sections by mergeAddOns
+const assessmentAddOns: Array<{ track: Track | Track[]; questions: Question[] }> = [];
+
+export function mergeAddOns(sections: Section[], track: Track): void {
+  assessmentAddOns.forEach((addOn) => {
+    const addOnTracks = Array.isArray(addOn.track) ? addOn.track : [addOn.track];
+
+    let matches = false;
+    for (const t of addOnTracks) {
+      if (t === track) {
+        matches = true;
+        break;
+      }
+    }
+    if (!matches) return;
+
+    const targetSectionId = TRACK_SECTION_MAP[track];
+    const targetSection = sections.find((section) => section.id === targetSectionId);
+    if (targetSection) {
+      targetSection.questions.push(...addOn.questions);
+    }
+  });
+}
 
 // Complete assessment sections from YAML - ALL QUESTIONS INCLUDED
 const assessmentSections: Section[] = [
