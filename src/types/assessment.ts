@@ -35,6 +35,7 @@ export interface Section {
 }
 
 export interface OrganizationProfile {
+  M0: string; // Company name
   M1: string; // Full name
   M2: string; // Work email
   M3: string; // Role/Position

@@ -70,6 +70,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       }));
 
       const profile: OrganizationProfile = {
+        M0: responses.M0 || "",
         M1: responses.M1 || "",
         M2: responses.M2 || "",
         M3: responses.M3 || "",

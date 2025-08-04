@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { useState } from "react";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
@@ -91,38 +92,79 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
 
       case "industry_dropdown":
         return (
-          <select
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            className="mt-2 w-full p-2 border rounded-md"
-            required={question.required}
-          >
-            <option value="">Select industry...</option>
-            <option value="Healthcare">Healthcare</option>
-            <option value="Finance">Finance</option>
-            <option value="Technology">Technology</option>
-            <option value="Retail">Retail</option>
-            <option value="Manufacturing">Manufacturing</option>
-          </select>
+          <Select value={value || ""} onValueChange={onChange}>
+            <SelectTrigger className="mt-2 bg-background border-input">
+              <SelectValue placeholder="Select industry..." />
+            </SelectTrigger>
+            <SelectContent className="z-50 bg-background border border-border">
+              <SelectItem value="Agriculture">Agriculture</SelectItem>
+              <SelectItem value="Automotive">Automotive</SelectItem>
+              <SelectItem value="Banking & Finance">Banking & Finance</SelectItem>
+              <SelectItem value="Construction">Construction</SelectItem>
+              <SelectItem value="Consulting">Consulting</SelectItem>
+              <SelectItem value="Education">Education</SelectItem>
+              <SelectItem value="Energy & Utilities">Energy & Utilities</SelectItem>
+              <SelectItem value="Entertainment & Media">Entertainment & Media</SelectItem>
+              <SelectItem value="Fashion & Retail">Fashion & Retail</SelectItem>
+              <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
+              <SelectItem value="Government">Government</SelectItem>
+              <SelectItem value="Healthcare">Healthcare</SelectItem>
+              <SelectItem value="Hospitality & Tourism">Hospitality & Tourism</SelectItem>
+              <SelectItem value="Insurance">Insurance</SelectItem>
+              <SelectItem value="Legal Services">Legal Services</SelectItem>
+              <SelectItem value="Logistics & Transportation">Logistics & Transportation</SelectItem>
+              <SelectItem value="Manufacturing">Manufacturing</SelectItem>
+              <SelectItem value="Non-profit">Non-profit</SelectItem>
+              <SelectItem value="Pharmaceuticals">Pharmaceuticals</SelectItem>
+              <SelectItem value="Real Estate">Real Estate</SelectItem>
+              <SelectItem value="Technology">Technology</SelectItem>
+              <SelectItem value="Telecommunications">Telecommunications</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         );
 
       case "country_dropdown":
         return (
-          <select
-            value={value || ""}
-            onChange={(e) => onChange(e.target.value)}
-            className="mt-2 w-full p-2 border rounded-md"
-            required={question.required}
-          >
-            <option value="">Select country...</option>
-            <option value="Germany">Germany</option>
-            <option value="France">France</option>
-            <option value="Italy">Italy</option>
-            <option value="Spain">Spain</option>
-            <option value="Netherlands">Netherlands</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="United States">United States</option>
-          </select>
+          <Select value={value || ""} onValueChange={onChange}>
+            <SelectTrigger className="mt-2 bg-background border-input">
+              <SelectValue placeholder="Select country..." />
+            </SelectTrigger>
+            <SelectContent className="z-50 bg-background border border-border max-h-48">
+              <SelectItem value="Austria">Austria</SelectItem>
+              <SelectItem value="Belgium">Belgium</SelectItem>
+              <SelectItem value="Bulgaria">Bulgaria</SelectItem>
+              <SelectItem value="Croatia">Croatia</SelectItem>
+              <SelectItem value="Cyprus">Cyprus</SelectItem>
+              <SelectItem value="Czech Republic">Czech Republic</SelectItem>
+              <SelectItem value="Denmark">Denmark</SelectItem>
+              <SelectItem value="Estonia">Estonia</SelectItem>
+              <SelectItem value="Finland">Finland</SelectItem>
+              <SelectItem value="France">France</SelectItem>
+              <SelectItem value="Germany">Germany</SelectItem>
+              <SelectItem value="Greece">Greece</SelectItem>
+              <SelectItem value="Hungary">Hungary</SelectItem>
+              <SelectItem value="Ireland">Ireland</SelectItem>
+              <SelectItem value="Italy">Italy</SelectItem>
+              <SelectItem value="Latvia">Latvia</SelectItem>
+              <SelectItem value="Lithuania">Lithuania</SelectItem>
+              <SelectItem value="Luxembourg">Luxembourg</SelectItem>
+              <SelectItem value="Malta">Malta</SelectItem>
+              <SelectItem value="Netherlands">Netherlands</SelectItem>
+              <SelectItem value="Poland">Poland</SelectItem>
+              <SelectItem value="Portugal">Portugal</SelectItem>
+              <SelectItem value="Romania">Romania</SelectItem>
+              <SelectItem value="Slovakia">Slovakia</SelectItem>
+              <SelectItem value="Slovenia">Slovenia</SelectItem>
+              <SelectItem value="Spain">Spain</SelectItem>
+              <SelectItem value="Sweden">Sweden</SelectItem>
+              <SelectItem value="United Kingdom">United Kingdom</SelectItem>
+              <SelectItem value="United States">United States</SelectItem>
+              <SelectItem value="Canada">Canada</SelectItem>
+              <SelectItem value="Australia">Australia</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         );
 
       default:

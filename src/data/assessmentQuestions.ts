@@ -8,6 +8,12 @@ const assessmentSections: Section[] = [
     purpose: 'Collect organisation profile for track detection.',
     questions: [
       {
+        id: 'M0',
+        text: 'Company Name',
+        type: 'text',
+        required: true
+      },
+      {
         id: 'M1',
         text: 'Full name',
         type: 'text',
@@ -63,14 +69,14 @@ const assessmentSections: Section[] = [
       {
         id: 'M5',
         text: 'Industry & Sub-sector',
-        type: 'text',
+        type: 'industry_dropdown',
         required: true,
-        helper: 'e.g., Technology - SaaS, Healthcare - Pharmaceuticals'
+        helper: 'Select your primary industry sector'
       },
       {
         id: 'M6',
         text: 'Country',
-        type: 'text',
+        type: 'country_dropdown',
         required: true
       },
       {
