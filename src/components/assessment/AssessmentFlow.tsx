@@ -77,7 +77,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         title: "Additional Questions",
         purpose: "",
         questions: visibleAddOns,
-        consent_banner: undefined,
+        consentBanner: undefined,
         computed: undefined,
       }
     : assessmentSections[currentPage]!;
@@ -154,7 +154,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // UI bits
   const answeredCount = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
   const showTrackInfo = Boolean(responses.M3 && responses.M4_industry);
-  const consentReq = (currentSection as any).consent_banner?.required;
+  const consentReq = currentSection.consentBanner?.required;
   const consentGiven = bannerConsent[currentSection.id] === true;
 
   return (
@@ -185,18 +185,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
           <CardContent className="space-y-6">
             {/* Consent banner if declared */}
-            {"consent_banner" in currentSection &&
-              currentSection.consent_banner && (
-                <ConsentBanner
-                  id={`consent_${currentSection.id}`}
-                  text={currentSection.consent_banner!.text}
-                  required={currentSection.consent_banner!.required}
-                  accepted={consentGiven}
-                  onChange={val =>
-                    setBannerConsent(b => ({ ...b, [currentSection.id]: val }))
-                  }
-                />
-              )}
+            {currentSection.consentBanner && (
+              <ConsentBanner
+                id={`consent_${currentSection.id}`}
+                text={currentSection.consentBanner.text}
+                required={currentSection.consentBanner.required}
+                accepted={consentGiven}
+                onChange={val =>
+                  setBannerConsent(b => ({ ...b, [currentSection.id]: val }))
+                }
+              />
+            )}
 
             {/* All questions for this page */}
             {visibleQuestions.map((q, idx) => (
