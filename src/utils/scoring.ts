@@ -1,84 +1,143 @@
-import { WeightVector, Track } from '@/types/assessment';
-import { assessmentMeta } from '@/data/assessmentQuestions';
+// src/utils/scoring.ts
+
+import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
+import type { Question, WeightVector } from "@/types/assessment";
 
 export interface ScoringResult {
   questionScores: Record<string, number>;
   totalScore: number;
   sectionScores: Record<string, number>;
-  track: Track;
+  track: string;
 }
 
-export function scoreAnswers(values: Record<string, unknown>, track: Track): ScoringResult {
+/** Map section titles to the categories used in weight vectors */
+const SECTION_CATEGORY_MAP: Record<string, keyof WeightVector> = {
+  "Strategy & Use-Case Readiness": "Strategy",
+  "Data Foundation & Security": "Data",
+  "Tool Stack & Integration": "Tools",
+  "Automation & AI Agents": "Automation",
+  "Team Capability & Culture": "People",
+  "Governance, Risk & Ethics": "Governance",
+};
+
+interface QuestionIndexEntry {
+  question: Question;
+  section: keyof WeightVector;
+}
+
+const buildQuestionIndex = (): Record<string, QuestionIndexEntry> => {
+  const index: Record<string, QuestionIndexEntry> = {};
+  assessmentSections.forEach((section) => {
+    const category = SECTION_CATEGORY_MAP[section.title];
+    if (!category) return;
+    section.questions.forEach((q) => {
+      index[q.id] = { question: q, section: category };
+    });
+  });
+  return index;
+};
+
+const QUESTION_INDEX = buildQuestionIndex();
+const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
+  string,
+  WeightVector
+>;
+
+export function scoreAnswers(
+  values: Record<string, unknown>,
+  track: string
+): ScoringResult {
   const questionScores: Record<string, number> = {};
-  const sectionScores: Record<string, number> = {};
-  
-  // Score individual questions
-  Object.entries(values).forEach(([questionId, answer]) => {
-    const score = scoreQuestion(questionId, answer);
-    questionScores[questionId] = score;
-  });
-
-  // Calculate section scores
-  const sections = ['Strategy', 'Data', 'Tools', 'Automation', 'People', 'Governance'];
-  sections.forEach(section => {
-    const sectionQuestions = getSectionQuestions(section);
-    const sectionTotal = sectionQuestions.reduce((sum, qId) => {
-      return sum + (questionScores[qId] ?? 50); // Default 50 for hidden questions
-    }, 0);
-    sectionScores[section] = sectionTotal / sectionQuestions.length;
-  });
-
-  // Apply track-specific weights
-  const weightVectors = (assessmentMeta as { weight_vectors: Record<Track, WeightVector> }).weight_vectors;
-  const weights = weightVectors[track] || weightVectors.GEN;
-  const totalScore = sections.reduce((sum, section) => {
-    const sectionKey = section as keyof typeof weights;
-    return sum + (sectionScores[section] * (weights[sectionKey] / 100));
-  }, 0);
-
-  return {
-    questionScores,
-    totalScore,
-    sectionScores,
-    track
+  const sectionTotals: Record<keyof WeightVector, number> = {
+    Strategy: 0,
+    Data: 0,
+    Tools: 0,
+    Automation: 0,
+    People: 0,
+    Governance: 0,
   };
-}
+  const sectionCounts: Record<keyof WeightVector, number> = {
+    Strategy: 0,
+    Data: 0,
+    Tools: 0,
+    Automation: 0,
+    People: 0,
+    Governance: 0,
+  };
 
-function scoreQuestion(questionId: string, answer: unknown): number {
-  // Handle different scoring methods based on question type
-  if (answer === undefined || answer === null || answer === '') {
-    return 50; // Neutral score for unanswered
+  for (const [id, { question, section }] of Object.entries(QUESTION_INDEX)) {
+    const ans = values[id];
+    const sc = scoreQuestion(question, ans);
+    questionScores[id] = sc;
+    sectionTotals[section] += sc;
+    sectionCounts[section] += 1;
   }
 
-  // Handle "Don't know" responses with confidence penalty
-  if (typeof answer === 'string' && answer.toLowerCase().includes("don't know")) {
+  const sectionScores: Record<string, number> = {};
+  (Object.keys(sectionTotals) as Array<keyof WeightVector>).forEach((sec) => {
+    const cnt = sectionCounts[sec] || 0;
+    sectionScores[sec] = cnt > 0 ? sectionTotals[sec] / cnt : 0;
+  });
+
+  const weights =
+    WEIGHT_VECTORS[track as keyof typeof WEIGHT_VECTORS] ??
+    WEIGHT_VECTORS.GEN;
+
+  const totalScore = (Object.keys(sectionScores) as Array<
+    keyof WeightVector
+  >).reduce((sum, sec) => {
+    const w = weights[sec] ?? 0;
+    return sum + sectionScores[sec] * (w / 100);
+  }, 0);
+
+  return { questionScores, sectionScores, totalScore, track };
+}
+
+function scoreQuestion(question: Question, answer: unknown): number {
+  if (answer === undefined || answer === null || answer === "") {
+    return 50;
+  }
+  if (typeof answer === "string" && answer.toLowerCase().includes("don't know")) {
     return 0;
   }
 
-  // For now, return a basic score - this will be enhanced with actual question metadata
-  if (typeof answer === 'boolean') {
+  const { type, score_map, score_per, cap, weight, options } = question;
+
+  if (Array.isArray(answer)) {
+    // ranked
+    if (type === "rank" && weight) {
+      const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
+      const max = weight.reduce((a, b) => a + b, 0);
+      return max ? (used / max) * 100 : 0;
+    }
+    // per-item
+    if (score_per !== undefined) {
+      return Math.min(answer.length * score_per, cap ?? 100);
+    }
+    // mapped choices
+    if (score_map && options) {
+      const scores = (answer as string[]).map((val) => {
+        const idx = options.findIndex((opt) => opt.value === val);
+        return idx >= 0 && score_map[idx] != null ? score_map[idx] : 0;
+      });
+      return scores.length
+        ? scores.reduce((a, b) => a + b, 0) / scores.length
+        : 50;
+    }
+  }
+
+  if (typeof answer === "boolean") {
     return answer ? 100 : 0;
   }
 
-  if (Array.isArray(answer)) {
-    // Multi-select scoring
-    return Math.min(answer.length * 20, 100);
+  if (score_map && options && typeof answer === "string") {
+    const idx = options.findIndex((opt) => opt.value === answer);
+    if (idx >= 0 && score_map[idx] != null) return score_map[idx];
   }
 
-  // Single choice - would need question metadata for proper scoring
-  return 50;
-}
+  if (typeof answer === "number") {
+    return Math.max(0, Math.min(100, answer));
+  }
 
-function getSectionQuestions(section: string): string[] {
-  // Map section names to question IDs - this would be derived from schema
-  const sectionMap: Record<string, string[]> = {
-    Strategy: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11', 'S12'],
-    Data: ['D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'D10', 'D11'],
-    Tools: ['4A', 'T1', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'T8'],
-    Automation: ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12'],
-    People: ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9', 'C10'],
-    Governance: ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10']
-  };
-  
-  return sectionMap[section] || [];
+  return 50;
 }
