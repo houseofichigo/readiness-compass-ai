@@ -1,6 +1,17 @@
+// src/types/assessment.ts
+
 export type Track = "TECH" | "REG" | "GEN";
 
-export type QuestionType = "text" | "email" | "single" | "multi" | "rank" | "checkbox" | "industry_dropdown" | "country_dropdown" | "multi_group";
+export type QuestionType =
+  | "text"
+  | "email"
+  | "single"
+  | "multi"
+  | "rank"
+  | "checkbox"
+  | "industry_dropdown"
+  | "country_dropdown"
+  | "multi_group";
 
 export interface QuestionOption {
   value: string;
@@ -25,6 +36,19 @@ export interface Question {
   max_select?: number;
   label?: string;
   tooltip_each?: boolean;
+  groups?: Array<{
+    label: string;
+    show_if?: Record<string, any>;
+    options: QuestionOption[];
+  }>;
+}
+
+/** A piece of logic declared in YAML to compute a derived field */
+export interface ComputedField {
+  /** the computed field’s id (e.g. "regulated") */
+  id: string;
+  /** the code snippet (as string) to evaluate at runtime */
+  logic: string;
 }
 
 export interface Section {
@@ -32,6 +56,8 @@ export interface Section {
   title: string;
   purpose: string;
   questions: Question[];
+  /** any YAML‐declared computed logic to run at form‐runtime */
+  computed?: ComputedField[];
 }
 
 export interface OrganizationProfile {
