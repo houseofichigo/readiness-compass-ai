@@ -359,7 +359,7 @@ section_3:
       text: "Other data storage location (please specify)"
       type: text
       show_if:
-      D1: subset_of ["Other (please specify)"]
+        D1: subset_of ["Other (please specify)"]
       required: true
 
 
@@ -435,7 +435,7 @@ section_3:
       text: "How developed are your AI ethics and data privacy policies?"
       type: single
       helper:  "Select the maturity stage of your policies and enforcement(e.g. ‘Policies + training & oversight’ means you’ve documented guidelines and run staff workshops)."
-      ooptions: ["No formal policies", "High-level principles only (no detailed guidance)", "Documented guidelines (but no training or oversight)", "Guidelines + training & oversight (staff workshops, reviews)", "Audited & continuously improved (regular audits + updates)"]
+      options: ["No formal policies", "High-level principles only (no detailed guidance)", "Documented guidelines (but no training or oversight)", "Guidelines + training & oversight (staff workshops, reviews)", "Audited & continuously improved (regular audits + updates)"]
 
 section_4:
   purpose: "Tool stack & integration maturity (to power workflow and AI agent recommendations)."
@@ -937,7 +937,7 @@ section_7:
       text: "How well can you explain and audit AI model decisions?"
       type: single
       helper: "Explanation means you can trace why a model made a decision (e.g. feature importances, logs);auditing means you can review records later. For example, logging inputs/outputs for each prediction."
-      options: [["None – no logging or explanations", "High-risk only – explain critical models", "Audit logs – structured logs for scripts", "All models – explanations for every model", "Audit-ready – tools & docs for compliance audits"]
+      options: ["None – no logging or explanations", "High-risk only – explain critical models", "Audit logs – structured logs for scripts", "All models – explanations for every model", "Audit-ready – tools & docs for compliance audits"]
       score_map: [0,25,50,75,100]
       
     - id: G3
@@ -1048,7 +1048,7 @@ section_8:
 
 add_ons:
   - id: T9
-    show_if: { track: TECH }
+    show_if: { track: "TECH" }
     text: "How do you deploy ML models and monitor them in production?"
     type: single
     helper: "Deployment and monitoring ensure reliability and fast issue detection."
@@ -1060,7 +1060,7 @@ add_ons:
       - "Fully automated blue/green deployments + rollback"
 
   - id: F8
-    show_if: { track: REG }
+    show_if: { track: "REG" }
     text: "Which mechanisms do you use for cross-border data transfers?"
     type: single
     helper: "GDPR requires lawful transfer—select your standard approach."
