@@ -11,12 +11,10 @@ import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile, ComputedField } from "@/types/assessment";
 
 // Helpers to parse the YAML-declared computed logic
-const parseRegulatedIndustries = (logic: string): string[] => {
-  const match = logic.match(/\[(.*?)\]/s);
+const parseListLiteral = (literal: string): string[] => {
+  const match = literal.match(/\[(.*?)\]/s);
   if (!match) return [];
-  return match[1]
-    .split(",")
-    .map((s) => s.trim().replace(/['"]/g, ""));
+  return match[1].split(",").map(s => s.trim().replace(/['"]/g, ""));
 };
 
 const parseTechRoles = (rules: any[]): string[] => {
@@ -24,9 +22,7 @@ const parseTechRoles = (rules: any[]): string[] => {
     (r: any) => typeof r.if === "string" && r.if.includes("-> TECH")
   );
   if (!techRule) return [];
-  const match = techRule.if.match(/role in \[(.*?)\]/);
-  if (!match) return [];
-  return match[1].split(",").map((r: string) => r.trim());
+  return parseListLiteral((techRule.if as string));
 };
 
 interface AssessmentFlowProps {
@@ -39,21 +35,24 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
 
   // 1) Extract the computed field for "regulated" from section_0
-  const profileSection = assessmentSections.find((s) => s.id === "section_0");
+  const profileSection = assessmentSections.find(s => s.id === "section_0");
   const regulatedLogic =
-    profileSection?.computed?.find((c) => c.id === "regulated")?.logic || "";
-  const regulatedIndustries = parseRegulatedIndustries(regulatedLogic);
+    profileSection?.computed?.find((c: ComputedField) => c.id === "regulated")
+      ?.logic ?? "";
+  const regulatedIndustries = parseListLiteral(regulatedLogic);
 
   // 2) Extract the YAML-defined track_detection rules
   const trackRules = (assessmentMeta as any)?.track_detection?.precedence || [];
   const techRoles = parseTechRoles(trackRules);
   const legalRole = "Legal / Compliance Lead";
 
+  // Fallback/simple track compute
   const computeTrack = (res: Record<string, any>): Track => {
     const role = res.M3 as string;
     const industry = res.M4_industry as string;
     if (techRoles.includes(role)) return "TECH";
-    if (regulatedIndustries.includes(industry) || role === legalRole) return "REG";
+    if (regulatedIndustries.includes(industry) || role === legalRole)
+      return "REG";
     return "GEN";
   };
 
@@ -63,9 +62,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const visibleQuestions = currentSection.questions;
 
   const handleAnswerChange = (questionId: string, value: any) => {
-    setResponses((prev) => {
+    setResponses(prev => {
       const updated = { ...prev, [questionId]: value };
-      // re-compute track whenever role or industry changes
+      // re-compute track when persona fields change
       if (questionId === "M3" || questionId === "M4_industry") {
         setDetectedTrack(computeTrack(updated));
       }
@@ -75,16 +74,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
   const goToNextSection = () => {
     if (currentSectionIndex < assessmentSections.length - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1);
+      setCurrentSectionIndex(idx => idx + 1);
     } else {
       // finalize
       const allResponses: AssessmentResponse[] = Object.entries(responses).map(
         ([questionId, val]) => ({
           questionId,
           value: val,
-          sectionId: assessmentSections.find((s) =>
-            s.questions.some((q) => q.id === questionId)
-          )?.id!,
+          sectionId:
+            assessmentSections.find(s =>
+              s.questions.some(q => q.id === questionId)
+            )?.id ?? "unknown",
         })
       );
 
@@ -107,13 +107,11 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const goToPreviousSection = () => {
-    if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(currentSectionIndex - 1);
-    }
+    setCurrentSectionIndex(idx => Math.max(0, idx - 1));
   };
 
   const answeredCount = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
-  const personaDone = responses.M3 && responses.M4_industry;
+  const personaDone = Boolean(responses.M3 && responses.M4_industry);
 
   return (
     <div className="min-h-screen bg-gradient-accent p-4">
@@ -123,7 +121,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           totalSections={assessmentSections.length}
           completedSections={currentSectionIndex}
           detectedTrack={detectedTrack}
-          showTrackInfo={!!personaDone}
+          showTrackInfo={personaDone}
         />
 
         <Card className="mb-6">
@@ -132,9 +130,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             <p className="text-muted-foreground">{currentSection.purpose}</p>
             <div className="flex justify-between text-sm text-muted-foreground">
               <span>Questions in this section</span>
-              <span>
-                {answeredCount} / {visibleQuestions.length} answered
-              </span>
+              <span>{answeredCount} / {visibleQuestions.length} answered</span>
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -148,7 +144,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
                     <QuestionCard
                       question={q}
                       value={responses[q.id]}
-                      onChange={(val) => handleAnswerChange(q.id, val)}
+                      onChange={val => handleAnswerChange(q.id, val)}
                     />
                   </div>
                 </div>
@@ -169,9 +165,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           ) : <div />}
 
           <Button onClick={goToNextSection} className="flex items-center gap-2">
-            {currentSectionIndex === assessmentSections.length - 1
-              ? "Complete"
-              : "Next"}
+            {currentSectionIndex === assessmentSections.length - 1 ? "Complete" : "Next"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>

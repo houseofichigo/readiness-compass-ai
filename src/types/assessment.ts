@@ -13,6 +13,7 @@ export type QuestionType =
   | "country_dropdown"
   | "multi_group";
 
+/** One choice in a single/multi/select/rank question */
 export interface QuestionOption {
   value: string;
   label: string;
@@ -25,6 +26,13 @@ export interface ComputedField {
   id: string;
   /** the code snippet (as string) to evaluate at runtime */
   logic: string;
+}
+
+/** A brief banner (e.g. consent notice) that can appear above a section */
+export interface ConsentBanner {
+  text: string;
+  type: string;
+  required?: boolean;
 }
 
 export interface Question {
@@ -58,6 +66,8 @@ export interface Section {
   title: string;
   purpose: string;
   questions: Question[];
+  /** optional consent banner (e.g. GDPR notice) */
+  consent_banner?: ConsentBanner;
   /** any YAML‐declared computed logic to run at form‐runtime */
   computed?: ComputedField[];
 }

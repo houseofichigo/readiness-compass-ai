@@ -2,7 +2,13 @@
 
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
-import type { Section, Question, QuestionOption, ComputedField } from "@/types/assessment";
+import type {
+  Section,
+  Question,
+  QuestionOption,
+  ConsentBanner,
+  ComputedField
+} from "@/types/assessment";
 
 // Titles for each section derived from the assessment YAML
 const SECTION_TITLES: Record<string, string> = {
@@ -29,6 +35,7 @@ interface RawQuestion extends Omit<Question, "options" | "groups"> {
 interface RawSection {
   purpose?: string;
   questions?: RawQuestion[];
+  consent_banner?: ConsentBanner;
   computed?: ComputedField[];
 }
 
@@ -55,17 +62,18 @@ const assessmentSections: Section[] = Object.entries(schema)
     a.localeCompare(b, undefined, { numeric: true })
   )
   .map(([id, rawSection]) => {
-    const { purpose = "", questions = [], computed = [] } = rawSection ?? {};
+    const {
+      purpose = "",
+      questions = [],
+      consent_banner,
+      computed = []
+    } = rawSection ?? {};
 
     const normalizedQuestions: Question[] = questions.map((q) => {
       const base: any = { ...q };
-
-      // normalize flat options
       if (q.options) {
         base.options = normalizeOptions(q.options);
       }
-
-      // normalize grouped options
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
@@ -73,7 +81,6 @@ const assessmentSections: Section[] = Object.entries(schema)
           options: normalizeOptions(g.options),
         }));
       }
-
       return base as Question;
     });
 
@@ -82,7 +89,9 @@ const assessmentSections: Section[] = Object.entries(schema)
       title: SECTION_TITLES[id] ?? id,
       purpose,
       questions: normalizedQuestions,
-      computed,
+      // if defined in YAML, attach consent banner & computed logic
+      ...(consent_banner ? { consent_banner } : {}),
+      ...(computed.length ? { computed } : {}),
     };
   });
 
@@ -98,4 +107,3 @@ export { assessmentSections };
 export const assessmentMeta = schema.meta ?? {};
 export { assessmentAddOns };
 export const assessmentData = { sections: assessmentSections };
-export const assessmentSchema = schema;
