@@ -8,7 +8,6 @@ interface AssessmentWelcomeProps {
 }
 
 export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
-  console.log("AssessmentWelcome component rendered");
   const features = [
     {
       icon: Brain,

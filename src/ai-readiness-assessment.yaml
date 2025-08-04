@@ -704,7 +704,7 @@ section_4:
     - id: T8
       text: "Which low-code or no-code platforms do you use for automation?"
       type: multi
-     helper: "Select all platforms you actively use; choose None if you don’t use any."
+      helper: "Select all platforms you actively use; choose None if you don't use any."
       options: ["None – no low-code/no-code tools", "Zapier – connect apps with workflows", "Make – multi-step automation builder", "n8n – self-hosted workflow automation", "Power Automate – Microsoft flow automation", "UiPath – RPA for desktop & web", "Workato – enterprise integration platform", "Airbyte – ELT data pipelines", "Fivetran – automated data connectors", "dbt – analytics engineering", "Other (please specify)"]
       score_per: 10
       cap: 100
