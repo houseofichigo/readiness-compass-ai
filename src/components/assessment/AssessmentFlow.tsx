@@ -7,9 +7,9 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { AssessmentThankYou } from "./AssessmentThankYou";
 import { ConsentBanner } from "./ConsentBanner";
-import { assessmentSections, assessmentAddOns, assessmentMeta } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
-import { AssessmentResponse, Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
+import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation"; // Updated import
 import { useToast } from "@/hooks/use-toast";
 
@@ -17,7 +17,7 @@ interface AssessmentFlowProps {
   onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => void;
 }
 
-// Helpers to parse YAML list literals like "['A','B','C']"
+// Helper to parse YAML list literals like "['A','B','C']"
 const parseListLiteral = (lit: string): string[] => {
   try {
     const cleaned = lit.replace(/'/g, '"');
@@ -25,17 +25,6 @@ const parseListLiteral = (lit: string): string[] => {
   } catch {
     return [lit];
   }
-};
-
-// 1) Compute "regulated" logic from meta
-// 2) Find TECH roles from track_detection rules
-const parseTechRoles = (rules: Array<Record<string, any>>): string[] => {
-  const techRule = rules.find(
-    r => r.if && typeof r.if !== "object" && String(r.if).includes("TECH")
-  );
-  return techRule
-    ? parseListLiteral(String(techRule.if))
-    : [];
 };
 
 export function AssessmentFlow({
@@ -50,34 +39,14 @@ export function AssessmentFlow({
 
   // Precompute global computed fields (e.g., from profile section)
   const profileSection = assessmentSections.find(s => s.id === "section_0");
-  // --- regulatedIndustries from meta
-  const regulatedLogic = (assessmentMeta as any)?.track_detection?.precedence
-    ?.find((p: any) => p.then === "REG")?.if;
-  const regulatedIndustries = Array.isArray(regulatedLogic)
-    ? regulatedLogic as string[]
-    : parseListLiteral(String(regulatedLogic || "[]"));
-
-  // --- techRoles from meta
-  const techRoles = parseTechRoles((assessmentMeta as any)?.track_detection?.precedence || []);
-  const legalRole = "Legal / Compliance Lead";
-
-  // 3) Fallback computeTrack for persona changes
-  const computeTrack = (rs: Record<string, AssessmentValue>): Track => {
-    const role = rs.M3 as string;
-    const industry = rs.M4_industry as string;
-    if (techRoles.includes(role)) return "TECH";
-    if (regulatedIndustries.includes(industry) || role === legalRole)
-      return "REG";
-    return "GEN";
-  };
 
   // Original compute for per‐section computed fields
-  const evaluateComputed = (fields: ComputedField[] | undefined, rs: Record<string, any>) => {
-    const values: Record<string, any> = {};
+  const evaluateComputed = (fields: ComputedField[] | undefined, rs: Record<string, unknown>) => {
+    const values: Record<string, unknown> = {};
     fields?.forEach(f => {
       if (f.id === "regulated") {
         const inds = parseListLiteral(String(f.logic || "[]"));
-        values.regulated = inds.includes(rs.M4_industry);
+        values.regulated = inds.includes(rs.M4_industry as string);
       }
     });
     return values;
@@ -85,10 +54,10 @@ export function AssessmentFlow({
 
   // Global computed
   const globalComputed = evaluateComputed(profileSection?.computed, responses);
-  // Initialize detectedTrack from profile
+  // Initialize detectedTrack from profile using utility
   useEffect(() => {
-    setDetectedTrack(computeTrack(responses));
-  }, [responses.M3, responses.M4_industry]);
+    setDetectedTrack(detectTrack(responses, globalComputed));
+  }, [responses, globalComputed]);
 
   // Filter visible "add-on" questions
   const visibleAddOns = assessmentAddOns.filter(q =>
