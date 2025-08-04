@@ -77,7 +77,12 @@ export function AssessmentFlow({
   const isAddOnPage = currentPage === assessmentSections.length;
 
   // Move forwards/backwards
-  const goPrev = () => setCurrentPage(i => Math.max(0, i - 1));
+  const goPrev = () => {
+    setCurrentPage(i => Math.max(0, i - 1));
+    // Scroll to top when changing sections
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  
   const goNext = () => {
     if (isLastSection && hasAddOns) {
       setCurrentPage(assessmentSections.length); // Go to add-ons
@@ -87,6 +92,8 @@ export function AssessmentFlow({
     } else {
       setCurrentPage(i => Math.min(assessmentSections.length - 1, i + 1));
     }
+    // Scroll to top when changing sections
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const completeAssessment = () => {
@@ -129,8 +136,39 @@ export function AssessmentFlow({
     }
   };
 
+  const scrollToFirstError = () => {
+    // Find the first question with an error and scroll to it
+    const currentQuestions = currentPage < assessmentSections.length 
+      ? assessmentSections[currentPage].questions.filter(q =>
+          isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
+        )
+      : visibleAddOns;
+    
+    const visibleIds = currentQuestions.map(q => q.id);
+    const validation = validateSection(currentQuestions, responses, visibleIds);
+    
+    if (!validation.isValid) {
+      const firstErrorId = Object.keys(validation.errors)[0];
+      const errorElement = document.getElementById(firstErrorId) || 
+                          document.querySelector(`[data-question-id="${firstErrorId}"]`);
+      
+      if (errorElement) {
+        errorElement.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'center' 
+        });
+        // Add focus for better accessibility
+        const input = errorElement.querySelector('input, select, textarea, button');
+        if (input instanceof HTMLElement) {
+          input.focus();
+        }
+      }
+    }
+  };
+
   const handleNext = () => {
     if (!canProceed()) {
+      scrollToFirstError();
       toast({
         title: "Please complete all required questions",
         description: "Some questions still need to be answered before you can continue.",
@@ -209,14 +247,15 @@ export function AssessmentFlow({
             />
           </div>
 
-          {visibleQuestions.map((question, index) => (
+        {visibleQuestions.map((question, index) => (
+          <div key={question.id} id={question.id} data-question-id={question.id}>
             <QuestionCard
-              key={question.id}
               question={question}
               value={responses[question.id]}
               onChange={(value) => handleAnswerChange(question.id, value)}
             />
-          ))}
+          </div>
+        ))}
         </div>
       </Card>
 
@@ -234,7 +273,7 @@ export function AssessmentFlow({
         <Button
           onClick={handleNext}
           className="flex items-center gap-2"
-          disabled={!canProceed()}
+          disabled={false}
         >
           {isFinalStep ? "Complete Assessment" : "Next"}
           <ArrowRight className="h-4 w-4" />
