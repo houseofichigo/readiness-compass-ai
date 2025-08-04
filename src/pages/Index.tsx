@@ -78,6 +78,7 @@ const Index = () => {
           responses={Object.values(assessmentData.responses || {})}
           profile={assessmentData.profile}
           track={assessmentData.track}
+          submissionId={submissionId}
           onRestart={handleRestart}
         />
       )}

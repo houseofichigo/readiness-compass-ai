@@ -16,6 +16,7 @@ interface AssessmentResultsProps {
   responses: AssessmentResponse[];
   profile: OrganizationProfile;
   track: Track;
+  submissionId?: string | null;
   onRestart: () => void;
 }
 
@@ -23,6 +24,7 @@ export function AssessmentResults({
   responses,
   profile,
   track,
+  submissionId,
   onRestart
 }: AssessmentResultsProps) {
   const responseValues = responses.reduce<Record<string, unknown>>(
@@ -75,6 +77,11 @@ export function AssessmentResults({
         <Badge variant="outline" className="text-sm">
           {track === "TECH" ? "Technical Track" : track === "REG" ? "Regulated Track" : "General Business Track"}
         </Badge>
+        {submissionId && (
+          <div className="text-sm text-muted-foreground">
+            Assessment ID: <code className="font-mono bg-muted px-2 py-1 rounded text-xs">{submissionId}</code>
+          </div>
+        )}
       </div>
 
       {/* Overall Score */}
