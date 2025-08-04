@@ -165,8 +165,9 @@ section_0:
       required: true
 
     - id: M8_consent
-      text: "I agree to processing my data for this report and related communications."
+      text: ""
       type: checkbox
+      options: ["I agree to processing my data for this report and related communications."]
       required: true
 
   computed:
