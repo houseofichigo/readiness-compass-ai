@@ -354,7 +354,7 @@ section_3:
       type: multi
       helper: "Critical data drives operations, decisions, and compliance."
       options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)", "Other (please specify)"]
-   - id: D1_other
+    - id: D1_other
       text: "Other data storage location (please specify)"
       type: text
       show_if:
