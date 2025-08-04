@@ -11,6 +11,7 @@ import { Question } from "@/types/assessment";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
 import { MatrixQuestion } from "./MatrixQuestion";
+import { ProgressiveMultiGroupQuestion } from "./ProgressiveMultiGroupQuestion";
 
 interface QuestionCardProps {
   question: Question;
@@ -122,38 +123,13 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "multi_group":
-        // Grouped checkboxes
-        const selected: string[] = value || [];
-        const handleGroupChange = (optValue: string, checked: boolean) => {
-          const set = new Set(selected);
-          checked ? set.add(optValue) : set.delete(optValue);
-          onChange(Array.from(set));
-        };
+        // Progressive disclosure for grouped checkboxes
         return (
-          <div className="mt-4 space-y-6">
-            {question.groups?.map((group) => (
-              <div key={group.label} className="space-y-2">
-                <Label className="text-sm font-medium">{group.label}</Label>
-                {group.options.map((opt) => (
-                  <div key={opt.value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`${group.label}-${opt.value}`}
-                      checked={selected.includes(opt.value)}
-                      onCheckedChange={(checked) =>
-                        handleGroupChange(opt.value, checked as boolean)
-                      }
-                    />
-                    <Label
-                      htmlFor={`${group.label}-${opt.value}`}
-                      className="font-normal cursor-pointer text-sm"
-                    >
-                      {opt.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+          <ProgressiveMultiGroupQuestion
+            groups={question.groups || []}
+            value={value || []}
+            onChange={onChange}
+          />
         );
 
       case "matrix":
