@@ -67,3 +67,4 @@ export { assessmentSections };
 export const assessmentMeta = schema.meta ?? {};
 export { assessmentAddOns };
 export const assessmentData = { sections: assessmentSections };
+export const assessmentSchema = schema;
