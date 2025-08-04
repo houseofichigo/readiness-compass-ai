@@ -332,8 +332,8 @@ section_2:
       score_map: [0,25,50,75,100]
       show_if:
         any_of:
-          - { track: TECH }
-          - { track: REG }
+          - { track: "TECH" }
+          - { track: "REG" }
           - { M6_size: ["10–49", "50–249", "250–999", "≥ 1 000"] }
 
     - id: F7
@@ -343,7 +343,7 @@ section_2:
       score_map: [0,25,50,75,100]
       show_if:
         any_of:
-          - { track: REG }
+          - { track: "REG" }
           - { F5: { not: ["None apply"] } }
 
 section_3:
