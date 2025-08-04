@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
@@ -89,6 +90,26 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
                   </div>
                 ))}
           </RadioGroup>
+        );
+
+      case "dropdown":
+        const dropdownOptions =
+          question.options ||
+          question.groups?.flatMap((g) => g.options) ||
+          [];
+        return (
+          <Select value={value} onValueChange={onChange}>
+            <SelectTrigger className="mt-4">
+              <SelectValue placeholder="Select an option..." />
+            </SelectTrigger>
+            <SelectContent>
+              {dropdownOptions.map((opt) => (
+                <SelectItem key={typeof opt === 'string' ? opt : opt.value} value={typeof opt === 'string' ? opt : opt.value}>
+                  {typeof opt === 'string' ? opt : opt.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         );
 
       case "multi":

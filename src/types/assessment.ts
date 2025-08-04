@@ -10,6 +10,7 @@ export type QuestionType =
   | "boolean"
   | "email"
   | "checkbox"
+  | "dropdown"
   | "multi_group";
 
 export interface QuestionOption {

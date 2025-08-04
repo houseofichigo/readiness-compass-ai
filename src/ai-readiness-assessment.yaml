@@ -116,7 +116,7 @@ section_0:
 
     - id: M5_country
       text: "Country"
-      type: single
+      type: dropdown
       options: [
         "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
         "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
