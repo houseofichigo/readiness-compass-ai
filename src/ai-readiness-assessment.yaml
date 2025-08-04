@@ -398,12 +398,12 @@ section_3:
       helper: "Security controls are measures that keep your data safe—encrypting it, controlling access, and monitoring usage."
       score_per: 15
       cap: 100
-      options: ["Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don't know", "Other (please specify)"] (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don’t know", "Other (please specify)"]
+      options: ["Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don't know", "Other (please specify)"] (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don’t know", "Other (please specify)"]
     - id: D5_other
       text: "Other security control (please specify)"
       type: text
       show_if:
-      D5: subset_of ["Other (please specify)"]
+        D5: subset_of ["Other (please specify)"]
       required: true
 
     - id: D6
