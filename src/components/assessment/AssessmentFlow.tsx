@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
-
+import { ConsentBanner } from "./ConsentBanner";
 import {
   assessmentSections,
   assessmentAddOns,
@@ -23,9 +23,9 @@ import {
 
 // Helpers to parse the YAML‐declared computed logic
 const parseListLiteral = (literal: string): string[] => {
-  const match = literal.match(/\[(.*?)\]/s);
-  if (!match) return [];
-  return match[1].split(",").map((s) => s.trim().replace(/['"]/g, ""));
+  const m = literal.match(/\[(.*?)\]/s);
+  if (!m) return [];
+  return m[1].split(",").map((s) => s.trim().replace(/['"]/g, ""));
 };
 
 const parseTechRoles = (rules: any[]): string[] => {
@@ -48,70 +48,61 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [responses, setResponses] = useState<Record<string, any>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
+  const [bannerConsent, setBannerConsent] = useState<Record<string, boolean>>({});
 
-  //
   // 1) Pull out “regulated” computed logic from section_0
-  //
   const profileSection = assessmentSections.find((s) => s.id === "section_0");
   const regulatedLogic =
-    profileSection?.computed?.find((c) => c.id === "regulated")?.logic ?? "";
+    profileSection?.computed?.find((c) => c.id === "regulated")?.logic || "";
   const regulatedIndustries = parseListLiteral(regulatedLogic);
 
-  //
   // 2) Pull out YAML‐defined track_detection rules
-  //
   const trackRules =
     (assessmentMeta as any)?.track_detection?.precedence ?? ([] as any[]);
   const techRoles = parseTechRoles(trackRules);
   const legalRole = "Legal / Compliance Lead";
 
-  //
-  // 3) Compute track fallback
-  //
-  const computeTrack = (res: Record<string, any>): Track => {
-    const role = res.M3 as string;
-    const industry = res.M4_industry as string;
+  // 3) Compute track based on persona answers
+  const computeTrack = (r: Record<string, any>): Track => {
+    const role = r.M3 as string;
+    const industry = r.M4_industry as string;
     if (techRoles.includes(role)) return "TECH";
     if (regulatedIndustries.includes(industry) || role === legalRole)
       return "REG";
     return "GEN";
   };
 
-  //
-  // 4) Filter any add-on questions by your visibility logic
-  //
+  // 4) Collect any add‐on questions (rendered in final "Add-Ons" page)
   const visibleAddOns = assessmentAddOns.filter((q) =>
-    isQuestionVisible(q, responses, detectedTrack, /* totalVisible= */ 0, {})
+    isQuestionVisible(q, responses, detectedTrack, /*totalVisible=*/ 0, {})
   );
 
-  // total pages = base sections + optional add-ons page
-  const totalSections =
+  // total pages = base sections + optional add-ons
+  const totalPages =
     assessmentSections.length + (visibleAddOns.length > 0 ? 1 : 0);
 
-  // if we're on the “add-ons” page
+  // detect if we're on the final add-ons page
   const isAddOnPage =
     visibleAddOns.length > 0 &&
     currentSectionIndex === assessmentSections.length;
 
-  // choose the correct “section”
+  // choose our "currentSection"
   const currentSection = isAddOnPage
     ? {
         id: "add_ons",
         title: "Additional Questions",
         purpose: "",
         questions: visibleAddOns,
+        consent_banner: undefined,
+        computed: undefined,
       }
     : assessmentSections[currentSectionIndex];
 
-  if (!currentSection) {
-    return <div>Loading sections…</div>;
-  }
+  if (!currentSection) return <div>Loading…</div>;
 
   const visibleQuestions = currentSection.questions;
 
-  //
-  // keep your persona fields in sync with track        
-  //
+  // handle answer + re-compute track if persona fields change
   const handleAnswerChange = (questionId: string, value: any) => {
     setResponses((prev) => {
       const updated = { ...prev, [questionId]: value };
@@ -122,24 +113,20 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     });
   };
 
-  //
-  // Navigation
-  //
-  const goToNextSection = () => {
-    if (currentSectionIndex < totalSections - 1) {
-      setCurrentSectionIndex((idx) => idx + 1);
+  // navigation
+  const goNext = () => {
+    if (currentSectionIndex < totalPages - 1) {
+      setCurrentSectionIndex((i) => i + 1);
     } else {
-      // wrap up
+      // finalize
       const allResponses: AssessmentResponse[] = Object.entries(responses).map(
-        ([questionId, val]) => ({
-          questionId,
+        ([qid, val]) => ({
+          questionId: qid,
           value: val,
           sectionId:
-            currentSectionIndex === assessmentSections.length
-              ? "add_ons"
-              : assessmentSections.find((s) =>
-                  s.questions.some((q) => q.id === questionId)
-                )?.id ?? "unknown",
+            isAddOnPage ? "add_ons" : assessmentSections.find((s) =>
+              s.questions.some((q) => q.id === qid)
+            )?.id ?? "unknown",
         })
       );
 
@@ -160,20 +147,23 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       onComplete(allResponses, profile, detectedTrack);
     }
   };
-  const goToPreviousSection = () =>
-    setCurrentSectionIndex((idx) => Math.max(0, idx - 1));
+  const goPrev = () =>
+    setCurrentSectionIndex((i) => Math.max(0, i - 1));
 
+  // UI state
   const answeredCount = visibleQuestions.filter(
     (q) => responses[q.id] !== undefined
   ).length;
   const showTrackInfo = Boolean(responses.M3 && responses.M4_industry);
+  const consentReq = (currentSection as any).consent_banner?.required;
+  const consentGiven = bannerConsent[currentSection.id] === true;
 
   return (
     <div className="min-h-screen bg-gradient-accent p-4">
       <div className="container mx-auto max-w-6xl">
         <AssessmentProgressBar
           currentSectionIndex={currentSectionIndex}
-          totalSections={totalSections}
+          totalSections={totalPages}
           completedSections={currentSectionIndex}
           detectedTrack={detectedTrack}
           showTrackInfo={showTrackInfo}
@@ -196,6 +186,23 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           </CardHeader>
 
           <CardContent className="space-y-6">
+            {/* render consent banner if this section has one */}
+            {"consent_banner" in currentSection &&
+              currentSection.consent_banner && (
+                <ConsentBanner
+                  id={`consent_${currentSection.id}`}
+                  text={currentSection.consent_banner.text}
+                  required={currentSection.consent_banner.required}
+                  accepted={consentGiven}
+                  onChange={(val) =>
+                    setBannerConsent((b) => ({
+                      ...b,
+                      [currentSection.id]: val,
+                    }))
+                  }
+                />
+              )}
+
             {visibleQuestions.map((q, idx) => (
               <div key={q.id} className="space-y-2">
                 <div className="flex items-start gap-3">
@@ -206,7 +213,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
                     <QuestionCard
                       question={q}
                       value={responses[q.id]}
-                      onChange={(val) => handleAnswerChange(q.id, val)}
+                      onChange={(v) => handleAnswerChange(q.id, v)}
                     />
                   </div>
                 </div>
@@ -219,7 +226,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           {currentSectionIndex > 0 ? (
             <Button
               variant="outline"
-              onClick={goToPreviousSection}
+              onClick={goPrev}
               className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" /> Previous
@@ -229,12 +236,11 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           )}
 
           <Button
-            onClick={goToNextSection}
+            onClick={goNext}
             className="flex items-center gap-2"
+            disabled={consentReq && !consentGiven}
           >
-            {currentSectionIndex === totalSections - 1
-              ? "Complete"
-              : "Next"}
+            {currentSectionIndex === totalPages - 1 ? "Complete" : "Next"}
             <ArrowRight className="h-4 w-4" />
           </Button>
         </div>

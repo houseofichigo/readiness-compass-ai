@@ -39,6 +39,7 @@ const buildQuestionIndex = (): Record<string, QuestionIndexEntry> => {
 
 const QUESTION_INDEX = buildQuestionIndex();
 
+// YAML provides a `weight_vectors` map under `assessmentMeta`
 const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
   string,
   WeightVector
@@ -74,6 +75,7 @@ export function scoreAnswers(
     sectionCounts[section] += 1;
   }
 
+  // Compute average per section
   const sectionScores: Record<string, number> = {};
   (Object.keys(sectionTotals) as Array<keyof WeightVector>).forEach(
     (section) => {
@@ -82,15 +84,17 @@ export function scoreAnswers(
     }
   );
 
+  // Apply track-specific weights
   const weights =
     WEIGHT_VECTORS[track as keyof typeof WEIGHT_VECTORS] ??
     WEIGHT_VECTORS.GEN;
 
+  // Compute weighted total
   const totalScore = (Object.keys(sectionScores) as Array<
     keyof WeightVector
   >).reduce((sum, section) => {
-    const weight = weights?.[section] ?? 0;
-    return sum + sectionScores[section] * (weight / 100);
+    const w = weights[section] ?? 0;
+    return sum + sectionScores[section] * (w / 100);
   }, 0);
 
   return {
@@ -115,47 +119,49 @@ function scoreQuestion(question: Question, answer: unknown): number {
 
   const { type, score_map, score_per, cap, weight, options } = question;
 
+  // Arrays (multi, rank, etc.)
   if (Array.isArray(answer)) {
+    // Ranked
     if (type === "rank" && weight) {
       const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
       const max = weight.reduce((a, b) => a + b, 0);
       return max === 0 ? 0 : (used / max) * 100;
     }
-
+    // Per-item
     if (score_per !== undefined) {
       const raw = answer.length * score_per;
       return Math.min(raw, cap ?? 100);
     }
-
+    // Mapped options
     if (score_map && options) {
       const scores = (answer as string[]).map((val) => {
-        const idx = options.findIndex((opt) =>
-          opt.value === val
-        );
+        const idx = options.findIndex((opt) => opt.value === val);
         return idx >= 0 && score_map[idx] !== undefined ? score_map[idx] : 0;
       });
-      return scores.length === 0
-        ? 50
-        : scores.reduce((a, b) => a + b, 0) / scores.length;
+      return scores.length
+        ? scores.reduce((a, b) => a + b, 0) / scores.length
+        : 50;
     }
   }
 
+  // Boolean
   if (typeof answer === "boolean") {
     return answer ? 100 : 0;
   }
 
+  // Single select mapped
   if (score_map && options) {
-    const idx = options.findIndex((opt) =>
-      opt.value === answer
-    );
+    const idx = options.findIndex((opt) => opt.value === answer);
     if (idx >= 0 && score_map[idx] !== undefined) {
       return score_map[idx];
     }
   }
 
+  // Numeric
   if (typeof answer === "number") {
     return Math.max(0, Math.min(100, answer));
   }
 
+  // Fallback neutral
   return 50;
 }

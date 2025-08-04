@@ -7,7 +7,7 @@ import type {
   Question,
   QuestionOption,
   ConsentBanner,
-  ComputedField
+  ComputedField,
 } from "@/types/assessment";
 
 // Titles for each section derived from the assessment YAML
@@ -47,7 +47,7 @@ interface AssessmentYaml {
 
 const schema = yaml.load(schemaRaw) as AssessmentYaml;
 
-// Turn string-or-object into QuestionOption[]
+// Normalize a mixed array of strings or objects into QuestionOption[]
 const normalizeOptions = (
   options?: Array<string | QuestionOption>
 ): QuestionOption[] | undefined =>
@@ -57,20 +57,24 @@ const normalizeOptions = (
 
 // Build Section[] from YAML
 const assessmentSections: Section[] = Object.entries(schema)
+  // keep only keys that start with "section_"
   .filter(([key]): key is `section_${string}` => key.startsWith("section_"))
+  // sort by the numeric suffix
   .sort(([a], [b]) =>
     a.localeCompare(b, undefined, { numeric: true })
   )
-  .map(([id, rawSection]) => {
+  .map(([id, raw]) => {
     const {
       purpose = "",
       questions = [],
       consent_banner,
-      computed = []
-    } = rawSection ?? {};
+      computed = [],
+    } = raw ?? {};
 
+    // normalize flat and grouped options
     const normalizedQuestions: Question[] = questions.map((q) => {
       const base: any = { ...q };
+
       if (q.options) {
         base.options = normalizeOptions(q.options);
       }
@@ -78,30 +82,46 @@ const assessmentSections: Section[] = Object.entries(schema)
         base.groups = q.groups.map((g) => ({
           label: g.label,
           show_if: g.show_if,
-          options: normalizeOptions(g.options),
+          options: normalizeOptions(g.options) || [],
         }));
       }
+
       return base as Question;
     });
 
-    return {
+    // assemble the Section object
+    const section: Section = {
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
       questions: normalizedQuestions,
-      // if defined in YAML, attach consent banner & computed logic
-      ...(consent_banner ? { consent_banner } : {}),
-      ...(computed.length ? { computed } : {}),
     };
+
+    if (consent_banner) {
+      section.consent_banner = consent_banner;
+    }
+    if (computed.length) {
+      section.computed = computed;
+    }
+
+    return section;
   });
 
 // Top-level add-ons (if any)
-const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => ({
-  ...q,
-  options: normalizeOptions(q.options),
-  // if you ever need groups in add_ons, you can normalize them similarly:
-  // groups: q.groups?.map(g => ({ ...g, options: normalizeOptions(g.options) }))
-}));
+const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
+  const base: any = { ...q };
+  if (q.options) {
+    base.options = normalizeOptions(q.options);
+  }
+  if (q.groups) {
+    base.groups = q.groups.map((g) => ({
+      label: g.label,
+      show_if: g.show_if,
+      options: normalizeOptions(g.options) || [],
+    }));
+  }
+  return base as Question;
+});
 
 export { assessmentSections };
 export const assessmentMeta = schema.meta ?? {};
