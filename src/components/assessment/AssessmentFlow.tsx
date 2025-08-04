@@ -104,6 +104,7 @@ export function AssessmentFlow({
   const currentSection = assessmentSections[currentPage];
   const isLastSection = currentPage === assessmentSections.length - 1;
   const hasAddOns = visibleAddOns.length > 0;
+  const isAddOnPage = currentPage === assessmentSections.length;
 
   // Move forwards/backwards
   const goPrev = () => setCurrentPage(i => Math.max(0, i - 1));
@@ -189,28 +190,33 @@ export function AssessmentFlow({
     );
   }
 
-  // Skip add-ons, they're removed
-
-  if (!currentSection) {
+  if (!currentSection && !isAddOnPage) {
     return <div>Section not found</div>;
   }
 
-  const visibleQuestions = currentSection.questions.filter(q =>
-    isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
-  );
+  const visibleQuestions = isAddOnPage
+    ? visibleAddOns
+    : currentSection!.questions.filter(q =>
+        isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
+      );
+
+  const sectionTitle = isAddOnPage ? "Additional Questions" : currentSection!.title;
+  const sectionPurpose = isAddOnPage ? undefined : currentSection!.purpose;
+  const progressSectionIndex = Math.min(currentPage, assessmentSections.length - 1);
+  const isFinalStep = isAddOnPage || (isLastSection && !hasAddOns);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
       <AssessmentProgressBar
-        currentSectionIndex={currentPage}
-        completedSections={currentPage}
+        currentSectionIndex={progressSectionIndex}
+        completedSections={Math.min(currentPage, assessmentSections.length)}
         detectedTrack={detectedTrack}
         showTrackInfo={showTrackInfo}
         responses={responses}
         globalComputed={globalComputed}
       />
 
-      {currentSection.consentBanner && (
+      {!isAddOnPage && currentSection?.consentBanner && (
         <ConsentBanner
           id={`consent_${currentSection.id}`}
           text={currentSection.consentBanner.text || currentSection.consentBanner.consent_text || ""}
@@ -223,13 +229,13 @@ export function AssessmentFlow({
       <Card className="p-6">
         <div className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold mb-2">{currentSection.title}</h2>
-            {currentSection.purpose && (
-              <p className="text-muted-foreground mb-4">{currentSection.purpose}</p>
+            <h2 className="text-2xl font-bold mb-2">{sectionTitle}</h2>
+            {sectionPurpose && (
+              <p className="text-muted-foreground mb-4">{sectionPurpose}</p>
             )}
-            <Progress 
-              value={(currentPage / assessmentSections.length) * 100} 
-              className="w-full" 
+            <Progress
+              value={(currentPage / assessmentSections.length) * 100}
+              className="w-full"
             />
           </div>
 
@@ -260,7 +266,7 @@ export function AssessmentFlow({
           className="flex items-center gap-2"
           disabled={!canProceed()}
         >
-          {isLastSection ? "Complete Assessment" : "Next"}
+          {isFinalStep ? "Complete Assessment" : "Next"}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
