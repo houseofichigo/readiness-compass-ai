@@ -1,10 +1,16 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { AssessmentResponse, OrganizationProfile, Track, WeightVector } from "@/types/assessment";
+import {
+  AssessmentResponse,
+  OrganizationProfile,
+  Track,
+  WeightVector,
+} from "@/types/assessment";
 import { assessmentMeta } from "@/data/assessmentQuestions";
 import { Badge } from "@/components/ui/badge";
 import { Download, Share2, BarChart3 } from "lucide-react";
+import { scoreAnswers } from "@/utils/scoring";
 
 interface AssessmentResultsProps {
   responses: AssessmentResponse[];
@@ -13,29 +19,30 @@ interface AssessmentResultsProps {
   onRestart: () => void;
 }
 
-export function AssessmentResults({ 
-  responses, 
-  profile, 
-  track, 
-  onRestart 
+export function AssessmentResults({
+  responses,
+  profile,
+  track,
+  onRestart
 }: AssessmentResultsProps) {
-  // Calculate mock scores for demonstration
-  const sectionScores = {
-    Strategy: Math.floor(Math.random() * 40) + 60,
-    Data: Math.floor(Math.random() * 40) + 50,
-    Tools: Math.floor(Math.random() * 40) + 55,
-    Automation: Math.floor(Math.random() * 40) + 45,
-    People: Math.floor(Math.random() * 40) + 65,
-    Governance: Math.floor(Math.random() * 40) + 40
-  };
-
-  const weightVectors = (assessmentMeta as { weight_vectors: Record<Track, WeightVector> }).weight_vectors;
-  const weights = weightVectors[track];
-  const overallScore = Math.round(
-    Object.entries(sectionScores).reduce((total, [section, score]) => {
-      return total + (score * weights[section as keyof typeof weights]) / 100;
-    }, 0)
+  const responseValues = responses.reduce<Record<string, unknown>>(
+    (acc, { questionId, value }) => {
+      acc[questionId] = value;
+      return acc;
+    },
+    {}
   );
+
+  const { questionScores, sectionScores, totalScore } = scoreAnswers(
+    responseValues,
+    track
+  );
+
+  const weightVectors = (
+    assessmentMeta as { weight_vectors: Record<Track, WeightVector> }
+  ).weight_vectors;
+  const weights = weightVectors[track];
+  const roundedScore = Math.round(totalScore);
 
   const getReadinessLevel = (score: number) => {
     if (score >= 80) return { level: "Advanced", color: "bg-green-500", description: "Excellent AI readiness" };
@@ -44,7 +51,7 @@ export function AssessmentResults({
     return { level: "Beginner", color: "bg-red-500", description: "Significant development needed" };
   };
 
-  const readinessLevel = getReadinessLevel(overallScore);
+  const readinessLevel = getReadinessLevel(roundedScore);
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
@@ -65,7 +72,7 @@ export function AssessmentResults({
       <Card className="p-8 text-center bg-gradient-accent border-0 shadow-glow">
         <div className="space-y-4">
           <div className="text-6xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            {overallScore}
+            {roundedScore}
           </div>
           <div className="space-y-2">
             <Badge className={`${readinessLevel.color} text-white px-4 py-2 text-lg`}>
