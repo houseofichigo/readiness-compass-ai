@@ -128,7 +128,14 @@ export function AssessmentFlow({
   const consentGiven = bannerConsent[currentSection.id] === true;
   return <div className="min-h-screen bg-gradient-accent p-4">
       <div className="container mx-auto max-w-6xl">
-        <AssessmentProgressBar currentSectionIndex={currentPage} completedSections={currentPage} detectedTrack={detectedTrack} showTrackInfo={showTrackInfo} />
+        <AssessmentProgressBar 
+          currentSectionIndex={currentPage} 
+          completedSections={currentPage} 
+          detectedTrack={detectedTrack} 
+          showTrackInfo={showTrackInfo}
+          responses={responses}
+          globalComputed={globalComputed}
+        />
 
         <Card className="mb-6">
           <CardHeader>
