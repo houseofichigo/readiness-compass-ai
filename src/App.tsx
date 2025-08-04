@@ -12,6 +12,7 @@ import { OverviewDashboard } from "@/components/admin/OverviewDashboard";
 import { SubmissionsTable } from "@/components/admin/SubmissionsTable";
 import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
 import { AdminLogin } from "@/pages/AdminLogin";
+import { ThankYou } from "@/pages/ThankYou";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/thank-you" element={<ThankYou />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin/*" element={
                 <ProtectedRoute>
