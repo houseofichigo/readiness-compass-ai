@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
-import { OrganizationProfileForm } from "./OrganizationProfileForm";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { AssessmentThankYou } from "./AssessmentThankYou";
 import { ConsentBanner } from "./ConsentBanner";
@@ -197,45 +196,29 @@ export function AssessmentFlow({
         />
       )}
 
-      {/* Special handling for Organization Profile section */}
-      {currentSection?.id === "section_0" && !isAddOnPage ? (
+      <Card className="p-6">
         <div className="space-y-6">
-          <div className="text-center">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">{sectionTitle}</h2>
+            {sectionPurpose && (
+              <p className="text-muted-foreground mb-4">{sectionPurpose}</p>
+            )}
             <Progress
               value={(currentPage / assessmentSections.length) * 100}
-              className="w-full mb-4"
+              className="w-full"
             />
           </div>
-          <OrganizationProfileForm
-            responses={responses}
-            onChange={handleAnswerChange}
-          />
-        </div>
-      ) : (
-        <Card className="p-6">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">{sectionTitle}</h2>
-              {sectionPurpose && (
-                <p className="text-muted-foreground mb-4">{sectionPurpose}</p>
-              )}
-              <Progress
-                value={(currentPage / assessmentSections.length) * 100}
-                className="w-full"
-              />
-            </div>
 
-            {visibleQuestions.map((question, index) => (
-              <QuestionCard
-                key={question.id}
-                question={question}
-                value={responses[question.id]}
-                onChange={(value) => handleAnswerChange(question.id, value)}
-              />
-            ))}
-          </div>
-        </Card>
-      )}
+          {visibleQuestions.map((question, index) => (
+            <QuestionCard
+              key={question.id}
+              question={question}
+              value={responses[question.id]}
+              onChange={(value) => handleAnswerChange(question.id, value)}
+            />
+          ))}
+        </div>
+      </Card>
 
       <div className="flex justify-between">
         <Button
