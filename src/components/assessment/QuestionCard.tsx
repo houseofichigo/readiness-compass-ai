@@ -1,9 +1,16 @@
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { useState } from "react";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
@@ -24,7 +31,11 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
   };
 
   const renderQuestionInput = () => {
-@@ -32,80 +31,114 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
+    switch (question.type) {
+      case "text":
+      case "email":
+      case "number":
+        return (
           <Input
             type={question.type}
             value={inputValue}
@@ -49,8 +60,11 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
           </div>
         );
 
-      case "single":
-        const singleOptions = question.options || question.groups?.flatMap(g => g.options) || [];
+      case "single": {
+        const flatOptions =
+          question.options ||
+          question.groups?.flatMap((g) => g.options) ||
+          [];
         return (
           <RadioGroup
             value={value}
@@ -58,35 +72,50 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
             className="mt-4 space-y-3"
           >
             {question.groups?.length
-              ? question.groups.map(group => (
+              ? question.groups.map((group) => (
                   <div key={group.label} className="space-y-2">
-                    <Label className="text-sm font-medium">{group.label}</Label>
-                    {group.options.map(option => (
-                      <div key={option.value} className="flex items-center space-x-2">
-                        <RadioGroupItem value={option.value} id={option.value} />
-                        <Label htmlFor={option.value} className="font-normal cursor-pointer">
-                          {option.label}
+                    <Label className="text-sm font-medium">
+                      {group.label}
+                    </Label>
+                    {group.options.map((opt) => (
+                      <div
+                        key={opt.value}
+                        className="flex items-center space-x-2"
+                      >
+                        <RadioGroupItem value={opt.value} id={opt.value} />
+                        <Label
+                          htmlFor={opt.value}
+                          className="font-normal cursor-pointer"
+                        >
+                          {opt.label}
                         </Label>
                       </div>
                     ))}
                   </div>
                 ))
-              : singleOptions.map(option => (
-                  <div key={option.value} className="flex items-center space-x-2">
-                    <RadioGroupItem value={option.value} id={option.value} />
-                    <Label htmlFor={option.value} className="font-normal cursor-pointer">
-                      {option.label}
+              : flatOptions.map((opt) => (
+                  <div
+                    key={opt.value}
+                    className="flex items-center space-x-2"
+                  >
+                    <RadioGroupItem value={opt.value} id={opt.value} />
+                    <Label
+                      htmlFor={opt.value}
+                      className="font-normal cursor-pointer"
+                    >
+                      {opt.label}
                     </Label>
                   </div>
                 ))}
           </RadioGroup>
         );
+      }
 
       case "multi":
         if (question.groups?.length) {
           return (
             <div className="mt-4 space-y-6">
-              {question.groups.map(group => (
+              {question.groups.map((group) => (
                 <div key={group.label} className="space-y-2">
                   <Label className="text-sm font-medium">{group.label}</Label>
                   <MultiSelectQuestion
@@ -109,8 +138,11 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
           />
         );
 
-      case "rank":
-        const rankOptions = question.options || question.groups?.flatMap(g => g.options) || [];
+      case "rank": {
+        const rankOptions =
+          question.options ||
+          question.groups?.flatMap((g) => g.options) ||
+          [];
         return (
           <DragDropQuestionRank
             options={rankOptions}
@@ -119,6 +151,7 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
             maxRank={question.max_rank || 3}
           />
         );
+      }
 
       case "industry_dropdown":
         return (
@@ -127,15 +160,48 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
               <SelectValue placeholder="Select industry..." />
             </SelectTrigger>
             <SelectContent className="z-50 bg-background border border-border">
+              {/*
+                Replace with dynamic list or keep static options as needed:
+              */}
               <SelectItem value="Agriculture">Agriculture</SelectItem>
               <SelectItem value="Automotive">Automotive</SelectItem>
-              <SelectItem value="Banking & Finance">Banking & Finance</SelectItem>
+              <SelectItem value="Banking & Finance">
+                Banking & Finance
+              </SelectItem>
               <SelectItem value="Construction">Construction</SelectItem>
               <SelectItem value="Consulting">Consulting</SelectItem>
               <SelectItem value="Education">Education</SelectItem>
-              <SelectItem value="Energy & Utilities">Energy & Utilities</SelectItem>
-              <SelectItem value="Entertainment & Media">Entertainment & Media</SelectItem>
+              <SelectItem value="Energy & Utilities">
+                Energy & Utilities
+              </SelectItem>
+              <SelectItem value="Entertainment & Media">
+                Entertainment & Media
+              </SelectItem>
               <SelectItem value="Fashion & Retail">Fashion & Retail</SelectItem>
               <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
               <SelectItem value="Government">Government</SelectItem>
               <SelectItem value="Healthcare">Healthcare</SelectItem>
+            </SelectContent>
+          </Select>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <Card className="mb-6 p-4">
+      <Label className="font-semibold">{question.text}</Label>
+      {renderQuestionInput()}
+      {question.helper && (
+        <p className="mt-2 text-sm text-muted-foreground">
+          {question.helper}
+        </p>
+      )}
+      <div className="mt-4">
+        <Button onClick={() => onChange(value)}>Save</Button>
+      </div>
+    </Card>
+  );
+}
