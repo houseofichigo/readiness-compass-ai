@@ -1,4 +1,5 @@
 // src/data/assessmentQuestions.ts
+
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
 import type { Section, Question, QuestionOption } from "@/types/assessment";
@@ -13,7 +14,7 @@ const SECTION_TITLES: Record<string, string> = {
   section_5: "Automation & AI Agents",
   section_6: "Team Capability & Culture",
   section_7: "Governance, Risk & Ethics",
-  section_8: "Implementation Horizon & Vision"
+  section_8: "Implementation Horizon & Vision",
 };
 
 interface RawQuestion extends Omit<Question, "options"> {
@@ -43,24 +44,34 @@ const normalizeOptions = (
 // Extract section_* entries and map to application Section objects
 const assessmentSections: Section[] = Object.entries(schema)
   .filter(([key]): key is `section_${string}` => key.startsWith("section_"))
+  .sort(([a], [b]) =>
+    a.localeCompare(b, undefined, { numeric: true })
+  )
   .map(([id, value]) => {
     const { purpose = "", questions = [] } = (value as RawSection) ?? {};
-    const normalizedQuestions: Question[] = questions.map((q) => ({
-      ...q,
-      options: normalizeOptions(q.options)
-    }));
-
+    const normalizedQuestions: Question[] = questions.map((q) => {
+      const base: any = { ...q };
+      if (q.options) base.options = normalizeOptions(q.options);
+      if ("groups" in q) {
+        base.groups = (q as any).groups.map((g: any) => ({
+          label: g.label,
+          show_if: g.show_if,
+          options: normalizeOptions(g.options),
+        }));
+      }
+      return base;
+    });
     return {
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
-      questions: normalizedQuestions
+      questions: normalizedQuestions,
     };
   });
 
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => ({
   ...q,
-  options: normalizeOptions(q.options)
+  options: normalizeOptions(q.options),
 }));
 
 export { assessmentSections };
