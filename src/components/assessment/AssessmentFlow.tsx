@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
-import { AssessmentResults } from "./AssessmentResults";
+import { AssessmentThankYou } from "./AssessmentThankYou";
 import { ConsentBanner } from "./ConsentBanner";
 import { assessmentSections, assessmentAddOns, assessmentMeta } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
@@ -172,12 +172,7 @@ export function AssessmentFlow({
 
   if (isCompleted) {
     return (
-      <AssessmentResults
-        responses={Object.entries(responses).map(([questionId, value]) => ({
-          questionId,
-          value,
-          sectionId: currentPage < assessmentSections.length ? assessmentSections[currentPage].id : "add_ons"
-        }))}
+      <AssessmentThankYou
         profile={{
           M0: responses.M0 as string,
           M1: responses.M1 as string,
@@ -194,61 +189,7 @@ export function AssessmentFlow({
     );
   }
 
-  // Add-ons page
-  if (currentPage === assessmentSections.length) {
-    return (
-      <div className="max-w-4xl mx-auto p-6 space-y-6">
-        <AssessmentProgressBar
-          currentSectionIndex={currentPage}
-          completedSections={assessmentSections.length}
-          detectedTrack={detectedTrack}
-          showTrackInfo={showTrackInfo}
-          responses={responses}
-          globalComputed={globalComputed}
-        />
-
-        <Card className="p-6">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold mb-2">Additional Questions</h2>
-              <p className="text-muted-foreground">
-                These optional questions help us provide more personalized recommendations.
-              </p>
-            </div>
-
-            {visibleAddOns.map((question, index) => (
-              <QuestionCard
-                key={question.id}
-                question={question}
-                value={responses[question.id]}
-                onChange={(value) => handleAnswerChange(question.id, value)}
-              />
-            ))}
-          </div>
-        </Card>
-
-        <div className="flex justify-between">
-          <Button
-            onClick={goPrev}
-            variant="outline"
-            className="flex items-center gap-2"
-            disabled={currentPage === 0}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Previous
-          </Button>
-
-          <Button
-            onClick={completeAssessment}
-            className="flex items-center gap-2"
-          >
-            Complete Assessment
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  // Skip add-ons, they're removed
 
   if (!currentSection) {
     return <div>Section not found</div>;
@@ -319,8 +260,7 @@ export function AssessmentFlow({
           className="flex items-center gap-2"
           disabled={!canProceed()}
         >
-          {isLastSection && hasAddOns ? "Continue to Additional Questions" : 
-           isLastSection ? "Complete Assessment" : "Next"}
+          {isLastSection ? "Complete Assessment" : "Next"}
           <ArrowRight className="h-4 w-4" />
         </Button>
       </div>
