@@ -70,7 +70,7 @@ export function ThankYou() {
   };
 
   const handleVisitWebsite = () => {
-    window.open('https://www.example.com', '_blank');
+    window.open('https://www.houseofichigo.com', '_blank');
   };
 
   const resourceCards = [
@@ -91,12 +91,6 @@ export function ThankYou() {
       title: "Best Practices Library",
       description: "Proven strategies and frameworks",
       action: () => handleComingSoon("Best Practices Library")
-    },
-    {
-      icon: Calculator,
-      title: "ROI Calculator",
-      description: "Calculate potential AI investment returns",
-      action: () => handleComingSoon("ROI Calculator")
     }
   ];
 
@@ -279,7 +273,7 @@ export function ThankYou() {
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-center text-foreground">Continue Your AI Journey</h2>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {resourceCards.map((card, index) => (
               <Card 
                 key={index} 
