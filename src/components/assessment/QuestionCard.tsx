@@ -33,7 +33,7 @@ export function QuestionCard({
       case "email":
         return <Input type={question.type} value={inputValue} onChange={e => handleInputChange(e.target.value)} placeholder={`Enter your ${question.text.toLowerCase()}`} className="mt-2" required={question.required} />;
       case "checkbox":
-        return;
+        return null;
       case "single":
         // Also used for industry_dropdown & country_dropdown
         const flatOptions = question.options || question.groups?.flatMap(g => g.options) || [];
