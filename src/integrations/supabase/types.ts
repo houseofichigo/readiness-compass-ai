@@ -14,7 +14,528 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      answers: {
+        Row: {
+          answered_at: string
+          question_id: string
+          submission_id: string
+          value: Json | null
+        }
+        Insert: {
+          answered_at?: string
+          question_id: string
+          submission_id: string
+          value?: Json | null
+        }
+        Update: {
+          answered_at?: string
+          question_id?: string
+          submission_id?: string
+          value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "answers_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessments: {
+        Row: {
+          created_at: string
+          id: string
+          locale_default: string | null
+          max_visible_questions: number | null
+          question_cap: Json | null
+          size_breakpoints: Json | null
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          locale_default?: string | null
+          max_visible_questions?: number | null
+          question_cap?: Json | null
+          size_breakpoints?: Json | null
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          locale_default?: string | null
+          max_visible_questions?: number | null
+          question_cap?: Json | null
+          size_breakpoints?: Json | null
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      computed_definitions: {
+        Row: {
+          conditions: Json | null
+          field_id: string
+          formula: string | null
+          logic: string | null
+          section_id: string
+        }
+        Insert: {
+          conditions?: Json | null
+          field_id: string
+          formula?: string | null
+          logic?: string | null
+          section_id: string
+        }
+        Update: {
+          conditions?: Json | null
+          field_id?: string
+          formula?: string | null
+          logic?: string | null
+          section_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "computed_definitions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      computed_values: {
+        Row: {
+          field_id: string
+          submission_id: string
+          value: Json | null
+        }
+        Insert: {
+          field_id: string
+          submission_id: string
+          value?: Json | null
+        }
+        Update: {
+          field_id?: string
+          submission_id?: string
+          value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "computed_values_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consent_banners: {
+        Row: {
+          consent_text: string | null
+          description: string | null
+          required: boolean
+          section_id: string
+          text: string | null
+          title: string | null
+        }
+        Insert: {
+          consent_text?: string | null
+          description?: string | null
+          required?: boolean
+          section_id: string
+          text?: string | null
+          title?: string | null
+        }
+        Update: {
+          consent_text?: string | null
+          description?: string | null
+          required?: boolean
+          section_id?: string
+          text?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_banners_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: true
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      question_scores: {
+        Row: {
+          question_id: string
+          score: number | null
+          submission_id: string
+        }
+        Insert: {
+          question_id: string
+          score?: number | null
+          submission_id: string
+        }
+        Update: {
+          question_id?: string
+          score?: number | null
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_scores_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      questions: {
+        Row: {
+          assessment_id: string | null
+          cap: number | null
+          columns: Json | null
+          created_at: string
+          groups: Json | null
+          helper: string | null
+          hide_if: Json | null
+          id: string
+          is_add_on: boolean
+          max_rank: number | null
+          max_select: number | null
+          options: Json | null
+          required: boolean
+          rows: Json | null
+          score_by_count: Json | null
+          score_formula: string | null
+          score_map: Json | null
+          score_per: number | null
+          section_id: string | null
+          sequence: number
+          show_if: Json | null
+          text: string
+          type: string
+          updated_at: string
+          weight: Json | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          cap?: number | null
+          columns?: Json | null
+          created_at?: string
+          groups?: Json | null
+          helper?: string | null
+          hide_if?: Json | null
+          id: string
+          is_add_on?: boolean
+          max_rank?: number | null
+          max_select?: number | null
+          options?: Json | null
+          required?: boolean
+          rows?: Json | null
+          score_by_count?: Json | null
+          score_formula?: string | null
+          score_map?: Json | null
+          score_per?: number | null
+          section_id?: string | null
+          sequence: number
+          show_if?: Json | null
+          text: string
+          type: string
+          updated_at?: string
+          weight?: Json | null
+        }
+        Update: {
+          assessment_id?: string | null
+          cap?: number | null
+          columns?: Json | null
+          created_at?: string
+          groups?: Json | null
+          helper?: string | null
+          hide_if?: Json | null
+          id?: string
+          is_add_on?: boolean
+          max_rank?: number | null
+          max_select?: number | null
+          options?: Json | null
+          required?: boolean
+          rows?: Json | null
+          score_by_count?: Json | null
+          score_formula?: string | null
+          score_map?: Json | null
+          score_per?: number | null
+          section_id?: string | null
+          sequence?: number
+          show_if?: Json | null
+          text?: string
+          type?: string
+          updated_at?: string
+          weight?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      section_scores: {
+        Row: {
+          score: number | null
+          section_id: string
+          submission_id: string
+        }
+        Insert: {
+          score?: number | null
+          section_id: string
+          submission_id: string
+        }
+        Update: {
+          score?: number | null
+          section_id?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "section_scores_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "section_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sections: {
+        Row: {
+          assessment_id: string | null
+          category: string | null
+          id: string
+          purpose: string | null
+          sequence: number
+          title: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          category?: string | null
+          id: string
+          purpose?: string | null
+          sequence: number
+          title: string
+        }
+        Update: {
+          assessment_id?: string | null
+          category?: string | null
+          id?: string
+          purpose?: string | null
+          sequence?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sections_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      submissions: {
+        Row: {
+          assessment_id: string | null
+          company_size: string | null
+          completed: boolean
+          country: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          industry: string | null
+          industry_other: string | null
+          organization_name: string | null
+          regulated: boolean | null
+          revenue: string | null
+          role: string | null
+          role_other: string | null
+          track: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          assessment_id?: string | null
+          company_size?: string | null
+          completed?: boolean
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          industry?: string | null
+          industry_other?: string | null
+          organization_name?: string | null
+          regulated?: boolean | null
+          revenue?: string | null
+          role?: string | null
+          role_other?: string | null
+          track?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          assessment_id?: string | null
+          company_size?: string | null
+          completed?: boolean
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          industry?: string | null
+          industry_other?: string | null
+          organization_name?: string | null
+          regulated?: boolean | null
+          revenue?: string | null
+          role?: string | null
+          role_other?: string | null
+          track?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_track_fkey"
+            columns: ["track"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      track_detection_rules: {
+        Row: {
+          condition: Json
+          id: number
+          precedence: number
+          track_id: string
+        }
+        Insert: {
+          condition: Json
+          id?: number
+          precedence: number
+          track_id: string
+        }
+        Update: {
+          condition?: Json
+          id?: number
+          precedence?: number
+          track_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_detection_rules_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      track_weights: {
+        Row: {
+          automation: number
+          data: number
+          governance: number
+          people: number
+          strategy: number
+          tools: number
+          track_id: string
+        }
+        Insert: {
+          automation: number
+          data: number
+          governance: number
+          people: number
+          strategy: number
+          tools: number
+          track_id: string
+        }
+        Update: {
+          automation?: number
+          data?: number
+          governance?: number
+          people?: number
+          strategy?: number
+          tools?: number
+          track_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_weights_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: true
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tracks: {
+        Row: {
+          id: string
+          label: string
+        }
+        Insert: {
+          id: string
+          label: string
+        }
+        Update: {
+          id?: string
+          label?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
