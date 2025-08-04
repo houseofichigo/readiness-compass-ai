@@ -338,7 +338,7 @@ section_2:
       show_if:
         any_of:
           - { track: REG }
-          - { F5: not ["None apply"] }
+          - { F5: { not: ["None apply"] } }
 
 section_3:
   purpose: "Data foundation, security, ethics, compliance."

@@ -1,6 +1,6 @@
 export type Track = "TECH" | "REG" | "GEN";
 
-export type QuestionType = "text" | "email" | "single" | "multi" | "rank" | "checkbox" | "industry_dropdown" | "country_dropdown";
+export type QuestionType = "text" | "email" | "single" | "multi" | "rank" | "checkbox" | "industry_dropdown" | "country_dropdown" | "multi_group";
 
 export interface QuestionOption {
   value: string;
