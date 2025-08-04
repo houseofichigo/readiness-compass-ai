@@ -95,15 +95,15 @@ const assessmentSections: Section[] = Object.entries(schema)
         type: q.type as QuestionType,
         helper: q.helper,
         required: q.required,
-        show_if: q.show_if,
-        hide_if: q.hide_if,
-        score_map: q.score_map,
-        score_per: q.score_per,
+        showIf: q.show_if,
+        hideIf: q.hide_if,
+        scoreMap: q.score_map,
+        scorePer: q.score_per,
         cap: q.cap,
         weight: q.weight,
-        max_rank: q.max_rank,
-        max_select: q.max_select,
-        score_by_count: q.score_by_count,
+        maxRank: q.max_rank,
+        maxSelect: q.max_select,
+        scoreByCount: q.score_by_count,
       };
 
       if (q.options) base.options = normalizeOptions(q.options);
@@ -113,7 +113,7 @@ const assessmentSections: Section[] = Object.entries(schema)
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
-          show_if: g.show_if,
+          showIf: g.show_if,
           options: normalizeOptions(g.options) || [],
         }));
       }
@@ -127,7 +127,7 @@ const assessmentSections: Section[] = Object.entries(schema)
       purpose,
       questions: normalizedQuestions,
       // only attach if defined
-      ...(consent_banner ? { consent_banner } : {}),
+      ...(consent_banner ? { consentBanner: consent_banner } : {}),
       ...(computed.length ? { computed } : {}),
     };
 
@@ -145,15 +145,15 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     type: q.type as QuestionType,
     helper: q.helper,
     required: q.required,
-    show_if: q.show_if,
-    hide_if: q.hide_if,
-    score_map: q.score_map,
-    score_per: q.score_per,
+    showIf: q.show_if,
+    hideIf: q.hide_if,
+    scoreMap: q.score_map,
+    scorePer: q.score_per,
     cap: q.cap,
     weight: q.weight,
-    max_rank: q.max_rank,
-    max_select: q.max_select,
-    score_by_count: q.score_by_count,
+    maxRank: q.max_rank,
+    maxSelect: q.max_select,
+    scoreByCount: q.score_by_count,
   };
 
   if (q.options) base.options = normalizeOptions(q.options);
@@ -162,7 +162,7 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
       label: g.label,
-      show_if: g.show_if,
+      showIf: g.show_if,
       options: normalizeOptions(g.options) || [],
     }));
   }
