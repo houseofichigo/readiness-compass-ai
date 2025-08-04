@@ -38,27 +38,44 @@ export default function ThankYou() {
 
   const data = location.state as ThankYouPageData;
 
+  // Debug logging
+  console.log("ThankYou page data:", data);
+  console.log("Location state:", location.state);
+
   useEffect(() => {
     // Stop confetti after 5 seconds
     const timer = setTimeout(() => setShowConfetti(false), 5000);
     return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    // Redirect back if no data (but do it in useEffect to avoid render-time navigation)
-    if (!data) {
-      navigate("/");
-    }
-  }, [data, navigate]);
+  // Create mock data for preview when no real data is available
+  const mockData: ThankYouPageData = {
+    profile: {
+      M0: "Demo Company",
+      M1: "John Doe", 
+      M2: "john@demo.com",
+      M3: "CTO/Tech Lead",
+      M4_industry: "Technology",
+      M5_country: "United States",
+      M6_size: "50-249",
+      track: "TECH"
+    },
+    track: "TECH",
+    responses: {
+      M0: "Demo Company",
+      M1: "John Doe",
+      M2: "john@demo.com", 
+      M3: "CTO/Tech Lead",
+      M4_industry: "Technology",
+      M5_country: "United States",
+      M6_size: "50-249"
+    },
+    submissionId: "demo-123"
+  };
 
-  if (!data) {
-    // Show loading while redirecting
-    return <div className="min-h-screen bg-gradient-accent flex items-center justify-center">
-      <div>Redirecting...</div>
-    </div>;
-  }
-
-  const { profile, track, responses } = data;
+  // Use real data if available, otherwise use mock data for preview
+  const pageData = data || mockData;
+  const { profile, track, responses } = pageData;
 
   const getTrackLabel = (track: Track) => {
     switch (track) {
