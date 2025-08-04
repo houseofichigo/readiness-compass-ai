@@ -11,6 +11,8 @@ import {
 } from "@/types/assessment";
 import { assessmentSections } from "@/data/assessmentQuestions";
 
+console.log("Index page loaded, assessmentSections:", assessmentSections.length);
+
 type AppState = "welcome" | "assessment" | "results";
 
 const Index = () => {

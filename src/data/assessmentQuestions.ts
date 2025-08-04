@@ -63,7 +63,15 @@ interface AssessmentYaml {
   [key: `section_${number}`]: RawSection | undefined;
 }
 
-const schema = yaml.load(schemaRaw) as AssessmentYaml;
+console.log("Loading YAML schema...");
+let schema: AssessmentYaml;
+try {
+  schema = yaml.load(schemaRaw) as AssessmentYaml;
+  console.log("YAML schema loaded successfully:", Object.keys(schema));
+} catch (error) {
+  console.error("YAML parsing error:", error);
+  throw error;
+}
 
 // Normalize a mixed array of strings or objects into QuestionOption[]
 function normalizeOptions(
