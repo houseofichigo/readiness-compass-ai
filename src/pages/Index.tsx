@@ -26,11 +26,19 @@ const Index = () => {
     responses: Record<string, AssessmentValue>,
     profile: OrganizationProfile
   ) => {
+    console.log("📝 Starting to save assessment to database...");
+    console.log("Profile data:", profile);
+    console.log("Response count:", Object.keys(responses).length);
+    
     // Save to database first
     const savedSubmissionId = await saveAssessment(responses, profile);
     
     if (savedSubmissionId) {
+      console.log("✅ Assessment saved with ID:", savedSubmissionId);
       setSubmissionId(savedSubmissionId);
+    } else {
+      console.error("❌ Failed to save assessment");
+      throw new Error("Failed to save assessment to database");
     }
 
     // Create local data for immediate display

@@ -107,8 +107,9 @@ export function AssessmentFlow({
     };
     
     try {
-      // Save assessment data
       console.log("💾 Saving assessment data...");
+      
+      // Wait for the save to complete before navigating
       await onComplete(responses, profile);
       
       console.log("🚀 Navigating to thank you page...");
