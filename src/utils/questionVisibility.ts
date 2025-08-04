@@ -1,96 +1,164 @@
-import { Question } from '@/types/assessment';
+import { assessmentMeta } from "@/data/assessmentQuestions";
+import { Question } from "@/types/assessment";
+
+interface EvalContext {
+  responses: Record<string, unknown>;
+  track?: string;
+  computed?: Record<string, unknown>;
+}
 
 export function isQuestionVisible(
-  question: Question, 
-  responses: Record<string, any>,
+  question: Question,
+  responses: Record<string, unknown>,
   detectedTrack: string,
-  totalVisibleQuestions: number
+  totalVisibleQuestions: number,
+  computed: Record<string, unknown> = {}
 ): boolean {
-  // Handle question cap (hide D2 and P6 if over 60 questions)
   if (totalVisibleQuestions >= 60) {
-    if (question.id === 'D2' || question.id === 'P6') {
+    if (question.id === "D2" || question.id === "P6") {
       return false;
     }
   }
 
-  // Handle track-specific visibility
+  const context: EvalContext = {
+    responses,
+    track: detectedTrack,
+    computed
+  };
+
   if (question.show_if) {
-    return evaluateCondition(question.show_if, responses, detectedTrack);
+    return evaluateCondition(question.show_if, context);
   }
 
   if (question.hide_if) {
-    return !evaluateCondition(question.hide_if, responses, detectedTrack);
+    return !evaluateCondition(question.hide_if, context);
   }
 
   return true;
 }
 
-function evaluateCondition(
-  condition: Record<string, any>, 
-  responses: Record<string, any>,
-  detectedTrack: string
-): boolean {
-  for (const [key, value] of Object.entries(condition)) {
-    if (key === 'track') {
-      if (typeof value === 'string') {
-        return detectedTrack === value;
-      }
-      if (Array.isArray(value)) {
-        return value.includes(detectedTrack);
-      }
-      if (typeof value === 'object' && value.in) {
-        return value.in.includes(detectedTrack);
-      }
-    }
+function evaluateCondition(condition: unknown, ctx: EvalContext): boolean {
+  if (!condition) return true;
 
-    const responseValue = responses[key];
-    
-    if (typeof value === 'string') {
-      if (value.startsWith('not_in ')) {
-        const excludeValues = value.replace('not_in ', '').split(',').map(v => v.trim());
-        return !excludeValues.includes(responseValue);
-      }
-      if (value.startsWith('in ')) {
-        const includeValues = value.replace('in ', '').split(',').map(v => v.trim());
-        return includeValues.includes(responseValue);
-      }
-      return responseValue === value;
-    }
-
-    if (Array.isArray(value)) {
-      return value.includes(responseValue);
-    }
-
-    if (typeof value === 'object') {
-      if (value.not) {
-        return responseValue !== value.not;
-      }
-      if (value.in) {
-        return value.in.includes(responseValue);
-      }
-      if (value.not_in) {
-        return !value.not_in.includes(responseValue);
-      }
-    }
+  if (Array.isArray(condition)) {
+    return condition.every((c) => evaluateCondition(c, ctx));
   }
 
-  return true;
+  if (typeof condition !== "object") {
+    return Boolean(condition);
+  }
+
+  const condObj = condition as Record<string, unknown>;
+
+  if ("any_of" in condObj) {
+    return (condObj.any_of as unknown[]).some((c) => evaluateCondition(c, ctx));
+  }
+
+  if ("all_of" in condObj) {
+    return (condObj.all_of as unknown[]).every((c) => evaluateCondition(c, ctx));
+  }
+  return Object.entries(condObj).every(([field, rule]) => {
+    if (field === "track") {
+      return matchValue(ctx.track, rule);
+    }
+
+    if (field === "computed") {
+      const compRules = rule as Record<string, unknown>;
+      return Object.entries(compRules).every(([key, val]) =>
+        matchValue(ctx.computed?.[key], val)
+      );
+    }
+
+    if (field.startsWith("computed.")) {
+      const key = field.slice("computed.".length);
+      return matchValue(ctx.computed?.[key], rule);
+    }
+
+    const responseValue = ctx.responses[field];
+    return matchValue(responseValue, rule);
+  });
 }
 
-export function detectTrack(responses: Record<string, any>): string {
-  const role = responses.M3;
-  const regulated = responses.M9;
+function matchValue(source: unknown, rule: unknown): boolean {
+  if (rule === undefined) return true;
 
-  // Technical track detection
-  if (['Data/AI Lead', 'IT Lead', 'CTO/Tech Lead'].includes(role)) {
-    return 'TECH';
+  if (rule && typeof rule === "object" && !Array.isArray(rule)) {
+    const objRule = rule as Record<string, unknown>;
+    if ("in" in objRule) {
+      const list = objRule.in as unknown[];
+      if (Array.isArray(source)) {
+        return source.some((v) => list.includes(v));
+      }
+      return list.includes(source);
+    }
+    if ("not_in" in objRule) {
+      const list = objRule.not_in as unknown[];
+      if (Array.isArray(source)) {
+        return !source.some((v) => list.includes(v));
+      }
+      return !list.includes(source);
+    }
+    if ("subset_of" in objRule) {
+      const list = objRule.subset_of as unknown[];
+      if (Array.isArray(source)) {
+        return source.every((v) => list.includes(v));
+      }
+      return list.includes(source);
+    }
+    if ("not" in objRule) {
+      const notVal = objRule.not as unknown;
+      if (Array.isArray(source)) {
+        const arr = Array.isArray(notVal) ? notVal : [notVal];
+        return !source.some((v) => arr.includes(v));
+      }
+      if (Array.isArray(notVal)) {
+        return !notVal.includes(source);
+      }
+      return source !== notVal;
+    }
+    return Object.entries(objRule).every(([k, v]) =>
+      matchValue((source as Record<string, unknown> | undefined)?.[k], v)
+    );
   }
 
-  // Regulated track detection
-  if (regulated === 'Yes' || regulated === 'Not sure' || role === 'Legal/Compliance') {
-    return 'REG';
+  if (Array.isArray(rule)) {
+    const arrRule = rule as unknown[];
+    if (Array.isArray(source)) {
+      return source.some((v) => arrRule.includes(v));
+    }
+    return arrRule.includes(source);
   }
 
-  // Default to General Business
-  return 'GEN';
+  return source === rule;
 }
+
+export function detectTrack(
+  responses: Record<string, unknown>,
+  computed: Record<string, unknown> = {}
+): string {
+  const precedence =
+    ((assessmentMeta as Record<string, unknown>)?.track_detection as Record<
+      string,
+      unknown
+    > | undefined)?.precedence as Array<Record<string, unknown>> | undefined ?? [];
+
+  for (const rule of precedence) {
+    const {
+      track,
+      if: cond,
+      ...rest
+    } = rule as { track?: string; if?: unknown; [key: string]: unknown };
+    const condition = cond ?? rest;
+    if (track && evaluateCondition(condition, { responses, computed })) {
+      return track;
+    }
+  }
+
+  const tracks = (assessmentMeta as Record<string, unknown>)?.tracks;
+  if (tracks && typeof tracks === "object") {
+    const fallback = Object.keys(tracks)[0];
+    if (fallback) return fallback;
+  }
+  return "GEN";
+}
+
