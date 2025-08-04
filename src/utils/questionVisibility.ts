@@ -140,7 +140,7 @@ function getTechRoles(): string[] {
 function getRegulatedIndustries(): string[] {
   const prof = assessmentSections.find(s => s.id === 'section_0');
   const logic = prof?.computed?.find(c => c.id === 'regulated')?.logic || '';
-  return parseListLiteral(logic);
+  return parseListLiteral(logic as string || "");
 }
 
 const TECH_ROLES = getTechRoles();

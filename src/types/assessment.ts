@@ -1,10 +1,6 @@
 // src/types/assessment.ts
 
-export interface QuestionOption {
-  value: string;
-  label: string;
-}
-
+// Type of question inputs
 export type QuestionType =
   | "text"
   | "email"
@@ -12,49 +8,77 @@ export type QuestionType =
   | "multi"
   | "multi_group"
   | "rank"
-  | "industry_dropdown"
   | "matrix"
-  | "checkbox";
+  | "checkbox"
+  | "dropdown"
+  | "industry_dropdown";
 
+// Option for single/multi/etc questions
+export interface QuestionOption {
+  value: string;
+  label: string;
+  description?: string;
+}
+
+// Group of options
 export interface QuestionGroup {
   label: string;
   showIf?: Record<string, unknown>;
   options: QuestionOption[];
 }
 
+// Core question shape
 export interface Question {
   id: string;
   text: string;
   type: QuestionType;
   helper?: string;
   required?: boolean;
+
+  // For single/multi/dropdown etc.
   options?: QuestionOption[];
-  rows?: string[];
-  columns?: string[];
+
+  // For matrix
+  rows?: (string | QuestionOption)[];
+  columns?: (string | QuestionOption)[];
+
+  // For grouped checkboxes
   groups?: QuestionGroup[];
+
+  // Conditional visibility
   showIf?: Record<string, unknown>;
   hideIf?: Record<string, unknown>;
+
+  // Scoring
   scoreMap?: number[];
   scorePer?: number;
   cap?: number;
   weight?: number[];
   maxRank?: number;
   maxSelect?: number;
-  scoreFormula?: string;
   scoreByCount?: Record<string, number>;
+  scoreFormula?: string;
 }
 
+// Banner shown in certain sections
 export interface ConsentBanner {
-  text: string;
-  type: string;
+  title?: string;
+  description?: string;
+  text?: string;
+  consent_text?: string;
   required: boolean;
 }
 
+// Computed (derived) field definition
 export interface ComputedField {
   id: string;
-  logic: string;
+  type?: string;
+  logic?: string | Record<string, unknown>;
+  formula?: string;
+  conditions?: Record<string, unknown>;
 }
 
+// A quiz or survey section
 export interface Section {
   id: string;
   title: string;
@@ -64,17 +88,24 @@ export interface Section {
   computed?: ComputedField[];
 }
 
-export interface WeightVector {
-  Strategy: number;
-  Data: number;
-  Tools: number;
-  Automation: number;
-  People: number;
-  Governance: number;
+// Overall assessment data
+export interface AssessmentData {
+  id?: string;
+  sections: Section[];
+  responses?: Record<string, AssessmentResponse>;
+  profile?: OrganizationProfile;
+  track?: Track;
+  completedSections?: string[];
+  totalScore?: number;
+  sectionScores?: Record<string, number>;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
+// Which track the org falls into
 export type Track = "TECH" | "REG" | "GEN";
 
+// Value types answers can take
 export type AssessmentValue =
   | string
   | number
@@ -83,34 +114,47 @@ export type AssessmentValue =
   | number[]
   | null;
 
+// Basic profile fields
 export interface OrganizationProfile {
-  M0: string; // Organization name
-  M1: string; // Full name
-  M2: string; // Business email
-  M3: string; // Primary role
-  M3_other: string; // Primary role (other)
-  M4_industry: string; // Industry
-  M4_sub: string; // Industry sub-sector
-  M5_country: string; // Country
-  M6_size: string; // Company size
-  M7_revenue: string; // Annual revenue
-  M8_consent: boolean; // Consent checkbox
+  M0?: string;               // organization name
+  M1?: string;               // full name
+  M2?: string;               // email
+  M3?: string;               // primary role
+  M3_other?: string;
+  M4_industry?: string;
+  M4_sub?: string;
+  M5_country?: string;
+  M6_size?: string;
+  M7_revenue?: string;
+  M8_consent?: boolean;
+  track?: Track;
+  regulated?: boolean;
+  [key: string]: any;
 }
 
+// Individual answer record
 export interface AssessmentResponse {
   questionId: string;
   value: AssessmentValue;
   sectionId: string;
 }
 
-export interface AssessmentData {
-  id: string;
-  profile: OrganizationProfile;
-  track: Track;
-  responses: AssessmentResponse[];
-  completedSections: string[];
+// Weight vector for scoring by category (per track)
+export interface WeightVector {
+  strategy: number;
+  data: number;
+  tools: number;
+  automation: number;
+  people: number;
+  governance: number;
+}
+
+// Final scoring results
+export interface ScoreResult {
   totalScore: number;
+  maxScore?: number;
+  percentage?: number;
   sectionScores: Record<string, number>;
-  createdAt: Date;
-  updatedAt: Date;
+  track: Track;
+  organizationProfile: OrganizationProfile;
 }

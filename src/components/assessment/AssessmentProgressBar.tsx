@@ -3,13 +3,16 @@
 import React from "react";
 import { CheckCircle2, Clock, HelpCircle } from "lucide-react";
 import { Track } from "@/types/assessment";
-import { assessmentSections } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
+import { isQuestionVisible } from "@/utils/questionVisibility";
 
 interface AssessmentProgressBarProps {
   currentSectionIndex: number;
   completedSections: number;
   detectedTrack: Track | null;
   showTrackInfo: boolean;
+  responses?: Record<string, any>;
+  globalComputed?: Record<string, any>;
 }
 
 const trackLabels: Record<Track, string> = {
@@ -23,7 +26,37 @@ export function AssessmentProgressBar({
   completedSections,
   detectedTrack,
   showTrackInfo,
+  responses = {},
+  globalComputed = {},
 }: AssessmentProgressBarProps) {
+  // Calculate total questions dynamically based on current responses and track
+  const calculateTotalQuestions = () => {
+    if (!detectedTrack) return null;
+    
+    let totalQuestions = 0;
+    
+    // Count questions in all sections
+    assessmentSections.forEach(section => {
+      let sectionVisible = 0;
+      section.questions.forEach(question => {
+        if (isQuestionVisible(question, responses, detectedTrack, sectionVisible, globalComputed)) {
+          sectionVisible++;
+          totalQuestions++;
+        }
+      });
+    });
+    
+    // Count visible add-on questions
+    assessmentAddOns.forEach(question => {
+      if (isQuestionVisible(question, responses, detectedTrack, totalQuestions, globalComputed)) {
+        totalQuestions++;
+      }
+    });
+    
+    return totalQuestions;
+  };
+
+  const totalQuestions = calculateTotalQuestions();
   const totalSections = assessmentSections.length;
   const progressPercentage = Math.round(
     (completedSections / totalSections) * 100
@@ -70,10 +103,12 @@ export function AssessmentProgressBar({
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center gap-3">
           <HelpCircle className="h-5 w-5 text-gray-600" />
           <div>
-            <div className="text-2xl font-bold text-gray-600">?</div>
+            <div className="text-2xl font-bold text-gray-600">
+              {totalQuestions || "?"}
+            </div>
             <div className="text-sm text-gray-700">
-              {showTrackInfo && detectedTrack
-                ? trackLabels[detectedTrack]
+              {showTrackInfo && detectedTrack && totalQuestions
+                ? `Total Questions (${trackLabels[detectedTrack]})`
                 : "Complete Profile First"}
             </div>
           </div>

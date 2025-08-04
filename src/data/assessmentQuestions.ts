@@ -27,7 +27,7 @@ const SECTION_TITLES: Record<string, string> = {
 interface RawQuestion {
   id: string;
   text: string;
-  type: QuestionType | string;
+  type: string;
   helper?: string;
   required?: boolean;
   options?: Array<string | QuestionOption>;
@@ -66,40 +66,39 @@ interface AssessmentYaml {
 const schema = yaml.load(schemaRaw) as AssessmentYaml;
 
 // Normalize a mixed array of strings or objects into QuestionOption[]
-const normalizeOptions = (
-  options?: Array<string | QuestionOption>
-): QuestionOption[] | undefined =>
-  options?.map((opt) =>
-    typeof opt === "string" ? { value: opt, label: opt } : opt
+function normalizeOptions(
+  opts?: Array<string | QuestionOption>
+): QuestionOption[] | undefined {
+  return opts?.map((o) =>
+    typeof o === "string" ? { value: o, label: o } : o
   );
+}
+
+// Top-level maps for consent banners & computed logic
+const assessmentConsentBanners: Record<string, ConsentBanner> = {};
+const assessmentComputed: Record<string, ComputedField[]> = {};
 
 // Build Section[] from YAML
 const assessmentSections: Section[] = Object.entries(schema)
-  // keep only keys that start with "section_"
   .filter(([key]) => key.startsWith("section_"))
-  // sort by the numeric suffix
   .sort(([a], [b]) =>
     a.localeCompare(b, undefined, { numeric: true })
   )
-  .map(([id, raw]) => {
+  .map(([id, rawSec]) => {
     const {
       purpose = "",
       questions = [],
       consent_banner,
       computed = [],
-    } = raw ?? {};
+    } = rawSec ?? {};
 
-    // normalize flat and grouped options and convert to camelCase
     const normalizedQuestions: Question[] = questions.map((q) => {
-      const base: Question = {
+      const base: Partial<Question> = {
         id: q.id,
         text: q.text,
         type: q.type as QuestionType,
         helper: q.helper,
         required: q.required,
-        options: normalizeOptions(q.options),
-        rows: q.rows,
-        columns: q.columns,
         showIf: q.show_if,
         hideIf: q.hide_if,
         scoreMap: q.score_map,
@@ -112,6 +111,10 @@ const assessmentSections: Section[] = Object.entries(schema)
         scoreByCount: q.score_by_count,
       };
 
+      if (q.options)   base.options = normalizeOptions(q.options);
+      if (q.rows)      base.rows    = [...q.rows];
+      if (q.columns)   base.columns = [...q.columns];
+
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
           label: g.label,
@@ -120,38 +123,34 @@ const assessmentSections: Section[] = Object.entries(schema)
         }));
       }
 
-      return base;
+      return base as Question;
     });
 
-    // assemble the Section object
-    const section: Section = {
+    if (consent_banner) {
+      assessmentConsentBanners[id] = consent_banner;
+    }
+    if (computed.length) {
+      assessmentComputed[id] = computed;
+    }
+
+    return {
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
       questions: normalizedQuestions,
+      ...(consent_banner ? { consentBanner: consent_banner } : {}),
+      ...(computed.length ? { computed } : {}),
     };
-
-    if (consent_banner) {
-      section.consentBanner = consent_banner;
-    }
-    if (computed.length) {
-      section.computed = computed;
-    }
-
-    return section;
   });
 
-// Top-level add-ons (if any)
+// Top-level “add_ons” questions
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
-  const base: Question = {
+  const base: Partial<Question> = {
     id: q.id,
     text: q.text,
     type: q.type as QuestionType,
     helper: q.helper,
     required: q.required,
-    options: normalizeOptions(q.options),
-    rows: q.rows,
-    columns: q.columns,
     showIf: q.show_if,
     hideIf: q.hide_if,
     scoreMap: q.score_map,
@@ -163,6 +162,11 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     scoreFormula: q.score_formula,
     scoreByCount: q.score_by_count,
   };
+
+  if (q.options)  base.options  = normalizeOptions(q.options);
+  if (q.rows)     base.rows     = [...q.rows];
+  if (q.columns)  base.columns  = [...q.columns];
+
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
       label: g.label,
@@ -170,10 +174,14 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
       options: normalizeOptions(g.options) || [],
     }));
   }
-  return base;
+
+  return base as Question;
 });
 
-export { assessmentSections };
+export {
+  assessmentSections,
+  assessmentConsentBanners,
+  assessmentComputed,
+  assessmentAddOns,
+};
 export const assessmentMeta = schema.meta ?? {};
-export { assessmentAddOns };
-export const assessmentData = { sections: assessmentSections };

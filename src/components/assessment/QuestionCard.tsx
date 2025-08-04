@@ -6,10 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Question } from "@/types/assessment";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
+import { MatrixQuestion } from "./MatrixQuestion";
+import { ProgressiveMultiGroupQuestion } from "./ProgressiveMultiGroupQuestion";
 
 interface QuestionCardProps {
   question: Question;
@@ -17,7 +25,11 @@ interface QuestionCardProps {
   onChange: (value: any) => void;
 }
 
-export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
+export function QuestionCard({
+  question,
+  value,
+  onChange,
+}: QuestionCardProps) {
   const [inputValue, setInputValue] = useState(value || "");
 
   const handleInputChange = (newValue: string) => {
@@ -42,56 +54,85 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
 
       case "checkbox":
         return (
-          <div className="flex items-center space-x-2 mt-4">
-            <Checkbox
-              id={question.id}
-              checked={value || false}
-              onCheckedChange={onChange}
-            />
-            <Label htmlFor={question.id} className="text-sm leading-relaxed">
-              {question.text}
-            </Label>
-          </div>
+          <Checkbox
+            checked={!!value}
+            onCheckedChange={(checked) => onChange(checked)}
+            className="mt-2"
+          />
         );
 
-      case "single":
-        {
-          // Also used for industry_dropdown & country_dropdown
-          const flatOptions =
-            question.options ||
-            question.groups?.flatMap(g => g.options) ||
-            [];
+      case "single": {
+        // Handles radio groups as well as dropdowns (industry_dropdown & country_dropdown)
+        const flatOptions: Array<
+          string | { value: string; label: string }
+        > = question.options || question.groups?.flatMap((g) => g.options) || [];
+
+        if (question.uiType === "dropdown" || question.type === "dropdown") {
+          // Render as <Select> for dropdowns
           return (
-            <RadioGroup
-              value={value}
-              onValueChange={onChange}
-              className="mt-4 space-y-3"
-            >
-              {question.groups?.length
-                ? question.groups.map(group => (
-                    <div key={group.label} className="space-y-2">
-                      <Label className="text-sm font-medium">{group.label}</Label>
-                      {group.options.map(opt => (
-                        <div key={opt.value} className="flex items-center space-x-2">
-                          <RadioGroupItem value={opt.value} id={opt.value} />
-                          <Label htmlFor={opt.value} className="font-normal cursor-pointer">
-                            {opt.label}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  ))
-                : flatOptions.map(opt => (
-                    <div key={opt.value} className="flex items-center space-x-2">
-                      <RadioGroupItem value={opt.value} id={opt.value} />
-                      <Label htmlFor={opt.value} className="font-normal cursor-pointer">
-                        {opt.label}
-                      </Label>
-                    </div>
-                  ))}
-            </RadioGroup>
+            <Select value={value} onValueChange={onChange}>
+              <SelectTrigger className="mt-4">
+                <SelectValue placeholder="Select an option..." />
+              </SelectTrigger>
+              <SelectContent>
+                {flatOptions.map((opt) => {
+                  const val = typeof opt === "string" ? opt : opt.value;
+                  const label = typeof opt === "string" ? opt : opt.label;
+                  return (
+                    <SelectItem key={val} value={val}>
+                      {label}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
           );
         }
+
+        // Otherwise render as radio buttons
+        return (
+          <RadioGroup
+            value={value}
+            onValueChange={onChange}
+            className="mt-4 space-y-3"
+          >
+            {question.groups?.length
+              ? question.groups.map((group) => (
+                  <div key={group.label} className="space-y-2">
+                    <Label className="text-sm font-medium">
+                      {group.label}
+                    </Label>
+                    {group.options.map((opt) => (
+                      <div
+                        key={opt.value}
+                        className="flex items-center space-x-2"
+                      >
+                        <RadioGroupItem value={opt.value} id={opt.value} />
+                        <Label
+                          htmlFor={opt.value}
+                          className="font-normal cursor-pointer"
+                        >
+                          {opt.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                ))
+              : flatOptions.map((opt) => {
+                  const val = typeof opt === "string" ? opt : opt.value;
+                  const label = typeof opt === "string" ? opt : opt.label;
+                  return (
+                    <div key={val} className="flex items-center space-x-2">
+                      <RadioGroupItem value={val} id={val} />
+                      <Label htmlFor={val} className="font-normal cursor-pointer">
+                        {label}
+                      </Label>
+                    </div>
+                  );
+                })}
+          </RadioGroup>
+        );
+      }
 
       case "multi":
         return (
@@ -103,61 +144,36 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "multi_group":
-        {
-          // Grouped checkboxes
-          const selected: string[] = value || [];
-          const handleGroupChange = (optValue: string, checked: boolean) => {
-            const set = new Set(selected);
-            if (checked) {
-              set.add(optValue);
-            } else {
-              set.delete(optValue);
-            }
-            onChange(Array.from(set));
-          };
-          return (
-            <div className="mt-4 space-y-6">
-              {question.groups?.map(group => (
-                <div key={group.label} className="space-y-2">
-                  <Label className="text-sm font-medium">{group.label}</Label>
-                  {group.options.map(opt => (
-                    <div key={opt.value} className="flex items-center space-x-2">
-                      <Checkbox
-                        id={`${group.label}-${opt.value}`}
-                        checked={selected.includes(opt.value)}
-                        onCheckedChange={checked =>
-                          handleGroupChange(opt.value, checked as boolean)
-                        }
-                      />
-                      <Label
-                        htmlFor={`${group.label}-${opt.value}`}
-                        className="font-normal cursor-pointer text-sm"
-                      >
-                        {opt.label}
-                      </Label>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          );
-        }
+        // Grouped checkboxes with progressive disclosure
+        return (
+          <ProgressiveMultiGroupQuestion
+            groups={question.groups || []}
+            value={value || []}
+            onChange={onChange}
+          />
+        );
 
-      case "rank":
-        {
-          const rankOpts =
-            question.options ||
-            question.groups?.flatMap(g => g.options) ||
-            [];
-          return (
-            <DragDropQuestionRank
-              options={rankOpts}
-              value={value || []}
-              onChange={onChange}
-              maxRank={question.maxRank || 3}
-            />
-          );
-        }
+      case "rank": {
+        const rankOpts = question.options || question.groups?.flatMap((g) => g.options) || [];
+        return (
+          <DragDropQuestionRank
+            options={rankOpts}
+            value={value || []}
+            onChange={onChange}
+            maxRank={question.maxRank || 3}
+          />
+        );
+      }
+
+      case "matrix":
+        return (
+          <MatrixQuestion
+            rows={Array.isArray(question.rows) ? question.rows : []}
+            columns={Array.isArray(question.columns) ? question.columns : []}
+            value={value || {}}
+            onChange={onChange}
+          />
+        );
 
       default:
         return null;
@@ -169,11 +185,10 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
       <Label className="font-semibold">{question.text}</Label>
       {renderQuestionInput()}
       {question.helper && (
-        <p className="mt-2 text-sm text-muted-foreground">{question.helper}</p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {question.helper}
+        </p>
       )}
-      <div className="mt-4">
-        <Button onClick={() => onChange(value)}>Save</Button>
-      </div>
     </Card>
   );
 }

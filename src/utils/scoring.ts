@@ -12,12 +12,12 @@ export interface ScoringResult {
 
 /** Map section titles to the categories used in weight vectors */
 const SECTION_CATEGORY_MAP: Record<string, keyof WeightVector> = {
-  "Strategy & Use-Case Readiness": "Strategy",
-  "Data Foundation & Security": "Data",
-  "Tool Stack & Integration": "Tools",
-  "Automation & AI Agents": "Automation",
-  "Team Capability & Culture": "People",
-  "Governance, Risk & Ethics": "Governance",
+  "Strategy & Use-Case Readiness": "strategy",
+  "Data Foundation & Security": "data",
+  "Tool Stack & Integration": "tools",
+  "Automation & AI Agents": "automation",
+  "Team Capability & Culture": "people",
+  "Governance, Risk & Ethics": "governance",
 };
 
 interface QuestionIndexEntry {
@@ -49,20 +49,24 @@ export function scoreAnswers(
 ): ScoringResult {
   const questionScores: Record<string, number> = {};
   const sectionTotals: Record<keyof WeightVector, number> = {
-    Strategy: 0,
-    Data: 0,
-    Tools: 0,
-    Automation: 0,
-    People: 0,
-    Governance: 0,
+    strategy: 0,
+    finance: 0,
+    data: 0,
+    tools: 0,
+    automation: 0,
+    people: 0,
+    governance: 0,
+    planning: 0,
   };
   const sectionCounts: Record<keyof WeightVector, number> = {
-    Strategy: 0,
-    Data: 0,
-    Tools: 0,
-    Automation: 0,
-    People: 0,
-    Governance: 0,
+    strategy: 0,
+    finance: 0,
+    data: 0,
+    tools: 0,
+    automation: 0,
+    people: 0,
+    governance: 0,
+    planning: 0,
   };
 
   for (const [id, { question, section }] of Object.entries(QUESTION_INDEX)) {
