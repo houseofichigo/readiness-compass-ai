@@ -376,7 +376,7 @@ section_3:
       hide_if:
         all_of:
           - { M6_size: "1–9" }
-          - { D1: subset_of ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] }
+          - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
       options: ["Low – data often outdated or unreliable", "Medium – manual checks for accuracy", "High – periodic data quality tests", "Very high – automated alerts for data issues", "Excellent – real-time monitoring & validation"]
 
     - id: D5
