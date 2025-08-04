@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
+import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { assessmentSections } from "@/data/assessmentQuestions";
 import { AssessmentResponse, Track, OrganizationProfile } from "@/types/assessment";
 
@@ -54,6 +54,10 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     }
   };
 
+  // Check if persona questions (M3, M9) are completed to show track info
+  const personaCompleted = responses.M3 && responses.M9;
+  const completedSections = currentSectionIndex; // sections fully completed
+  
   const goToNextSection = () => {
     if (currentSectionIndex < assessmentSections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
@@ -97,36 +101,21 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     return 'unknown';
   };
 
-  const sectionProgress = ((currentSectionIndex + 1) / assessmentSections.length) * 100;
   const answeredInSection = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
 
   return (
     <div className="min-h-screen bg-gradient-accent p-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         {/* Progress Header */}
-        <Card className="mb-6">
-          <CardContent className="pt-6">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Badge variant="outline">
-                  Section {currentSectionIndex + 1} of {assessmentSections.length}
-                </Badge>
-                <Badge className="bg-primary/10 text-primary border-primary/20">
-                  {detectedTrack === "TECH" ? "Technical Track" : 
-                   detectedTrack === "REG" ? "Regulated Track" : "General Track"}
-                </Badge>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Overall Progress</span>
-                  <span>{Math.round(sectionProgress)}%</span>
-                </div>
-                <Progress value={sectionProgress} className="h-2" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mb-6">
+          <AssessmentProgressBar
+            currentSectionIndex={currentSectionIndex}
+            totalSections={assessmentSections.length}
+            completedSections={completedSections}
+            detectedTrack={detectedTrack}
+            showTrackInfo={personaCompleted}
+          />
+        </div>
 
         {/* Current Section - ALL QUESTIONS ON ONE PAGE */}
         <Card className="mb-6">
