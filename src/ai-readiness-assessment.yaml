@@ -321,6 +321,7 @@ section_2:
       type: text
       show_if:
       F5: subset_of ["Other (please specify)"]
+      required: true
 
 
     - id: F6
@@ -359,6 +360,7 @@ section_3:
       type: text
       show_if:
       D1: subset_of ["Other (please specify)"]
+      required: true
 
 
     - id: D2
@@ -402,6 +404,7 @@ section_3:
       type: text
       show_if:
       D5: subset_of ["Other (please specify)"]
+      required: true
 
     - id: D6
       text: "How is data stewardship and cleaning managed?"
@@ -710,6 +713,7 @@ section_4:
       type: text
       show_if:
       T8: subset_of ["Other (please specify)"]
+      required: true
 
 
 section_5:
@@ -728,6 +732,7 @@ section_5:
       type: text
       show_if:
       A1: subset_of ["Other (please specify)"]
+      required: true
 
 
     - id: A2
@@ -755,6 +760,7 @@ section_5:
       type: text
       show_if:
       A4: subset_of ["Other (please specify)"]
+      required: true
 
     - id: A5
       text: "What level of autonomy do you want for your AI agents?"
@@ -783,6 +789,7 @@ section_5:
       type: text
       show_if:
       A7: subset_of ["Other (please specify)"]
+      required: true
 
 
     - id: A8
@@ -797,6 +804,7 @@ section_5:
       type: text
       show_if:
       A8: subset_of ["Other (please specify)"]
+      required: true
 
     - id: A9
       text: "What governance processes do you have for AI agents?"
@@ -861,6 +869,7 @@ section_6:
       type: text
       show_if:
       C3a: subset_of ["Other"]
+      required: true
 
 
     # 4. Logistics: Budget & time
@@ -894,6 +903,7 @@ section_6:
       type: text
       show_if:
       C8: subset_of ["Other (please specify)"]
+      required: true
 
     - id: C9
       text: "How open are you and your team to piloting new AI projects?"
@@ -972,10 +982,10 @@ section_7:
       options: ["Never – no fairness tests", "Ad-hoc – tests only after incidents", "Pre-release – tests before each deployment", "Quarterly – scheduled fairness reviews", "Continuous – automated monitoring"]
 
     - id: G10
-  text: "What governance body oversees your AI ethics and compliance?"
-  type: single
-  helper: 'Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel."
-  options: ["None – no oversight body", "Informal – occasional advisor reviews", "Ad-hoc – project-based ethics reviews", "Scheduled – regular ethics committee meetings", "External – includes independent ethics experts"]
+      text: "What governance body oversees your AI ethics and compliance?"
+      type: single
+      helper: 'Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel."
+      options: ["None – no oversight body", "Informal – occasional advisor reviews", "Ad-hoc – project-based ethics reviews", "Scheduled – regular ethics committee meetings", "External – includes independent ethics experts"]
 
 
 section_8:
