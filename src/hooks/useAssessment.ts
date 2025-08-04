@@ -91,6 +91,12 @@ export function useAssessment() {
 
       console.log(`📊 Inserting ${answers.length} answers...`);
       console.log("Sample answers:", answers.slice(0, 3));
+      console.log("All question IDs:", Object.keys(responses));
+
+      if (answers.length === 0) {
+        console.warn("⚠️ No answers to save - responses object might be empty!");
+        console.log("Responses object:", responses);
+      }
 
       const { error: answersError } = await supabase
         .from('answers')

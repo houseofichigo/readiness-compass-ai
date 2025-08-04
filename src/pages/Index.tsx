@@ -29,6 +29,13 @@ const Index = () => {
     console.log("📝 Starting to save assessment to database...");
     console.log("Profile data:", profile);
     console.log("Response count:", Object.keys(responses).length);
+    console.log("First 5 responses:", Object.entries(responses).slice(0, 5));
+    
+    if (Object.keys(responses).length === 0) {
+      console.error("🚨 CRITICAL: No responses to save! This is the problem!");
+      console.log("Complete responses object:", responses);
+      throw new Error("No responses data to save");
+    }
     
     // Save to database first
     const savedSubmissionId = await saveAssessment(responses, profile);

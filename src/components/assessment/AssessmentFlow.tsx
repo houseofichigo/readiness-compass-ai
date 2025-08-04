@@ -15,7 +15,7 @@ import { validateSection } from "@/utils/validation"; // Updated import
 import { useToast } from "@/hooks/use-toast";
 
 interface AssessmentFlowProps {
-  onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => void;
+  onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => Promise<void>;
 }
 
 // Helper to parse YAML list literals like "['A','B','C']"
@@ -97,6 +97,21 @@ export function AssessmentFlow({
 
   const completeAssessment = async () => {
     console.log("🎉 Starting assessment completion...");
+    console.log("🔍 Current responses state:", responses);
+    console.log("🔍 Response count:", Object.keys(responses).length);
+    console.log("🔍 Sample responses:", Object.entries(responses).slice(0, 5));
+    
+    if (Object.keys(responses).length === 0) {
+      console.error("🚨 CRITICAL: Responses object is empty in AssessmentFlow!");
+      console.log("🔍 Current page:", currentPage);
+      console.log("🔍 Detected track:", detectedTrack);
+      toast({
+        title: "No answers to save",
+        description: "Please answer some questions before completing the assessment.",
+        variant: "destructive"
+      });
+      return;
+    }
     
     // Create complete profile object with all required fields
     const profile: OrganizationProfile = {
@@ -120,7 +135,9 @@ export function AssessmentFlow({
       console.log("Responses:", responses);
       
       // Call onComplete and wait for it to finish
+      console.log("🔄 About to call onComplete function...");
       await onComplete(responses, profile);
+      console.log("🔄 onComplete completed successfully!");
       
       console.log("✅ Assessment completed and saved successfully");
       
