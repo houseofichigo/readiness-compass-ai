@@ -712,7 +712,7 @@ section_4:
       text: "Other low-code/no-code platform (please specify)"
       type: text
       show_if:
-      T8: subset_of ["Other (please specify)"]
+        T8: subset_of ["Other (please specify)"]
       required: true
 
 
