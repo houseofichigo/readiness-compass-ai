@@ -129,6 +129,11 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
+            {currentSection.consent_banner && (
+              <div className="rounded-md bg-muted p-4 text-sm text-muted-foreground">
+                {currentSection.consent_banner.text}
+              </div>
+            )}
             {/* Render ALL questions for the current section */}
             {visibleQuestions.map((question, questionIndex) => (
               <div key={question.id} className="space-y-2">

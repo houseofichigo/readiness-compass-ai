@@ -1,7 +1,13 @@
 // src/data/assessmentQuestions.ts
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
-import type { Section, Question, QuestionOption } from "@/types/assessment";
+import type {
+  Section,
+  Question,
+  QuestionOption,
+  ConsentBanner,
+  ComputedField
+} from "@/types/assessment";
 
 // Titles for each section derived from the assessment YAML
 const SECTION_TITLES: Record<string, string> = {
@@ -23,6 +29,8 @@ interface RawQuestion extends Omit<Question, "options"> {
 interface RawSection {
   purpose?: string;
   questions?: RawQuestion[];
+  consent_banner?: ConsentBanner;
+  computed?: ComputedField[];
 }
 
 interface AssessmentYaml {
@@ -41,20 +49,33 @@ const normalizeOptions = (
   );
 
 // Extract section_* entries and map to application Section objects
+const sectionConsentBanners: Record<string, ConsentBanner> = {};
+const sectionComputed: Record<string, ComputedField[]> = {};
+
 const assessmentSections: Section[] = Object.entries(schema)
   .filter(([key]): key is `section_${string}` => key.startsWith("section_"))
   .map(([id, value]) => {
-    const { purpose = "", questions = [] } = (value as RawSection) ?? {};
+    const {
+      purpose = "",
+      questions = [],
+      consent_banner,
+      computed
+    } = (value as RawSection) ?? {};
     const normalizedQuestions: Question[] = questions.map((q) => ({
       ...q,
       options: normalizeOptions(q.options)
     }));
 
+    if (consent_banner) sectionConsentBanners[id] = consent_banner;
+    if (computed) sectionComputed[id] = computed;
+
     return {
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
-      questions: normalizedQuestions
+      questions: normalizedQuestions,
+      consent_banner,
+      computed
     };
   });
 
@@ -64,6 +85,12 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => ({
 }));
 
 export { assessmentSections };
+export const assessmentConsentBanners = sectionConsentBanners;
+export const assessmentComputed = sectionComputed;
 export const assessmentMeta = schema.meta ?? {};
 export { assessmentAddOns };
-export const assessmentData = { sections: assessmentSections };
+export const assessmentData = {
+  sections: assessmentSections,
+  consent_banner: assessmentConsentBanners,
+  computed: sectionComputed
+};
