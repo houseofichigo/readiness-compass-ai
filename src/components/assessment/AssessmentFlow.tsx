@@ -161,14 +161,9 @@ export function AssessmentFlow({
           }))} />}
 
             {/* All questions for this page */}
-            {visibleQuestions.map((q, idx) => <div key={q.id} className="space-y-2">
-                <div className="flex items-start gap-3">
-                  
-                  <div className="flex-1">
-                    <QuestionCard question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} />
-                  </div>
-                </div>
-              </div>)}
+            {visibleQuestions.map((q, idx) => 
+              <QuestionCard key={q.id} question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} />
+            )}
           </CardContent>
         </Card>
 
