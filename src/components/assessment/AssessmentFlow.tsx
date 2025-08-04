@@ -20,6 +20,7 @@ import {
   Track,
   OrganizationProfile,
   ComputedField,
+  AssessmentValue,
 } from "@/types/assessment";
 
 // Helpers to parse YAML list literals like "['A','B','C']"
@@ -29,9 +30,9 @@ const parseListLiteral = (lit: string): string[] => {
 };
 
 // Find TECH roles from the track_detection precedence rules
-const parseTechRoles = (rules: any[]): string[] => {
+const parseTechRoles = (rules: Array<Record<string, unknown>>): string[] => {
   const techRule = rules.find(
-    (r: any) => typeof r.if === "string" && r.if.includes("-> TECH")
+    r => typeof r.if === "string" && (r.if as string).includes("-> TECH")
   );
   return techRule ? parseListLiteral(techRule.if as string) : [];
 };
@@ -46,7 +47,7 @@ interface AssessmentFlowProps {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentPage, setCurrentPage] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, AssessmentValue>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
   const [bannerConsent, setBannerConsent] = useState<Record<string, boolean>>({});
 
@@ -59,12 +60,14 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
   // 2) Extract track_detection rules
   const trackRules =
-    (assessmentMeta as any)?.track_detection?.precedence ?? [];
+    (assessmentMeta.track_detection as {
+      precedence?: Array<Record<string, unknown>>;
+    } | undefined)?.precedence ?? [];
   const techRoles = parseTechRoles(trackRules);
   const legalRole = "Legal / Compliance Lead";
 
   // 3) Fallback computeTrack for persona changes
-  const computeTrack = (rs: Record<string, any>): Track => {
+  const computeTrack = (rs: Record<string, AssessmentValue>): Track => {
     const role = rs.M3 as string;
     const industry = rs.M4_industry as string;
     if (techRoles.includes(role)) return "TECH";
@@ -93,7 +96,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         title: "Additional Questions",
         purpose: "",
         questions: visibleAddOns,
-        consent_banner: undefined,
+        consentBanner: undefined,
         computed: undefined,
       }
     : assessmentSections[currentPage]!;
@@ -104,7 +107,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const visibleQuestions = currentSection.questions;
 
   // Handle answer changes and re-compute track for persona fields
-  const handleAnswerChange = (qid: string, val: any) => {
+  const handleAnswerChange = (qid: string, val: AssessmentValue) => {
     setResponses(prev => {
       const updated = { ...prev, [qid]: val };
       if (qid === "M3" || qid === "M4_industry") {
@@ -133,17 +136,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       );
 
       const profile: OrganizationProfile = {
-        M0: responses.M0 || "",
-        M1: responses.M1 || "",
-        M2: responses.M2 || "",
-        M3: responses.M3 || "",
-        M3_other: responses.M3_other || "",
-        M4_industry: responses.M4_industry || "",
-        M4_sub: responses.M4_sub || "",
-        M5_country: responses.M5_country || "",
-        M6_size: responses.M6_size || "",
-        M7_revenue: responses.M7_revenue || "",
-        M8_consent: responses.M8_consent || false,
+        M0: (responses.M0 as string) || "",
+        M1: (responses.M1 as string) || "",
+        M2: (responses.M2 as string) || "",
+        M3: (responses.M3 as string) || "",
+        M3_other: (responses.M3_other as string) || "",
+        M4_industry: (responses.M4_industry as string) || "",
+        M4_sub: (responses.M4_sub as string) || "",
+        M5_country: (responses.M5_country as string) || "",
+        M6_size: (responses.M6_size as string) || "",
+        M7_revenue: (responses.M7_revenue as string) || "",
+        M8_consent: (responses.M8_consent as boolean) || false,
       };
 
       onComplete(allResponses, profile, detectedTrack);
@@ -155,7 +158,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // UI bits
   const answeredCount = visibleQuestions.filter(q => responses[q.id] !== undefined).length;
   const showTrackInfo = Boolean(responses.M3 && responses.M4_industry);
-  const consentReq = (currentSection as any).consent_banner?.required;
+  const consentReq = currentSection.consentBanner?.required;
   const consentGiven = bannerConsent[currentSection.id] === true;
 
   return (
@@ -186,18 +189,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
           <CardContent className="space-y-6">
             {/* Consent banner if declared */}
-            {"consent_banner" in currentSection &&
-              currentSection.consent_banner && (
-                <ConsentBanner
-                  id={`consent_${currentSection.id}`}
-                  text={currentSection.consent_banner!.text}
-                  required={currentSection.consent_banner!.required}
-                  accepted={consentGiven}
-                  onChange={val =>
-                    setBannerConsent(b => ({ ...b, [currentSection.id]: val }))
-                  }
-                />
-              )}
+            {currentSection.consentBanner && (
+              <ConsentBanner
+                id={`consent_${currentSection.id}`}
+                text={currentSection.consentBanner.text}
+                required={currentSection.consentBanner.required}
+                accepted={consentGiven}
+                onChange={val =>
+                  setBannerConsent(b => ({ ...b, [currentSection.id]: val }))
+                }
+              />
+            )}
 
             {/* All questions for this page */}
             {visibleQuestions.map((q, idx) => (

@@ -55,41 +55,43 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "single":
-        // Also used for industry_dropdown & country_dropdown
-        const flatOptions =
-          question.options ||
-          question.groups?.flatMap((g) => g.options) ||
-          [];
-        return (
-          <RadioGroup
-            value={value}
-            onValueChange={onChange}
-            className="mt-4 space-y-3"
-          >
-            {question.groups?.length
-              ? question.groups.map((group) => (
-                  <div key={group.label} className="space-y-2">
-                    <Label className="text-sm font-medium">{group.label}</Label>
-                    {group.options.map((opt) => (
-                      <div key={opt.value} className="flex items-center space-x-2">
-                        <RadioGroupItem value={opt.value} id={opt.value} />
-                        <Label htmlFor={opt.value} className="font-normal cursor-pointer">
-                          {opt.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </div>
-                ))
-              : flatOptions.map((opt) => (
-                  <div key={opt.value} className="flex items-center space-x-2">
-                    <RadioGroupItem value={opt.value} id={opt.value} />
-                    <Label htmlFor={opt.value} className="font-normal cursor-pointer">
-                      {opt.label}
-                    </Label>
-                  </div>
-                ))}
-          </RadioGroup>
-        );
+        {
+          // Also used for industry_dropdown & country_dropdown
+          const flatOptions =
+            question.options ||
+            question.groups?.flatMap(g => g.options) ||
+            [];
+          return (
+            <RadioGroup
+              value={value}
+              onValueChange={onChange}
+              className="mt-4 space-y-3"
+            >
+              {question.groups?.length
+                ? question.groups.map(group => (
+                    <div key={group.label} className="space-y-2">
+                      <Label className="text-sm font-medium">{group.label}</Label>
+                      {group.options.map(opt => (
+                        <div key={opt.value} className="flex items-center space-x-2">
+                          <RadioGroupItem value={opt.value} id={opt.value} />
+                          <Label htmlFor={opt.value} className="font-normal cursor-pointer">
+                            {opt.label}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  ))
+                : flatOptions.map(opt => (
+                    <div key={opt.value} className="flex items-center space-x-2">
+                      <RadioGroupItem value={opt.value} id={opt.value} />
+                      <Label htmlFor={opt.value} className="font-normal cursor-pointer">
+                        {opt.label}
+                      </Label>
+                    </div>
+                  ))}
+            </RadioGroup>
+          );
+        }
 
       case "multi":
         return (
@@ -101,53 +103,61 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "multi_group":
-        // Grouped checkboxes
-        const selected: string[] = value || [];
-        const handleGroupChange = (optValue: string, checked: boolean) => {
-          const set = new Set(selected);
-          checked ? set.add(optValue) : set.delete(optValue);
-          onChange(Array.from(set));
-        };
-        return (
-          <div className="mt-4 space-y-6">
-            {question.groups?.map((group) => (
-              <div key={group.label} className="space-y-2">
-                <Label className="text-sm font-medium">{group.label}</Label>
-                {group.options.map((opt) => (
-                  <div key={opt.value} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={`${group.label}-${opt.value}`}
-                      checked={selected.includes(opt.value)}
-                      onCheckedChange={(checked) =>
-                        handleGroupChange(opt.value, checked as boolean)
-                      }
-                    />
-                    <Label
-                      htmlFor={`${group.label}-${opt.value}`}
-                      className="font-normal cursor-pointer text-sm"
-                    >
-                      {opt.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        );
+        {
+          // Grouped checkboxes
+          const selected: string[] = value || [];
+          const handleGroupChange = (optValue: string, checked: boolean) => {
+            const set = new Set(selected);
+            if (checked) {
+              set.add(optValue);
+            } else {
+              set.delete(optValue);
+            }
+            onChange(Array.from(set));
+          };
+          return (
+            <div className="mt-4 space-y-6">
+              {question.groups?.map(group => (
+                <div key={group.label} className="space-y-2">
+                  <Label className="text-sm font-medium">{group.label}</Label>
+                  {group.options.map(opt => (
+                    <div key={opt.value} className="flex items-center space-x-2">
+                      <Checkbox
+                        id={`${group.label}-${opt.value}`}
+                        checked={selected.includes(opt.value)}
+                        onCheckedChange={checked =>
+                          handleGroupChange(opt.value, checked as boolean)
+                        }
+                      />
+                      <Label
+                        htmlFor={`${group.label}-${opt.value}`}
+                        className="font-normal cursor-pointer text-sm"
+                      >
+                        {opt.label}
+                      </Label>
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
+          );
+        }
 
       case "rank":
-        const rankOpts =
-          question.options ||
-          question.groups?.flatMap((g) => g.options) ||
-          [];
-        return (
-          <DragDropQuestionRank
-            options={rankOpts}
-            value={value || []}
-            onChange={onChange}
-            maxRank={question.max_rank || 3}
-          />
-        );
+        {
+          const rankOpts =
+            question.options ||
+            question.groups?.flatMap(g => g.options) ||
+            [];
+          return (
+            <DragDropQuestionRank
+              options={rankOpts}
+              value={value || []}
+              onChange={onChange}
+              maxRank={question.maxRank || 3}
+            />
+          );
+        }
 
       default:
         return null;
