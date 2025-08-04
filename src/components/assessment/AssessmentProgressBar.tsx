@@ -11,16 +11,17 @@ interface AssessmentProgressBarProps {
   showTrackInfo: boolean;
 }
 
-const sectionLabels = [
+const baseSectionLabels = [
   "Profile",
-  "Strategy", 
+  "Strategy",
   "Foundation",
   "Data",
   "Technology",
   "Automation",
-  "Collaboration", 
+  "Collaboration",
   "Governance",
-  "Future"
+  "Future",
+  "Add-ons"
 ];
 
 const trackLabels = {
@@ -36,6 +37,7 @@ export function AssessmentProgressBar({
   detectedTrack,
   showTrackInfo 
 }: AssessmentProgressBarProps) {
+  const labels = baseSectionLabels.slice(0, totalSections);
   const progressPercentage = Math.round((completedSections / totalSections) * 100);
   const remainingSections = totalSections - completedSections;
 
@@ -85,7 +87,7 @@ export function AssessmentProgressBar({
       {/* Current section indicator */}
       <div className="mb-4">
         <div className="text-sm text-muted-foreground mb-2">
-          Section {currentSectionIndex + 1} of {totalSections}: {sectionLabels[currentSectionIndex]}
+          Section {currentSectionIndex + 1} of {totalSections}: {labels[currentSectionIndex]}
         </div>
         {!showTrackInfo && (
           <div className="text-sm text-muted-foreground">
@@ -96,7 +98,7 @@ export function AssessmentProgressBar({
 
       {/* Section progress circles */}
       <div className="flex items-center justify-between">
-        {sectionLabels.map((label, index) => {
+        {labels.map((label, index) => {
           const isCompleted = index < completedSections;
           const isCurrent = index === currentSectionIndex;
           const isPending = index > currentSectionIndex;
@@ -124,8 +126,8 @@ export function AssessmentProgressBar({
               </div>
               
               {/* Progress line between circles */}
-              {index < sectionLabels.length - 1 && (
-                <div 
+              {index < labels.length - 1 && (
+                <div
                   className={`
                     absolute h-0.5 w-16 mt-6 ml-12
                     ${index < currentSectionIndex ? 'bg-green-300' : 'bg-gray-200'}
