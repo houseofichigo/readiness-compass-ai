@@ -15,8 +15,8 @@ export interface Question {
   options?: QuestionOption[];
   required?: boolean;
   helper?: string;
-  show_if?: Record<string, any>;
-  hide_if?: Record<string, any>;
+  show_if?: Record<string, unknown>;
+  hide_if?: Record<string, unknown>;
   max_rank?: number;
   weight?: number[];
   score_map?: number[];
@@ -77,9 +77,3 @@ export interface WeightVector {
   People: number;
   Governance: number;
 }
-
-export const TRACK_WEIGHTS: Record<Track, WeightVector> = {
-  TECH: { Strategy: 20, Data: 30, Tools: 20, Automation: 15, People: 5, Governance: 10 },
-  REG: { Strategy: 10, Data: 20, Tools: 10, Automation: 10, People: 5, Governance: 45 },
-  GEN: { Strategy: 25, Data: 15, Tools: 15, Automation: 15, People: 15, Governance: 15 }
-};

@@ -1,13 +1,14 @@
-import { TRACK_WEIGHTS } from '@/types/assessment';
+import { WeightVector, Track } from '@/types/assessment';
+import { assessmentMeta } from '@/data/assessmentQuestions';
 
 export interface ScoringResult {
   questionScores: Record<string, number>;
   totalScore: number;
   sectionScores: Record<string, number>;
-  track: string;
+  track: Track;
 }
 
-export function scoreAnswers(values: Record<string, any>, track: string): ScoringResult {
+export function scoreAnswers(values: Record<string, unknown>, track: Track): ScoringResult {
   const questionScores: Record<string, number> = {};
   const sectionScores: Record<string, number> = {};
   
@@ -28,7 +29,8 @@ export function scoreAnswers(values: Record<string, any>, track: string): Scorin
   });
 
   // Apply track-specific weights
-  const weights = TRACK_WEIGHTS[track as keyof typeof TRACK_WEIGHTS] || TRACK_WEIGHTS.GEN;
+  const weightVectors = (assessmentMeta as { weight_vectors: Record<Track, WeightVector> }).weight_vectors;
+  const weights = weightVectors[track] || weightVectors.GEN;
   const totalScore = sections.reduce((sum, section) => {
     const sectionKey = section as keyof typeof weights;
     return sum + (sectionScores[section] * (weights[sectionKey] / 100));
@@ -42,7 +44,7 @@ export function scoreAnswers(values: Record<string, any>, track: string): Scorin
   };
 }
 
-function scoreQuestion(questionId: string, answer: any): number {
+function scoreQuestion(questionId: string, answer: unknown): number {
   // Handle different scoring methods based on question type
   if (answer === undefined || answer === null || answer === '') {
     return 50; // Neutral score for unanswered
