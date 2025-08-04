@@ -71,19 +71,30 @@ export function QuestionCard({
           string | { value: string; label: string }
         > = question.options || question.groups?.flatMap((g) => g.options) || [];
 
-        if (question.type === "dropdown" || question.type === "industry_dropdown") {
+        // Use dropdown for: explicit dropdown types, questions with many options (>8), or specific questions like M3 (Primary role)
+        const shouldUseDropdown = 
+          question.type === "dropdown" || 
+          question.type === "industry_dropdown" ||
+          flatOptions.length > 8 ||
+          question.id === "M3"; // Primary role question
+
+        if (shouldUseDropdown) {
           // Render as <Select> for dropdowns
           return (
             <Select value={value} onValueChange={onChange}>
-              <SelectTrigger className="mt-4">
+              <SelectTrigger className="mt-4 bg-background border border-border">
                 <SelectValue placeholder="Select an option..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="z-50 bg-background border border-border shadow-lg">
                 {flatOptions.map((opt) => {
                   const val = typeof opt === "string" ? opt : opt.value;
                   const label = typeof opt === "string" ? opt : opt.label;
                   return (
-                    <SelectItem key={val} value={val}>
+                    <SelectItem 
+                      key={val} 
+                      value={val}
+                      className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                    >
                       {label}
                     </SelectItem>
                   );
