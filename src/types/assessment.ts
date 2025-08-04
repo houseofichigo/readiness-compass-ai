@@ -76,6 +76,11 @@ export interface AssessmentData {
   responses?: Record<string, AssessmentResponse>;
   profile?: OrganizationProfile;
   track?: Track;
+  completedSections?: string[];
+  totalScore?: number;
+  sectionScores?: Record<string, number>;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export type Track = "TECH" | "REG" | "GEN";

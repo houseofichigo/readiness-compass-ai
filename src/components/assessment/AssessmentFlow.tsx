@@ -32,7 +32,7 @@ const evaluateComputed = (
   const values: Record<string, any> = {};
   fields?.forEach(f => {
     if (f.id === "regulated") {
-      const industries = parseListLiteral(f.logic);
+      const industries = parseListLiteral(f.logic as unknown as string || "");
       values[f.id] = industries.includes(rs.M4_industry);
     }
   });
@@ -107,7 +107,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       const updated = { ...prev, [qid]: val };
       if (qid === "M3" || qid === "M4_industry") {
         const comp = evaluateComputed(profileSection?.computed, updated);
-        setDetectedTrack(detectTrack(updated, comp));
+        setDetectedTrack(detectTrack(updated, comp) as Track);
       }
       return updated;
     });

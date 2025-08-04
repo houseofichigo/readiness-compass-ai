@@ -24,8 +24,8 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
-interface RawQuestion extends Omit<Question, "options" | "groups"> {
-  type: QuestionType | string;
+interface RawQuestion extends Omit<Question, "options" | "groups" | "type"> {
+  type: string;
   options?: Array<string | QuestionOption>;
   rows?: Array<string>;
   columns?: Array<string>;

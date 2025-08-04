@@ -8,6 +8,7 @@ import {
   OrganizationProfile,
   Track
 } from "@/types/assessment";
+import { assessmentSections } from "@/data/assessmentQuestions";
 
 type AppState = "welcome" | "assessment" | "results";
 
@@ -28,9 +29,10 @@ const Index = () => {
   ) => {
     const data: AssessmentData = {
       id: `${Date.now()}`,
+      sections: assessmentSections,
       profile,
       track,
-      responses,
+      responses: {},
       completedSections: [],
       totalScore: 0,
       sectionScores: {},
@@ -59,7 +61,7 @@ const Index = () => {
       
       {appState === "results" && assessmentData && (
         <AssessmentResults
-          responses={assessmentData.responses}
+          responses={Object.values(assessmentData.responses || {})}
           profile={assessmentData.profile}
           track={assessmentData.track}
           onRestart={handleRestart}

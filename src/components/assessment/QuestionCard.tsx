@@ -138,8 +138,8 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
       case "matrix":
         return (
           <MatrixQuestion
-            rows={question.rows || []}
-            columns={question.columns || []}
+            rows={Array.isArray(question.rows) ? question.rows.map(r => typeof r === 'string' ? { value: r, label: r } : r) : []}
+            columns={Array.isArray(question.columns) ? question.columns.map(c => typeof c === 'string' ? { value: c, label: c } : c) : []}
             value={value || {}}
             onChange={onChange}
           />
