@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Question, AssessmentValue } from "@/types/assessment";
-import { CheckCircle, Building2, Users, MapPin, Briefcase } from "lucide-react";
+import { CheckCircle, Building2, Users, MapPin, Briefcase, Info, Target, Shield } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface OrganizationProfileFormProps {
@@ -107,12 +107,16 @@ function QuestionField({ question, value, onChange, isCompleted }: QuestionField
                 )}>
                   <SelectValue placeholder="Select an option..." />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="z-50 bg-background border border-border shadow-lg">
                   {flatOptions.map((opt) => {
                     const val = typeof opt === "string" ? opt : opt.value;
                     const label = typeof opt === "string" ? opt : opt.label;
                     return (
-                      <SelectItem key={val} value={val}>
+                      <SelectItem 
+                        key={val} 
+                        value={val}
+                        className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
+                      >
                         {label}
                       </SelectItem>
                     );
@@ -259,35 +263,56 @@ export function OrganizationProfileForm({ questions, responses, onChange }: Orga
         </div>
       </div>
 
-      {/* Primary Information */}
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-primary" />
-            Organization Details
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {primaryQuestions.map((question) => (
-              <QuestionField
-                key={question.id}
-                question={question}
-                value={responses[question.id]}
-                onChange={(value) => onChange(question.id, value)}
-                isCompleted={getCompletionStatus(question)}
-              />
-            ))}
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column - Form Fields */}
+        <div className="lg:col-span-2 space-y-8">
+          {/* Primary Information */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Building2 className="h-5 w-5 text-primary" />
+                Organization Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {primaryQuestions.map((question) => (
+                  <QuestionField
+                    key={question.id}
+                    question={question}
+                    value={responses[question.id]}
+                    onChange={(value) => onChange(question.id, value)}
+                    isCompleted={getCompletionStatus(question)}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
 
-        {/* Secondary Information */}
-        {secondaryQuestions.length > 0 && (
-          <div>
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              Additional Information
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {secondaryQuestions.map((question) => (
+          {/* Secondary Information */}
+          {secondaryQuestions.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <Users className="h-5 w-5 text-primary" />
+                Additional Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {secondaryQuestions.map((question) => (
+                  <QuestionField
+                    key={question.id}
+                    question={question}
+                    value={responses[question.id]}
+                    onChange={(value) => onChange(question.id, value)}
+                    isCompleted={getCompletionStatus(question)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Remaining Questions */}
+          {remainingQuestions.length > 0 && (
+            <div className="space-y-6">
+              {remainingQuestions.map((question) => (
                 <QuestionField
                   key={question.id}
                   question={question}
@@ -297,23 +322,122 @@ export function OrganizationProfileForm({ questions, responses, onChange }: Orga
                 />
               ))}
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Remaining Questions */}
-        {remainingQuestions.length > 0 && (
-          <div className="space-y-6">
-            {remainingQuestions.map((question) => (
-              <QuestionField
-                key={question.id}
-                question={question}
-                value={responses[question.id]}
-                onChange={(value) => onChange(question.id, value)}
-                isCompleted={getCompletionStatus(question)}
-              />
-            ))}
-          </div>
-        )}
+        {/* Right Column - Helper Content */}
+        <div className="lg:col-span-1 space-y-6">
+          {/* Progress Summary */}
+          <Card className="p-6 bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                  <Target className="h-4 w-4 text-primary" />
+                </div>
+                <h4 className="font-semibold">Assessment Progress</h4>
+              </div>
+              
+              <div className="space-y-3">
+                <div className="flex justify-between text-sm">
+                  <span>Profile Completion</span>
+                  <span className="font-medium">{completedQuestions}/{totalQuestions}</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Organization Details</span>
+                    <span>{primaryQuestions.filter(getCompletionStatus).length}/{primaryQuestions.length}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Additional Info</span>
+                    <span>{secondaryQuestions.filter(getCompletionStatus).length}/{secondaryQuestions.length}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Why We Ask */}
+          <Card className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                  <Info className="h-4 w-4 text-blue-600" />
+                </div>
+                <h4 className="font-semibold">Why We Ask</h4>
+              </div>
+              
+              <div className="space-y-3 text-sm text-muted-foreground">
+                <div className="flex gap-3">
+                  <Building2 className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-foreground">Organization Details</p>
+                    <p>Helps us tailor recommendations to your industry and company size</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <Briefcase className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-foreground">Primary Role</p>
+                    <p>Determines your recommendation track and relevant questions</p>
+                  </div>
+                </div>
+                
+                <div className="flex gap-3">
+                  <MapPin className="h-4 w-4 mt-0.5 text-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-medium text-foreground">Location & Size</p>
+                    <p>Considers regional regulations and company scale factors</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Card>
+
+          {/* Data Privacy */}
+          <Card className="p-6 border-green-200 bg-green-50/50 dark:bg-green-950/20 dark:border-green-800">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 rounded-full bg-green-500/10 flex items-center justify-center">
+                  <Shield className="h-4 w-4 text-green-600" />
+                </div>
+                <h4 className="font-semibold text-green-900 dark:text-green-100">Data Privacy</h4>
+              </div>
+              
+              <div className="text-sm text-green-700 dark:text-green-300 space-y-2">
+                <p>Your information is:</p>
+                <ul className="space-y-1 ml-4">
+                  <li>• Encrypted and secure</li>
+                  <li>• Used only for assessment</li>
+                  <li>• Never shared with third parties</li>
+                  <li>• Anonymized in reports</li>
+                </ul>
+              </div>
+            </div>
+          </Card>
+
+          {/* Quick Tips */}
+          {completionPercentage < 100 && (
+            <Card className="p-6 bg-amber-50/50 border-amber-200 dark:bg-amber-950/20 dark:border-amber-800">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-amber-500/10 flex items-center justify-center">
+                    <Info className="h-4 w-4 text-amber-600" />
+                  </div>
+                  <h4 className="font-semibold text-amber-900 dark:text-amber-100">Quick Tips</h4>
+                </div>
+                
+                <div className="text-sm text-amber-700 dark:text-amber-300 space-y-2">
+                  <p>• Use your official business email</p>
+                  <p>• Select the most accurate industry</p>
+                  <p>• FTE = Full-Time Equivalent employees</p>
+                  <p>• All fields are required to proceed</p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
       </div>
 
       {/* Completion indicator */}
