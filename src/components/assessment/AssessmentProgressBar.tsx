@@ -1,27 +1,14 @@
 import React from "react";
-import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, Clock, HelpCircle } from "lucide-react";
 import { Track } from "@/types/assessment";
+import { assessmentSections } from "@/data/assessmentQuestions";
 
 interface AssessmentProgressBarProps {
   currentSectionIndex: number;
-  totalSections: number;
   completedSections: number;
   detectedTrack: Track | null;
   showTrackInfo: boolean;
 }
-
-const sectionLabels = [
-  "Profile",
-  "Strategy", 
-  "Foundation",
-  "Data",
-  "Technology",
-  "Automation",
-  "Collaboration", 
-  "Governance",
-  "Future"
-];
 
 const trackLabels = {
   TECH: "Technical Track",
@@ -29,13 +16,13 @@ const trackLabels = {
   GEN: "General Track"
 };
 
-export function AssessmentProgressBar({ 
-  currentSectionIndex, 
-  totalSections, 
+export function AssessmentProgressBar({
+  currentSectionIndex,
   completedSections,
   detectedTrack,
-  showTrackInfo 
+  showTrackInfo
 }: AssessmentProgressBarProps) {
+  const totalSections = assessmentSections.length;
   const progressPercentage = Math.round((completedSections / totalSections) * 100);
   const remainingSections = totalSections - completedSections;
 
@@ -85,7 +72,7 @@ export function AssessmentProgressBar({
       {/* Current section indicator */}
       <div className="mb-4">
         <div className="text-sm text-muted-foreground mb-2">
-          Section {currentSectionIndex + 1} of {totalSections}: {sectionLabels[currentSectionIndex]}
+          Section {currentSectionIndex + 1} of {totalSections}: {assessmentSections[currentSectionIndex]?.title}
         </div>
         {!showTrackInfo && (
           <div className="text-sm text-muted-foreground">
@@ -96,19 +83,19 @@ export function AssessmentProgressBar({
 
       {/* Section progress circles */}
       <div className="flex items-center justify-between">
-        {sectionLabels.map((label, index) => {
+        {assessmentSections.map((section, index) => {
+          const label = section.title;
           const isCompleted = index < completedSections;
           const isCurrent = index === currentSectionIndex;
-          const isPending = index > currentSectionIndex;
 
           return (
-            <div key={index} className="flex flex-col items-center">
+            <div key={section.id} className="flex flex-col items-center">
               <div
                 className={`
                   w-12 h-12 rounded-full flex items-center justify-center text-sm font-semibold mb-2
-                  ${isCurrent 
-                    ? 'bg-primary text-primary-foreground' 
-                    : isCompleted 
+                  ${isCurrent
+                    ? 'bg-primary text-primary-foreground'
+                    : isCompleted
                       ? 'bg-green-100 text-green-700 border-2 border-green-200'
                       : 'bg-gray-100 text-gray-500'
                   }
@@ -122,10 +109,10 @@ export function AssessmentProgressBar({
                   {isCurrent ? 'Current' : isCompleted ? 'Complete' : 'Pending'}
                 </div>
               </div>
-              
+
               {/* Progress line between circles */}
-              {index < sectionLabels.length - 1 && (
-                <div 
+              {index < assessmentSections.length - 1 && (
+                <div
                   className={`
                     absolute h-0.5 w-16 mt-6 ml-12
                     ${index < currentSectionIndex ? 'bg-green-300' : 'bg-gray-200'}

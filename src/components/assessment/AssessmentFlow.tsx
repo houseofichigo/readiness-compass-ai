@@ -14,7 +14,7 @@ interface AssessmentFlowProps {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Record<string, string | boolean | string[]>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
 
   const currentSection = assessmentSections[currentSectionIndex];
@@ -26,30 +26,36 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // Show ALL questions for the current section on ONE page
   const visibleQuestions = currentSection.questions || [];
 
-  const handleAnswerChange = (questionId: string, value: any) => {
+  const handleAnswerChange = (questionId: string, value: string | boolean | string[]) => {
     setResponses(prev => ({ ...prev, [questionId]: value }));
-    
+
     // Enhanced track detection based on YAML logic
     if (questionId === 'M3') {
+      const role = value as string;
       // TECH track: Data/AI Lead, IT Lead, CIO/CTO
-      if (['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(value)) {
+      if (['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(role)) {
         setDetectedTrack('TECH');
-      } else if (value === 'Legal/Compliance') {
+      } else if (role === 'Legal/Compliance') {
         setDetectedTrack('REG');
       } else {
         // Default to GEN unless regulated industry is detected
-        if (responses.M9 !== 'Yes' && responses.M9 !== 'Not sure') {
+        const industry = responses.M9 as string;
+        if (industry !== 'Yes' && industry !== 'Not sure') {
           setDetectedTrack('GEN');
         }
       }
     }
-    
+
     // REG track: Regulated industry or Legal/Compliance role
     if (questionId === 'M9') {
-      if (['Yes', 'Not sure'].includes(value)) {
+      const regulated = value as string;
+      if (['Yes', 'Not sure'].includes(regulated)) {
         setDetectedTrack('REG');
-      } else if (responses.M3 !== 'Legal/Compliance' && !['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(responses.M3)) {
-        setDetectedTrack('GEN');
+      } else {
+        const role = responses.M3 as string;
+        if (role !== 'Legal/Compliance' && !['Data/AI Lead', 'IT Lead', 'CIO/CTO'].includes(role)) {
+          setDetectedTrack('GEN');
+        }
       }
     }
   };
@@ -111,7 +117,6 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         <div className="mb-6">
           <AssessmentProgressBar
             currentSectionIndex={currentSectionIndex}
-            totalSections={assessmentSections.length}
             completedSections={completedSections}
             detectedTrack={detectedTrack}
             showTrackInfo={personaCompleted}
