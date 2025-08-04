@@ -58,20 +58,30 @@ section_0:
       type: single
       helper: "Determines your recommendation track."
       options: [
-        "Founder / CEO",
-        "C-level executive",
-        "CIO / CTO",
-        "Head of Marketing",
-        "Head of Sales",
-        "Head of Finance",
-        "Head of Operations",
-        "Legal / Compliance Lead",
-        "IT Lead",
-        "Data / AI Lead",
-        "Product Lead",
-        "HR Lead",
-        "Customer Support Lead",
-        "Other (please specify)"
+        - "Founder / CEO"
+        - "C-level executive"
+        - "Head of Marketing"
+        - "Head of Sales"
+        - "Head of Finance"
+        - "Head of Operations"
+        - "Product Lead"
+        - "HR Lead"
+        - "Customer Support Lead"
+        - "CIO / CTO"
+        - "IT Lead"
+        - "Data / AI Lead"
+        - "ML Engineer"
+        - "Data Engineer"
+        - "DevOps Engineer"
+        - "Security Architect"
+        - "Infrastructure Manager"
+        - "Legal / Compliance Lead"
+        - "Privacy Officer"
+        - "Compliance Manager"
+        - "Risk Manager"
+        - "Audit Lead"
+        - "Governance Officer"
+        - "Other (please specify)"
       ]
       required: true
     - id: M3_other
@@ -180,8 +190,8 @@ section_0:
 
     - id: track
       logic: |
-        tech_roles = ["CIO / CTO", "IT Lead", "Data / AI Lead"]
-        reg_roles  = ["Legal / Compliance Lead"]
+        tech_roles = ["CIO / CTO", "IT Lead", "Data / AI Lead", "ML Engineer", "Data Engineer", "DevOps Engineer", "Security Architect", "Infrastructure Manager"]
+        reg_roles = ["Legal / Compliance Lead", "Privacy Officer", "Compliance Manager", "Risk Manager", "Audit Lead", "Governance Officer"]
         if M3 in tech_roles:
           return "TECH"
         elif computed.regulated or M3 in reg_roles:
