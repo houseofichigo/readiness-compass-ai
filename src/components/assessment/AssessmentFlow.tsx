@@ -120,10 +120,10 @@ export function AssessmentFlow({
 
   const completeAssessment = () => {
     const profile: OrganizationProfile = {
-      orgName: responses.M1 as string || "",
-      industry: responses.M4_industry as string || "",
-      role: responses.M3 as string || "",
-      size: responses.M6_size as string || "",
+      M0: responses.M0 as string || "",
+      M4_industry: responses.M4_industry as string || "",
+      M3: responses.M3 as string || "",
+      M6_size: responses.M6_size as string || "",
       track: detectedTrack || "GEN"
     };
     
