@@ -65,7 +65,30 @@ interface AssessmentYaml {
   [key: `section_${number}`]: RawSection | undefined;
 }
 
-const schema = yaml.load(schemaRaw) as AssessmentYaml;
+let schema: AssessmentYaml;
+try {
+  schema = yaml.load(schemaRaw) as AssessmentYaml;
+  if (!schema || typeof schema !== 'object') {
+    throw new Error('Invalid YAML structure');
+  }
+} catch (error) {
+  console.error('Failed to load assessment YAML:', error);
+  // Fallback to minimal schema to prevent app crash
+  schema = {
+    meta: { title: "Assessment unavailable" },
+    section_0: {
+      purpose: "Basic profile information",
+      questions: [
+        {
+          id: "M0",
+          text: "Organization Name",
+          type: "text",
+          required: true
+        }
+      ]
+    }
+  };
+}
 
 // Normalize a mixed array of strings or objects into QuestionOption[]
 function normalizeOptions(

@@ -56,7 +56,8 @@ export function AssessmentFlow({
   const globalComputed = evaluateComputed(profileSection?.computed, responses);
   // Initialize detectedTrack from profile using utility
   useEffect(() => {
-    setDetectedTrack(detectTrack(responses, globalComputed));
+    const newTrack = detectTrack(responses, globalComputed) as Track;
+    setDetectedTrack(newTrack);
   }, [responses, globalComputed]);
 
   // Filter visible "add-on" questions

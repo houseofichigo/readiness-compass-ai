@@ -50,7 +50,7 @@ export function AssessmentResults({
     governance: 0,
   };
   const weights =
-    weightVectors[track] ?? weightVectors.GEN ?? defaultWeights;
+    weightVectors[track] ?? weightVectors["GEN" as Track] ?? defaultWeights;
   const roundedScore = Math.round(totalScore);
 
   const getReadinessLevel = (score: number) => {
