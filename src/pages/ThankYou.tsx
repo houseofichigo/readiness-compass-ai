@@ -44,10 +44,18 @@ export default function ThankYou() {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    // Redirect back if no data (but do it in useEffect to avoid render-time navigation)
+    if (!data) {
+      navigate("/");
+    }
+  }, [data, navigate]);
+
   if (!data) {
-    // Redirect back if no data
-    navigate("/");
-    return null;
+    // Show loading while redirecting
+    return <div className="min-h-screen bg-gradient-accent flex items-center justify-center">
+      <div>Redirecting...</div>
+    </div>;
   }
 
   const { profile, track, responses } = data;
