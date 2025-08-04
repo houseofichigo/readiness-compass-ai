@@ -15,16 +15,12 @@ import { useAssessment } from "@/hooks/useAssessment";
 type AppState = "welcome" | "assessment" | "results";
 
 const Index = () => {
-  const [appState, setAppState] = useState<AppState>("welcome");
+  const [appState, setAppState] = useState<AppState>("assessment");
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(
     null
   );
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const { saveAssessment, isLoading } = useAssessment();
-
-  const handleStartAssessment = () => {
-    setAppState("assessment");
-  };
 
   const handleAssessmentComplete = async (
     responses: Record<string, AssessmentValue>,
@@ -60,15 +56,11 @@ const Index = () => {
 
   const handleRestart = () => {
     setAssessmentData(null);
-    setAppState("welcome");
+    setAppState("assessment");
   };
 
   return (
     <div className="min-h-screen bg-gradient-accent">
-      {appState === "welcome" && (
-        <AssessmentWelcome onStart={handleStartAssessment} />
-      )}
-      
       {appState === "assessment" && (
         <AssessmentFlow onComplete={handleAssessmentComplete} />
       )}
