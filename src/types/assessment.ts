@@ -1,121 +1,161 @@
-// src/types/assessment.ts
+// src/utils/scoring.ts
 
-export type Track = "TECH" | "REG" | "GEN";
+import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
+import type { Question, WeightVector } from "@/types/assessment";
 
-export type QuestionType =
-  | "text"
-  | "email"
-  | "single"
-  | "multi"
-  | "rank"
-  | "checkbox"
-  | "industry_dropdown"
-  | "country_dropdown"
-  | "multi_group";
-
-/** One choice in a single/multi/select/rank question */
-export interface QuestionOption {
-  value: string;
-  label: string;
-  score?: number;
-}
-
-/** A piece of logic declared in YAML to compute a derived field */
-export interface ComputedField {
-  /** the computed field’s id (e.g. "regulated") */
-  id: string;
-  /** the code snippet (as string) to evaluate at runtime */
-  logic: string;
-}
-
-/** A brief banner (e.g. consent notice) that can appear above a section */
-export interface ConsentBanner {
-  text: string;
-  type: string;
-  required?: boolean;
-}
-
-export interface Question {
-  id: string;
-  text: string;
-  type: QuestionType;
-  options?: QuestionOption[];
-  /** for grouped questions (multi_group) */
-  groups?: Array<{
-    label: string;
-    show_if?: Record<string, any>;
-    options: QuestionOption[];
-  }>;
-  required?: boolean;
-  helper?: string;
-  show_if?: Record<string, any>;
-  hide_if?: Record<string, any>;
-  max_rank?: number;
-  weight?: number[];
-  score_map?: number[];
-  score_by_count?: Record<string, number>;
-  score_per?: number;
-  cap?: number;
-  max_select?: number;
-  label?: string;
-  tooltip_each?: boolean;
-}
-
-export interface Section {
-  id: string;
-  title: string;
-  purpose: string;
-  questions: Question[];
-  /** optional consent banner (e.g. GDPR notice) */
-  consent_banner?: ConsentBanner;
-  /** any YAML-declared computed logic to run at form-runtime */
-  computed?: ComputedField[];
-}
-
-export interface OrganizationProfile {
-  M0: string;              // Organization name
-  M1: string;              // Full name
-  M2: string;              // Business email
-  M3: string;              // Primary role
-  M3_other?: string;
-  M4_industry: string;     // Industry
-  M4_sub?: string;         // Industry (other)
-  M5_country: string;      // Country
-  M6_size: string;         // Company size
-  M7_revenue: string;      // Annual revenue
-  M8_consent: boolean;     // Consent
-}
-
-export interface AssessmentResponse {
-  questionId: string;
-  value: string | string[] | number | boolean;
-  sectionId: string;
-  score?: number;
-}
-
-export interface AssessmentData {
-  id: string;
-  profile: OrganizationProfile;
-  track: Track;
-  responses: AssessmentResponse[];
-  completedSections: string[];
+export interface ScoringResult {
+  questionScores: Record<string, number>;
   totalScore: number;
   sectionScores: Record<string, number>;
-  createdAt: Date;
-  updatedAt: Date;
+  track: string;
 }
 
-export interface WeightVector {
-  Strategy: number;
-  Data: number;
-  Tools: number;
-  Automation: number;
-  People: number;
-  Governance: number;
-}
-
-export const TRACK_WEIGHTS: Record<Track, WeightVector> = {
-  TECH: { Strategy: 20, Data: 30, Tools: 20, Automation: 15, People: 5, Governance: 10 },
-  REG:  { Strategy: 10, Data: 20, Tools: 10, Automation: 10, People: 5, Governance: 45 },
-  GEN:  { Strategy: 25, Data: 15, Tools: 15, Automation: 15, People: 15, Governance: 15 },
+/** Map section titles to the categories used in weight vectors */
+const SECTION_CATEGORY_MAP: Record<string, keyof WeightVector> = {
+  "Strategy & Use-Case Readiness": "Strategy",
+  "Data Foundation & Security": "Data",
+  "Tool Stack & Integration": "Tools",
+  "Automation & AI Agents": "Automation",
+  "Team Capability & Culture": "People",
+  "Governance, Risk & Ethics": "Governance",
 };
+
+interface QuestionIndexEntry {
+  question: Question;
+  section: keyof WeightVector;
+}
+
+const buildQuestionIndex = (): Record<string, QuestionIndexEntry> => {
+  const index: Record<string, QuestionIndexEntry> = {};
+  assessmentSections.forEach((section) => {
+    const category = SECTION_CATEGORY_MAP[section.title];
+    if (!category) return;
+    section.questions.forEach((q) => {
+      index[q.id] = { question: q, section: category };
+    });
+  });
+  return index;
+};
+
+const QUESTION_INDEX = buildQuestionIndex();
+
+const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
+  string,
+  WeightVector
+>;
+
+export function scoreAnswers(
+  values: Record<string, unknown>,
+  track: string
+): ScoringResult {
+  const questionScores: Record<string, number> = {};
+  const sectionTotals: Record<keyof WeightVector, number> = {
+    Strategy: 0,
+    Data: 0,
+    Tools: 0,
+    Automation: 0,
+    People: 0,
+    Governance: 0,
+  };
+  const sectionCounts: Record<keyof WeightVector, number> = {
+    Strategy: 0,
+    Data: 0,
+    Tools: 0,
+    Automation: 0,
+    People: 0,
+    Governance: 0,
+  };
+
+  for (const [id, { question, section }] of Object.entries(QUESTION_INDEX)) {
+    const answer = values[id];
+    const score = scoreQuestion(question, answer);
+    questionScores[id] = score;
+    sectionTotals[section] += score;
+    sectionCounts[section] += 1;
+  }
+
+  const sectionScores: Record<string, number> = {};
+  (Object.keys(sectionTotals) as Array<keyof WeightVector>).forEach(
+    (section) => {
+      const count = sectionCounts[section] || 0;
+      sectionScores[section] = count > 0 ? sectionTotals[section] / count : 0;
+    }
+  );
+
+  const weights =
+    WEIGHT_VECTORS[track as keyof typeof WEIGHT_VECTORS] ??
+    WEIGHT_VECTORS.GEN;
+
+  const totalScore = (Object.keys(sectionScores) as Array<
+    keyof WeightVector
+  >).reduce((sum, section) => {
+    const weight = weights?.[section] ?? 0;
+    return sum + sectionScores[section] * (weight / 100);
+  }, 0);
+
+  return {
+    questionScores,
+    totalScore,
+    sectionScores,
+    track,
+  };
+}
+
+function scoreQuestion(question: Question, answer: unknown): number {
+  if (answer === undefined || answer === null || answer === "") {
+    return 50;
+  }
+
+  if (
+    typeof answer === "string" &&
+    answer.toLowerCase().includes("don't know")
+  ) {
+    return 0;
+  }
+
+  const { type, score_map, score_per, cap, weight, options } = question;
+
+  if (Array.isArray(answer)) {
+    if (type === "rank" && weight) {
+      const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
+      const max = weight.reduce((a, b) => a + b, 0);
+      return max === 0 ? 0 : (used / max) * 100;
+    }
+
+    if (score_per !== undefined) {
+      const raw = answer.length * score_per;
+      return Math.min(raw, cap ?? 100);
+    }
+
+    if (score_map && options) {
+      const scores = (answer as string[]).map((val) => {
+        const idx = options.findIndex((opt) =>
+          opt.value === val
+        );
+        return idx >= 0 && score_map[idx] !== undefined ? score_map[idx] : 0;
+      });
+      return scores.length === 0
+        ? 50
+        : scores.reduce((a, b) => a + b, 0) / scores.length;
+    }
+  }
+
+  if (typeof answer === "boolean") {
+    return answer ? 100 : 0;
+  }
+
+  if (score_map && options) {
+    const idx = options.findIndex((opt) =>
+      opt.value === answer
+    );
+    if (idx >= 0 && score_map[idx] !== undefined) {
+      return score_map[idx];
+    }
+  }
+
+  if (typeof answer === "number") {
+    return Math.max(0, Math.min(100, answer));
+  }
+
+  return 50;
+}

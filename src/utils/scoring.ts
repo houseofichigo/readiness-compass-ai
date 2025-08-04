@@ -38,7 +38,6 @@ const buildQuestionIndex = (): Record<string, QuestionIndexEntry> => {
 };
 
 const QUESTION_INDEX = buildQuestionIndex();
-
 const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
   string,
   WeightVector
@@ -66,21 +65,19 @@ export function scoreAnswers(
     Governance: 0,
   };
 
-  Object.entries(QUESTION_INDEX).forEach(([id, { question, section }]) => {
-    const answer = values[id];
-    const score = scoreQuestion(question, answer);
-    questionScores[id] = score;
-    sectionTotals[section] += score;
+  for (const [id, { question, section }] of Object.entries(QUESTION_INDEX)) {
+    const ans = values[id];
+    const sc = scoreQuestion(question, ans);
+    questionScores[id] = sc;
+    sectionTotals[section] += sc;
     sectionCounts[section] += 1;
-  });
+  }
 
   const sectionScores: Record<string, number> = {};
-  (Object.keys(sectionTotals) as Array<keyof WeightVector>).forEach(
-    (section) => {
-      const count = sectionCounts[section] || 0;
-      sectionScores[section] = count > 0 ? sectionTotals[section] / count : 0;
-    }
-  );
+  (Object.keys(sectionTotals) as Array<keyof WeightVector>).forEach((sec) => {
+    const cnt = sectionCounts[sec] || 0;
+    sectionScores[sec] = cnt > 0 ? sectionTotals[sec] / cnt : 0;
+  });
 
   const weights =
     WEIGHT_VECTORS[track as keyof typeof WEIGHT_VECTORS] ??
@@ -88,57 +85,44 @@ export function scoreAnswers(
 
   const totalScore = (Object.keys(sectionScores) as Array<
     keyof WeightVector
-  >).reduce((sum, section) => {
-    const weight = weights?.[section] ?? 0;
-    return sum + sectionScores[section] * (weight / 100);
+  >).reduce((sum, sec) => {
+    const w = weights[sec] ?? 0;
+    return sum + sectionScores[sec] * (w / 100);
   }, 0);
 
-  return {
-    questionScores,
-    totalScore,
-    sectionScores,
-    track,
-  };
+  return { questionScores, sectionScores, totalScore, track };
 }
 
 function scoreQuestion(question: Question, answer: unknown): number {
   if (answer === undefined || answer === null || answer === "") {
     return 50;
   }
-
-  if (
-    typeof answer === "string" &&
-    answer.toLowerCase().includes("don't know")
-  ) {
+  if (typeof answer === "string" && answer.toLowerCase().includes("don't know")) {
     return 0;
   }
 
   const { type, score_map, score_per, cap, weight, options } = question;
 
   if (Array.isArray(answer)) {
-    // ranked lists
+    // ranked
     if (type === "rank" && weight) {
       const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
       const max = weight.reduce((a, b) => a + b, 0);
-      return max === 0 ? 0 : (used / max) * 100;
+      return max ? (used / max) * 100 : 0;
     }
-
-    // per-item scoring
+    // per-item
     if (score_per !== undefined) {
-      const raw = answer.length * score_per;
-      return Math.min(raw, cap ?? 100);
+      return Math.min(answer.length * score_per, cap ?? 100);
     }
-
-    // map selected options to scores
+    // mapped choices
     if (score_map && options) {
       const scores = (answer as string[]).map((val) => {
-        const idx = options.findIndex((opt) =>
-          typeof opt === "string" ? opt === val : opt.value === val
-        );
-        return idx >= 0 && score_map[idx] !== undefined ? score_map[idx] : 0;
+        const idx = options.findIndex((opt) => opt.value === val);
+        return idx >= 0 && score_map[idx] != null ? score_map[idx] : 0;
       });
-      if (scores.length === 0) return 50;
-      return scores.reduce((a, b) => a + b, 0) / scores.length;
+      return scores.length
+        ? scores.reduce((a, b) => a + b, 0) / scores.length
+        : 50;
     }
   }
 
@@ -146,13 +130,9 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return answer ? 100 : 0;
   }
 
-  if (score_map && options) {
-    const idx = options.findIndex((opt) =>
-      typeof opt === "string" ? opt === answer : opt.value === answer
-    );
-    if (idx >= 0 && score_map[idx] !== undefined) {
-      return score_map[idx];
-    }
+  if (score_map && options && typeof answer === "string") {
+    const idx = options.findIndex((opt) => opt.value === answer);
+    if (idx >= 0 && score_map[idx] != null) return score_map[idx];
   }
 
   if (typeof answer === "number") {

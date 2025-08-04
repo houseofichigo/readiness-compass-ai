@@ -1,7 +1,8 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { AssessmentResponse, OrganizationProfile, Track, TRACK_WEIGHTS } from "@/types/assessment";
+import { AssessmentResponse, OrganizationProfile, Track, WeightVector } from "@/types/assessment";
+import { assessmentMeta } from "@/data/assessmentQuestions";
 import { Badge } from "@/components/ui/badge";
 import { Download, Share2, BarChart3 } from "lucide-react";
 
@@ -28,7 +29,8 @@ export function AssessmentResults({
     Governance: Math.floor(Math.random() * 40) + 40
   };
 
-  const weights = TRACK_WEIGHTS[track];
+  const weightVectors = (assessmentMeta as { weight_vectors: Record<Track, WeightVector> }).weight_vectors;
+  const weights = weightVectors[track];
   const overallScore = Math.round(
     Object.entries(sectionScores).reduce((total, [section, score]) => {
       return total + (score * weights[section as keyof typeof weights]) / 100;
