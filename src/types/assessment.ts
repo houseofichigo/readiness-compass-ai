@@ -32,7 +32,7 @@ export interface Question {
   text: string;
   type: QuestionType;
   options?: QuestionOption[];
-  /** for grouped questions (multi_group or multi) */
+  /** for grouped questions (multi_group) */
   groups?: Array<{
     label: string;
     show_if?: Record<string, any>;
@@ -58,7 +58,7 @@ export interface Section {
   title: string;
   purpose: string;
   questions: Question[];
-  /** any YAML-declared computed logic to run at form-runtime */
+  /** any YAML‐declared computed logic to run at form‐runtime */
   computed?: ComputedField[];
 }
 
@@ -105,7 +105,7 @@ export interface WeightVector {
 }
 
 export const TRACK_WEIGHTS: Record<Track, WeightVector> = {
-  TECH: { Strategy: 20, Data: 30, Tools: 20, Automation: 15, People: 5, Governance: 10 },
-  REG:  { Strategy: 10, Data: 20, Tools: 10, Automation: 10, People: 5, Governance: 45 },
+  TECH: { Strategy: 20, Data: 30, Tools: 20, Automation: 15, People: 5,  Governance: 10 },
+  REG:  { Strategy: 10, Data: 20, Tools: 10, Automation: 10, People: 5,  Governance: 45 },
   GEN:  { Strategy: 25, Data: 15, Tools: 15, Automation: 15, People: 15, Governance: 15 }
 };

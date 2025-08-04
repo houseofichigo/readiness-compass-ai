@@ -17,7 +17,7 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
-interface RawQuestion extends Omit<Question, "options"> {
+interface RawQuestion extends Omit<Question, "options" | "groups"> {
   options?: Array<string | QuestionOption>;
   groups?: Array<{
     label: string;
@@ -90,6 +90,8 @@ const assessmentSections: Section[] = Object.entries(schema)
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => ({
   ...q,
   options: normalizeOptions(q.options),
+  // if you ever need groups in add_ons, you can normalize them similarly:
+  // groups: q.groups?.map(g => ({ ...g, options: normalizeOptions(g.options) }))
 }));
 
 export { assessmentSections };
