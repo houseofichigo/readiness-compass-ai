@@ -1,42 +1,55 @@
-// Type definitions for the AI Readiness Assessment
+// src/types/assessment.ts
 
-export type QuestionType = 
-  | "single" 
-  | "multi" 
-  | "rank" 
-  | "matrix" 
-  | "text" 
-  | "number"
-  | "boolean"
+// Type of question inputs
+export type QuestionType =
+  | "text"
   | "email"
+  | "single"
+  | "multi"
+  | "multi_group"
+  | "rank"
+  | "matrix"
   | "checkbox"
   | "dropdown"
-  | "multi_group";
+  | "industry_dropdown";
 
+// Option for single/multi/etc questions
 export interface QuestionOption {
   value: string;
   label: string;
   description?: string;
 }
 
+// Group of options
 export interface QuestionGroup {
   label: string;
   showIf?: Record<string, unknown>;
   options: QuestionOption[];
 }
 
+// Core question shape
 export interface Question {
   id: string;
   text: string;
   type: QuestionType;
   helper?: string;
   required?: boolean;
+
+  // For single/multi/dropdown etc.
   options?: QuestionOption[];
-  rows?: string[] | QuestionOption[];
-  columns?: string[] | QuestionOption[];
+
+  // For matrix
+  rows?: (string | QuestionOption)[];
+  columns?: (string | QuestionOption)[];
+
+  // For grouped checkboxes
   groups?: QuestionGroup[];
+
+  // Conditional visibility
   showIf?: Record<string, unknown>;
   hideIf?: Record<string, unknown>;
+
+  // Scoring
   scoreMap?: number[];
   scorePer?: number;
   cap?: number;
@@ -44,24 +57,28 @@ export interface Question {
   maxRank?: number;
   maxSelect?: number;
   scoreByCount?: Record<string, number>;
+  scoreFormula?: string;
 }
 
+// Banner shown in certain sections
 export interface ConsentBanner {
-  title: string;
-  description: string;
-  consent_text: string;
+  title?: string;
+  description?: string;
   text?: string;
+  consent_text?: string;
   required: boolean;
 }
 
+// Computed (derived) field definition
 export interface ComputedField {
   id: string;
-  type: string;
+  type?: string;
+  logic?: string | Record<string, unknown>;
   formula?: string;
-  logic?: Record<string, unknown>;
   conditions?: Record<string, unknown>;
 }
 
+// A quiz or survey section
 export interface Section {
   id: string;
   title: string;
@@ -71,6 +88,7 @@ export interface Section {
   computed?: ComputedField[];
 }
 
+// Overall assessment data
 export interface AssessmentData {
   id?: string;
   sections: Section[];
@@ -84,45 +102,59 @@ export interface AssessmentData {
   updatedAt?: Date;
 }
 
+// Which track the org falls into
 export type Track = "TECH" | "REG" | "GEN";
 
+// Value types answers can take
+export type AssessmentValue =
+  | string
+  | number
+  | boolean
+  | string[]
+  | number[]
+  | null;
+
+// Basic profile fields
 export interface OrganizationProfile {
-  name?: string;
-  role?: string;
-  industry?: string;
-  country?: string;
-  size?: string;
-  revenue?: string;
+  M0?: string;               // organization name
+  M1?: string;               // full name
+  M2?: string;               // email
+  M3?: string;               // primary role
+  M3_other?: string;
+  M4_industry?: string;
+  M4_sub?: string;
+  M5_country?: string;
+  M6_size?: string;
+  M7_revenue?: string;
+  M8_consent?: boolean;
   track?: Track;
   regulated?: boolean;
-  M0?: string;
-  M1?: string;
-  M3?: string;
   [key: string]: any;
 }
 
+// Individual answer record
 export interface AssessmentResponse {
   questionId: string;
-  value: string | string[] | number | boolean;
+  value: AssessmentValue;
   sectionId: string;
 }
 
+// Weight vector for scoring by category (per track)
 export interface WeightVector {
   strategy: number;
-  finance: number;
   data: number;
   tools: number;
   automation: number;
   people: number;
   governance: number;
-  planning: number;
 }
 
+// Final scoring results
 export interface ScoreResult {
   totalScore: number;
-  maxScore: number;
-  percentage: number;
-  categoryScores: Record<string, number>;
+  maxScore?: number;
+  percentage?: number;
+  sectionScores: Record<string, number>;
   track: Track;
   organizationProfile: OrganizationProfile;
 }

@@ -24,11 +24,15 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
-interface RawQuestion extends Omit<Question, "options" | "groups" | "type"> {
+interface RawQuestion {
+  id: string;
+  text: string;
   type: string;
+  helper?: string;
+  required?: boolean;
   options?: Array<string | QuestionOption>;
-  rows?: Array<string>;
-  columns?: Array<string>;
+  rows?: string[];
+  columns?: string[];
   groups?: Array<{
     label: string;
     show_if?: Record<string, unknown>;
@@ -42,6 +46,7 @@ interface RawQuestion extends Omit<Question, "options" | "groups" | "type"> {
   weight?: number[];
   max_rank?: number;
   max_select?: number;
+  score_formula?: string;
   score_by_count?: Record<string, number>;
 }
 
@@ -73,7 +78,7 @@ function normalizeOptions(
 const assessmentConsentBanners: Record<string, ConsentBanner> = {};
 const assessmentComputed: Record<string, ComputedField[]> = {};
 
-// Build our Section[] from YAML
+// Build Section[] from YAML
 const assessmentSections: Section[] = Object.entries(schema)
   .filter(([key]) => key.startsWith("section_"))
   .sort(([a], [b]) =>
@@ -87,7 +92,6 @@ const assessmentSections: Section[] = Object.entries(schema)
       computed = [],
     } = rawSec ?? {};
 
-    // Normalize every question
     const normalizedQuestions: Question[] = questions.map((q) => {
       const base: Partial<Question> = {
         id: q.id,
@@ -103,12 +107,13 @@ const assessmentSections: Section[] = Object.entries(schema)
         weight: q.weight,
         maxRank: q.max_rank,
         maxSelect: q.max_select,
+        scoreFormula: q.score_formula,
         scoreByCount: q.score_by_count,
       };
 
-      if (q.options) base.options = normalizeOptions(q.options);
-      if (q.rows)    base.rows    = [...q.rows];
-      if (q.columns) base.columns = [...q.columns];
+      if (q.options)   base.options = normalizeOptions(q.options);
+      if (q.rows)      base.rows    = [...q.rows];
+      if (q.columns)   base.columns = [...q.columns];
 
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
@@ -121,23 +126,24 @@ const assessmentSections: Section[] = Object.entries(schema)
       return base as Question;
     });
 
-    const section: Section = {
+    if (consent_banner) {
+      assessmentConsentBanners[id] = consent_banner;
+    }
+    if (computed.length) {
+      assessmentComputed[id] = computed;
+    }
+
+    return {
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
       questions: normalizedQuestions,
-      // only attach if defined
       ...(consent_banner ? { consentBanner: consent_banner } : {}),
       ...(computed.length ? { computed } : {}),
     };
-
-    if (consent_banner) assessmentConsentBanners[id] = consent_banner;
-    if (computed.length)  assessmentComputed[id] = computed;
-
-    return section;
   });
 
-// Top-level “add_ons” questions, if any
+// Top-level “add_ons” questions
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   const base: Partial<Question> = {
     id: q.id,
@@ -153,12 +159,14 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     weight: q.weight,
     maxRank: q.max_rank,
     maxSelect: q.max_select,
+    scoreFormula: q.score_formula,
     scoreByCount: q.score_by_count,
   };
 
-  if (q.options) base.options = normalizeOptions(q.options);
-  if (q.rows)    base.rows    = [...q.rows];
-  if (q.columns) base.columns = [...q.columns];
+  if (q.options)  base.options  = normalizeOptions(q.options);
+  if (q.rows)     base.rows     = [...q.rows];
+  if (q.columns)  base.columns  = [...q.columns];
+
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
       label: g.label,
@@ -177,4 +185,3 @@ export {
   assessmentAddOns,
 };
 export const assessmentMeta = schema.meta ?? {};
-export const assessmentData = { sections: assessmentSections };
