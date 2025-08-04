@@ -83,6 +83,11 @@ export interface Section {
   id: string;
   title: string;
   purpose: string;
+  /**
+   * Category used for scoring. Optional because some sections
+   * (e.g. demographic or informational sections) are not scored.
+   */
+  category?: keyof WeightVector;
   questions: Question[];
   consentBanner?: ConsentBanner;
   computed?: ComputedField[];
@@ -129,7 +134,7 @@ export interface OrganizationProfile {
   M8_consent?: boolean;
   track?: Track;
   regulated?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 // Individual answer record
