@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -31,6 +32,7 @@ export function AssessmentFlow({
   onComplete
 }: AssessmentFlowProps) {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
   const [responses, setResponses] = useState<Record<string, AssessmentValue>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track | null>(null);
@@ -105,8 +107,23 @@ export function AssessmentFlow({
       track: detectedTrack || "GEN"
     };
     
-    setIsCompleted(true);
+    // Save assessment data
     onComplete(responses, profile);
+    
+    // Navigate to thank you page with data
+    navigate("/thank-you", {
+      state: {
+        profile: {
+          ...profile,
+          M1: responses.M1 as string,
+          M2: responses.M2 as string,
+          M5_country: responses.M5_country as string,
+        },
+        track: detectedTrack || "GEN",
+        responses,
+        submissionId: null
+      }
+    });
   };
 
   const handleAnswerChange = (questionId: string, value: AssessmentValue) => {
@@ -179,24 +196,7 @@ export function AssessmentFlow({
     goNext();
   };
 
-  if (isCompleted) {
-    return (
-      <AssessmentThankYou
-        profile={{
-          M0: responses.M0 as string,
-          M1: responses.M1 as string,
-          M2: responses.M2 as string,
-          M3: responses.M3 as string,
-          M4_industry: responses.M4_industry as string,
-          M5_country: responses.M5_country as string,
-          M6_size: responses.M6_size as string,
-          track: detectedTrack || "GEN"
-        }}
-        track={detectedTrack || "GEN"}
-        onRestart={() => window.location.reload()}
-      />
-    );
-  }
+  // Remove the isCompleted state render since we now navigate to thank you page
 
   if (!currentSection && !isAddOnPage) {
     return <div>Section not found</div>;
