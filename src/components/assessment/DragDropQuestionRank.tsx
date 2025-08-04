@@ -76,24 +76,46 @@ export function DragDropQuestionRank({
           return (
             <Card
               key={option.value}
-              className={`p-4 cursor-pointer transition-all duration-200 ${
+              className={`p-4 cursor-pointer transition-all duration-200 touch-manipulation ${
                 isSelected 
                   ? "bg-primary/10 border-primary shadow-md" 
                   : "hover:bg-muted/50 hover:border-border"
               }`}
-              draggable
+              draggable={isSelected}
               onDragStart={(e) => handleDragStart(e, option.value)}
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, index)}
               onClick={() => handleOptionClick(option.value)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleOptionClick(option.value);
+                }
+              }}
+              aria-label={`${option.label}${rank ? ` (ranked ${rank})` : ' (unranked)'}`}
+              style={{ minHeight: '44px' }} // Touch target size
             >
               <div className="flex items-center justify-between">
-                <span className="font-medium">{option.label}</span>
-                {isSelected && (
-                  <Badge variant="default" className="bg-primary">
-                    #{rank}
-                  </Badge>
-                )}
+                <span className="font-medium text-sm md:text-base">{option.label}</span>
+                <div className="flex items-center gap-2">
+                  {isSelected && (
+                    <>
+                      <Badge variant="default" className="bg-primary">
+                        #{rank}
+                      </Badge>
+                      <div 
+                        className="w-6 h-6 bg-muted rounded flex items-center justify-center cursor-grab active:cursor-grabbing md:w-8 md:h-8"
+                        role="img"
+                        aria-label="Drag handle"
+                        style={{ minWidth: '44px', minHeight: '44px' }} // Touch target
+                      >
+                        <span className="text-xs md:text-sm">⋮⋮</span>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </Card>
           );
@@ -109,7 +131,7 @@ export function DragDropQuestionRank({
               return (
                 <div key={item} className="flex items-center gap-2">
                   <Badge variant="outline">#{index + 1}</Badge>
-                  <span>{option?.label}</span>
+                  <span className="text-sm md:text-base">{option?.label}</span>
                 </div>
               );
             })}

@@ -53,16 +53,24 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
         );
 
       case "single":
+        const hasMany = (question.options?.length || 0) > 6;
         return (
           <RadioGroup
             value={value}
             onValueChange={onChange}
-            className="mt-4 space-y-3"
+            className={`space-y-3 ${hasMany ? 'max-h-64 overflow-y-auto pr-2' : ''}`}
           >
             {question.options?.map((option) => (
-              <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={option.value} />
-                <Label htmlFor={option.value} className="font-normal cursor-pointer">
+              <div key={option.value} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <RadioGroupItem 
+                  value={option.value} 
+                  id={option.value}
+                  className="mt-0.5"
+                />
+                <Label 
+                  htmlFor={option.value} 
+                  className="font-normal cursor-pointer text-sm leading-relaxed flex-1"
+                >
                   {option.label}
                 </Label>
               </div>
@@ -131,23 +139,27 @@ export function QuestionCard({ question, value, onChange }: QuestionCardProps) {
   };
 
   return (
-    <Card className="p-6 shadow-elegant border-0 bg-card/50 backdrop-blur-sm">
-      <div className="mb-4">
+    <Card className="p-4 md:p-6 shadow-elegant border-0 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-shadow">
+      <div className="space-y-3">
         {question.type !== "checkbox" && (
-          <Label className="text-lg font-medium text-foreground mb-2 block">
-            {question.text}
-            {question.required && <span className="text-destructive ml-1">*</span>}
-          </Label>
+          <div>
+            <Label className="text-base md:text-lg font-medium text-foreground block">
+              {question.text}
+              {question.required && <span className="text-destructive ml-1">*</span>}
+            </Label>
+            
+            {question.helper && (
+              <p className="text-sm text-muted-foreground mt-2">
+                {question.helper}
+              </p>
+            )}
+          </div>
         )}
-        
-        {question.helper && (
-          <p className="text-sm text-muted-foreground mb-3">
-            {question.helper}
-          </p>
-        )}
-      </div>
 
-      {renderQuestionInput()}
+        <div className="w-full">
+          {renderQuestionInput()}
+        </div>
+      </div>
     </Card>
   );
 }
