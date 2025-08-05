@@ -90,9 +90,6 @@ try {
   };
 }
 
-// Extract French translations
-export const frenchTranslations = (schema as any).locale_fr || {};
-
 // Normalize a mixed array of strings or objects into QuestionOption[]
 function normalizeOptions(
   opts?: Array<string | QuestionOption>
