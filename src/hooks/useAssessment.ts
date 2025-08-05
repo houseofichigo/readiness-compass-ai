@@ -44,11 +44,7 @@ export function useAssessment() {
     setError(null);
 
     try {
-      console.log("🔍 SUPABASE SAVE DEBUG:");
-      console.log("Assessment ID:", assessmentId);
-      console.log("Profile received:", profile);
-      console.log("Responses count:", Object.keys(responses).length);
-      console.log("Responses keys:", Object.keys(responses));
+      console.log("💾 SUPABASE - Saving assessment with", Object.keys(responses).length, "responses");
       
       // Create submission record
       const submissionData = {
@@ -68,7 +64,7 @@ export function useAssessment() {
         revenue: profile.M7_revenue || ''
       };
 
-      console.log("📝 Submitting to Supabase:", submissionData);
+      
 
       
 
@@ -83,15 +79,21 @@ export function useAssessment() {
         throw submissionError;
       }
       
-      console.log("✅ Submission created successfully:", submission);
+      console.log("✅ Submission created, processing", Object.keys(responses).length, "answers");
 
       // Save individual answers
       const answers = Object.entries(responses)
-        .filter(([key, value]) => value !== undefined && value !== null && value !== "") // Filter out empty responses
+        .filter(([key, value]) => {
+          // Filter out empty responses, but be more specific about what constitutes "empty"
+          if (value === undefined || value === null) return false;
+          if (typeof value === 'string' && value.trim() === '') return false;
+          if (Array.isArray(value) && value.length === 0) return false;
+          return true;
+        })
         .map(([questionId, value]) => ({
           submission_id: submission.id,
           question_id: questionId,
-          value: typeof value === 'string' ? value : JSON.stringify(value) // Handle both strings and complex objects
+          value: value // Store the value directly as JSONB can handle any type
         }));
 
       console.log(`📊 Prepared ${answers.length} answers for insertion:`, answers.slice(0, 3));

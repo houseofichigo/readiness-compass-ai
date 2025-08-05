@@ -106,10 +106,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     setIsSubmitting(true);
     try {
       // Debug: Check responses before submission
-      console.log("🔍 ASSESSMENT COMPLETION DEBUG:");
-      console.log("Total responses:", Object.keys(responses).length);
-      console.log("Sample responses:", Object.entries(responses).slice(0, 5));
-      console.log("Profile built:", profile);
+      console.log("🔍 ASSESSMENT COMPLETION - Responses:", Object.keys(responses).length, "questions");
+      console.log("📝 Sample responses:", Object.fromEntries(Object.entries(responses).slice(0, 3)));
+      console.log("👤 Profile:", { track: detectedTrack, regulated: Boolean(globalComputed.regulated) });
       
       // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
