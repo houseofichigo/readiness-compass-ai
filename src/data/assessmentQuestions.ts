@@ -2,6 +2,7 @@
 
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
+import i18n from "@/lib/i18n";
 import type {
   Section,
   Question,
@@ -12,32 +13,77 @@ import type {
   WeightVector,
 } from "@/types/assessment";
 
-// Titles for each section derived from the assessment YAML
-const SECTION_TITLES: Record<string, string> = {
-  section_0: "Organization Profile",
-  section_1: "Strategy & Use-Case Readiness",
-  section_2: "Budget, Runway & Compliance",
-  section_3: "Data Foundation & Security",
-  section_4: "Tool Stack & Integration",
-  section_5: "Automation & AI Agents",
-  section_6: "Team Capability & Culture",
-  section_7: "Governance, Risk & Ethics",
-  section_8: "Implementation Horizon & Vision",
+// Titles for each section in both supported locales
+const SECTION_TITLES: Record<string, { en: string; fr: string }> = {
+  section_0: {
+    en: "Organization Profile",
+    fr: "Profil de l'organisation",
+  },
+  section_1: {
+    en: "Strategy & Use-Case Readiness",
+    fr: "Stratégie et préparation des cas d'utilisation",
+  },
+  section_2: {
+    en: "Budget, Runway & Compliance",
+    fr: "Budget, échéancier et conformité",
+  },
+  section_3: {
+    en: "Data Foundation & Security",
+    fr: "Fondation des données et sécurité",
+  },
+  section_4: {
+    en: "Tool Stack & Integration",
+    fr: "Pile d'outils et intégration",
+  },
+  section_5: {
+    en: "Automation & AI Agents",
+    fr: "Automatisation et agents IA",
+  },
+  section_6: {
+    en: "Team Capability & Culture",
+    fr: "Capacités de l'équipe et culture",
+  },
+  section_7: {
+    en: "Governance, Risk & Ethics",
+    fr: "Gouvernance, risque et éthique",
+  },
+  section_8: {
+    en: "Implementation Horizon & Vision",
+    fr: "Horizon d'implémentation et vision",
+  },
 };
+
+const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
+
+function pickLang<T extends Record<string, unknown>>(obj: T, key: string): unknown {
+  return (
+    obj?.[`${key}_${lang}` as keyof T] ??
+    obj?.[`${key}_en` as keyof T] ??
+    (obj as Record<string, unknown>)[key]
+  );
+}
 
 interface RawQuestion {
   id: string;
-  text: string;
   type: string;
+  // Localized text & helper fields
+  text?: string;
+  text_en?: string;
+  text_fr?: string;
   helper?: string;
+  helper_en?: string;
+  helper_fr?: string;
   required?: boolean;
-  options?: Array<string | QuestionOption>;
-  rows?: string[];
-  columns?: string[];
+  // Options/rows/columns may already be objects with localized labels
+  options?: Array<string | Record<string, unknown>>;
+  rows?: Array<string | Record<string, unknown>>;
+  columns?: Array<string | Record<string, unknown>>;
   groups?: Array<{
-    label: string;
+    label?: string;
+    label_en?: string;
+    label_fr?: string;
     show_if?: Record<string, unknown>;
-    options: Array<string | QuestionOption>;
+    options: Array<string | Record<string, unknown>>;
   }>;
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
@@ -54,8 +100,10 @@ interface RawQuestion {
 interface RawSection {
   category?: keyof WeightVector | string;
   purpose?: string;
+  purpose_en?: string;
+  purpose_fr?: string;
   questions?: RawQuestion[];
-  consent_banner?: ConsentBanner;
+  consent_banner?: Record<string, unknown>;
   computed?: ComputedField[];
 }
 
@@ -92,11 +140,19 @@ try {
 
 // Normalize a mixed array of strings or objects into QuestionOption[]
 function normalizeOptions(
-  opts?: Array<string | QuestionOption>
+  opts?: Array<string | Record<string, unknown>>
 ): QuestionOption[] | undefined {
-  return opts?.map((o) =>
-    typeof o === "string" ? { value: o, label: o } : o
-  );
+  return opts?.map((o) => {
+    if (typeof o === "string") return { value: o, label: o };
+    const obj = o as Record<string, unknown>;
+    return {
+      value: obj.value as string,
+      label: (pickLang(obj, "label") as string) ?? (obj.value as string),
+      ...(pickLang(obj, "description")
+        ? { description: pickLang(obj, "description") as string }
+        : {}),
+    };
+  });
 }
 
 // Top-level maps for consent banners & computed logic
@@ -112,18 +168,19 @@ const assessmentSections: Section[] = Object.entries(schema)
   .map(([id, rawSec]) => {
     const {
       category,
-      purpose = "",
       questions = [],
       consent_banner,
       computed = [],
     } = rawSec ?? {};
 
+    const purpose = pickLang(rawSec ?? {}, "purpose") || "";
+
     const normalizedQuestions: Question[] = questions.map((q) => {
       const base: Partial<Question> = {
         id: q.id,
-        text: q.text,
+        text: pickLang(q, "text"),
         type: q.type as QuestionType,
-        helper: q.helper,
+        helper: pickLang(q, "helper"),
         required: q.required,
         showIf: q.show_if,
         hideIf: q.hide_if,
@@ -138,12 +195,12 @@ const assessmentSections: Section[] = Object.entries(schema)
       };
 
       if (q.options)   base.options = normalizeOptions(q.options);
-      if (q.rows)      base.rows    = [...q.rows];
-      if (q.columns)   base.columns = [...q.columns];
+      if (q.rows)      base.rows    = normalizeOptions(q.rows);
+      if (q.columns)   base.columns = normalizeOptions(q.columns);
 
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
-          label: g.label,
+          label: pickLang(g, "label"),
           showIf: g.show_if,
           options: normalizeOptions(g.options) || [],
         }));
@@ -152,8 +209,24 @@ const assessmentSections: Section[] = Object.entries(schema)
       return base as Question;
     });
 
+    let localizedConsent: ConsentBanner | undefined;
     if (consent_banner) {
-      assessmentConsentBanners[id] = consent_banner;
+      localizedConsent = {
+        ...consent_banner,
+        ...(pickLang(consent_banner, "title")
+          ? { title: pickLang(consent_banner, "title") }
+          : {}),
+        ...(pickLang(consent_banner, "description")
+          ? { description: pickLang(consent_banner, "description") }
+          : {}),
+        ...(pickLang(consent_banner, "text")
+          ? { text: pickLang(consent_banner, "text") }
+          : {}),
+        ...(pickLang(consent_banner, "consent_text")
+          ? { consent_text: pickLang(consent_banner, "consent_text") }
+          : {}),
+      } as ConsentBanner;
+      assessmentConsentBanners[id] = localizedConsent;
     }
     if (computed.length) {
       assessmentComputed[id] = computed;
@@ -161,11 +234,11 @@ const assessmentSections: Section[] = Object.entries(schema)
 
     return {
       id,
-      title: SECTION_TITLES[id] ?? id,
+      title: SECTION_TITLES[id]?.[lang] ?? SECTION_TITLES[id]?.en ?? id,
       purpose,
       ...(category ? { category } : {}),
       questions: normalizedQuestions,
-      ...(consent_banner ? { consentBanner: consent_banner } : {}),
+      ...(localizedConsent ? { consentBanner: localizedConsent } : {}),
       ...(computed.length ? { computed } : {}),
     };
   });
@@ -174,9 +247,9 @@ const assessmentSections: Section[] = Object.entries(schema)
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   const base: Partial<Question> = {
     id: q.id,
-    text: q.text,
+    text: pickLang(q, "text"),
     type: q.type as QuestionType,
-    helper: q.helper,
+    helper: pickLang(q, "helper"),
     required: q.required,
     showIf: q.show_if,
     hideIf: q.hide_if,
@@ -191,12 +264,12 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   };
 
   if (q.options)  base.options  = normalizeOptions(q.options);
-  if (q.rows)     base.rows     = [...q.rows];
-  if (q.columns)  base.columns  = [...q.columns];
+  if (q.rows)     base.rows     = normalizeOptions(q.rows);
+  if (q.columns)  base.columns  = normalizeOptions(q.columns);
 
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
-      label: g.label,
+      label: pickLang(g, "label"),
       showIf: g.show_if,
       options: normalizeOptions(g.options) || [],
     }));
@@ -211,4 +284,17 @@ export {
   assessmentComputed,
   assessmentAddOns,
 };
-export const assessmentMeta = schema.meta ?? {};
+const rawMeta = schema.meta ?? {};
+const localizedMeta: Record<string, unknown> = { ...rawMeta };
+if (rawMeta.tracks && typeof rawMeta.tracks === "object") {
+    localizedMeta.tracks = Object.fromEntries(
+      Object.entries(rawMeta.tracks as Record<string, unknown>).map(([k, v]) => [
+      k,
+      typeof v === "object"
+        ? (v[lang] ?? v.en ?? "")
+        : v,
+    ])
+  );
+}
+
+export const assessmentMeta = localizedMeta;
