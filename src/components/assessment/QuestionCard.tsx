@@ -18,6 +18,7 @@ import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
 import { MatrixQuestion } from "./MatrixQuestion";
 import { ProgressiveMultiGroupQuestion } from "./ProgressiveMultiGroupQuestion";
+import { getPlaceholder } from "@/lib/placeholders";
 
 interface QuestionCardProps {
   question: Question;
@@ -48,7 +49,7 @@ export function QuestionCard({
             type={question.type}
             value={inputValue}
             onChange={(e) => handleInputChange(e.target.value)}
-            placeholder={`Enter your ${question.text.toLowerCase()}`}
+            placeholder={`${getPlaceholder('enterYour')} ${question.text.toLowerCase()}`}
             className="mt-2"
             required={question.required}
           />
@@ -83,7 +84,7 @@ export function QuestionCard({
           return (
             <Select value={value} onValueChange={onChange}>
               <SelectTrigger className="mt-4 bg-background border border-border">
-                <SelectValue placeholder="Select an option..." />
+                <SelectValue placeholder={getPlaceholder('selectOption')} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-background border border-border shadow-lg">
                 {flatOptions.map((opt) => {
