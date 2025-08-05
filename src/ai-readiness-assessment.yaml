@@ -60,19 +60,19 @@ section_0:
       type: text
       required: true
       text_en: Organization name
-      text_fr: Organization name
+      text_fr: Nom de l'organisation
     - id: M1
       type: text
       required: true
       text_en: Full name
-      text_fr: Full name
+      text_fr: Nom complet
     - id: M2
       type: email
       required: true
       text_en: Business e-mail
-      text_fr: Business e-mail
+      text_fr: E-mail professionnel
       helper_en: Use your work address (no Gmail, Hotmail, etc.)
-      helper_fr: Use your work address (no Gmail, Hotmail, etc.)
+      helper_fr: Utilisez votre adresse professionnelle (pas Gmail, Hotmail, etc.)
     - id: M3
       type: single
       options:
@@ -147,9 +147,9 @@ section_0:
           label_fr: Governance Officer
       required: true
       text_en: Primary role
-      text_fr: Primary role
+      text_fr: Rôle principal
       helper_en: Determines your recommendation track.
-      helper_fr: Determines your recommendation track.
+      helper_fr: Détermine votre parcours de recommandation.
     - id: M4_industry
       type: dropdown
       options:
@@ -212,7 +212,7 @@ section_0:
           label_fr: Non-profit & NGO
       required: true
       text_en: Industry & sub-sector
-      text_fr: Industry & sub-sector
+      text_fr: Industrie et sous-secteur
     - id: M5_country
       type: dropdown
       options:

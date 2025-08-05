@@ -53,10 +53,11 @@ const SECTION_TITLES: Record<string, { en: string; fr: string }> = {
   },
 };
 
-// Get current language from i18n
-const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
+// Get current language dynamically from i18n
+const getCurrentLang = () => i18n.language?.startsWith("fr") ? "fr" : "en";
 
 function pickLang<T extends Record<string, unknown>>(obj: T, key: string): string {
+  const lang = getCurrentLang();
   const result = (
     obj?.[`${key}_${lang}` as keyof T] ??
     obj?.[`${key}_en` as keyof T] ??
@@ -157,146 +158,159 @@ function normalizeOptions(
   });
 }
 
-// Top-level maps for consent banners & computed logic
-const assessmentConsentBanners: Record<string, ConsentBanner> = {};
-const assessmentComputed: Record<string, ComputedField[]> = {};
+// Function to build sections reactively
+function buildSections(): Section[] {
+  const consentBanners: Record<string, ConsentBanner> = {};
+  const computed: Record<string, ComputedField[]> = {};
+  
+  return Object.entries(schema)
+    .filter(([key]) => key.startsWith("section_"))
+    .sort(([a], [b]) =>
+      a.localeCompare(b, undefined, { numeric: true })
+    )
+    .map(([id, rawSec]) => {
+      const {
+        category,
+        questions = [],
+        consent_banner,
+        computed: rawComputed = [],
+      } = rawSec ?? {};
 
-// Build Section[] from YAML
-const assessmentSections: Section[] = Object.entries(schema)
-  .filter(([key]) => key.startsWith("section_"))
-  .sort(([a], [b]) =>
-    a.localeCompare(b, undefined, { numeric: true })
-  )
-  .map(([id, rawSec]) => {
-    const {
-      category,
-      questions = [],
-      consent_banner,
-      computed = [],
-    } = rawSec ?? {};
+      const purpose = pickLang((rawSec ?? {}) as Record<string, unknown>, "purpose");
 
-    const purpose = pickLang((rawSec ?? {}) as Record<string, unknown>, "purpose");
+      const normalizedQuestions: Question[] = questions.map((q) => {
+        const base: Partial<Question> = {
+          id: q.id,
+          text: pickLang(q as Record<string, unknown>, "text"),
+          type: q.type as QuestionType,
+          helper: pickLang(q as Record<string, unknown>, "helper"),
+          required: q.required,
+          showIf: q.show_if,
+          hideIf: q.hide_if,
+          scoreMap: q.score_map,
+          scorePer: q.score_per,
+          cap: q.cap,
+          weight: q.weight,
+          maxRank: q.max_rank,
+          maxSelect: q.max_select,
+          scoreFormula: q.score_formula,
+          scoreByCount: q.score_by_count,
+        };
 
-    const normalizedQuestions: Question[] = questions.map((q) => {
-      const base: Partial<Question> = {
-        id: q.id,
-        text: pickLang(q as Record<string, unknown>, "text"),
-        type: q.type as QuestionType,
-        helper: pickLang(q as Record<string, unknown>, "helper"),
-        required: q.required,
-        showIf: q.show_if,
-        hideIf: q.hide_if,
-        scoreMap: q.score_map,
-        scorePer: q.score_per,
-        cap: q.cap,
-        weight: q.weight,
-        maxRank: q.max_rank,
-        maxSelect: q.max_select,
-        scoreFormula: q.score_formula,
-        scoreByCount: q.score_by_count,
-      };
+        if (q.options)   base.options = normalizeOptions(q.options);
+        if (q.rows)      base.rows    = normalizeOptions(q.rows);
+        if (q.columns)   base.columns = normalizeOptions(q.columns);
 
-      if (q.options)   base.options = normalizeOptions(q.options);
-      if (q.rows)      base.rows    = normalizeOptions(q.rows);
-      if (q.columns)   base.columns = normalizeOptions(q.columns);
+        if (q.groups) {
+          base.groups = q.groups.map((g) => ({
+            label: pickLang(g as Record<string, unknown>, "label"),
+            showIf: g.show_if,
+            options: normalizeOptions(g.options) || [],
+          }));
+        }
 
-      if (q.groups) {
-        base.groups = q.groups.map((g) => ({
-          label: pickLang(g as Record<string, unknown>, "label"),
-          showIf: g.show_if,
-          options: normalizeOptions(g.options) || [],
-        }));
+        return base as Question;
+      });
+
+      let localizedConsent: ConsentBanner | undefined;
+      if (consent_banner) {
+        localizedConsent = {
+          ...consent_banner,
+          ...(pickLang(consent_banner, "title")
+            ? { title: pickLang(consent_banner, "title") }
+            : {}),
+          ...(pickLang(consent_banner, "description")
+            ? { description: pickLang(consent_banner, "description") }
+            : {}),
+          ...(pickLang(consent_banner, "text")
+            ? { text: pickLang(consent_banner, "text") }
+            : {}),
+          ...(pickLang(consent_banner, "consent_text")
+            ? { consent_text: pickLang(consent_banner, "consent_text") }
+            : {}),
+        } as ConsentBanner;
+        consentBanners[id] = localizedConsent;
+      }
+      if (rawComputed.length) {
+        computed[id] = rawComputed;
       }
 
-      return base as Question;
+      return {
+        id,
+        title: SECTION_TITLES[id]?.[getCurrentLang()] ?? SECTION_TITLES[id]?.en ?? id,
+        purpose,
+        ...(category ? { category } : {}),
+        questions: normalizedQuestions,
+        ...(localizedConsent ? { consentBanner: localizedConsent } : {}),
+        ...(rawComputed.length ? { computed: rawComputed } : {}),
+      };
     });
-
-    let localizedConsent: ConsentBanner | undefined;
-    if (consent_banner) {
-      localizedConsent = {
-        ...consent_banner,
-        ...(pickLang(consent_banner, "title")
-          ? { title: pickLang(consent_banner, "title") }
-          : {}),
-        ...(pickLang(consent_banner, "description")
-          ? { description: pickLang(consent_banner, "description") }
-          : {}),
-        ...(pickLang(consent_banner, "text")
-          ? { text: pickLang(consent_banner, "text") }
-          : {}),
-        ...(pickLang(consent_banner, "consent_text")
-          ? { consent_text: pickLang(consent_banner, "consent_text") }
-          : {}),
-      } as ConsentBanner;
-      assessmentConsentBanners[id] = localizedConsent;
-    }
-    if (computed.length) {
-      assessmentComputed[id] = computed;
-    }
-
-    return {
-      id,
-      title: SECTION_TITLES[id]?.[lang] ?? SECTION_TITLES[id]?.en ?? id,
-      purpose,
-      ...(category ? { category } : {}),
-      questions: normalizedQuestions,
-      ...(localizedConsent ? { consentBanner: localizedConsent } : {}),
-      ...(computed.length ? { computed } : {}),
-    };
-  });
-
-// Top-level “add_ons” questions
-const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
-  const base: Partial<Question> = {
-    id: q.id,
-    text: pickLang(q as unknown as Record<string, unknown>, "text"),
-    type: q.type as QuestionType,
-    helper: pickLang(q as unknown as Record<string, unknown>, "helper"),
-    required: q.required,
-    showIf: q.show_if,
-    hideIf: q.hide_if,
-    scoreMap: q.score_map,
-    scorePer: q.score_per,
-    cap: q.cap,
-    weight: q.weight,
-    maxRank: q.max_rank,
-    maxSelect: q.max_select,
-    scoreFormula: q.score_formula,
-    scoreByCount: q.score_by_count,
-  };
-
-  if (q.options)  base.options  = normalizeOptions(q.options);
-  if (q.rows)     base.rows     = normalizeOptions(q.rows);
-  if (q.columns)  base.columns  = normalizeOptions(q.columns);
-
-  if (q.groups) {
-    base.groups = q.groups.map((g) => ({
-      label: pickLang(g as Record<string, unknown>, "label"),
-      showIf: g.show_if,
-      options: normalizeOptions(g.options) || [],
-    }));
-  }
-
-  return base as Question;
-});
-
-export {
-  assessmentSections,
-  assessmentConsentBanners,
-  assessmentComputed,
-  assessmentAddOns,
-};
-const rawMeta = schema.meta ?? {};
-const localizedMeta: Record<string, unknown> = { ...rawMeta };
-if (rawMeta.tracks && typeof rawMeta.tracks === "object") {
-    localizedMeta.tracks = Object.fromEntries(
-      Object.entries(rawMeta.tracks as Record<string, unknown>).map(([k, v]) => [
-      k,
-      typeof v === "object" && v !== null
-        ? ((v as Record<string, unknown>)[lang] ?? (v as Record<string, unknown>).en ?? "")
-        : v,
-    ])
-  );
 }
 
-export const assessmentMeta = localizedMeta;
+// Function to build add-ons reactively
+function buildAddOns(): Question[] {
+  return (schema.add_ons ?? []).map((q) => {
+    const base: Partial<Question> = {
+      id: q.id,
+      text: pickLang(q as unknown as Record<string, unknown>, "text"),
+      type: q.type as QuestionType,
+      helper: pickLang(q as unknown as Record<string, unknown>, "helper"),
+      required: q.required,
+      showIf: q.show_if,
+      hideIf: q.hide_if,
+      scoreMap: q.score_map,
+      scorePer: q.score_per,
+      cap: q.cap,
+      weight: q.weight,
+      maxRank: q.max_rank,
+      maxSelect: q.max_select,
+      scoreFormula: q.score_formula,
+      scoreByCount: q.score_by_count,
+    };
+
+    if (q.options)  base.options  = normalizeOptions(q.options);
+    if (q.rows)     base.rows     = normalizeOptions(q.rows);
+    if (q.columns)  base.columns  = normalizeOptions(q.columns);
+
+    if (q.groups) {
+      base.groups = q.groups.map((g) => ({
+        label: pickLang(g as Record<string, unknown>, "label"),
+        showIf: g.show_if,
+        options: normalizeOptions(g.options) || [],
+      }));
+    }
+
+    return base as Question;
+  });
+}
+
+// Export reactive getters
+export const getAssessmentSections = (): Section[] => buildSections();
+export const getAssessmentAddOns = (): Question[] => buildAddOns();
+
+// Legacy exports for backward compatibility
+export const assessmentSections = buildSections();
+export const assessmentAddOns = buildAddOns();
+export const assessmentConsentBanners: Record<string, ConsentBanner> = {};
+export const assessmentComputed: Record<string, ComputedField[]> = {};
+
+// Build meta reactively
+function buildMeta(): Record<string, unknown> {
+  const rawMeta = schema.meta ?? {};
+  const localizedMeta: Record<string, unknown> = { ...rawMeta };
+  if (rawMeta.tracks && typeof rawMeta.tracks === "object") {
+      const lang = getCurrentLang();
+      localizedMeta.tracks = Object.fromEntries(
+        Object.entries(rawMeta.tracks as Record<string, unknown>).map(([k, v]) => [
+        k,
+        typeof v === "object" && v !== null
+          ? ((v as Record<string, unknown>)[lang] ?? (v as Record<string, unknown>).en ?? "")
+          : v,
+      ])
+    );
+  }
+  return localizedMeta;
+}
+
+export const getAssessmentMeta = (): Record<string, unknown> => buildMeta();
+export const assessmentMeta = buildMeta();

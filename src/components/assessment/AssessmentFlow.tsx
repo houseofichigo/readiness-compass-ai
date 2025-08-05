@@ -10,12 +10,13 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 import { OrganizationProfileForm } from "./OrganizationProfileForm";
-import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns, getAssessmentSections, getAssessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
+
 
 interface AssessmentFlowProps {
   onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => Promise<void>;
@@ -33,7 +34,7 @@ const parseListLiteral = (lit: string): string[] => {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const { toast } = useToast();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -41,9 +42,19 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
   const [showTrackInfo, setShowTrackInfo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Get reactive sections that update when language changes
+  const [sections, setSections] = useState(getAssessmentSections());
+  const [addOns, setAddOns] = useState(getAssessmentAddOns());
+  
+  // Update sections when language changes
+  useEffect(() => {
+    setSections(getAssessmentSections());
+    setAddOns(getAssessmentAddOns());
+  }, [i18n.language]);
 
-  // Profile section computed fields
-  const profileSection = assessmentSections.find(s => s.id === "section_0");
+  // Profile section computed fields  
+  const profileSection = sections.find(s => s.id === "section_0");
   const evaluateComputed = (fields: ComputedField[] | undefined, rs: Record<string, any>) => {
     const values: Record<string, any> = {};
     fields?.forEach(f => {
@@ -63,16 +74,16 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   }, [responses, globalComputed]);
 
   // Which add-ons to show?
-  const visibleAddOns = assessmentAddOns.filter(q =>
+  const visibleAddOns = addOns.filter(q =>
     isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
   );
 
-  const isLastSection = currentPage === assessmentSections.length - 1;
+  const isLastSection = currentPage === sections.length - 1;
   const hasAddOns = visibleAddOns.length > 0;
-  const isAddOnPage = currentPage === assessmentSections.length;
+  const isAddOnPage = currentPage === sections.length;
   const currentSection = isAddOnPage
     ? null
-    : assessmentSections[currentPage];
+    : sections[currentPage];
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -82,9 +93,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
   const goNextPage = () => {
     if (isLastSection && hasAddOns) {
-      setCurrentPage(assessmentSections.length);
+      setCurrentPage(sections.length);
     } else {
-      setCurrentPage(p => Math.min(assessmentSections.length, p + 1));
+      setCurrentPage(p => Math.min(sections.length, p + 1));
     }
     scrollToTop();
   };
@@ -212,7 +223,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const visibleQuestions = getVisibleQuestions();
   const sectionTitle = isAddOnPage ? t("assessment.flow.additionalQuestions") : currentSection?.title;
   const sectionPurpose = isAddOnPage ? undefined : currentSection?.purpose;
-  const progressIndex = Math.min(currentPage, assessmentSections.length - 1);
+  const progressIndex = Math.min(currentPage, sections.length - 1);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -239,7 +250,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         <div>
           <h2 className="text-2xl font-bold">{sectionTitle}</h2>
           {sectionPurpose && <p className="text-muted-foreground">{sectionPurpose}</p>}
-          <Progress value={((currentPage) / assessmentSections.length) * 100} className="w-full my-4" />
+          <Progress value={((currentPage) / sections.length) * 100} className="w-full my-4" />
         </div>
 
         {/* Use special layout for Organization Profile section (section_0) */}
@@ -268,7 +279,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             console.log("🔍 CURRENT STATE:");
             console.log("- isSubmitting:", isSubmitting);
             console.log("- currentPage:", currentPage);
-            console.log("- Total sections:", assessmentSections.length);
+            console.log("- Total sections:", sections.length);
             console.log("- Total responses:", Object.keys(responses).length);
             handleNext();
           }} 
