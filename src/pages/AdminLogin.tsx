@@ -1,21 +1,26 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { Navigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, Shield } from 'lucide-react';
-import i18n from '@/lib/i18n';
+import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { Navigate } from "react-router-dom";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2, Shield } from "lucide-react";
+import { getPlaceholder } from "@/lib/placeholders";
 
 export function AdminLogin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const lang = i18n.language?.startsWith('fr') ? 'fr' : 'en';
-  
+  const [error, setError] = useState("");
+
   const { user, isAdmin, signIn, isLoading } = useAuth();
 
   // Redirect if already authenticated and admin
@@ -26,14 +31,13 @@ export function AdminLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     const { error: authError } = await signIn(email, password);
-    
     if (authError) {
       setError(authError.message);
     }
-    
+
     setIsSubmitting(false);
   };
 
@@ -52,27 +56,19 @@ export function AdminLogin() {
           <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
             <Shield className="h-6 w-6 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">
-            {lang === 'fr' ? 'Portail Admin' : 'Admin Portal'}
-          </CardTitle>
+          <CardTitle className="text-2xl">Admin Portal</CardTitle>
           <CardDescription>
-            {lang === 'fr'
-              ? "Connectez-vous pour accéder au tableau de bord d'évaluation de préparation à l'IA"
-              : 'Sign in to access the AI Readiness Assessment dashboard'}
+            Sign in to access the AI Readiness Assessment dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">{lang === 'fr' ? 'Courriel' : 'Email'}</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder={
-                  lang === 'fr'
-                    ? 'admin@entreprise.com'
-                    : 'admin@company.com'
-                }
+                placeholder={getPlaceholder("adminEmail")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -80,35 +76,32 @@ export function AdminLogin() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">{lang === 'fr' ? 'Mot de passe' : 'Password'}</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
+                placeholder={getPlaceholder("password")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isSubmitting}
               />
             </div>
-            
+
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isSubmitting}
-            >
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {lang === 'fr' ? 'Connexion...' : 'Signing in...'}
+                  Signing in...
                 </>
               ) : (
-                lang === 'fr' ? 'Se connecter' : 'Sign In'
+                "Sign In"
               )}
             </Button>
           </form>

@@ -2,12 +2,17 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock, Users, Shield, BarChart3, Brain } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { getAssessmentTranslations } from "@/i18n/assessmentTranslations";
 
 interface AssessmentWelcomeProps {
   onStart: () => void;
 }
 
 export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
+  const { i18n } = useTranslation();
+  const { trackLabels } = getAssessmentTranslations(i18n.language);
+
   const features = [
     {
       icon: Brain,
@@ -96,7 +101,7 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-blue-500" />
-              <h3 className="font-semibold text-blue-700">Technical Track</h3>
+              <h3 className="font-semibold text-blue-700">{trackLabels.TECH}</h3>
             </div>
             <p className="text-sm text-blue-600">
               For Data/AI Leads, CTOs, and IT Leaders focusing on technical implementation and architecture.
@@ -113,7 +118,7 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-purple-500" />
-              <h3 className="font-semibold text-purple-700">Regulated Track</h3>
+              <h3 className="font-semibold text-purple-700">{trackLabels.REG}</h3>
             </div>
             <p className="text-sm text-purple-600">
               For organizations in regulated industries with compliance requirements.
@@ -130,7 +135,7 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-green-500" />
-              <h3 className="font-semibold text-green-700">General Business Track</h3>
+              <h3 className="font-semibold text-green-700">{trackLabels.GEN}</h3>
             </div>
             <p className="text-sm text-green-600">
               For business leaders, founders, and functional heads starting their AI journey.
