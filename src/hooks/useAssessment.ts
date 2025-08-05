@@ -44,7 +44,7 @@ export function useAssessment() {
     setError(null);
 
     try {
-      console.log("💾 SUPABASE - Saving assessment with", Object.keys(responses).length, "responses");
+      console.log("💾 SUPABASE - Saving", Object.keys(responses).length, "responses");
       
       // Create submission record
       const submissionData = {

@@ -28,7 +28,7 @@ const Index = () => {
     responses: Record<string, AssessmentValue>,
     profile: OrganizationProfile
   ) => {
-    console.log("📋 INDEX - Starting assessment save with", Object.keys(responses).length, "responses");
+    console.log("📋 INDEX - Saving assessment with", Object.keys(responses).length, "responses");
     
     if (Object.keys(responses).length === 0) {
       console.error("🚨 CRITICAL: No responses data to save!");

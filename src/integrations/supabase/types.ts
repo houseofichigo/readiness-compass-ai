@@ -59,13 +59,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "answers_question_id_fkey"
-            columns: ["question_id"]
-            isOneToOne: false
-            referencedRelation: "questions"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "answers_submission_id_fkey"
             columns: ["submission_id"]
             isOneToOne: false
