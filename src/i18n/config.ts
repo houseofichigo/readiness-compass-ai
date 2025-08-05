@@ -1,8 +1,6 @@
 // src/i18n.ts
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-
-// auto-loaded translations from your JSON files:
 import enTranslation from '../../public/locales/en/translation.json';
 import frTranslation from '../../public/locales/fr/translation.json';
 
@@ -10,7 +8,6 @@ import frTranslation from '../../public/locales/fr/translation.json';
 const overrides = {
   en: {
     assessment: {
-      // you can add or override nested keys
       results: {
         track: {
           TECH: 'Technical Track',

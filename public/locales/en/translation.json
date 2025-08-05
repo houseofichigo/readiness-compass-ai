@@ -2,7 +2,10 @@
   "assessment": {
     "welcome": {
       "badge": "AI Readiness Assessment v2.0",
-      "title": "Measure Your AI Readiness",
+      "title": {
+        "highlight": "Measure Your",
+        "rest": "AI Readiness"
+      },
       "description": "Comprehensive assessment platform that evaluates your organization's AI maturity across strategy, data, tools, automation, people, and governance dimensions.",
       "duration": "15-20 minutes",
       "questions": "60 smart questions",
