@@ -9,6 +9,8 @@ import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, M
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
 import { useAssessment } from "@/hooks/useAssessment";
+import { useTranslation } from "react-i18next";
+import { getAssessmentTranslations } from "@/i18n/assessmentTranslations";
 interface ThankYouPageData {
   profile: OrganizationProfile;
   track: Track;
@@ -21,6 +23,8 @@ export default function ThankYou() {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { loadAssessment } = useAssessment();
+  const { i18n } = useTranslation();
+  const { trackLabels } = getAssessmentTranslations(i18n.language);
   
   const [showConfetti, setShowConfetti] = useState(true);
   const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
@@ -102,16 +106,6 @@ export default function ThankYou() {
     track,
     responses
   } = pageData;
-  const getTrackLabel = (track: Track) => {
-    switch (track) {
-      case "TECH":
-        return "Technical Track";
-      case "REG":
-        return "Regulated Track";
-      default:
-        return "General Business Track";
-    }
-  };
   const handleComingSoon = (feature: string) => {
     toast({
       title: "Coming Soon!",
@@ -193,7 +187,7 @@ export default function ThankYou() {
               </div>
               <div>
                 <Badge variant="outline" className="text-sm">
-                  {getTrackLabel(track)}
+                  {trackLabels[track]}
                 </Badge>
               </div>
             </div>
@@ -355,7 +349,7 @@ export default function ThankYou() {
               {profile.M0} • {profile.M3} • {profile.M4_industry}
             </p>
             <Badge variant="outline" className="text-xs">
-              {getTrackLabel(track)}
+              {trackLabels[track]}
             </Badge>
           </div>
         </div>

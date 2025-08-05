@@ -3,18 +3,22 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { useAdminData } from '@/hooks/useAdminData';
-import { 
-  BarChart3, 
-  PieChart, 
+import {
+  BarChart3,
+  PieChart,
   TrendingDown,
   Users,
   FileText,
   Clock,
   Activity
 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import { getAssessmentTranslations } from '@/i18n/assessmentTranslations';
 
 export function AnalyticsDashboard() {
   const { analytics, submissions, isLoading } = useAdminData();
+  const { i18n } = useTranslation();
+  const { trackLabels } = getAssessmentTranslations(i18n.language);
 
   // Calculate completion trends (last 7 days)
   const completionTrends = useMemo(() => {
@@ -300,8 +304,7 @@ export function AnalyticsDashboard() {
               <div key={track.track} className="text-center space-y-2">
                 <div className="text-3xl font-bold">{track.count}</div>
                 <div className="text-sm text-muted-foreground">
-                  {track.track === 'TECH' ? 'Technical Track' :
-                   track.track === 'REG' ? 'Regulated Track' : 'General Track'}
+                  {trackLabels[track.track as keyof typeof trackLabels]}
                 </div>
                 <Badge variant="outline">{track.percentage}%</Badge>
               </div>

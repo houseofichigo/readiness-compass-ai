@@ -11,6 +11,8 @@ import { assessmentMeta } from "@/data/assessmentQuestions";
 import { Badge } from "@/components/ui/badge";
 import { Download, Share2, BarChart3 } from "lucide-react";
 import { scoreAnswers } from "@/utils/scoring";
+import { useTranslation } from "react-i18next";
+import { getAssessmentTranslations } from "@/i18n/assessmentTranslations";
 
 interface AssessmentResultsProps {
   responses: AssessmentResponse[];
@@ -39,6 +41,9 @@ export function AssessmentResults({
     responseValues,
     track
   );
+
+  const { i18n } = useTranslation();
+  const { trackLabels } = getAssessmentTranslations(i18n.language);
 
   const weightVectors = (
     assessmentMeta as { weight_vectors?: Record<Track, WeightVector> }
@@ -75,7 +80,7 @@ export function AssessmentResults({
           {profile.M1} • {profile.M3} at {profile.M0}
         </p>
         <Badge variant="outline" className="text-sm">
-          {track === "TECH" ? "Technical Track" : track === "REG" ? "Regulated Track" : "General Business Track"}
+          {trackLabels[track]}
         </Badge>
         {submissionId && (
           <div className="text-sm text-muted-foreground">
