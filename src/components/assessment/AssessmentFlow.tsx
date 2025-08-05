@@ -352,7 +352,10 @@ export function AssessmentFlow({
         </Button>
 
         <Button
-          onClick={handleNext}
+          onClick={() => {
+            console.log("🔴 BUTTON CLICKED! Final step:", isFinalStep);
+            handleNext();
+          }}
           className="flex items-center gap-2"
           disabled={false}
         >

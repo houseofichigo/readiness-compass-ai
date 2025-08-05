@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AssessmentWelcome } from "@/components/assessment/AssessmentWelcome";
 import { AssessmentFlow } from "@/components/assessment/AssessmentFlow";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
@@ -15,6 +16,7 @@ import { useAssessment } from "@/hooks/useAssessment";
 type AppState = "welcome" | "assessment" | "results";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [appState, setAppState] = useState<AppState>("assessment");
   const [assessmentData, setAssessmentData] = useState<AssessmentData | null>(
     null
@@ -44,8 +46,10 @@ const Index = () => {
       console.log("✅ Assessment saved with ID:", savedSubmissionId);
       setSubmissionId(savedSubmissionId);
       
-      // Navigate to thank you page with the saved data
-      window.location.href = `/thank-you?submissionId=${savedSubmissionId}`;
+      // Navigate to thank you page using React Router (not window.location.href)
+      navigate(`/thank-you?submissionId=${savedSubmissionId}`, { 
+        state: { submissionId: savedSubmissionId } 
+      });
       
     } else {
       console.error("❌ Failed to save assessment");
