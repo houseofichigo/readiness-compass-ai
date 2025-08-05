@@ -5,6 +5,8 @@ import { CheckCircle2, Clock, HelpCircle } from "lucide-react";
 import { Track } from "@/types/assessment";
 import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible } from "@/utils/questionVisibility";
+import { useTranslation } from "react-i18next";
+import { getAssessmentTranslations } from "@/i18n/assessmentTranslations";
 
 interface AssessmentProgressBarProps {
   currentSectionIndex: number;
@@ -15,12 +17,6 @@ interface AssessmentProgressBarProps {
   globalComputed?: Record<string, any>;
 }
 
-const trackLabels: Record<Track, string> = {
-  TECH: "Technical Track",
-  REG: "Regulated Track",
-  GEN: "General Track",
-};
-
 export function AssessmentProgressBar({
   currentSectionIndex,
   completedSections,
@@ -29,6 +25,8 @@ export function AssessmentProgressBar({
   responses = {},
   globalComputed = {},
 }: AssessmentProgressBarProps) {
+  const { i18n } = useTranslation();
+  const { trackLabels, progress } = getAssessmentTranslations(i18n.language);
   // Calculate remaining questions dynamically based on current responses and track
   const calculateRemainingQuestions = () => {
     if (!detectedTrack) return null;
@@ -94,7 +92,7 @@ export function AssessmentProgressBar({
           <div className="text-2xl font-bold text-primary">
             {progressPercentage}%
           </div>
-          <div className="text-sm text-muted-foreground">Complete</div>
+          <div className="text-sm text-muted-foreground">{progress.complete}</div>
         </div>
       </div>
 
@@ -106,7 +104,7 @@ export function AssessmentProgressBar({
             <div className="text-2xl font-bold text-green-600">
               {completedSections}
             </div>
-            <div className="text-sm text-green-700">Sections Complete</div>
+            <div className="text-sm text-green-700">{progress.sectionsComplete}</div>
           </div>
         </div>
 
@@ -116,7 +114,7 @@ export function AssessmentProgressBar({
             <div className="text-2xl font-bold text-orange-600">
               {totalSections - completedSections}
             </div>
-            <div className="text-sm text-orange-700">Sections Remaining</div>
+            <div className="text-sm text-orange-700">{progress.sectionsRemaining}</div>
           </div>
         </div>
 
@@ -128,10 +126,10 @@ export function AssessmentProgressBar({
             </div>
             <div className="text-sm text-gray-700">
               {showQuestionCount && detectedTrack && questionData
-                ? `Questions Remaining (${trackLabels[detectedTrack]})`
-                : currentSectionIndex === 0 
-                  ? "Complete Profile First"
-                  : "Select Role to See Count"}
+                ? `${progress.questionsRemaining} (${trackLabels[detectedTrack]})`
+                : currentSectionIndex === 0
+                  ? progress.completeProfileFirst
+                  : progress.selectRoleToSeeCount}
             </div>
           </div>
         </div>
@@ -145,12 +143,12 @@ export function AssessmentProgressBar({
         </div>
         {!showQuestionCount && currentSectionIndex === 0 && (
           <div className="text-sm text-muted-foreground">
-            Complete your profile to see personalized question count
+            {progress.completeProfileToSeeCount}
           </div>
         )}
         {!showQuestionCount && currentSectionIndex > 0 && !responses.M3 && (
           <div className="text-sm text-muted-foreground">
-            Select your role to see remaining questions
+            {progress.selectRoleToSeeRemaining}
           </div>
         )}
       </div>
@@ -180,7 +178,7 @@ export function AssessmentProgressBar({
                   {section.title}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {isCurrent ? "Current" : isCompleted ? "Complete" : "Pending"}
+                  {isCurrent ? progress.current : isCompleted ? progress.complete : progress.pending}
                 </div>
               </div>
               {/* Connector line */}

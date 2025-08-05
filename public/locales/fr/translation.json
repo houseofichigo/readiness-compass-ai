@@ -1,0 +1,200 @@
+{
+  "assessment": {
+    "welcome": {
+      "badge": "Évaluation de préparation à l'IA v2.0",
+      "title": "Mesurez votre préparation à l'IA",
+      "description": "Plateforme d'évaluation complète qui mesure la maturité IA de votre organisation à travers la stratégie, les données, les outils, l'automatisation, les personnes et la gouvernance.",
+      "duration": "15-20 minutes",
+      "questions": "60 questions intelligentes",
+      "tracks": "3 parcours spécialisés",
+      "features": {
+        "aiPowered": {
+          "title": "Évaluation alimentée par l'IA",
+          "description": "Des algorithmes avancés évaluent la préparation IA de votre organisation sur 6 dimensions clés"
+        },
+        "personalized": {
+          "title": "Expérience personnalisée",
+          "description": "Questionnaire adaptatif adapté à votre rôle, votre secteur et la taille de l'organisation"
+        },
+        "analytics": {
+          "title": "Analyses détaillées",
+          "description": "Score global avec comparaison à vos pairs du secteur"
+        },
+        "compliance": {
+          "title": "Conforme aux réglementations",
+          "description": "Évaluation intégrée pour le RGPD, l'AI Act de l'UE et d'autres cadres réglementaires"
+        }
+      },
+      "tracksSection": {
+        "technical": {
+          "title": "Parcours technique",
+          "description": "Pour les responsables Data/IA, CTO et DSI axés sur l'implémentation technique et l'architecture.",
+          "items": [
+            "Évaluations techniques avancées",
+            "Évaluation du déploiement MLOps",
+            "Revue de la documentation d'architecture"
+          ]
+        },
+        "regulated": {
+          "title": "Parcours réglementé",
+          "description": "Pour les organisations régulées avec obligations de conformité.",
+          "items": [
+            "Conformité RGPD & AI Act",
+            "Cadres de gestion des risques",
+            "Évaluation de la préparation à l'audit"
+          ]
+        },
+        "general": {
+          "title": "Parcours entreprise générale",
+          "description": "Pour les dirigeants, fondateurs et responsables fonctionnels au début de leur parcours IA.",
+          "items": [
+            "Évaluations orientées business",
+            "Alignement ROI et stratégie",
+            "Préparation à la conduite du changement"
+          ]
+        }
+      },
+      "discover": {
+        "title": "Ce que vous découvrirez",
+        "items": [
+          "Évaluation de l'alignement stratégique",
+          "Évaluation de la base de données",
+          "Analyse de la pile technologique",
+          "Score de maturité de l'automatisation",
+          "Cartographie des compétences de l'équipe",
+          "Revue du cadre de gouvernance"
+        ]
+      },
+      "score": {
+        "label": "Votre score de préparation à l'IA",
+        "badge": "Avancé",
+        "description": "Obtenez un score personnalisé avec des recommandations actionnables"
+      },
+      "cta": {
+        "startButton": "Commencer votre évaluation IA",
+        "disclaimer": "Évaluation gratuite • Aucune inscription requise • Résultats instantanés"
+      }
+    },
+    "thankYou": {
+      "title": "Évaluation terminée",
+      "subtitle": "8 domaines clés évalués avec une analyse détaillée",
+      "statusCards": {
+        "complete": {
+          "title": "Évaluation terminée",
+          "description": "8 domaines clés évalués avec une analyse détaillée"
+        },
+        "report": {
+          "title": "Rapport bientôt disponible",
+          "description": "Nous vous enverrons votre rapport personnalisé sous 3 jours ouvrables"
+        },
+        "action": {
+          "title": "Passez à l'action",
+          "description": "Mettez en œuvre les recommandations pour faire avancer votre parcours IA"
+        }
+      },
+      "overview": {
+        "title": "Vue d'ensemble de l'évaluation",
+        "questionsAnswered": "Questions répondues",
+        "keyAreas": "Domaines clés évalués"
+      },
+      "preparing": {
+        "title": "Votre rapport est en cours de préparation",
+        "description": "Nos experts IA analysent vos réponses pour créer un rapport de maturité complet et personnalisé avec des recommandations concrètes adaptées à votre organisation.",
+        "noticeTitle": "Nous vous enverrons votre rapport de préparation IA détaillé sous 3 jours ouvrables",
+        "noticeDescription": "Veuillez vérifier votre boîte de réception (et le spam) pour recevoir vos résultats personnalisés"
+      },
+      "resources": {
+        "implementationGuides": {
+          "title": "Guides de mise en œuvre",
+          "description": "Guides pas à pas pour implémenter des solutions IA"
+        },
+        "bestPractices": {
+          "title": "Bibliothèque de bonnes pratiques",
+          "description": "Meilleures pratiques du secteur et études de cas"
+        },
+        "expertConsultation": {
+          "title": "Consultation d'experts",
+          "description": "Sessions individuelles avec des experts IA"
+        },
+        "training": {
+          "title": "Ressources de formation",
+          "description": "Programmes de formation complets pour votre équipe"
+        },
+        "community": {
+          "title": "Accès à la communauté",
+          "description": "Connectez-vous avec d'autres organisations tournées vers l'IA"
+        },
+        "roiCalculator": {
+          "title": "Calculateur de ROI",
+          "description": "Calculez le retour potentiel des investissements IA"
+        }
+      },
+      "includes": {
+        "title": "Votre rapport comprend",
+        "maturityScore": {
+          "title": "Score de maturité IA",
+          "description": "Évaluation globale des 8 domaines clés"
+        },
+        "analysis": {
+          "title": "Analyse détaillée par section",
+          "description": "Identification des forces et axes d'amélioration"
+        },
+        "recommendations": {
+          "title": "Recommandations opérationnelles",
+          "description": "Étapes concrètes pour faire progresser votre parcours IA"
+        },
+        "roadmap": {
+          "title": "Feuille de route de mise en œuvre",
+          "description": "Calendrier priorisé pour l'adoption de l'IA"
+        }
+      },
+      "actions": {
+        "retake": "Reprendre l'évaluation",
+        "website": "Visitez notre site web"
+      },
+      "footer": {
+        "privacyNotice": "Nous nous engageons à protéger votre vie privée et n'utiliserons vos informations que pour vous fournir les résultats de l'évaluation et les ressources associées demandées.",
+        "dataPrivacy": "Protection des données assurée",
+        "contact": "Contact : support@houseofichigo.com"
+      },
+      "thanks": {
+        "title": "Merci pour votre participation",
+        "description": "Vos données nous aident à améliorer notre évaluation et à fournir des informations plus pertinentes sur la préparation à l'IA."
+      }
+    }
+  },
+  "admin": {
+    "login": {
+      "title": "Portail admin",
+      "description": "Connectez-vous pour accéder au tableau de bord de l'évaluation de préparation à l'IA",
+      "email": "Email",
+      "password": "Mot de passe",
+      "placeholder": "admin@entreprise.com",
+      "signIn": "Se connecter",
+      "signingIn": "Connexion..."
+    }
+  },
+  "errors": {
+    "notFound": {
+      "title": "404",
+      "message": "Oups ! Page introuvable",
+      "return": "Retour à l'accueil"
+    },
+    "loading": {
+      "title": "Chargement de vos résultats...",
+      "description": "Veuillez patienter pendant que nous récupérons vos données d'évaluation."
+    }
+  },
+  "toast": {
+    "comingSoon": {
+      "title": "Bientôt disponible !",
+      "description": "{{feature}} sera bientôt disponible. Nous vous préviendrons lorsqu'elle sera prête."
+    }
+  },
+  "language": {
+    "english": "🇺🇸 Anglais",
+    "spanish": "🇪🇸 Espagnol",
+    "french": "🇫🇷 Français",
+    "german": "🇩🇪 Allemand"
+  }
+}
