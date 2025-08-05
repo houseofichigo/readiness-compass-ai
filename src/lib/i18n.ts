@@ -1,3 +1,5 @@
+// src/i18n.ts
+
 class SimpleI18n {
   language: string = 'en'
 

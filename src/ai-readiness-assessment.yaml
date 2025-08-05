@@ -1,6 +1,3 @@
-# AI Readiness Assessment v2.0
-# Schema-date: 2025-08-03
-
 meta:
   locale_default: en
   size_breakpoints:
@@ -11,154 +8,838 @@ meta:
     enterprise: 1000+
   max_visible_questions: 60
   tracks:
-    TECH:   "Technical / Data-Lead"
-    REG:    "Regulated / Compliance"
-    GEN:    "General Business"
+    TECH:
+      en: Technical / Data-Lead
+      fr: Technical / Data-Lead
+    REG:
+      en: Regulated / Compliance
+      fr: Regulated / Compliance
+    GEN:
+      en: General Business
+      fr: General Business
   track_detection:
     precedence:
       - if: role in [CIO / CTO, IT Lead, Data / AI Lead, ML Engineer, Data Engineer, DevOps Engineer, Security Architect, Infrastructure Manager] -> TECH
       - if: computed.regulated OR role in [Legal / Compliance Lead, Privacy Officer, Compliance Manager, Risk Manager, Audit Lead, Governance Officer] -> REG
       - else: GEN
   weight_vectors:
-    TECH: {Strategy:20, Data:30, Tools:20, Automation:15, People:5, Governance:10}
-    REG:  {Strategy:10, Data:20, Tools:10, Automation:10, People:5, Governance:45}
-    GEN:  {Strategy:25, Data:15, Tools:15, Automation:15, People:15, Governance:15}
-
+    TECH:
+      Strategy: 20
+      Data: 30
+      Tools: 20
+      Automation: 15
+      People: 5
+      Governance: 10
+    REG:
+      Strategy: 10
+      Data: 20
+      Tools: 10
+      Automation: 10
+      People: 5
+      Governance: 45
+    GEN:
+      Strategy: 25
+      Data: 15
+      Tools: 15
+      Automation: 15
+      People: 15
+      Governance: 15
   question_cap:
     max_questions: 60
-    auto_hide: [D2, P6]
-
+    auto_hide:
+      - D2
+      - P6
 section_0:
-  purpose: "Collect organization profile for track detection and personalized recommendations."
   consent_banner:
-    text: "By proceeding, you agree to process your data for this readiness report and related communications."
     type: banner
     required: true
-
+    text_en: By proceeding, you agree to process your data for this readiness report and related communications.
+    text_fr: By proceeding, you agree to process your data for this readiness report and related communications.
   questions:
-
     - id: M0
-      text: "Organization name"
       type: text
       required: true
-
+      text_en: Organization name
+      text_fr: Organization name
     - id: M1
-      text: "Full name"
       type: text
       required: true
-
+      text_en: Full name
+      text_fr: Full name
     - id: M2
-      text: "Business e-mail"
       type: email
-      helper: "Use your work address (no Gmail, Hotmail, etc.)"
       required: true
-
+      text_en: Business e-mail
+      text_fr: Business e-mail
+      helper_en: Use your work address (no Gmail, Hotmail, etc.)
+      helper_fr: Use your work address (no Gmail, Hotmail, etc.)
     - id: M3
-      text: "Primary role"
       type: single
-      helper: "Determines your recommendation track."
       options:
-        - "Founder / CEO"
-        - "C-level executive"
-        - "Head of Marketing"
-        - "Head of Sales"
-        - "Head of Finance"
-        - "Head of Operations"
-        - "Product Lead"
-        - "HR Lead"
-        - "Customer Support Lead"
-        - "CIO / CTO"
-        - "IT Lead"
-        - "Data / AI Lead"
-        - "ML Engineer"
-        - "Data Engineer"
-        - "DevOps Engineer"
-        - "Security Architect"
-        - "Infrastructure Manager"
-        - "Legal / Compliance Lead"
-        - "Privacy Officer"
-        - "Compliance Manager"
-        - "Risk Manager"
-        - "Audit Lead"
-        - "Governance Officer"
+        - value: Founder / CEO
+          label_en: Founder / CEO
+          label_fr: Founder / CEO
+        - value: C-level executive
+          label_en: C-level executive
+          label_fr: C-level executive
+        - value: Head of Marketing
+          label_en: Head of Marketing
+          label_fr: Head of Marketing
+        - value: Head of Sales
+          label_en: Head of Sales
+          label_fr: Head of Sales
+        - value: Head of Finance
+          label_en: Head of Finance
+          label_fr: Head of Finance
+        - value: Head of Operations
+          label_en: Head of Operations
+          label_fr: Head of Operations
+        - value: Product Lead
+          label_en: Product Lead
+          label_fr: Product Lead
+        - value: HR Lead
+          label_en: HR Lead
+          label_fr: HR Lead
+        - value: Customer Support Lead
+          label_en: Customer Support Lead
+          label_fr: Customer Support Lead
+        - value: CIO / CTO
+          label_en: CIO / CTO
+          label_fr: CIO / CTO
+        - value: IT Lead
+          label_en: IT Lead
+          label_fr: IT Lead
+        - value: Data / AI Lead
+          label_en: Data / AI Lead
+          label_fr: Data / AI Lead
+        - value: ML Engineer
+          label_en: ML Engineer
+          label_fr: ML Engineer
+        - value: Data Engineer
+          label_en: Data Engineer
+          label_fr: Data Engineer
+        - value: DevOps Engineer
+          label_en: DevOps Engineer
+          label_fr: DevOps Engineer
+        - value: Security Architect
+          label_en: Security Architect
+          label_fr: Security Architect
+        - value: Infrastructure Manager
+          label_en: Infrastructure Manager
+          label_fr: Infrastructure Manager
+        - value: Legal / Compliance Lead
+          label_en: Legal / Compliance Lead
+          label_fr: Legal / Compliance Lead
+        - value: Privacy Officer
+          label_en: Privacy Officer
+          label_fr: Privacy Officer
+        - value: Compliance Manager
+          label_en: Compliance Manager
+          label_fr: Compliance Manager
+        - value: Risk Manager
+          label_en: Risk Manager
+          label_fr: Risk Manager
+        - value: Audit Lead
+          label_en: Audit Lead
+          label_fr: Audit Lead
+        - value: Governance Officer
+          label_en: Governance Officer
+          label_fr: Governance Officer
       required: true
-
+      text_en: Primary role
+      text_fr: Primary role
+      helper_en: Determines your recommendation track.
+      helper_fr: Determines your recommendation track.
     - id: M4_industry
-      text: "Industry & sub-sector"
       type: dropdown
-      options: [
-        "Agriculture, Forestry & Fishing",
-        "Mining & Quarrying",
-        "Utilities (Electricity, Gas, Water & Waste)",
-        "Construction",
-        "Manufacturing",
-        "Wholesale Trade",
-        "Retail Trade",
-        "Transportation & Warehousing",
-        "Information & Communication Technology",
-        "Finance & Insurance",
-        "Real Estate & Rental & Leasing",
-        "Professional, Scientific & Technical Services",
-        "Administrative & Support & Waste Management Services",
-        "Educational Services",
-        "Health Care & Social Assistance",
-        "Arts, Entertainment & Recreation",
-        "Accommodation & Food Services",
-        "Public Administration",
-        "Non-profit & NGO"
-      ]
+      options:
+        - value: Agriculture, Forestry & Fishing
+          label_en: Agriculture, Forestry & Fishing
+          label_fr: Agriculture, Forestry & Fishing
+        - value: Mining & Quarrying
+          label_en: Mining & Quarrying
+          label_fr: Mining & Quarrying
+        - value: Utilities (Electricity, Gas, Water & Waste)
+          label_en: Utilities (Electricity, Gas, Water & Waste)
+          label_fr: Utilities (Electricity, Gas, Water & Waste)
+        - value: Construction
+          label_en: Construction
+          label_fr: Construction
+        - value: Manufacturing
+          label_en: Manufacturing
+          label_fr: Manufacturing
+        - value: Wholesale Trade
+          label_en: Wholesale Trade
+          label_fr: Wholesale Trade
+        - value: Retail Trade
+          label_en: Retail Trade
+          label_fr: Retail Trade
+        - value: Transportation & Warehousing
+          label_en: Transportation & Warehousing
+          label_fr: Transportation & Warehousing
+        - value: Information & Communication Technology
+          label_en: Information & Communication Technology
+          label_fr: Information & Communication Technology
+        - value: Finance & Insurance
+          label_en: Finance & Insurance
+          label_fr: Finance & Insurance
+        - value: Real Estate & Rental & Leasing
+          label_en: Real Estate & Rental & Leasing
+          label_fr: Real Estate & Rental & Leasing
+        - value: Professional, Scientific & Technical Services
+          label_en: Professional, Scientific & Technical Services
+          label_fr: Professional, Scientific & Technical Services
+        - value: Administrative & Support & Waste Management Services
+          label_en: Administrative & Support & Waste Management Services
+          label_fr: Administrative & Support & Waste Management Services
+        - value: Educational Services
+          label_en: Educational Services
+          label_fr: Educational Services
+        - value: Health Care & Social Assistance
+          label_en: Health Care & Social Assistance
+          label_fr: Health Care & Social Assistance
+        - value: Arts, Entertainment & Recreation
+          label_en: Arts, Entertainment & Recreation
+          label_fr: Arts, Entertainment & Recreation
+        - value: Accommodation & Food Services
+          label_en: Accommodation & Food Services
+          label_fr: Accommodation & Food Services
+        - value: Public Administration
+          label_en: Public Administration
+          label_fr: Public Administration
+        - value: Non-profit & NGO
+          label_en: Non-profit & NGO
+          label_fr: Non-profit & NGO
       required: true
-
+      text_en: Industry & sub-sector
+      text_fr: Industry & sub-sector
     - id: M5_country
-      text: "Country"
       type: dropdown
-      options: [
-        "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
-        "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain",
-        "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", "Bolivia",
-        "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei Darussalam", "Bulgaria",
-        "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada",
-        "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros",
-        "Congo (Brazzaville)", "Costa Rica", "Côte d’Ivoire", "Croatia", "Cuba", "Cyprus",
-        "Czech Republic", "Democratic Republic of the Congo", "Denmark", "Djibouti",
-        "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador",
-        "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia", "Fiji",
-        "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece",
-        "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Honduras",
-        "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel",
-        "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati",
-        "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho", "Liberia",
-        "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar", "Malawi",
-        "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
-        "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia",
-        "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal",
-        "Netherlands", "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia",
-        "Norway", "Oman", "Pakistan", "Palau", "Panama", "Papua New Guinea", "Paraguay",
-        "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia",
-        "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", "Saint Vincent and the Grenadines",
-        "Samoa", "San Marino", "São Tomé and Príncipe", "Saudi Arabia", "Senegal",
-        "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia",
-        "Solomon Islands", "Somalia", "South Africa", "South Sudan", "Spain", "Sri Lanka",
-        "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Tajikistan", "Thailand",
-        "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey",
-        "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom",
-        "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela", "Vietnam", "Yemen",
-        "Zambia", "Zimbabwe"
-      ]
+      options:
+        - value: Afghanistan
+          label_en: Afghanistan
+          label_fr: Afghanistan
+        - value: Albania
+          label_en: Albania
+          label_fr: Albania
+        - value: Algeria
+          label_en: Algeria
+          label_fr: Algeria
+        - value: Andorra
+          label_en: Andorra
+          label_fr: Andorra
+        - value: Angola
+          label_en: Angola
+          label_fr: Angola
+        - value: Antigua and Barbuda
+          label_en: Antigua and Barbuda
+          label_fr: Antigua and Barbuda
+        - value: Argentina
+          label_en: Argentina
+          label_fr: Argentina
+        - value: Armenia
+          label_en: Armenia
+          label_fr: Armenia
+        - value: Australia
+          label_en: Australia
+          label_fr: Australia
+        - value: Austria
+          label_en: Austria
+          label_fr: Austria
+        - value: Azerbaijan
+          label_en: Azerbaijan
+          label_fr: Azerbaijan
+        - value: Bahamas
+          label_en: Bahamas
+          label_fr: Bahamas
+        - value: Bahrain
+          label_en: Bahrain
+          label_fr: Bahrain
+        - value: Bangladesh
+          label_en: Bangladesh
+          label_fr: Bangladesh
+        - value: Barbados
+          label_en: Barbados
+          label_fr: Barbados
+        - value: Belarus
+          label_en: Belarus
+          label_fr: Belarus
+        - value: Belgium
+          label_en: Belgium
+          label_fr: Belgium
+        - value: Belize
+          label_en: Belize
+          label_fr: Belize
+        - value: Benin
+          label_en: Benin
+          label_fr: Benin
+        - value: Bhutan
+          label_en: Bhutan
+          label_fr: Bhutan
+        - value: Bolivia
+          label_en: Bolivia
+          label_fr: Bolivia
+        - value: Bosnia and Herzegovina
+          label_en: Bosnia and Herzegovina
+          label_fr: Bosnia and Herzegovina
+        - value: Botswana
+          label_en: Botswana
+          label_fr: Botswana
+        - value: Brazil
+          label_en: Brazil
+          label_fr: Brazil
+        - value: Brunei Darussalam
+          label_en: Brunei Darussalam
+          label_fr: Brunei Darussalam
+        - value: Bulgaria
+          label_en: Bulgaria
+          label_fr: Bulgaria
+        - value: Burkina Faso
+          label_en: Burkina Faso
+          label_fr: Burkina Faso
+        - value: Burundi
+          label_en: Burundi
+          label_fr: Burundi
+        - value: Cabo Verde
+          label_en: Cabo Verde
+          label_fr: Cabo Verde
+        - value: Cambodia
+          label_en: Cambodia
+          label_fr: Cambodia
+        - value: Cameroon
+          label_en: Cameroon
+          label_fr: Cameroon
+        - value: Canada
+          label_en: Canada
+          label_fr: Canada
+        - value: Central African Republic
+          label_en: Central African Republic
+          label_fr: Central African Republic
+        - value: Chad
+          label_en: Chad
+          label_fr: Chad
+        - value: Chile
+          label_en: Chile
+          label_fr: Chile
+        - value: China
+          label_en: China
+          label_fr: China
+        - value: Colombia
+          label_en: Colombia
+          label_fr: Colombia
+        - value: Comoros
+          label_en: Comoros
+          label_fr: Comoros
+        - value: Congo (Brazzaville)
+          label_en: Congo (Brazzaville)
+          label_fr: Congo (Brazzaville)
+        - value: Costa Rica
+          label_en: Costa Rica
+          label_fr: Costa Rica
+        - value: Côte d’Ivoire
+          label_en: Côte d’Ivoire
+          label_fr: Côte d’Ivoire
+        - value: Croatia
+          label_en: Croatia
+          label_fr: Croatia
+        - value: Cuba
+          label_en: Cuba
+          label_fr: Cuba
+        - value: Cyprus
+          label_en: Cyprus
+          label_fr: Cyprus
+        - value: Czech Republic
+          label_en: Czech Republic
+          label_fr: Czech Republic
+        - value: Democratic Republic of the Congo
+          label_en: Democratic Republic of the Congo
+          label_fr: Democratic Republic of the Congo
+        - value: Denmark
+          label_en: Denmark
+          label_fr: Denmark
+        - value: Djibouti
+          label_en: Djibouti
+          label_fr: Djibouti
+        - value: Dominica
+          label_en: Dominica
+          label_fr: Dominica
+        - value: Dominican Republic
+          label_en: Dominican Republic
+          label_fr: Dominican Republic
+        - value: Ecuador
+          label_en: Ecuador
+          label_fr: Ecuador
+        - value: Egypt
+          label_en: Egypt
+          label_fr: Egypt
+        - value: El Salvador
+          label_en: El Salvador
+          label_fr: El Salvador
+        - value: Equatorial Guinea
+          label_en: Equatorial Guinea
+          label_fr: Equatorial Guinea
+        - value: Eritrea
+          label_en: Eritrea
+          label_fr: Eritrea
+        - value: Estonia
+          label_en: Estonia
+          label_fr: Estonia
+        - value: Eswatini
+          label_en: Eswatini
+          label_fr: Eswatini
+        - value: Ethiopia
+          label_en: Ethiopia
+          label_fr: Ethiopia
+        - value: Fiji
+          label_en: Fiji
+          label_fr: Fiji
+        - value: Finland
+          label_en: Finland
+          label_fr: Finland
+        - value: France
+          label_en: France
+          label_fr: France
+        - value: Gabon
+          label_en: Gabon
+          label_fr: Gabon
+        - value: Gambia
+          label_en: Gambia
+          label_fr: Gambia
+        - value: Georgia
+          label_en: Georgia
+          label_fr: Georgia
+        - value: Germany
+          label_en: Germany
+          label_fr: Germany
+        - value: Ghana
+          label_en: Ghana
+          label_fr: Ghana
+        - value: Greece
+          label_en: Greece
+          label_fr: Greece
+        - value: Grenada
+          label_en: Grenada
+          label_fr: Grenada
+        - value: Guatemala
+          label_en: Guatemala
+          label_fr: Guatemala
+        - value: Guinea
+          label_en: Guinea
+          label_fr: Guinea
+        - value: Guinea-Bissau
+          label_en: Guinea-Bissau
+          label_fr: Guinea-Bissau
+        - value: Guyana
+          label_en: Guyana
+          label_fr: Guyana
+        - value: Haiti
+          label_en: Haiti
+          label_fr: Haiti
+        - value: Honduras
+          label_en: Honduras
+          label_fr: Honduras
+        - value: Hungary
+          label_en: Hungary
+          label_fr: Hungary
+        - value: Iceland
+          label_en: Iceland
+          label_fr: Iceland
+        - value: India
+          label_en: India
+          label_fr: India
+        - value: Indonesia
+          label_en: Indonesia
+          label_fr: Indonesia
+        - value: Iran
+          label_en: Iran
+          label_fr: Iran
+        - value: Iraq
+          label_en: Iraq
+          label_fr: Iraq
+        - value: Ireland
+          label_en: Ireland
+          label_fr: Ireland
+        - value: Israel
+          label_en: Israel
+          label_fr: Israel
+        - value: Italy
+          label_en: Italy
+          label_fr: Italy
+        - value: Jamaica
+          label_en: Jamaica
+          label_fr: Jamaica
+        - value: Japan
+          label_en: Japan
+          label_fr: Japan
+        - value: Jordan
+          label_en: Jordan
+          label_fr: Jordan
+        - value: Kazakhstan
+          label_en: Kazakhstan
+          label_fr: Kazakhstan
+        - value: Kenya
+          label_en: Kenya
+          label_fr: Kenya
+        - value: Kiribati
+          label_en: Kiribati
+          label_fr: Kiribati
+        - value: Kuwait
+          label_en: Kuwait
+          label_fr: Kuwait
+        - value: Kyrgyzstan
+          label_en: Kyrgyzstan
+          label_fr: Kyrgyzstan
+        - value: Laos
+          label_en: Laos
+          label_fr: Laos
+        - value: Latvia
+          label_en: Latvia
+          label_fr: Latvia
+        - value: Lebanon
+          label_en: Lebanon
+          label_fr: Lebanon
+        - value: Lesotho
+          label_en: Lesotho
+          label_fr: Lesotho
+        - value: Liberia
+          label_en: Liberia
+          label_fr: Liberia
+        - value: Libya
+          label_en: Libya
+          label_fr: Libya
+        - value: Liechtenstein
+          label_en: Liechtenstein
+          label_fr: Liechtenstein
+        - value: Lithuania
+          label_en: Lithuania
+          label_fr: Lithuania
+        - value: Luxembourg
+          label_en: Luxembourg
+          label_fr: Luxembourg
+        - value: Madagascar
+          label_en: Madagascar
+          label_fr: Madagascar
+        - value: Malawi
+          label_en: Malawi
+          label_fr: Malawi
+        - value: Malaysia
+          label_en: Malaysia
+          label_fr: Malaysia
+        - value: Maldives
+          label_en: Maldives
+          label_fr: Maldives
+        - value: Mali
+          label_en: Mali
+          label_fr: Mali
+        - value: Malta
+          label_en: Malta
+          label_fr: Malta
+        - value: Marshall Islands
+          label_en: Marshall Islands
+          label_fr: Marshall Islands
+        - value: Mauritania
+          label_en: Mauritania
+          label_fr: Mauritania
+        - value: Mauritius
+          label_en: Mauritius
+          label_fr: Mauritius
+        - value: Mexico
+          label_en: Mexico
+          label_fr: Mexico
+        - value: Micronesia
+          label_en: Micronesia
+          label_fr: Micronesia
+        - value: Moldova
+          label_en: Moldova
+          label_fr: Moldova
+        - value: Monaco
+          label_en: Monaco
+          label_fr: Monaco
+        - value: Mongolia
+          label_en: Mongolia
+          label_fr: Mongolia
+        - value: Montenegro
+          label_en: Montenegro
+          label_fr: Montenegro
+        - value: Morocco
+          label_en: Morocco
+          label_fr: Morocco
+        - value: Mozambique
+          label_en: Mozambique
+          label_fr: Mozambique
+        - value: Myanmar
+          label_en: Myanmar
+          label_fr: Myanmar
+        - value: Namibia
+          label_en: Namibia
+          label_fr: Namibia
+        - value: Nauru
+          label_en: Nauru
+          label_fr: Nauru
+        - value: Nepal
+          label_en: Nepal
+          label_fr: Nepal
+        - value: Netherlands
+          label_en: Netherlands
+          label_fr: Netherlands
+        - value: New Zealand
+          label_en: New Zealand
+          label_fr: New Zealand
+        - value: Nicaragua
+          label_en: Nicaragua
+          label_fr: Nicaragua
+        - value: Niger
+          label_en: Niger
+          label_fr: Niger
+        - value: Nigeria
+          label_en: Nigeria
+          label_fr: Nigeria
+        - value: North Macedonia
+          label_en: North Macedonia
+          label_fr: North Macedonia
+        - value: Norway
+          label_en: Norway
+          label_fr: Norway
+        - value: Oman
+          label_en: Oman
+          label_fr: Oman
+        - value: Pakistan
+          label_en: Pakistan
+          label_fr: Pakistan
+        - value: Palau
+          label_en: Palau
+          label_fr: Palau
+        - value: Panama
+          label_en: Panama
+          label_fr: Panama
+        - value: Papua New Guinea
+          label_en: Papua New Guinea
+          label_fr: Papua New Guinea
+        - value: Paraguay
+          label_en: Paraguay
+          label_fr: Paraguay
+        - value: Peru
+          label_en: Peru
+          label_fr: Peru
+        - value: Philippines
+          label_en: Philippines
+          label_fr: Philippines
+        - value: Poland
+          label_en: Poland
+          label_fr: Poland
+        - value: Portugal
+          label_en: Portugal
+          label_fr: Portugal
+        - value: Qatar
+          label_en: Qatar
+          label_fr: Qatar
+        - value: Romania
+          label_en: Romania
+          label_fr: Romania
+        - value: Russia
+          label_en: Russia
+          label_fr: Russia
+        - value: Rwanda
+          label_en: Rwanda
+          label_fr: Rwanda
+        - value: Saint Kitts and Nevis
+          label_en: Saint Kitts and Nevis
+          label_fr: Saint Kitts and Nevis
+        - value: Saint Lucia
+          label_en: Saint Lucia
+          label_fr: Saint Lucia
+        - value: Saint Vincent and the Grenadines
+          label_en: Saint Vincent and the Grenadines
+          label_fr: Saint Vincent and the Grenadines
+        - value: Samoa
+          label_en: Samoa
+          label_fr: Samoa
+        - value: San Marino
+          label_en: San Marino
+          label_fr: San Marino
+        - value: São Tomé and Príncipe
+          label_en: São Tomé and Príncipe
+          label_fr: São Tomé and Príncipe
+        - value: Saudi Arabia
+          label_en: Saudi Arabia
+          label_fr: Saudi Arabia
+        - value: Senegal
+          label_en: Senegal
+          label_fr: Senegal
+        - value: Serbia
+          label_en: Serbia
+          label_fr: Serbia
+        - value: Seychelles
+          label_en: Seychelles
+          label_fr: Seychelles
+        - value: Sierra Leone
+          label_en: Sierra Leone
+          label_fr: Sierra Leone
+        - value: Singapore
+          label_en: Singapore
+          label_fr: Singapore
+        - value: Slovakia
+          label_en: Slovakia
+          label_fr: Slovakia
+        - value: Slovenia
+          label_en: Slovenia
+          label_fr: Slovenia
+        - value: Solomon Islands
+          label_en: Solomon Islands
+          label_fr: Solomon Islands
+        - value: Somalia
+          label_en: Somalia
+          label_fr: Somalia
+        - value: South Africa
+          label_en: South Africa
+          label_fr: South Africa
+        - value: South Sudan
+          label_en: South Sudan
+          label_fr: South Sudan
+        - value: Spain
+          label_en: Spain
+          label_fr: Spain
+        - value: Sri Lanka
+          label_en: Sri Lanka
+          label_fr: Sri Lanka
+        - value: Sudan
+          label_en: Sudan
+          label_fr: Sudan
+        - value: Suriname
+          label_en: Suriname
+          label_fr: Suriname
+        - value: Sweden
+          label_en: Sweden
+          label_fr: Sweden
+        - value: Switzerland
+          label_en: Switzerland
+          label_fr: Switzerland
+        - value: Syria
+          label_en: Syria
+          label_fr: Syria
+        - value: Tajikistan
+          label_en: Tajikistan
+          label_fr: Tajikistan
+        - value: Thailand
+          label_en: Thailand
+          label_fr: Thailand
+        - value: Timor-Leste
+          label_en: Timor-Leste
+          label_fr: Timor-Leste
+        - value: Togo
+          label_en: Togo
+          label_fr: Togo
+        - value: Tonga
+          label_en: Tonga
+          label_fr: Tonga
+        - value: Trinidad and Tobago
+          label_en: Trinidad and Tobago
+          label_fr: Trinidad and Tobago
+        - value: Tunisia
+          label_en: Tunisia
+          label_fr: Tunisia
+        - value: Turkey
+          label_en: Turkey
+          label_fr: Turkey
+        - value: Turkmenistan
+          label_en: Turkmenistan
+          label_fr: Turkmenistan
+        - value: Tuvalu
+          label_en: Tuvalu
+          label_fr: Tuvalu
+        - value: Uganda
+          label_en: Uganda
+          label_fr: Uganda
+        - value: Ukraine
+          label_en: Ukraine
+          label_fr: Ukraine
+        - value: United Arab Emirates
+          label_en: United Arab Emirates
+          label_fr: United Arab Emirates
+        - value: United Kingdom
+          label_en: United Kingdom
+          label_fr: United Kingdom
+        - value: United States
+          label_en: United States
+          label_fr: United States
+        - value: Uruguay
+          label_en: Uruguay
+          label_fr: Uruguay
+        - value: Uzbekistan
+          label_en: Uzbekistan
+          label_fr: Uzbekistan
+        - value: Vanuatu
+          label_en: Vanuatu
+          label_fr: Vanuatu
+        - value: Venezuela
+          label_en: Venezuela
+          label_fr: Venezuela
+        - value: Vietnam
+          label_en: Vietnam
+          label_fr: Vietnam
+        - value: Yemen
+          label_en: Yemen
+          label_fr: Yemen
+        - value: Zambia
+          label_en: Zambia
+          label_fr: Zambia
+        - value: Zimbabwe
+          label_en: Zimbabwe
+          label_fr: Zimbabwe
       required: true
-
+      text_en: Country
+      text_fr: Country
     - id: M6_size
-      text: "Company size (FTE)"
       type: single
-      options: ["1–9", "10–49", "50–249", "250–999", "≥ 1 000", "Prefer not to say"]
+      options:
+        - value: 1–9
+          label_en: 1–9
+          label_fr: 1–9
+        - value: 10–49
+          label_en: 10–49
+          label_fr: 10–49
+        - value: 50–249
+          label_en: 50–249
+          label_fr: 50–249
+        - value: 250–999
+          label_en: 250–999
+          label_fr: 250–999
+        - value: ≥ 1 000
+          label_en: ≥ 1 000
+          label_fr: ≥ 1 000
+        - value: Prefer not to say
+          label_en: Prefer not to say
+          label_fr: Prefer not to say
       required: true
-
+      text_en: Company size (FTE)
+      text_fr: Company size (FTE)
     - id: M7_revenue
-      text: "Annual revenue"
       type: single
-      options: ["< €250 k", "€250 k–1 M", "€1 M–€5 M", "€5 M–€20 M", "€20 M–€100 M", "> €100 M", "Prefer not to say"]
+      options:
+        - value: < €250 k
+          label_en: < €250 k
+          label_fr: < €250 k
+        - value: €250 k–1 M
+          label_en: €250 k–1 M
+          label_fr: €250 k–1 M
+        - value: €1 M–€5 M
+          label_en: €1 M–€5 M
+          label_fr: €1 M–€5 M
+        - value: €5 M–€20 M
+          label_en: €5 M–€20 M
+          label_fr: €5 M–€20 M
+        - value: €20 M–€100 M
+          label_en: €20 M–€100 M
+          label_fr: €20 M–€100 M
+        - value: '> €100 M'
+          label_en: '> €100 M'
+          label_fr: '> €100 M'
+        - value: Prefer not to say
+          label_en: Prefer not to say
+          label_fr: Prefer not to say
       required: true
-
+      text_en: Annual revenue
+      text_fr: Annual revenue
   computed:
     - id: regulated
       logic: |
@@ -174,7 +855,6 @@ section_0:
           "Accommodation & Food Services"
         ]
         return M4_industry in regulated_industries
-
     - id: track
       logic: |
         tech_roles = ["CIO / CTO", "IT Lead", "Data / AI Lead", "ML Engineer", "Data Engineer", "DevOps Engineer", "Security Architect", "Infrastructure Manager"]
@@ -185,927 +865,2697 @@ section_0:
           return "REG"
         else:
           return "GEN"
-
+  purpose_en: Collect organization profile for track detection and personalized recommendations.
+  purpose_fr: Collect organization profile for track detection and personalized recommendations.
 section_1:
   category: strategy
-  purpose: "Assess strategic alignment & planning maturity."
   questions:
-
     - id: S1
-      text: "How many AI use cases have you identified for implementation within the next 12 months?"
       type: single
-      helper: "Defines your planning maturity and readiness."
-      options: ["None", "Ideas listed only", "1–2 documented use cases", "3–5 prioritized with owners", "6 or more with owners and timelines"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: Ideas listed only
+          label_en: Ideas listed only
+          label_fr: Ideas listed only
+        - value: 1–2 documented use cases
+          label_en: 1–2 documented use cases
+          label_fr: 1–2 documented use cases
+        - value: 3–5 prioritized with owners
+          label_en: 3–5 prioritized with owners
+          label_fr: 3–5 prioritized with owners
+        - value: 6 or more with owners and timelines
+          label_en: 6 or more with owners and timelines
+          label_fr: 6 or more with owners and timelines
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How many AI use cases have you identified for implementation within the next 12 months?
+      text_fr: How many AI use cases have you identified for implementation within the next 12 months?
+      helper_en: Defines your planning maturity and readiness.
+      helper_fr: Defines your planning maturity and readiness.
     - id: S2
-      text: "How do you decide which AI opportunities to pursue first?"
       type: single
-      helper: "Select the process you currently use."
-      options: ["No formal process", "Ad hoc based on perceived value", "Impact × Effort matrix", "Impact × Effort + capacity weighting", "ROI-driven financial model", "Risk-adjusted prioritization"]
+      options:
+        - value: No formal process
+          label_en: No formal process
+          label_fr: No formal process
+        - value: Ad hoc based on perceived value
+          label_en: Ad hoc based on perceived value
+          label_fr: Ad hoc based on perceived value
+        - value: Impact × Effort matrix
+          label_en: Impact × Effort matrix
+          label_fr: Impact × Effort matrix
+        - value: Impact × Effort + capacity weighting
+          label_en: Impact × Effort + capacity weighting
+          label_fr: Impact × Effort + capacity weighting
+        - value: ROI-driven financial model
+          label_en: ROI-driven financial model
+          label_fr: ROI-driven financial model
+        - value: Risk-adjusted prioritization
+          label_en: Risk-adjusted prioritization
+          label_fr: Risk-adjusted prioritization
       show_if:
         S1:
-          not_in: ["None", "Ideas listed only"]
+          not_in:
+            - None
+            - Ideas listed only
       required: true
-
+      text_en: How do you decide which AI opportunities to pursue first?
+      text_fr: How do you decide which AI opportunities to pursue first?
+      helper_en: Select the process you currently use.
+      helper_fr: Select the process you currently use.
     - id: S3
-      text: "How integrated are your AI performance metrics with corporate KPIs or OKRs?"
       type: single
-      options: ["No AI KPIs/OKRs defined", "KPIs drafted but not tracked", "KPIs tracked but not linked", "Partially aligned with departmental OKRs", "Fully embedded in executive OKRs"]
+      options:
+        - value: No AI KPIs/OKRs defined
+          label_en: No AI KPIs/OKRs defined
+          label_fr: No AI KPIs/OKRs defined
+        - value: KPIs drafted but not tracked
+          label_en: KPIs drafted but not tracked
+          label_fr: KPIs drafted but not tracked
+        - value: KPIs tracked but not linked
+          label_en: KPIs tracked but not linked
+          label_fr: KPIs tracked but not linked
+        - value: Partially aligned with departmental OKRs
+          label_en: Partially aligned with departmental OKRs
+          label_fr: Partially aligned with departmental OKRs
+        - value: Fully embedded in executive OKRs
+          label_en: Fully embedded in executive OKRs
+          label_fr: Fully embedded in executive OKRs
       show_if:
         S1:
-          not_in: ["None", "Ideas listed only"]
+          not_in:
+            - None
+            - Ideas listed only
       required: true
-
+      text_en: How integrated are your AI performance metrics with corporate KPIs or OKRs?
+      text_fr: How integrated are your AI performance metrics with corporate KPIs or OKRs?
     - id: S4
-      text: "How do you estimate ROI for AI projects?"
       type: single
-      helper: "Choose the method that matches your current practice."
-      options: ["Don’t estimate ROI", "Rough experience-based estimates", "Simple cost–benefit analysis", "Linked ROI to clear KPIs and goals", "Detailed financial or risk-adjusted models"]
+      options:
+        - value: Don’t estimate ROI
+          label_en: Don’t estimate ROI
+          label_fr: Don’t estimate ROI
+        - value: Rough experience-based estimates
+          label_en: Rough experience-based estimates
+          label_fr: Rough experience-based estimates
+        - value: Simple cost–benefit analysis
+          label_en: Simple cost–benefit analysis
+          label_fr: Simple cost–benefit analysis
+        - value: Linked ROI to clear KPIs and goals
+          label_en: Linked ROI to clear KPIs and goals
+          label_fr: Linked ROI to clear KPIs and goals
+        - value: Detailed financial or risk-adjusted models
+          label_en: Detailed financial or risk-adjusted models
+          label_fr: Detailed financial or risk-adjusted models
       show_if:
         S1:
-          not_in: ["None", "Ideas listed only"]
+          not_in:
+            - None
+            - Ideas listed only
       required: true
-
+      text_en: How do you estimate ROI for AI projects?
+      text_fr: How do you estimate ROI for AI projects?
+      helper_en: Choose the method that matches your current practice.
+      helper_fr: Choose the method that matches your current practice.
     - id: S5
-      text: "What is your typical time from idea to measurable AI impact?"
       type: single
-      options: ["Over 12 months", "6–12 months", "3–6 months", "1–3 months", "Under 30 days"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: Over 12 months
+          label_en: Over 12 months
+          label_fr: Over 12 months
+        - value: 6–12 months
+          label_en: 6–12 months
+          label_fr: 6–12 months
+        - value: 3–6 months
+          label_en: 3–6 months
+          label_fr: 3–6 months
+        - value: 1–3 months
+          label_en: 1–3 months
+          label_fr: 1–3 months
+        - value: Under 30 days
+          label_en: Under 30 days
+          label_fr: Under 30 days
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       show_if:
         S1:
-          not_in: ["None", "Ideas listed only"]
+          not_in:
+            - None
+            - Ideas listed only
       required: true
-
+      text_en: What is your typical time from idea to measurable AI impact?
+      text_fr: What is your typical time from idea to measurable AI impact?
     - id: S6
-      text: "How do you monitor competitor or industry AI developments?"
       type: single
-      options: ["Not tracked", "Occasional ad hoc research", "Annual review", "Quarterly reporting", "Continuous dashboard or feed"]
+      options:
+        - value: Not tracked
+          label_en: Not tracked
+          label_fr: Not tracked
+        - value: Occasional ad hoc research
+          label_en: Occasional ad hoc research
+          label_fr: Occasional ad hoc research
+        - value: Annual review
+          label_en: Annual review
+          label_fr: Annual review
+        - value: Quarterly reporting
+          label_en: Quarterly reporting
+          label_fr: Quarterly reporting
+        - value: Continuous dashboard or feed
+          label_en: Continuous dashboard or feed
+          label_fr: Continuous dashboard or feed
       required: true
-
+      text_en: How do you monitor competitor or industry AI developments?
+      text_fr: How do you monitor competitor or industry AI developments?
     - id: S7
-      text: "Rank your top four strategic objectives for AI initiatives"
       type: rank
-      options: ["Productivity", "Cost reduction", "Revenue growth", "Customer experience", "Innovation", "Regulatory compliance", "Investor positioning"]
+      options:
+        - value: Productivity
+          label_en: Productivity
+          label_fr: Productivity
+        - value: Cost reduction
+          label_en: Cost reduction
+          label_fr: Cost reduction
+        - value: Revenue growth
+          label_en: Revenue growth
+          label_fr: Revenue growth
+        - value: Customer experience
+          label_en: Customer experience
+          label_fr: Customer experience
+        - value: Innovation
+          label_en: Innovation
+          label_fr: Innovation
+        - value: Regulatory compliance
+          label_en: Regulatory compliance
+          label_fr: Regulatory compliance
+        - value: Investor positioning
+          label_en: Investor positioning
+          label_fr: Investor positioning
       max_rank: 4
-      weight: [40, 30, 20, 10]
+      weight:
+        - 40
+        - 30
+        - 20
+        - 10
       required: true
-
+      text_en: Rank your top four strategic objectives for AI initiatives
+      text_fr: Rank your top four strategic objectives for AI initiatives
     - id: S8
-      text: "How aligned is your leadership team on AI strategy?"
       type: single
-      options: ["No alignment", "Occasional discussions", "Executive interest without action", "Budget approved", "Active executive sponsorship"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: No alignment
+          label_en: No alignment
+          label_fr: No alignment
+        - value: Occasional discussions
+          label_en: Occasional discussions
+          label_fr: Occasional discussions
+        - value: Executive interest without action
+          label_en: Executive interest without action
+          label_fr: Executive interest without action
+        - value: Budget approved
+          label_en: Budget approved
+          label_fr: Budget approved
+        - value: Active executive sponsorship
+          label_en: Active executive sponsorship
+          label_fr: Active executive sponsorship
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How aligned is your leadership team on AI strategy?
+      text_fr: How aligned is your leadership team on AI strategy?
     - id: S9
-      text: "Which teams are involved in defining AI use cases?"
       type: multi
-      options: ["Executive leadership", "Product & marketing", "Operations", "Data & IT", "Legal & compliance", "HR", "Finance", "Customer support"]
+      options:
+        - value: Executive leadership
+          label_en: Executive leadership
+          label_fr: Executive leadership
+        - value: Product & marketing
+          label_en: Product & marketing
+          label_fr: Product & marketing
+        - value: Operations
+          label_en: Operations
+          label_fr: Operations
+        - value: Data & IT
+          label_en: Data & IT
+          label_fr: Data & IT
+        - value: Legal & compliance
+          label_en: Legal & compliance
+          label_fr: Legal & compliance
+        - value: HR
+          label_en: HR
+          label_fr: HR
+        - value: Finance
+          label_en: Finance
+          label_fr: Finance
+        - value: Customer support
+          label_en: Customer support
+          label_fr: Customer support
       score_per: 10
       cap: 100
       required: true
-
+      text_en: Which teams are involved in defining AI use cases?
+      text_fr: Which teams are involved in defining AI use cases?
     - id: S10
-      text: "How prepared is your organization to manage change from AI adoption?"
       type: single
-      options: ["Not prepared", "Ad hoc readiness", "Formal process for some projects", "Organization-wide framework", "Continuous improvement culture"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: Not prepared
+          label_en: Not prepared
+          label_fr: Not prepared
+        - value: Ad hoc readiness
+          label_en: Ad hoc readiness
+          label_fr: Ad hoc readiness
+        - value: Formal process for some projects
+          label_en: Formal process for some projects
+          label_fr: Formal process for some projects
+        - value: Organization-wide framework
+          label_en: Organization-wide framework
+          label_fr: Organization-wide framework
+        - value: Continuous improvement culture
+          label_en: Continuous improvement culture
+          label_fr: Continuous improvement culture
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How prepared is your organization to manage change from AI adoption?
+      text_fr: How prepared is your organization to manage change from AI adoption?
     - id: S11
-      text: "How clear are the goals and metrics for your AI use cases?"
       type: single
-      options: ["No clear goals", "Goals defined with no metrics", "Some metrics tracked", "Most goals with metrics", "All goals have metrics and thresholds"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: No clear goals
+          label_en: No clear goals
+          label_fr: No clear goals
+        - value: Goals defined with no metrics
+          label_en: Goals defined with no metrics
+          label_fr: Goals defined with no metrics
+        - value: Some metrics tracked
+          label_en: Some metrics tracked
+          label_fr: Some metrics tracked
+        - value: Most goals with metrics
+          label_en: Most goals with metrics
+          label_fr: Most goals with metrics
+        - value: All goals have metrics and thresholds
+          label_en: All goals have metrics and thresholds
+          label_fr: All goals have metrics and thresholds
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       show_if:
         S1:
-          not_in: ["None", "Ideas listed only"]
+          not_in:
+            - None
+            - Ideas listed only
       required: true
-
+      text_en: How clear are the goals and metrics for your AI use cases?
+      text_fr: How clear are the goals and metrics for your AI use cases?
     - id: S12
-      text: "What best describes your approach to piloting and deploying AI projects?"
       type: single
-      options: ["POC only with strict compliance checks", "Small pilots with controlled access", "Case-by-case security review for deployments", "Agile testing with integrated oversight", "Fast iterations with production readiness and risk management"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: POC only with strict compliance checks
+          label_en: POC only with strict compliance checks
+          label_fr: POC only with strict compliance checks
+        - value: Small pilots with controlled access
+          label_en: Small pilots with controlled access
+          label_fr: Small pilots with controlled access
+        - value: Case-by-case security review for deployments
+          label_en: Case-by-case security review for deployments
+          label_fr: Case-by-case security review for deployments
+        - value: Agile testing with integrated oversight
+          label_en: Agile testing with integrated oversight
+          label_fr: Agile testing with integrated oversight
+        - value: Fast iterations with production readiness and risk management
+          label_en: Fast iterations with production readiness and risk management
+          label_fr: Fast iterations with production readiness and risk management
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       hide_if:
-        P2: "Conservative – preferring pilot tests before scaling"
+        P2: Conservative – preferring pilot tests before scaling
       required: true
-
+      text_en: What best describes your approach to piloting and deploying AI projects?
+      text_fr: What best describes your approach to piloting and deploying AI projects?
+  purpose_en: Assess strategic alignment & planning maturity.
+  purpose_fr: Assess strategic alignment & planning maturity.
 section_2:
-  purpose: "Budget, runway, investor support, compliance."
   questions:
-
     - id: F1
-      text: "What is your current monthly budget for AI and data initiatives?"
       type: single
-      options: ["< €100", "€100–500", "€500–2 000", "€2 000–15 000", "Over €15 000"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: < €100
+          label_en: < €100
+          label_fr: < €100
+        - value: €100–500
+          label_en: €100–500
+          label_fr: €100–500
+        - value: €500–2 000
+          label_en: €500–2 000
+          label_fr: €500–2 000
+        - value: €2 000–15 000
+          label_en: €2 000–15 000
+          label_fr: €2 000–15 000
+        - value: Over €15 000
+          label_en: Over €15 000
+          label_fr: Over €15 000
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: What is your current monthly budget for AI and data initiatives?
+      text_fr: What is your current monthly budget for AI and data initiatives?
     - id: F3
-      text: "How long can you fund your AI and data efforts without new investment or revenue?"
       type: single
-      helper: "Indicates financial runway for AI projects."
-      options: ["Less than 3 months", "3–6 months", "6–12 months", "12–24 months", "Over 24 months"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: Less than 3 months
+          label_en: Less than 3 months
+          label_fr: Less than 3 months
+        - value: 3–6 months
+          label_en: 3–6 months
+          label_fr: 3–6 months
+        - value: 6–12 months
+          label_en: 6–12 months
+          label_fr: 6–12 months
+        - value: 12–24 months
+          label_en: 12–24 months
+          label_fr: 12–24 months
+        - value: Over 24 months
+          label_en: Over 24 months
+          label_fr: Over 24 months
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How long can you fund your AI and data efforts without new investment or revenue?
+      text_fr: How long can you fund your AI and data efforts without new investment or revenue?
+      helper_en: Indicates financial runway for AI projects.
+      helper_fr: Indicates financial runway for AI projects.
     - id: F4
-      text: "How supportive are your board or investors of your AI initiatives?"
       type: single
-      options: ["Not supportive", "Discussion only, no commitments", "Open to AI initiatives", "Budget approved", "Active championing"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: Not supportive
+          label_en: Not supportive
+          label_fr: Not supportive
+        - value: Discussion only, no commitments
+          label_en: Discussion only, no commitments
+          label_fr: Discussion only, no commitments
+        - value: Open to AI initiatives
+          label_en: Open to AI initiatives
+          label_fr: Open to AI initiatives
+        - value: Budget approved
+          label_en: Budget approved
+          label_fr: Budget approved
+        - value: Active championing
+          label_en: Active championing
+          label_fr: Active championing
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How supportive are your board or investors of your AI initiatives?
+      text_fr: How supportive are your board or investors of your AI initiatives?
     - id: F5
-      text: "Which additional regulatory or security frameworks apply to your organization?"
       type: multi
-      helper: "GDPR and EU AI Act apply by default."
-      options: ["MiFID II / MDR – Finance & medical (EU)", "ISO 27001 – Information security", "PCI-DSS – Payment data security", "HIPAA – US health data", "CCPA – California privacy", "LGPD – Brazilian privacy", "POPIA – South African privacy", "None apply"]
+      options:
+        - value: MiFID II / MDR – Finance & medical (EU)
+          label_en: MiFID II / MDR – Finance & medical (EU)
+          label_fr: MiFID II / MDR – Finance & medical (EU)
+        - value: ISO 27001 – Information security
+          label_en: ISO 27001 – Information security
+          label_fr: ISO 27001 – Information security
+        - value: PCI-DSS – Payment data security
+          label_en: PCI-DSS – Payment data security
+          label_fr: PCI-DSS – Payment data security
+        - value: HIPAA – US health data
+          label_en: HIPAA – US health data
+          label_fr: HIPAA – US health data
+        - value: CCPA – California privacy
+          label_en: CCPA – California privacy
+          label_fr: CCPA – California privacy
+        - value: LGPD – Brazilian privacy
+          label_en: LGPD – Brazilian privacy
+          label_fr: LGPD – Brazilian privacy
+        - value: POPIA – South African privacy
+          label_en: POPIA – South African privacy
+          label_fr: POPIA – South African privacy
+        - value: None apply
+          label_en: None apply
+          label_fr: None apply
       required: true
-
-
+      text_en: Which additional regulatory or security frameworks apply to your organization?
+      text_fr: Which additional regulatory or security frameworks apply to your organization?
+      helper_en: GDPR and EU AI Act apply by default.
+      helper_fr: GDPR and EU AI Act apply by default.
     - id: F6
-      text: "What level of strategic partnerships do you have for AI?"
       type: single
-      helper: "Choose the option that best describes your existing AI partnership activity."
-      options: ["None", "Exploratory discussions", "One active partnership", "Multiple partnerships", "Ecosystem collaboration (R&D + vendors)"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: Exploratory discussions
+          label_en: Exploratory discussions
+          label_fr: Exploratory discussions
+        - value: One active partnership
+          label_en: One active partnership
+          label_fr: One active partnership
+        - value: Multiple partnerships
+          label_en: Multiple partnerships
+          label_fr: Multiple partnerships
+        - value: Ecosystem collaboration (R&D + vendors)
+          label_en: Ecosystem collaboration (R&D + vendors)
+          label_fr: Ecosystem collaboration (R&D + vendors)
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       show_if:
         any_of:
-          - { track: "TECH" }
-          - { track: "REG" }
-          - { M6_size: ["10–49", "50–249", "250–999", "≥ 1 000"] }
+          - track: TECH
+          - track: REG
+          - M6_size:
+              - 10–49
+              - 50–249
+              - 250–999
+              - ≥ 1 000
       required: true
-
+      text_en: What level of strategic partnerships do you have for AI?
+      text_fr: What level of strategic partnerships do you have for AI?
+      helper_en: Choose the option that best describes your existing AI partnership activity.
+      helper_fr: Choose the option that best describes your existing AI partnership activity.
     - id: F7
-      text: "What percentage of your AI budget is allocated to ethics and bias mitigation?"
       type: single
-      options: ["None", "Planned next fiscal year", "Under 5 %", "5–15 %", "Over 15 %"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: Planned next fiscal year
+          label_en: Planned next fiscal year
+          label_fr: Planned next fiscal year
+        - value: Under 5 %
+          label_en: Under 5 %
+          label_fr: Under 5 %
+        - value: 5–15 %
+          label_en: 5–15 %
+          label_fr: 5–15 %
+        - value: Over 15 %
+          label_en: Over 15 %
+          label_fr: Over 15 %
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       show_if:
         any_of:
-          - { track: "REG" }
-          - { F5: { not: ["None apply"] } }
+          - track: REG
+          - F5:
+              not:
+                - None apply
       required: true
-
+      text_en: What percentage of your AI budget is allocated to ethics and bias mitigation?
+      text_fr: What percentage of your AI budget is allocated to ethics and bias mitigation?
+  purpose_en: Budget, runway, investor support, compliance.
+  purpose_fr: Budget, runway, investor support, compliance.
 section_3:
   category: data
-  purpose: "Data foundation, security, ethics, compliance."
   questions:
-
     - id: D1
-      text: "Where is your most critical data primarily stored?"
       type: multi
-      helper: "Critical data drives operations, decisions, and compliance."
-      options: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)", "Databases (e.g. SQL, NoSQL, data warehouses)", "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)", "Internal tools / legacy systems (e.g. custom apps, intranet)", "Analytics & BI platforms (e.g. Power BI, Looker, Tableau)"]
+      options:
+        - value: Files & spreadsheets (e.g. Excel, Google Sheets, local files)
+          label_en: Files & spreadsheets (e.g. Excel, Google Sheets, local files)
+          label_fr: Files & spreadsheets (e.g. Excel, Google Sheets, local files)
+        - value: Databases (e.g. SQL, NoSQL, data warehouses)
+          label_en: Databases (e.g. SQL, NoSQL, data warehouses)
+          label_fr: Databases (e.g. SQL, NoSQL, data warehouses)
+        - value: Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)
+          label_en: Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)
+          label_fr: Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)
+        - value: Internal tools / legacy systems (e.g. custom apps, intranet)
+          label_en: Internal tools / legacy systems (e.g. custom apps, intranet)
+          label_fr: Internal tools / legacy systems (e.g. custom apps, intranet)
+        - value: Analytics & BI platforms (e.g. Power BI, Looker, Tableau)
+          label_en: Analytics & BI platforms (e.g. Power BI, Looker, Tableau)
+          label_fr: Analytics & BI platforms (e.g. Power BI, Looker, Tableau)
       required: true
-
-
+      text_en: Where is your most critical data primarily stored?
+      text_fr: Where is your most critical data primarily stored?
+      helper_en: Critical data drives operations, decisions, and compliance.
+      helper_fr: Critical data drives operations, decisions, and compliance.
     - id: D2
-      text: "How much data does your organization generate or collect each month?"
       type: single
-      options: ["Don’t know", "< 1 GB", "1–10 GB", "10–100 GB", "> 100 GB"]
+      options:
+        - value: Don’t know
+          label_en: Don’t know
+          label_fr: Don’t know
+        - value: < 1 GB
+          label_en: < 1 GB
+          label_fr: < 1 GB
+        - value: 1–10 GB
+          label_en: 1–10 GB
+          label_fr: 1–10 GB
+        - value: 10–100 GB
+          label_en: 10–100 GB
+          label_fr: 10–100 GB
+        - value: '> 100 GB'
+          label_en: '> 100 GB'
+          label_fr: '> 100 GB'
       hide_if:
-        total_questions: ">60"
+        total_questions: '>60'
       required: true
-
+      text_en: How much data does your organization generate or collect each month?
+      text_fr: How much data does your organization generate or collect each month?
     - id: D3
-      text: "How mature is your data management (structure, tools, and lineage)?"
       type: single
       show_if:
-        track: [TECH, REG]
+        track:
+          - TECH
+          - REG
       hide_if:
         all_of:
-          - { M6_size: "1–9" }
-          - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
-      options: ["No standards or visibility", "Basic naming conventions & partial docs", "Defined standards with manual processes", "Schema tools & automated tracking for key systems", "Version-controlled models with full lineage & governance"]
+          - M6_size: 1–9
+          - D1:
+              subset_of:
+                - Files & spreadsheets (e.g. Excel, Google Sheets, local files)
+      options:
+        - value: No standards or visibility
+          label_en: No standards or visibility
+          label_fr: No standards or visibility
+        - value: Basic naming conventions & partial docs
+          label_en: Basic naming conventions & partial docs
+          label_fr: Basic naming conventions & partial docs
+        - value: Defined standards with manual processes
+          label_en: Defined standards with manual processes
+          label_fr: Defined standards with manual processes
+        - value: Schema tools & automated tracking for key systems
+          label_en: Schema tools & automated tracking for key systems
+          label_fr: Schema tools & automated tracking for key systems
+        - value: Version-controlled models with full lineage & governance
+          label_en: Version-controlled models with full lineage & governance
+          label_fr: Version-controlled models with full lineage & governance
       required: true
-
+      text_en: How mature is your data management (structure, tools, and lineage)?
+      text_fr: How mature is your data management (structure, tools, and lineage)?
     - id: D4
-      text: "How confident are you in the accuracy and freshness of your critical data?"
       type: single
       show_if:
-        track: [TECH, REG]
+        track:
+          - TECH
+          - REG
       hide_if:
         all_of:
-          - { M6_size: "1–9" }
-          - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
-      options: ["Low – data often outdated or unreliable", "Medium – manual checks for accuracy", "High – periodic data quality tests", "Very high – automated alerts for data issues", "Excellent – real-time monitoring & validation"]
+          - M6_size: 1–9
+          - D1:
+              subset_of:
+                - Files & spreadsheets (e.g. Excel, Google Sheets, local files)
+      options:
+        - value: Low – data often outdated or unreliable
+          label_en: Low – data often outdated or unreliable
+          label_fr: Low – data often outdated or unreliable
+        - value: Medium – manual checks for accuracy
+          label_en: Medium – manual checks for accuracy
+          label_fr: Medium – manual checks for accuracy
+        - value: High – periodic data quality tests
+          label_en: High – periodic data quality tests
+          label_fr: High – periodic data quality tests
+        - value: Very high – automated alerts for data issues
+          label_en: Very high – automated alerts for data issues
+          label_fr: Very high – automated alerts for data issues
+        - value: Excellent – real-time monitoring & validation
+          label_en: Excellent – real-time monitoring & validation
+          label_fr: Excellent – real-time monitoring & validation
       required: true
-
+      text_en: How confident are you in the accuracy and freshness of your critical data?
+      text_fr: How confident are you in the accuracy and freshness of your critical data?
     - id: D5
-      text: "Which security controls protect your data infrastructure?"
       type: multi
-      helper: "Security controls are measures that keep your data safe—encrypting it, controlling access, and monitoring usage."
       score_per: 15
       cap: 100
-      options: ["Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)", "TLS/HTTPS in transit (e.g. API calls over HTTPS)", "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)", "Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)", "Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)", "Tokenization (e.g. Vault-based tokenization of sensitive fields)", "Differential privacy (e.g. noise injection for analytics)", "None", "I don’t know", "Other (please specify)"]
+      options:
+        - value: Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)
+          label_en: Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)
+          label_fr: Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)
+        - value: TLS/HTTPS in transit (e.g. API calls over HTTPS)
+          label_en: TLS/HTTPS in transit (e.g. API calls over HTTPS)
+          label_fr: TLS/HTTPS in transit (e.g. API calls over HTTPS)
+        - value: Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)
+          label_en: Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)
+          label_fr: Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)
+        - value: Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)
+          label_en: Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)
+          label_fr: Audit logs & monitoring (e.g. AWS CloudTrail, GCP Stackdriver)
+        - value: Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)
+          label_en: Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)
+          label_fr: Data Loss Prevention (DLP) (e.g. Google Cloud DLP, Azure Purview)
+        - value: Tokenization (e.g. Vault-based tokenization of sensitive fields)
+          label_en: Tokenization (e.g. Vault-based tokenization of sensitive fields)
+          label_fr: Tokenization (e.g. Vault-based tokenization of sensitive fields)
+        - value: Differential privacy (e.g. noise injection for analytics)
+          label_en: Differential privacy (e.g. noise injection for analytics)
+          label_fr: Differential privacy (e.g. noise injection for analytics)
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: I don’t know
+          label_en: I don’t know
+          label_fr: I don’t know
+        - value: Other (please specify)
+          label_en: Other (please specify)
+          label_fr: Other (please specify)
       required: true
-
+      text_en: Which security controls protect your data infrastructure?
+      text_fr: Which security controls protect your data infrastructure?
+      helper_en: Security controls are measures that keep your data safe—encrypting it, controlling access, and monitoring usage.
+      helper_fr: Security controls are measures that keep your data safe—encrypting it, controlling access, and monitoring usage.
     - id: D6
-      text: "How is data stewardship and cleaning managed?"
       type: single
-      options: ["No owner", "Occasional clean-ups", "Assigned owner with periodic review", "Dedicated steward with monthly routines", "Continuous stewardship and monitoring"]
+      options:
+        - value: No owner
+          label_en: No owner
+          label_fr: No owner
+        - value: Occasional clean-ups
+          label_en: Occasional clean-ups
+          label_fr: Occasional clean-ups
+        - value: Assigned owner with periodic review
+          label_en: Assigned owner with periodic review
+          label_fr: Assigned owner with periodic review
+        - value: Dedicated steward with monthly routines
+          label_en: Dedicated steward with monthly routines
+          label_fr: Dedicated steward with monthly routines
+        - value: Continuous stewardship and monitoring
+          label_en: Continuous stewardship and monitoring
+          label_fr: Continuous stewardship and monitoring
       required: true
-
+      text_en: How is data stewardship and cleaning managed?
+      text_fr: How is data stewardship and cleaning managed?
     - id: D7
-      text: "How prepared are you for GDPR or EU AI Act audits?"
       type: single
-      helper: "All companies can face audits—regulators, investors, or internal risk teams may review your controls.Indicate your readiness level for upcoming compliance or security audits."
-      options: ["None – no audit readiness", "Basic logs only", "Audit trail for critical systems", "Explainability logs + scripts", "Automated compliance checks", "I don’t know"]
+      options:
+        - value: None – no audit readiness
+          label_en: None – no audit readiness
+          label_fr: None – no audit readiness
+        - value: Basic logs only
+          label_en: Basic logs only
+          label_fr: Basic logs only
+        - value: Audit trail for critical systems
+          label_en: Audit trail for critical systems
+          label_fr: Audit trail for critical systems
+        - value: Explainability logs + scripts
+          label_en: Explainability logs + scripts
+          label_fr: Explainability logs + scripts
+        - value: Automated compliance checks
+          label_en: Automated compliance checks
+          label_fr: Automated compliance checks
+        - value: I don’t know
+          label_en: I don’t know
+          label_fr: I don’t know
       required: true
-
+      text_en: How prepared are you for GDPR or EU AI Act audits?
+      text_fr: How prepared are you for GDPR or EU AI Act audits?
+      helper_en: All companies can face audits—regulators, investors, or internal risk teams may review your controls.Indicate your readiness level for upcoming compliance or security audits.
+      helper_fr: All companies can face audits—regulators, investors, or internal risk teams may review your controls.Indicate your readiness level for upcoming compliance or security audits.
     - id: D8
-      text: "How mature is your data labeling and annotation process?"
       type: single
       show_if:
-        track: [TECH, REG]
-      options: ["None", "Ad-hoc manual labeling", "Defined guidelines", "Standard taxonomy across datasets", "Automated labeling & ontology management"]
+        track:
+          - TECH
+          - REG
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: Ad-hoc manual labeling
+          label_en: Ad-hoc manual labeling
+          label_fr: Ad-hoc manual labeling
+        - value: Defined guidelines
+          label_en: Defined guidelines
+          label_fr: Defined guidelines
+        - value: Standard taxonomy across datasets
+          label_en: Standard taxonomy across datasets
+          label_fr: Standard taxonomy across datasets
+        - value: Automated labeling & ontology management
+          label_en: Automated labeling & ontology management
+          label_fr: Automated labeling & ontology management
       required: true
-
+      text_en: How mature is your data labeling and annotation process?
+      text_fr: How mature is your data labeling and annotation process?
     - id: D9
-      text: "Do you use synthetic or third-party data to augment your datasets?"
       type: single
       show_if:
-        track: "TECH"
-      options: ["No", "Exploring options", "Limited pilots", "Regular production use", "Extensive synthetic data pipelines"]
+        track: TECH
+      options:
+        - value: 'No'
+          label_en: 'No'
+          label_fr: 'No'
+        - value: Exploring options
+          label_en: Exploring options
+          label_fr: Exploring options
+        - value: Limited pilots
+          label_en: Limited pilots
+          label_fr: Limited pilots
+        - value: Regular production use
+          label_en: Regular production use
+          label_fr: Regular production use
+        - value: Extensive synthetic data pipelines
+          label_en: Extensive synthetic data pipelines
+          label_fr: Extensive synthetic data pipelines
       required: true
-
+      text_en: Do you use synthetic or third-party data to augment your datasets?
+      text_fr: Do you use synthetic or third-party data to augment your datasets?
     - id: D10
-      text: "How developed are your AI ethics and data privacy policies?"
       type: single
-      helper:  "Select the maturity stage of your policies and enforcement(e.g. ‘Policies + training & oversight’ means you’ve documented guidelines and run staff workshops)."
-      options: ["No formal policies", "High-level principles only (no detailed guidance)", "Documented guidelines (but no training or oversight)", "Guidelines + training & oversight (staff workshops, reviews)", "Audited & continuously improved (regular audits + updates)"]
+      options:
+        - value: No formal policies
+          label_en: No formal policies
+          label_fr: No formal policies
+        - value: High-level principles only (no detailed guidance)
+          label_en: High-level principles only (no detailed guidance)
+          label_fr: High-level principles only (no detailed guidance)
+        - value: Documented guidelines (but no training or oversight)
+          label_en: Documented guidelines (but no training or oversight)
+          label_fr: Documented guidelines (but no training or oversight)
+        - value: Guidelines + training & oversight (staff workshops, reviews)
+          label_en: Guidelines + training & oversight (staff workshops, reviews)
+          label_fr: Guidelines + training & oversight (staff workshops, reviews)
+        - value: Audited & continuously improved (regular audits + updates)
+          label_en: Audited & continuously improved (regular audits + updates)
+          label_fr: Audited & continuously improved (regular audits + updates)
       required: true
-
+      text_en: How developed are your AI ethics and data privacy policies?
+      text_fr: How developed are your AI ethics and data privacy policies?
+      helper_en: Select the maturity stage of your policies and enforcement(e.g. ‘Policies + training & oversight’ means you’ve documented guidelines and run staff workshops).
+      helper_fr: Select the maturity stage of your policies and enforcement(e.g. ‘Policies + training & oversight’ means you’ve documented guidelines and run staff workshops).
+  purpose_en: Data foundation, security, ethics, compliance.
+  purpose_fr: Data foundation, security, ethics, compliance.
 section_4:
   category: tools
-  purpose: "Tool stack & integration maturity (to power workflow and AI agent recommendations)."
   questions:
-
     - id: T0_tools
-      text: "Which tools are actively used by you and your team?"
       type: multi_group
-      helper: "Select all tools your team uses—this drives tailored workflow and AI agent suggestions."
       score_by_count:
-        "1": 0
-        "2-3": 25
-        "4-6": 50
-        "7-9": 75
-        ">=10": 100
+        '1': 0
+        2-3: 25
+        4-6: 50
+        7-9: 75
+        '>=10': 100
       groups:
-
-        # Tech Track – Performance Monitoring
-        - label: "Performance Monitoring"
-          show_if: { track: "TECH" }
-          options: [
-            "New Relic", "Datadog", "Dynatrace", "AppDynamics",
-            "Elastic APM", "Sentry", "Splunk APM", "Pingdom",
-            "Bubble", "Mistral", "Other performance monitoring tool (please specify)"
-          ]
-
-        # Tech Track – Infrastructure & Network Monitoring
-        - label: "Infrastructure & Network Monitoring"
-          show_if: { track: "TECH" }
-          options: [
-            "Zabbix", "Nagios", "PRTG", "SolarWinds",
-            "Site24x7", "ManageEngine", "Grafana", "Prometheus",
-            "Checkmk", "Other infrastructure monitoring tool (please specify)"
-          ]
-
-        # Tech Track – Cloud & DevOps Monitoring
-        - label: "Cloud & DevOps Monitoring"
-          show_if: { track: "TECH" }
-          options: [
-            "AWS CloudWatch", "Azure Monitor", "Google Cloud Operations",
-            "LogicMonitor", "Sumo Logic", "PagerDuty", "StatusPage",
-            "Other cloud monitoring tool (please specify)"
-          ]
-
-        # Tech Track – Web Analytics & User Experience
-        - label: "Web Analytics & User Experience"
-          show_if: { track: "TECH" }
-          options: [
-            "Google Analytics", "Adobe Analytics", "Hotjar", "Mixpanel",
-            "Amplitude", "Tealium", "Webflow", "Matomo", "Plausible",
-            "Other web analytics tool (please specify)"
-          ]
-
-        # Tech Track – Data Management & ETL
-        - label: "Data Management & ETL"
-          show_if: { track: "TECH" }
-          options: [
-            "Snowflake", "Databricks", "Fivetran", "Stitch",
-            "Talend", "Apache Airflow", "Other data management tool (please specify)"
-          ]
-
-        # Tech Track – API Integration & Workflow Automation
-        - label: "API Integration & Workflow Automation"
-          show_if: { track: "TECH" }
-          options: [
-            "Zapier", "Power Automate", "MuleSoft", "Make",
-            "n8n", "Workato", "Tray.io", "Other automation tool (please specify)"
-          ]
-
-        # General Track – Email Marketing & Communication
-        - label: "Email Marketing & Communication"
-          show_if: { track: "GEN" }
-          options: [
-            "Mailchimp", "Constant Contact", "SendGrid",
-            "Campaign Monitor", "ConvertKit", "ActiveCampaign",
-            "GetResponse", "Cordial", "Brevo (Sendinblue)",
-            "AWeber", "Other email marketing tool (please specify)"
-          ]
-
-        # General Track – Customer Relations & Sales Management
-        - label: "Customer Relations & Sales Management"
-          show_if: { track: "GEN" }
-          options: [
-            "Salesforce", "HubSpot", "Pipedrive", "Zoho CRM",
-            "Freshsales", "Monday.com", "Close.io", "Zendesk",
-            "Intercom", "Other CRM tool (please specify)"
-          ]
-
-        # General Track – E-commerce & Payment Processing
-        - label: "E-commerce & Payment Processing"
-          show_if: { track: "GEN" }
-          options: [
-            "Shopify", "WooCommerce", "Stripe", "PayPal",
-            "BigCommerce", "Magento", "Square",
-            "Other e-commerce tool (please specify)"
-          ]
-
-        # General Track – Digital Advertising & Marketing
-        - label: "Digital Advertising & Marketing"
-          show_if: { track: "GEN" }
-          options: [
-            "Google Ads", "Facebook Ads", "LinkedIn Ads",
-            "Microsoft Advertising", "Twitter Ads",
-            "Pinterest Ads", "TikTok Ads", "Other advertising tool (please specify)"
-          ]
-
-        # General Track – Business Intelligence & Analytics
-        - label: "Business Intelligence & Analytics"
-          show_if: { track: "GEN" }
-          options: [
-            "Tableau", "Power BI", "Looker", "Qlik Sense",
-            "Sisense", "Domo", "SurveyMonkey",
-            "Other BI tool (please specify)"
-          ]
-
-        # General Track – Project Management & Productivity
-        - label: "Project Management & Productivity"
-          show_if: { track: "GEN" }
-          options: [
-            "Asana", "Trello", "Jira", "Slack",
-            "Microsoft Teams", "Notion", "ClickUp",
-            "Other productivity tool (please specify)"
-          ]
-
-        # General Track – Financial Management & Accounting
-        - label: "Financial Management & Accounting"
-          show_if: { track: "GEN" }
-          options: [
-            "QuickBooks", "Xero", "FreshBooks", "Sage",
-            "Wave", "Odoo", "Henrri.net",
-            "Other financial tool (please specify)"
-          ]
-
-        # General Track – Business Process Management
-        - label: "Business Process Management"
-          show_if: { track: "GEN" }
-          options: [
-            "Kissflow", "Nintex", "Pipefy", "ProcessMaker",
-            "Appian", "Pegasystems", "Other workflow tool (please specify)"
-          ]
-
-        # Reg Track – Data Privacy & GDPR Compliance
-        - label: "Data Privacy & GDPR Compliance"
-          show_if: { track: "REG" }
-          options: [
-            "OneTrust", "TrustArc", "CookieYes",
-            "Usercentrics", "Didomi", "Cookiebot",
-            "DataGrail", "Other privacy tool (please specify)"
-          ]
-
-        # Reg Track – Security & Risk Management
-        - label: "Security & Risk Management"
-          show_if: { track: "REG" }
-          options: [
-            "Qualys", "Rapid7", "Tenable", "CrowdStrike",
-            "SentinelOne", "Splunk", "Other security tool (please specify)"
-          ]
-
-        # Reg Track – Audit & Governance
-        - label: "Audit & Governance"
-          show_if: { track: "REG" }
-          options: [
-            "AuditBoard", "MetricStream", "ServiceNow GRC",
-            "RSA Archer", "LogicGate", "Resolver",
-            "Other GRC tool (please specify)"
-          ]
-
-        # Reg Track – Industry-Specific Compliance
-        - label: "Industry-Specific Compliance"
-          show_if: { track: "REG" }
-          options: [
-            "Fenergo", "RegEd", "Thomson Reuters",
-            "Other regulatory tool (please specify)"
-          ]
-
-        # Reg Track – Document & Records Management
-        - label: "Document & Records Management"
-          show_if: { track: "REG" }
-          options: [
-            "SharePoint", "DocuSign", "Box",
-            "Dropbox Business", "M-Files", "FileHold",
-          ]
-
-
+        - show_if:
+            track: TECH
+          options:
+            - value: New Relic
+              label_en: New Relic
+              label_fr: New Relic
+            - value: Datadog
+              label_en: Datadog
+              label_fr: Datadog
+            - value: Dynatrace
+              label_en: Dynatrace
+              label_fr: Dynatrace
+            - value: AppDynamics
+              label_en: AppDynamics
+              label_fr: AppDynamics
+            - value: Elastic APM
+              label_en: Elastic APM
+              label_fr: Elastic APM
+            - value: Sentry
+              label_en: Sentry
+              label_fr: Sentry
+            - value: Splunk APM
+              label_en: Splunk APM
+              label_fr: Splunk APM
+            - value: Pingdom
+              label_en: Pingdom
+              label_fr: Pingdom
+            - value: Bubble
+              label_en: Bubble
+              label_fr: Bubble
+            - value: Mistral
+              label_en: Mistral
+              label_fr: Mistral
+            - value: Other performance monitoring tool (please specify)
+              label_en: Other performance monitoring tool (please specify)
+              label_fr: Other performance monitoring tool (please specify)
+          label_en: Performance Monitoring
+          label_fr: Performance Monitoring
+        - show_if:
+            track: TECH
+          options:
+            - value: Zabbix
+              label_en: Zabbix
+              label_fr: Zabbix
+            - value: Nagios
+              label_en: Nagios
+              label_fr: Nagios
+            - value: PRTG
+              label_en: PRTG
+              label_fr: PRTG
+            - value: SolarWinds
+              label_en: SolarWinds
+              label_fr: SolarWinds
+            - value: Site24x7
+              label_en: Site24x7
+              label_fr: Site24x7
+            - value: ManageEngine
+              label_en: ManageEngine
+              label_fr: ManageEngine
+            - value: Grafana
+              label_en: Grafana
+              label_fr: Grafana
+            - value: Prometheus
+              label_en: Prometheus
+              label_fr: Prometheus
+            - value: Checkmk
+              label_en: Checkmk
+              label_fr: Checkmk
+            - value: Other infrastructure monitoring tool (please specify)
+              label_en: Other infrastructure monitoring tool (please specify)
+              label_fr: Other infrastructure monitoring tool (please specify)
+          label_en: Infrastructure & Network Monitoring
+          label_fr: Infrastructure & Network Monitoring
+        - show_if:
+            track: TECH
+          options:
+            - value: AWS CloudWatch
+              label_en: AWS CloudWatch
+              label_fr: AWS CloudWatch
+            - value: Azure Monitor
+              label_en: Azure Monitor
+              label_fr: Azure Monitor
+            - value: Google Cloud Operations
+              label_en: Google Cloud Operations
+              label_fr: Google Cloud Operations
+            - value: LogicMonitor
+              label_en: LogicMonitor
+              label_fr: LogicMonitor
+            - value: Sumo Logic
+              label_en: Sumo Logic
+              label_fr: Sumo Logic
+            - value: PagerDuty
+              label_en: PagerDuty
+              label_fr: PagerDuty
+            - value: StatusPage
+              label_en: StatusPage
+              label_fr: StatusPage
+            - value: Other cloud monitoring tool (please specify)
+              label_en: Other cloud monitoring tool (please specify)
+              label_fr: Other cloud monitoring tool (please specify)
+          label_en: Cloud & DevOps Monitoring
+          label_fr: Cloud & DevOps Monitoring
+        - show_if:
+            track: TECH
+          options:
+            - value: Google Analytics
+              label_en: Google Analytics
+              label_fr: Google Analytics
+            - value: Adobe Analytics
+              label_en: Adobe Analytics
+              label_fr: Adobe Analytics
+            - value: Hotjar
+              label_en: Hotjar
+              label_fr: Hotjar
+            - value: Mixpanel
+              label_en: Mixpanel
+              label_fr: Mixpanel
+            - value: Amplitude
+              label_en: Amplitude
+              label_fr: Amplitude
+            - value: Tealium
+              label_en: Tealium
+              label_fr: Tealium
+            - value: Webflow
+              label_en: Webflow
+              label_fr: Webflow
+            - value: Matomo
+              label_en: Matomo
+              label_fr: Matomo
+            - value: Plausible
+              label_en: Plausible
+              label_fr: Plausible
+            - value: Other web analytics tool (please specify)
+              label_en: Other web analytics tool (please specify)
+              label_fr: Other web analytics tool (please specify)
+          label_en: Web Analytics & User Experience
+          label_fr: Web Analytics & User Experience
+        - show_if:
+            track: TECH
+          options:
+            - value: Snowflake
+              label_en: Snowflake
+              label_fr: Snowflake
+            - value: Databricks
+              label_en: Databricks
+              label_fr: Databricks
+            - value: Fivetran
+              label_en: Fivetran
+              label_fr: Fivetran
+            - value: Stitch
+              label_en: Stitch
+              label_fr: Stitch
+            - value: Talend
+              label_en: Talend
+              label_fr: Talend
+            - value: Apache Airflow
+              label_en: Apache Airflow
+              label_fr: Apache Airflow
+            - value: Other data management tool (please specify)
+              label_en: Other data management tool (please specify)
+              label_fr: Other data management tool (please specify)
+          label_en: Data Management & ETL
+          label_fr: Data Management & ETL
+        - show_if:
+            track: TECH
+          options:
+            - value: Zapier
+              label_en: Zapier
+              label_fr: Zapier
+            - value: Power Automate
+              label_en: Power Automate
+              label_fr: Power Automate
+            - value: MuleSoft
+              label_en: MuleSoft
+              label_fr: MuleSoft
+            - value: Make
+              label_en: Make
+              label_fr: Make
+            - value: n8n
+              label_en: n8n
+              label_fr: n8n
+            - value: Workato
+              label_en: Workato
+              label_fr: Workato
+            - value: Tray.io
+              label_en: Tray.io
+              label_fr: Tray.io
+            - value: Other automation tool (please specify)
+              label_en: Other automation tool (please specify)
+              label_fr: Other automation tool (please specify)
+          label_en: API Integration & Workflow Automation
+          label_fr: API Integration & Workflow Automation
+        - show_if:
+            track: GEN
+          options:
+            - value: Mailchimp
+              label_en: Mailchimp
+              label_fr: Mailchimp
+            - value: Constant Contact
+              label_en: Constant Contact
+              label_fr: Constant Contact
+            - value: SendGrid
+              label_en: SendGrid
+              label_fr: SendGrid
+            - value: Campaign Monitor
+              label_en: Campaign Monitor
+              label_fr: Campaign Monitor
+            - value: ConvertKit
+              label_en: ConvertKit
+              label_fr: ConvertKit
+            - value: ActiveCampaign
+              label_en: ActiveCampaign
+              label_fr: ActiveCampaign
+            - value: GetResponse
+              label_en: GetResponse
+              label_fr: GetResponse
+            - value: Cordial
+              label_en: Cordial
+              label_fr: Cordial
+            - value: Brevo (Sendinblue)
+              label_en: Brevo (Sendinblue)
+              label_fr: Brevo (Sendinblue)
+            - value: AWeber
+              label_en: AWeber
+              label_fr: AWeber
+            - value: Other email marketing tool (please specify)
+              label_en: Other email marketing tool (please specify)
+              label_fr: Other email marketing tool (please specify)
+          label_en: Email Marketing & Communication
+          label_fr: Email Marketing & Communication
+        - show_if:
+            track: GEN
+          options:
+            - value: Salesforce
+              label_en: Salesforce
+              label_fr: Salesforce
+            - value: HubSpot
+              label_en: HubSpot
+              label_fr: HubSpot
+            - value: Pipedrive
+              label_en: Pipedrive
+              label_fr: Pipedrive
+            - value: Zoho CRM
+              label_en: Zoho CRM
+              label_fr: Zoho CRM
+            - value: Freshsales
+              label_en: Freshsales
+              label_fr: Freshsales
+            - value: Monday.com
+              label_en: Monday.com
+              label_fr: Monday.com
+            - value: Close.io
+              label_en: Close.io
+              label_fr: Close.io
+            - value: Zendesk
+              label_en: Zendesk
+              label_fr: Zendesk
+            - value: Intercom
+              label_en: Intercom
+              label_fr: Intercom
+            - value: Other CRM tool (please specify)
+              label_en: Other CRM tool (please specify)
+              label_fr: Other CRM tool (please specify)
+          label_en: Customer Relations & Sales Management
+          label_fr: Customer Relations & Sales Management
+        - show_if:
+            track: GEN
+          options:
+            - value: Shopify
+              label_en: Shopify
+              label_fr: Shopify
+            - value: WooCommerce
+              label_en: WooCommerce
+              label_fr: WooCommerce
+            - value: Stripe
+              label_en: Stripe
+              label_fr: Stripe
+            - value: PayPal
+              label_en: PayPal
+              label_fr: PayPal
+            - value: BigCommerce
+              label_en: BigCommerce
+              label_fr: BigCommerce
+            - value: Magento
+              label_en: Magento
+              label_fr: Magento
+            - value: Square
+              label_en: Square
+              label_fr: Square
+            - value: Other e-commerce tool (please specify)
+              label_en: Other e-commerce tool (please specify)
+              label_fr: Other e-commerce tool (please specify)
+          label_en: E-commerce & Payment Processing
+          label_fr: E-commerce & Payment Processing
+        - show_if:
+            track: GEN
+          options:
+            - value: Google Ads
+              label_en: Google Ads
+              label_fr: Google Ads
+            - value: Facebook Ads
+              label_en: Facebook Ads
+              label_fr: Facebook Ads
+            - value: LinkedIn Ads
+              label_en: LinkedIn Ads
+              label_fr: LinkedIn Ads
+            - value: Microsoft Advertising
+              label_en: Microsoft Advertising
+              label_fr: Microsoft Advertising
+            - value: Twitter Ads
+              label_en: Twitter Ads
+              label_fr: Twitter Ads
+            - value: Pinterest Ads
+              label_en: Pinterest Ads
+              label_fr: Pinterest Ads
+            - value: TikTok Ads
+              label_en: TikTok Ads
+              label_fr: TikTok Ads
+            - value: Other advertising tool (please specify)
+              label_en: Other advertising tool (please specify)
+              label_fr: Other advertising tool (please specify)
+          label_en: Digital Advertising & Marketing
+          label_fr: Digital Advertising & Marketing
+        - show_if:
+            track: GEN
+          options:
+            - value: Tableau
+              label_en: Tableau
+              label_fr: Tableau
+            - value: Power BI
+              label_en: Power BI
+              label_fr: Power BI
+            - value: Looker
+              label_en: Looker
+              label_fr: Looker
+            - value: Qlik Sense
+              label_en: Qlik Sense
+              label_fr: Qlik Sense
+            - value: Sisense
+              label_en: Sisense
+              label_fr: Sisense
+            - value: Domo
+              label_en: Domo
+              label_fr: Domo
+            - value: SurveyMonkey
+              label_en: SurveyMonkey
+              label_fr: SurveyMonkey
+            - value: Other BI tool (please specify)
+              label_en: Other BI tool (please specify)
+              label_fr: Other BI tool (please specify)
+          label_en: Business Intelligence & Analytics
+          label_fr: Business Intelligence & Analytics
+        - show_if:
+            track: GEN
+          options:
+            - value: Asana
+              label_en: Asana
+              label_fr: Asana
+            - value: Trello
+              label_en: Trello
+              label_fr: Trello
+            - value: Jira
+              label_en: Jira
+              label_fr: Jira
+            - value: Slack
+              label_en: Slack
+              label_fr: Slack
+            - value: Microsoft Teams
+              label_en: Microsoft Teams
+              label_fr: Microsoft Teams
+            - value: Notion
+              label_en: Notion
+              label_fr: Notion
+            - value: ClickUp
+              label_en: ClickUp
+              label_fr: ClickUp
+            - value: Other productivity tool (please specify)
+              label_en: Other productivity tool (please specify)
+              label_fr: Other productivity tool (please specify)
+          label_en: Project Management & Productivity
+          label_fr: Project Management & Productivity
+        - show_if:
+            track: GEN
+          options:
+            - value: QuickBooks
+              label_en: QuickBooks
+              label_fr: QuickBooks
+            - value: Xero
+              label_en: Xero
+              label_fr: Xero
+            - value: FreshBooks
+              label_en: FreshBooks
+              label_fr: FreshBooks
+            - value: Sage
+              label_en: Sage
+              label_fr: Sage
+            - value: Wave
+              label_en: Wave
+              label_fr: Wave
+            - value: Odoo
+              label_en: Odoo
+              label_fr: Odoo
+            - value: Henrri.net
+              label_en: Henrri.net
+              label_fr: Henrri.net
+            - value: Other financial tool (please specify)
+              label_en: Other financial tool (please specify)
+              label_fr: Other financial tool (please specify)
+          label_en: Financial Management & Accounting
+          label_fr: Financial Management & Accounting
+        - show_if:
+            track: GEN
+          options:
+            - value: Kissflow
+              label_en: Kissflow
+              label_fr: Kissflow
+            - value: Nintex
+              label_en: Nintex
+              label_fr: Nintex
+            - value: Pipefy
+              label_en: Pipefy
+              label_fr: Pipefy
+            - value: ProcessMaker
+              label_en: ProcessMaker
+              label_fr: ProcessMaker
+            - value: Appian
+              label_en: Appian
+              label_fr: Appian
+            - value: Pegasystems
+              label_en: Pegasystems
+              label_fr: Pegasystems
+            - value: Other workflow tool (please specify)
+              label_en: Other workflow tool (please specify)
+              label_fr: Other workflow tool (please specify)
+          label_en: Business Process Management
+          label_fr: Business Process Management
+        - show_if:
+            track: REG
+          options:
+            - value: OneTrust
+              label_en: OneTrust
+              label_fr: OneTrust
+            - value: TrustArc
+              label_en: TrustArc
+              label_fr: TrustArc
+            - value: CookieYes
+              label_en: CookieYes
+              label_fr: CookieYes
+            - value: Usercentrics
+              label_en: Usercentrics
+              label_fr: Usercentrics
+            - value: Didomi
+              label_en: Didomi
+              label_fr: Didomi
+            - value: Cookiebot
+              label_en: Cookiebot
+              label_fr: Cookiebot
+            - value: DataGrail
+              label_en: DataGrail
+              label_fr: DataGrail
+            - value: Other privacy tool (please specify)
+              label_en: Other privacy tool (please specify)
+              label_fr: Other privacy tool (please specify)
+          label_en: Data Privacy & GDPR Compliance
+          label_fr: Data Privacy & GDPR Compliance
+        - show_if:
+            track: REG
+          options:
+            - value: Qualys
+              label_en: Qualys
+              label_fr: Qualys
+            - value: Rapid7
+              label_en: Rapid7
+              label_fr: Rapid7
+            - value: Tenable
+              label_en: Tenable
+              label_fr: Tenable
+            - value: CrowdStrike
+              label_en: CrowdStrike
+              label_fr: CrowdStrike
+            - value: SentinelOne
+              label_en: SentinelOne
+              label_fr: SentinelOne
+            - value: Splunk
+              label_en: Splunk
+              label_fr: Splunk
+            - value: Other security tool (please specify)
+              label_en: Other security tool (please specify)
+              label_fr: Other security tool (please specify)
+          label_en: Security & Risk Management
+          label_fr: Security & Risk Management
+        - show_if:
+            track: REG
+          options:
+            - value: AuditBoard
+              label_en: AuditBoard
+              label_fr: AuditBoard
+            - value: MetricStream
+              label_en: MetricStream
+              label_fr: MetricStream
+            - value: ServiceNow GRC
+              label_en: ServiceNow GRC
+              label_fr: ServiceNow GRC
+            - value: RSA Archer
+              label_en: RSA Archer
+              label_fr: RSA Archer
+            - value: LogicGate
+              label_en: LogicGate
+              label_fr: LogicGate
+            - value: Resolver
+              label_en: Resolver
+              label_fr: Resolver
+            - value: Other GRC tool (please specify)
+              label_en: Other GRC tool (please specify)
+              label_fr: Other GRC tool (please specify)
+          label_en: Audit & Governance
+          label_fr: Audit & Governance
+        - show_if:
+            track: REG
+          options:
+            - value: Fenergo
+              label_en: Fenergo
+              label_fr: Fenergo
+            - value: RegEd
+              label_en: RegEd
+              label_fr: RegEd
+            - value: Thomson Reuters
+              label_en: Thomson Reuters
+              label_fr: Thomson Reuters
+            - value: Other regulatory tool (please specify)
+              label_en: Other regulatory tool (please specify)
+              label_fr: Other regulatory tool (please specify)
+          label_en: Industry-Specific Compliance
+          label_fr: Industry-Specific Compliance
+        - show_if:
+            track: REG
+          options:
+            - value: SharePoint
+              label_en: SharePoint
+              label_fr: SharePoint
+            - value: DocuSign
+              label_en: DocuSign
+              label_fr: DocuSign
+            - value: Box
+              label_en: Box
+              label_fr: Box
+            - value: Dropbox Business
+              label_en: Dropbox Business
+              label_fr: Dropbox Business
+            - value: M-Files
+              label_en: M-Files
+              label_fr: M-Files
+            - value: FileHold
+              label_en: FileHold
+              label_fr: FileHold
+          label_en: Document & Records Management
+          label_fr: Document & Records Management
       required: true
-
+      text_en: Which tools are actively used by you and your team?
+      text_fr: Which tools are actively used by you and your team?
+      helper_en: Select all tools your team uses—this drives tailored workflow and AI agent suggestions.
+      helper_fr: Select all tools your team uses—this drives tailored workflow and AI agent suggestions.
     - id: T1
-      text: "How well are your tools and systems connected?"
       type: single
-      options: [
-        "Siloed – no connections",
-        "Manual – CSV imports/exports",
-        "Batch – scheduled syncs",
-        "API – platform integrations",
-        "Real-time – event-driven mesh"
-      ]
+      options:
+        - value: Siloed – no connections
+          label_en: Siloed – no connections
+          label_fr: Siloed – no connections
+        - value: Manual – CSV imports/exports
+          label_en: Manual – CSV imports/exports
+          label_fr: Manual – CSV imports/exports
+        - value: Batch – scheduled syncs
+          label_en: Batch – scheduled syncs
+          label_fr: Batch – scheduled syncs
+        - value: API – platform integrations
+          label_en: API – platform integrations
+          label_fr: API – platform integrations
+        - value: Real-time – event-driven mesh
+          label_en: Real-time – event-driven mesh
+          label_fr: Real-time – event-driven mesh
       required: true
-
+      text_en: How well are your tools and systems connected?
+      text_fr: How well are your tools and systems connected?
     - id: T2
-      text: "How often do data connections fail or cause issues?"
       type: single
-      options: [
-        "Weekly – frequent failures",
-        "Monthly – occasional errors",
-        "Quarterly – rare problems",
-        "Almost never – very stable",
-        "Never – fully reliable"
-      ]
+      options:
+        - value: Weekly – frequent failures
+          label_en: Weekly – frequent failures
+          label_fr: Weekly – frequent failures
+        - value: Monthly – occasional errors
+          label_en: Monthly – occasional errors
+          label_fr: Monthly – occasional errors
+        - value: Quarterly – rare problems
+          label_en: Quarterly – rare problems
+          label_fr: Quarterly – rare problems
+        - value: Almost never – very stable
+          label_en: Almost never – very stable
+          label_fr: Almost never – very stable
+        - value: Never – fully reliable
+          label_en: Never – fully reliable
+          label_fr: Never – fully reliable
       required: true
-
+      text_en: How often do data connections fail or cause issues?
+      text_fr: How often do data connections fail or cause issues?
     - id: T3
-      text: "Who owns and maintains your system integrations?"
       type: single
-      options: [
-        "No clear owner",
-        "External agency/freelancer",
-        "Ops/Product team",
-        "Internal tech team",
-        "Dedicated integration team"
-      ]
+      options:
+        - value: No clear owner
+          label_en: No clear owner
+          label_fr: No clear owner
+        - value: External agency/freelancer
+          label_en: External agency/freelancer
+          label_fr: External agency/freelancer
+        - value: Ops/Product team
+          label_en: Ops/Product team
+          label_fr: Ops/Product team
+        - value: Internal tech team
+          label_en: Internal tech team
+          label_fr: Internal tech team
+        - value: Dedicated integration team
+          label_en: Dedicated integration team
+          label_fr: Dedicated integration team
       required: true
-
+      text_en: Who owns and maintains your system integrations?
+      text_fr: Who owns and maintains your system integrations?
     - id: T4
-      text: "How well are you connected to external AI services and LLMs?"
       type: single
-      helper: "Indicates which large-language models (LLMs) you’re allowed to use and any internal models you access.Examples: OpenAI (ChatGPT), Anthropic Claude, Mistral, GitHub Copilot, or your own on-premise LLM."
-      options: ["Not allowed to use any external LLMs", "Exploratory tests only (e.g., trying ChatGPT, Claude, Mistral in sandbox)", "Pilot deployments (small projects using APIs)", "One API in production (e.g., ChatGPT or Copilot embedded in a workflow)", "Multiple APIs in production + internal LLM access"]
+      options:
+        - value: Not allowed to use any external LLMs
+          label_en: Not allowed to use any external LLMs
+          label_fr: Not allowed to use any external LLMs
+        - value: Exploratory tests only (e.g., trying ChatGPT, Claude, Mistral in sandbox)
+          label_en: Exploratory tests only (e.g., trying ChatGPT, Claude, Mistral in sandbox)
+          label_fr: Exploratory tests only (e.g., trying ChatGPT, Claude, Mistral in sandbox)
+        - value: Pilot deployments (small projects using APIs)
+          label_en: Pilot deployments (small projects using APIs)
+          label_fr: Pilot deployments (small projects using APIs)
+        - value: One API in production (e.g., ChatGPT or Copilot embedded in a workflow)
+          label_en: One API in production (e.g., ChatGPT or Copilot embedded in a workflow)
+          label_fr: One API in production (e.g., ChatGPT or Copilot embedded in a workflow)
+        - value: Multiple APIs in production + internal LLM access
+          label_en: Multiple APIs in production + internal LLM access
+          label_fr: Multiple APIs in production + internal LLM access
       required: true
-
+      text_en: How well are you connected to external AI services and LLMs?
+      text_fr: How well are you connected to external AI services and LLMs?
+      helper_en: 'Indicates which large-language models (LLMs) you’re allowed to use and any internal models you access.Examples: OpenAI (ChatGPT), Anthropic Claude, Mistral, GitHub Copilot, or your own on-premise LLM.'
+      helper_fr: 'Indicates which large-language models (LLMs) you’re allowed to use and any internal models you access.Examples: OpenAI (ChatGPT), Anthropic Claude, Mistral, GitHub Copilot, or your own on-premise LLM.'
     - id: T5
-      text: "What access do you have to GPU/TPU compute?"
       type: single
-      show_if: { track: [TECH, REG] }
-      options: [
-        "None",
-        "Colab only",
-        "On-demand cloud GPUs/TPUs",
-        "Dedicated GPU/TPU budget",
-        "Managed AI compute cluster"
-      ]
+      show_if:
+        track:
+          - TECH
+          - REG
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: Colab only
+          label_en: Colab only
+          label_fr: Colab only
+        - value: On-demand cloud GPUs/TPUs
+          label_en: On-demand cloud GPUs/TPUs
+          label_fr: On-demand cloud GPUs/TPUs
+        - value: Dedicated GPU/TPU budget
+          label_en: Dedicated GPU/TPU budget
+          label_fr: Dedicated GPU/TPU budget
+        - value: Managed AI compute cluster
+          label_en: Managed AI compute cluster
+          label_fr: Managed AI compute cluster
       required: true
-
+      text_en: What access do you have to GPU/TPU compute?
+      text_fr: What access do you have to GPU/TPU compute?
     - id: T6
-      text: "How well is your technical or data architecture documented?"
       type: single
-      show_if: { track: [TECH, REG] }
-      options: [
-        "None",
-        "High-level sketches",
-        "Critical systems mapped",
-        "Full architecture diagrams",
-        "Auto-generated & maintained docs"
-      ]
+      show_if:
+        track:
+          - TECH
+          - REG
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: High-level sketches
+          label_en: High-level sketches
+          label_fr: High-level sketches
+        - value: Critical systems mapped
+          label_en: Critical systems mapped
+          label_fr: Critical systems mapped
+        - value: Full architecture diagrams
+          label_en: Full architecture diagrams
+          label_fr: Full architecture diagrams
+        - value: Auto-generated & maintained docs
+          label_en: Auto-generated & maintained docs
+          label_fr: Auto-generated & maintained docs
       required: true
-
+      text_en: How well is your technical or data architecture documented?
+      text_fr: How well is your technical or data architecture documented?
     - id: T7
-      text: "What level of disaster recovery planning exists for data & AI?"
       type: single
-      show_if: { track: [TECH, REG] }
-      options: [
-        "No plan",
-        "Backups only",
-        "Manual failover",
-        "Automated failover",
-        "AI-aware recovery playbook"
-      ]
+      show_if:
+        track:
+          - TECH
+          - REG
+      options:
+        - value: No plan
+          label_en: No plan
+          label_fr: No plan
+        - value: Backups only
+          label_en: Backups only
+          label_fr: Backups only
+        - value: Manual failover
+          label_en: Manual failover
+          label_fr: Manual failover
+        - value: Automated failover
+          label_en: Automated failover
+          label_fr: Automated failover
+        - value: AI-aware recovery playbook
+          label_en: AI-aware recovery playbook
+          label_fr: AI-aware recovery playbook
       required: true
-
+      text_en: What level of disaster recovery planning exists for data & AI?
+      text_fr: What level of disaster recovery planning exists for data & AI?
     - id: T8
-      text: "Which low-code or no-code platforms do you use for automation?"
       type: multi
-      helper: "Select all platforms you actively use; choose None if you don't use any."
-      options: ["None – no low-code/no-code tools", "Zapier – connect apps with workflows", "Make – multi-step automation builder", "n8n – self-hosted workflow automation", "Power Automate – Microsoft flow automation", "UiPath – RPA for desktop & web", "Workato – enterprise integration platform", "Airbyte – ELT data pipelines", "Fivetran – automated data connectors", "dbt – analytics engineering"]
+      options:
+        - value: None – no low-code/no-code tools
+          label_en: None – no low-code/no-code tools
+          label_fr: None – no low-code/no-code tools
+        - value: Zapier – connect apps with workflows
+          label_en: Zapier – connect apps with workflows
+          label_fr: Zapier – connect apps with workflows
+        - value: Make – multi-step automation builder
+          label_en: Make – multi-step automation builder
+          label_fr: Make – multi-step automation builder
+        - value: n8n – self-hosted workflow automation
+          label_en: n8n – self-hosted workflow automation
+          label_fr: n8n – self-hosted workflow automation
+        - value: Power Automate – Microsoft flow automation
+          label_en: Power Automate – Microsoft flow automation
+          label_fr: Power Automate – Microsoft flow automation
+        - value: UiPath – RPA for desktop & web
+          label_en: UiPath – RPA for desktop & web
+          label_fr: UiPath – RPA for desktop & web
+        - value: Workato – enterprise integration platform
+          label_en: Workato – enterprise integration platform
+          label_fr: Workato – enterprise integration platform
+        - value: Airbyte – ELT data pipelines
+          label_en: Airbyte – ELT data pipelines
+          label_fr: Airbyte – ELT data pipelines
+        - value: Fivetran – automated data connectors
+          label_en: Fivetran – automated data connectors
+          label_fr: Fivetran – automated data connectors
+        - value: dbt – analytics engineering
+          label_en: dbt – analytics engineering
+          label_fr: dbt – analytics engineering
       score_per: 10
       cap: 100
       required: true
-
-
+      text_en: Which low-code or no-code platforms do you use for automation?
+      text_fr: Which low-code or no-code platforms do you use for automation?
+      helper_en: Select all platforms you actively use; choose None if you don't use any.
+      helper_fr: Select all platforms you actively use; choose None if you don't use any.
+  purpose_en: Tool stack & integration maturity (to power workflow and AI agent recommendations).
+  purpose_fr: Tool stack & integration maturity (to power workflow and AI agent recommendations).
 section_5:
   category: automation
-  purpose: "Automation maturity & AI agent governance."
   questions:
-
     - id: A1
-      text: "Which three tasks would most benefit from automation in your organization?"
       type: rank
-      helper: "Rank your top priorities for automation."
-      options: ["Reporting", "Scheduling", "Data entry", "FAQ handling", "Ticket triage", "Contract generation", "Inventory management", "Compliance checks"]
+      options:
+        - value: Reporting
+          label_en: Reporting
+          label_fr: Reporting
+        - value: Scheduling
+          label_en: Scheduling
+          label_fr: Scheduling
+        - value: Data entry
+          label_en: Data entry
+          label_fr: Data entry
+        - value: FAQ handling
+          label_en: FAQ handling
+          label_fr: FAQ handling
+        - value: Ticket triage
+          label_en: Ticket triage
+          label_fr: Ticket triage
+        - value: Contract generation
+          label_en: Contract generation
+          label_fr: Contract generation
+        - value: Inventory management
+          label_en: Inventory management
+          label_fr: Inventory management
+        - value: Compliance checks
+          label_en: Compliance checks
+          label_fr: Compliance checks
       max_rank: 3
-      weight: [40,30,20]
+      weight:
+        - 40
+        - 30
+        - 20
       required: true
-
-
+      text_en: Which three tasks would most benefit from automation in your organization?
+      text_fr: Which three tasks would most benefit from automation in your organization?
+      helper_en: Rank your top priorities for automation.
+      helper_fr: Rank your top priorities for automation.
     - id: A2
-      text: "How mature are your current automation efforts?"
       type: single
-      helper: "Choose the description that best fits how automated your processes are, from no automation to fully autonomous."
-      options: ["None – no automation", "1 – ad-hoc scripts only", "2 – basic tools with manual oversight", "3 – integrated workflows across functions", "4 – continuous automation with monitoring", "5 – fully autonomous processes"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: None – no automation
+          label_en: None – no automation
+          label_fr: None – no automation
+        - value: 1 – ad-hoc scripts only
+          label_en: 1 – ad-hoc scripts only
+          label_fr: 1 – ad-hoc scripts only
+        - value: 2 – basic tools with manual oversight
+          label_en: 2 – basic tools with manual oversight
+          label_fr: 2 – basic tools with manual oversight
+        - value: 3 – integrated workflows across functions
+          label_en: 3 – integrated workflows across functions
+          label_fr: 3 – integrated workflows across functions
+        - value: 4 – continuous automation with monitoring
+          label_en: 4 – continuous automation with monitoring
+          label_fr: 4 – continuous automation with monitoring
+        - value: 5 – fully autonomous processes
+          label_en: 5 – fully autonomous processes
+          label_fr: 5 – fully autonomous processes
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How mature are your current automation efforts?
+      text_fr: How mature are your current automation efforts?
+      helper_en: Choose the description that best fits how automated your processes are, from no automation to fully autonomous.
+      helper_fr: Choose the description that best fits how automated your processes are, from no automation to fully autonomous.
     - id: A3
-      text: "What is the current status of AI agents in your operations?"
       type: single
-      helper: "Helps us recommend the right agent training modules."
-      options: ["None implemented – no AI agents", "Prototype built – early proof of concept", "One agent in production – single live agent", "Multiple agents live – several agents running", "Organization-wide deployment – agents across teams"]
+      options:
+        - value: None implemented – no AI agents
+          label_en: None implemented – no AI agents
+          label_fr: None implemented – no AI agents
+        - value: Prototype built – early proof of concept
+          label_en: Prototype built – early proof of concept
+          label_fr: Prototype built – early proof of concept
+        - value: One agent in production – single live agent
+          label_en: One agent in production – single live agent
+          label_fr: One agent in production – single live agent
+        - value: Multiple agents live – several agents running
+          label_en: Multiple agents live – several agents running
+          label_fr: Multiple agents live – several agents running
+        - value: Organization-wide deployment – agents across teams
+          label_en: Organization-wide deployment – agents across teams
+          label_fr: Organization-wide deployment – agents across teams
       required: true
-
+      text_en: What is the current status of AI agents in your operations?
+      text_fr: What is the current status of AI agents in your operations?
+      helper_en: Helps us recommend the right agent training modules.
+      helper_fr: Helps us recommend the right agent training modules.
     - id: A4
-      text: "Which tasks are you considering for AI-agent automation?"
       type: multi
-      helper: "Select all that apply to identify your first agent use cases."
-      options: ["Customer support – automated responses", "Report generation – auto-create summaries", "Email drafting – compose routine emails", "Lead scoring – prioritize prospects", "Meeting summaries – automated notes", "Market research – gather insights", "Quality control – flag issues"]
+      options:
+        - value: Customer support – automated responses
+          label_en: Customer support – automated responses
+          label_fr: Customer support – automated responses
+        - value: Report generation – auto-create summaries
+          label_en: Report generation – auto-create summaries
+          label_fr: Report generation – auto-create summaries
+        - value: Email drafting – compose routine emails
+          label_en: Email drafting – compose routine emails
+          label_fr: Email drafting – compose routine emails
+        - value: Lead scoring – prioritize prospects
+          label_en: Lead scoring – prioritize prospects
+          label_fr: Lead scoring – prioritize prospects
+        - value: Meeting summaries – automated notes
+          label_en: Meeting summaries – automated notes
+          label_fr: Meeting summaries – automated notes
+        - value: Market research – gather insights
+          label_en: Market research – gather insights
+          label_fr: Market research – gather insights
+        - value: Quality control – flag issues
+          label_en: Quality control – flag issues
+          label_fr: Quality control – flag issues
       score_per: 10
       cap: 100
       required: true
-
+      text_en: Which tasks are you considering for AI-agent automation?
+      text_fr: Which tasks are you considering for AI-agent automation?
+      helper_en: Select all that apply to identify your first agent use cases.
+      helper_fr: Select all that apply to identify your first agent use cases.
     - id: A5
-      text: "What level of autonomy do you want for your AI agents?"
       type: single
-      helper: "Define how independent your agents should be."
-      options: ["Suggest only", "Require human approval", "Semi-automated", "Fully automated"]
+      options:
+        - value: Suggest only
+          label_en: Suggest only
+          label_fr: Suggest only
+        - value: Require human approval
+          label_en: Require human approval
+          label_fr: Require human approval
+        - value: Semi-automated
+          label_en: Semi-automated
+          label_fr: Semi-automated
+        - value: Fully automated
+          label_en: Fully automated
+          label_fr: Fully automated
       hide_if:
         all_of:
-          - { A3: "None implemented" }
-          - { P2: "Conservative – preferring pilot tests before scaling" }
+          - A3: None implemented
+          - P2: Conservative – preferring pilot tests before scaling
       required: true
-
+      text_en: What level of autonomy do you want for your AI agents?
+      text_fr: What level of autonomy do you want for your AI agents?
+      helper_en: Define how independent your agents should be.
+      helper_fr: Define how independent your agents should be.
     - id: A6
-      text: "How do you monitor and alert on your automated processes?"
       type: single
-      helper: "Ensures reliability and rapid issue resolution."
-      options: ["No monitoring", "Manual checks", "KPI dashboards", "Automated alerts", "Full observability & logging"]
+      options:
+        - value: No monitoring
+          label_en: No monitoring
+          label_fr: No monitoring
+        - value: Manual checks
+          label_en: Manual checks
+          label_fr: Manual checks
+        - value: KPI dashboards
+          label_en: KPI dashboards
+          label_fr: KPI dashboards
+        - value: Automated alerts
+          label_en: Automated alerts
+          label_fr: Automated alerts
+        - value: Full observability & logging
+          label_en: Full observability & logging
+          label_fr: Full observability & logging
       required: true
-
+      text_en: How do you monitor and alert on your automated processes?
+      text_fr: How do you monitor and alert on your automated processes?
+      helper_en: Ensures reliability and rapid issue resolution.
+      helper_fr: Ensures reliability and rapid issue resolution.
     - id: A7
-      text: "What are the main blockers to automating tasks and deploying AI agents?"
       type: multi
-      helper: "Select all that apply."
-      options: ["Data silos", "Lack of technical resources", "Insufficient buy-in", "Compliance concerns", "Unclear ROI", "Budget constraints", "Integration complexity"]
-      score_formula: "100 - 10 * count"
+      options:
+        - value: Data silos
+          label_en: Data silos
+          label_fr: Data silos
+        - value: Lack of technical resources
+          label_en: Lack of technical resources
+          label_fr: Lack of technical resources
+        - value: Insufficient buy-in
+          label_en: Insufficient buy-in
+          label_fr: Insufficient buy-in
+        - value: Compliance concerns
+          label_en: Compliance concerns
+          label_fr: Compliance concerns
+        - value: Unclear ROI
+          label_en: Unclear ROI
+          label_fr: Unclear ROI
+        - value: Budget constraints
+          label_en: Budget constraints
+          label_fr: Budget constraints
+        - value: Integration complexity
+          label_en: Integration complexity
+          label_fr: Integration complexity
+      score_formula: 100 - 10 * count
       required: true
-
-
+      text_en: What are the main blockers to automating tasks and deploying AI agents?
+      text_fr: What are the main blockers to automating tasks and deploying AI agents?
+      helper_en: Select all that apply.
+      helper_fr: Select all that apply.
     - id: A8
-      text: "Which interface do you prefer for interacting with AI agents?"
       type: multi
-      helper: "Helps tailor agent UI recommendations."
-      options: ["Chatbot (Slack/Teams)", "Embedded widget", "Dashboard", "Email assistant", "API/CLI", "Voice assistant", "Need guidance"]
+      options:
+        - value: Chatbot (Slack/Teams)
+          label_en: Chatbot (Slack/Teams)
+          label_fr: Chatbot (Slack/Teams)
+        - value: Embedded widget
+          label_en: Embedded widget
+          label_fr: Embedded widget
+        - value: Dashboard
+          label_en: Dashboard
+          label_fr: Dashboard
+        - value: Email assistant
+          label_en: Email assistant
+          label_fr: Email assistant
+        - value: API/CLI
+          label_en: API/CLI
+          label_fr: API/CLI
+        - value: Voice assistant
+          label_en: Voice assistant
+          label_fr: Voice assistant
+        - value: Need guidance
+          label_en: Need guidance
+          label_fr: Need guidance
       score_per: 10
       cap: 100
       required: true
-
+      text_en: Which interface do you prefer for interacting with AI agents?
+      text_fr: Which interface do you prefer for interacting with AI agents?
+      helper_en: Helps tailor agent UI recommendations.
+      helper_fr: Helps tailor agent UI recommendations.
     - id: A9
-      text: "What governance processes do you have for AI agents?"
       type: single
-      helper: "Ensures safe, compliant agent operations."
-      options: ["None", "Ad-hoc spot checks", "Formal review process", "Logging with oversight", "Continuous auditing"]
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: Ad-hoc spot checks
+          label_en: Ad-hoc spot checks
+          label_fr: Ad-hoc spot checks
+        - value: Formal review process
+          label_en: Formal review process
+          label_fr: Formal review process
+        - value: Logging with oversight
+          label_en: Logging with oversight
+          label_fr: Logging with oversight
+        - value: Continuous auditing
+          label_en: Continuous auditing
+          label_fr: Continuous auditing
       hide_if:
-        A3: "None implemented"
+        A3: None implemented
       required: true
-
+      text_en: What governance processes do you have for AI agents?
+      text_fr: What governance processes do you have for AI agents?
+      helper_en: Ensures safe, compliant agent operations.
+      helper_fr: Ensures safe, compliant agent operations.
     - id: A10
-      text: "What recovery or rollback strategy exists for failed automations or AI agents?"
       type: single
-      helper: "Defines resilience and business continuity."
-      options: ["No plan", "Manual rollback steps", "Pre-defined failover procedures", "Automated rollback", "Self-healing loops"]
+      options:
+        - value: No plan
+          label_en: No plan
+          label_fr: No plan
+        - value: Manual rollback steps
+          label_en: Manual rollback steps
+          label_fr: Manual rollback steps
+        - value: Pre-defined failover procedures
+          label_en: Pre-defined failover procedures
+          label_fr: Pre-defined failover procedures
+        - value: Automated rollback
+          label_en: Automated rollback
+          label_fr: Automated rollback
+        - value: Self-healing loops
+          label_en: Self-healing loops
+          label_fr: Self-healing loops
       hide_if:
-        A3: "None implemented"
+        A3: None implemented
       required: true
-
+      text_en: What recovery or rollback strategy exists for failed automations or AI agents?
+      text_fr: What recovery or rollback strategy exists for failed automations or AI agents?
+      helper_en: Defines resilience and business continuity.
+      helper_fr: Defines resilience and business continuity.
     - id: A11
-      text: "How do you track the accuracy and quality of AI agent outputs?"
       type: single
-      helper: "Drives training on output validation and testing."
-      options: ["No tracking", "Manual spot checks", "Release testing", "Ongoing tests + spot checks", "Continuous accuracy monitoring"]
+      options:
+        - value: No tracking
+          label_en: No tracking
+          label_fr: No tracking
+        - value: Manual spot checks
+          label_en: Manual spot checks
+          label_fr: Manual spot checks
+        - value: Release testing
+          label_en: Release testing
+          label_fr: Release testing
+        - value: Ongoing tests + spot checks
+          label_en: Ongoing tests + spot checks
+          label_fr: Ongoing tests + spot checks
+        - value: Continuous accuracy monitoring
+          label_en: Continuous accuracy monitoring
+          label_fr: Continuous accuracy monitoring
       hide_if:
-        A3: "None implemented"
+        A3: None implemented
       required: true
-
+      text_en: How do you track the accuracy and quality of AI agent outputs?
+      text_fr: How do you track the accuracy and quality of AI agent outputs?
+      helper_en: Drives training on output validation and testing.
+      helper_fr: Drives training on output validation and testing.
+  purpose_en: Automation maturity & AI agent governance.
+  purpose_fr: Automation maturity & AI agent governance.
 section_6:
   category: people
-  purpose: "Team capability & learning culture (to drive targeted training recommendations)."
   questions:
-
-    # 1. Self-assessment: AI tool usage
     - id: C1
-      text: "How often do you and your team use AI tools in your daily work?"
       type: single
-      options: ["Never", "Rarely", "Monthly", "Weekly", "Daily"]
-      score_map: [0, 25, 50, 75, 100]
+      options:
+        - value: Never
+          label_en: Never
+          label_fr: Never
+        - value: Rarely
+          label_en: Rarely
+          label_fr: Rarely
+        - value: Monthly
+          label_en: Monthly
+          label_fr: Monthly
+        - value: Weekly
+          label_en: Weekly
+          label_fr: Weekly
+        - value: Daily
+          label_en: Daily
+          label_fr: Daily
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
-    # 2. Self-assessment: Prompt-writing skills
+      text_en: How often do you and your team use AI tools in your daily work?
+      text_fr: How often do you and your team use AI tools in your daily work?
     - id: C2
-      text: "How confident are you and your team at these prompt-writing skills?"
       type: matrix
       rows:
-        - "Writing basic prompts"
-        - "Using few-shot examples"
-        - "Formatting structured prompts"
-        - "Designing multi-step prompt chains"
-      columns: ["No confidence", "Some confidence", "Confident", "Very confident"]
+        - value: Writing basic prompts
+          label_en: Writing basic prompts
+          label_fr: Writing basic prompts
+        - value: Using few-shot examples
+          label_en: Using few-shot examples
+          label_fr: Using few-shot examples
+        - value: Formatting structured prompts
+          label_en: Formatting structured prompts
+          label_fr: Formatting structured prompts
+        - value: Designing multi-step prompt chains
+          label_en: Designing multi-step prompt chains
+          label_fr: Designing multi-step prompt chains
+      columns:
+        - value: No confidence
+          label_en: No confidence
+          label_fr: No confidence
+        - value: Some confidence
+          label_en: Some confidence
+          label_fr: Some confidence
+        - value: Confident
+          label_en: Confident
+          label_fr: Confident
+        - value: Very confident
+          label_en: Very confident
+          label_fr: Very confident
       required: true
-
-    # 3. Knowledge sharing and priority topics
+      text_en: How confident are you and your team at these prompt-writing skills?
+      text_fr: How confident are you and your team at these prompt-writing skills?
     - id: C3
-      text: "How do you and your team share AI learnings internally?"
       type: single
-      options: ["None – no sharing", "Informal tips & tricks", "Dedicated chat channel", "Regular workshops", "Active Community of Practice"]
+      options:
+        - value: None – no sharing
+          label_en: None – no sharing
+          label_fr: None – no sharing
+        - value: Informal tips & tricks
+          label_en: Informal tips & tricks
+          label_fr: Informal tips & tricks
+        - value: Dedicated chat channel
+          label_en: Dedicated chat channel
+          label_fr: Dedicated chat channel
+        - value: Regular workshops
+          label_en: Regular workshops
+          label_fr: Regular workshops
+        - value: Active Community of Practice
+          label_en: Active Community of Practice
+          label_fr: Active Community of Practice
       required: true
-
+      text_en: How do you and your team share AI learnings internally?
+      text_fr: How do you and your team share AI learnings internally?
     - id: C3a
-      text: "Which AI training topics should you and your team prioritize? (Rank top 3)"
       type: rank
-      options: ["Prompt engineering", "AI tool mastery", "Data literacy", "Model fine-tuning", "Retrieval-augmented generation", "Agent orchestration", "Ethics & governance"]
+      options:
+        - value: Prompt engineering
+          label_en: Prompt engineering
+          label_fr: Prompt engineering
+        - value: AI tool mastery
+          label_en: AI tool mastery
+          label_fr: AI tool mastery
+        - value: Data literacy
+          label_en: Data literacy
+          label_fr: Data literacy
+        - value: Model fine-tuning
+          label_en: Model fine-tuning
+          label_fr: Model fine-tuning
+        - value: Retrieval-augmented generation
+          label_en: Retrieval-augmented generation
+          label_fr: Retrieval-augmented generation
+        - value: Agent orchestration
+          label_en: Agent orchestration
+          label_fr: Agent orchestration
+        - value: Ethics & governance
+          label_en: Ethics & governance
+          label_fr: Ethics & governance
       max_rank: 3
-      weight: [50, 30, 20]
+      weight:
+        - 50
+        - 30
+        - 20
       required: true
-
-
-    # 4. Logistics: Budget & time
+      text_en: Which AI training topics should you and your team prioritize? (Rank top 3)
+      text_fr: Which AI training topics should you and your team prioritize? (Rank top 3)
     - id: C4
-      text: "What annual budget do you and your team allocate per person for AI upskilling?"
       type: single
-      options: ["0 €", "< 200 €", "200–500 €", "500–1 000 €", "> 1 000 €"]
+      options:
+        - value: 0 €
+          label_en: 0 €
+          label_fr: 0 €
+        - value: < 200 €
+          label_en: < 200 €
+          label_fr: < 200 €
+        - value: 200–500 €
+          label_en: 200–500 €
+          label_fr: 200–500 €
+        - value: 500–1 000 €
+          label_en: 500–1 000 €
+          label_fr: 500–1 000 €
+        - value: '> 1 000 €'
+          label_en: '> 1 000 €'
+          label_fr: '> 1 000 €'
       required: true
-
+      text_en: What annual budget do you and your team allocate per person for AI upskilling?
+      text_fr: What annual budget do you and your team allocate per person for AI upskilling?
     - id: C5
-      text: "How many hours per month can you and your team dedicate to AI training?"
       type: single
-      options: ["None", "< 1 hr", "1–3 hrs", "3–5 hrs", "> 5 hrs"]
+      options:
+        - value: None
+          label_en: None
+          label_fr: None
+        - value: < 1 hr
+          label_en: < 1 hr
+          label_fr: < 1 hr
+        - value: 1–3 hrs
+          label_en: 1–3 hrs
+          label_fr: 1–3 hrs
+        - value: 3–5 hrs
+          label_en: 3–5 hrs
+          label_fr: 3–5 hrs
+        - value: '> 5 hrs'
+          label_en: '> 5 hrs'
+          label_fr: '> 5 hrs'
       required: true
-
+      text_en: How many hours per month can you and your team dedicate to AI training?
+      text_fr: How many hours per month can you and your team dedicate to AI training?
     - id: C6
-      text: "What format do you and your team prefer for AI training delivery?"
       type: single
-      options: ["Text guides", "Short videos", "Live workshops", "Self-paced courses", "Mixed formats"]
+      options:
+        - value: Text guides
+          label_en: Text guides
+          label_fr: Text guides
+        - value: Short videos
+          label_en: Short videos
+          label_fr: Short videos
+        - value: Live workshops
+          label_en: Live workshops
+          label_fr: Live workshops
+        - value: Self-paced courses
+          label_en: Self-paced courses
+          label_fr: Self-paced courses
+        - value: Mixed formats
+          label_en: Mixed formats
+          label_fr: Mixed formats
       required: true
-
-    # 5. Culture & support
+      text_en: What format do you and your team prefer for AI training delivery?
+      text_fr: What format do you and your team prefer for AI training delivery?
     - id: C7
-      text: "How often do you and your team engage external AI experts?"
       type: single
-      options: ["None – no external support", "Occasional advice", "Regular advisory sessions", "Access to expert network", "Dedicated AI advisory board"]
+      options:
+        - value: None – no external support
+          label_en: None – no external support
+          label_fr: None – no external support
+        - value: Occasional advice
+          label_en: Occasional advice
+          label_fr: Occasional advice
+        - value: Regular advisory sessions
+          label_en: Regular advisory sessions
+          label_fr: Regular advisory sessions
+        - value: Access to expert network
+          label_en: Access to expert network
+          label_fr: Access to expert network
+        - value: Dedicated AI advisory board
+          label_en: Dedicated AI advisory board
+          label_fr: Dedicated AI advisory board
       required: true
-
+      text_en: How often do you and your team engage external AI experts?
+      text_fr: How often do you and your team engage external AI experts?
     - id: C8
-      text: "What stops you and your team from piloting more AI projects?"
       type: multi
-      options: ["Budget constraints", "Lack of skills", "Data silos", "Compliance concerns", "Unclear ROI", "Tech complexity"]
+      options:
+        - value: Budget constraints
+          label_en: Budget constraints
+          label_fr: Budget constraints
+        - value: Lack of skills
+          label_en: Lack of skills
+          label_fr: Lack of skills
+        - value: Data silos
+          label_en: Data silos
+          label_fr: Data silos
+        - value: Compliance concerns
+          label_en: Compliance concerns
+          label_fr: Compliance concerns
+        - value: Unclear ROI
+          label_en: Unclear ROI
+          label_fr: Unclear ROI
+        - value: Tech complexity
+          label_en: Tech complexity
+          label_fr: Tech complexity
       required: true
-
+      text_en: What stops you and your team from piloting more AI projects?
+      text_fr: What stops you and your team from piloting more AI projects?
     - id: C9
-      text: "How open are you and your team to piloting new AI projects?"
       type: single
-      options: ["Resistant", "Cautious", "Interested", "Proactive", "Active pilots"]
+      options:
+        - value: Resistant
+          label_en: Resistant
+          label_fr: Resistant
+        - value: Cautious
+          label_en: Cautious
+          label_fr: Cautious
+        - value: Interested
+          label_en: Interested
+          label_fr: Interested
+        - value: Proactive
+          label_en: Proactive
+          label_fr: Proactive
+        - value: Active pilots
+          label_en: Active pilots
+          label_fr: Active pilots
       required: true
-
-    # 6. Collaboration & safety
+      text_en: How open are you and your team to piloting new AI projects?
+      text_fr: How open are you and your team to piloting new AI projects?
     - id: C10
-      text: "How frequently do you and your team collaborate across functions on AI initiatives?"
       type: single
-      options: ["Never", "Occasionally", "Quarterly", "In squads", "Embedded practice"]
+      options:
+        - value: Never
+          label_en: Never
+          label_fr: Never
+        - value: Occasionally
+          label_en: Occasionally
+          label_fr: Occasionally
+        - value: Quarterly
+          label_en: Quarterly
+          label_fr: Quarterly
+        - value: In squads
+          label_en: In squads
+          label_fr: In squads
+        - value: Embedded practice
+          label_en: Embedded practice
+          label_fr: Embedded practice
       required: true
-
+      text_en: How frequently do you and your team collaborate across functions on AI initiatives?
+      text_fr: How frequently do you and your team collaborate across functions on AI initiatives?
     - id: C11
-      text: "How safe do you and your team feel to experiment and fail with AI?"
       type: single
-      helper: "Everyone makes small mistakes (e.g. minor bugs, wrong outputs)—how safe do you feel experimenting and learning with AI?"
-      options: ["No safety – fear of repercussions", "Low safety – rarely comfortable", "Moderate safety – sometimes comfortable", "High safety – often comfortable", "Full safety – always encouraged"]
+      options:
+        - value: No safety – fear of repercussions
+          label_en: No safety – fear of repercussions
+          label_fr: No safety – fear of repercussions
+        - value: Low safety – rarely comfortable
+          label_en: Low safety – rarely comfortable
+          label_fr: Low safety – rarely comfortable
+        - value: Moderate safety – sometimes comfortable
+          label_en: Moderate safety – sometimes comfortable
+          label_fr: Moderate safety – sometimes comfortable
+        - value: High safety – often comfortable
+          label_en: High safety – often comfortable
+          label_fr: High safety – often comfortable
+        - value: Full safety – always encouraged
+          label_en: Full safety – always encouraged
+          label_fr: Full safety – always encouraged
       required: true
-
-
-
+      text_en: How safe do you and your team feel to experiment and fail with AI?
+      text_fr: How safe do you and your team feel to experiment and fail with AI?
+      helper_en: Everyone makes small mistakes (e.g. minor bugs, wrong outputs)—how safe do you feel experimenting and learning with AI?
+      helper_fr: Everyone makes small mistakes (e.g. minor bugs, wrong outputs)—how safe do you feel experimenting and learning with AI?
+  purpose_en: Team capability & learning culture (to drive targeted training recommendations).
+  purpose_fr: Team capability & learning culture (to drive targeted training recommendations).
 section_7:
   category: governance
-  purpose: "Governance, risk & ethics (to drive targeted policy, oversight, and training recommendations)."
   questions:
-
     - id: G1
-      text: "How mature are your processes for identifying and mitigating AI risks and biases?"
       type: single
-      options: ["None – no risk or bias management", "Reactive fixes – ad-hoc corrections after issues", "Pre-release checks – bias tests before deployments", "Formal framework – defined policies and workflows", "AI Act–compliant – meets EU AI Act standards"]
+      options:
+        - value: None – no risk or bias management
+          label_en: None – no risk or bias management
+          label_fr: None – no risk or bias management
+        - value: Reactive fixes – ad-hoc corrections after issues
+          label_en: Reactive fixes – ad-hoc corrections after issues
+          label_fr: Reactive fixes – ad-hoc corrections after issues
+        - value: Pre-release checks – bias tests before deployments
+          label_en: Pre-release checks – bias tests before deployments
+          label_fr: Pre-release checks – bias tests before deployments
+        - value: Formal framework – defined policies and workflows
+          label_en: Formal framework – defined policies and workflows
+          label_fr: Formal framework – defined policies and workflows
+        - value: AI Act–compliant – meets EU AI Act standards
+          label_en: AI Act–compliant – meets EU AI Act standards
+          label_fr: AI Act–compliant – meets EU AI Act standards
       required: true
-
+      text_en: How mature are your processes for identifying and mitigating AI risks and biases?
+      text_fr: How mature are your processes for identifying and mitigating AI risks and biases?
     - id: G2
-      text: "How well can you explain and audit AI model decisions?"
       type: single
-      helper: "Explanation means you can trace why a model made a decision (e.g. feature importances, logs);auditing means you can review records later. For example, logging inputs/outputs for each prediction."
-      options: ["None – no logging or explanations", "High-risk only – explain critical models", "Audit logs – structured logs for scripts", "All models – explanations for every model", "Audit-ready – tools & docs for compliance audits"]
-      score_map: [0,25,50,75,100]
+      options:
+        - value: None – no logging or explanations
+          label_en: None – no logging or explanations
+          label_fr: None – no logging or explanations
+        - value: High-risk only – explain critical models
+          label_en: High-risk only – explain critical models
+          label_fr: High-risk only – explain critical models
+        - value: Audit logs – structured logs for scripts
+          label_en: Audit logs – structured logs for scripts
+          label_fr: Audit logs – structured logs for scripts
+        - value: All models – explanations for every model
+          label_en: All models – explanations for every model
+          label_fr: All models – explanations for every model
+        - value: Audit-ready – tools & docs for compliance audits
+          label_en: Audit-ready – tools & docs for compliance audits
+          label_fr: Audit-ready – tools & docs for compliance audits
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-      
+      text_en: How well can you explain and audit AI model decisions?
+      text_fr: How well can you explain and audit AI model decisions?
+      helper_en: Explanation means you can trace why a model made a decision (e.g. feature importances, logs);auditing means you can review records later. For example, logging inputs/outputs for each prediction.
+      helper_fr: Explanation means you can trace why a model made a decision (e.g. feature importances, logs);auditing means you can review records later. For example, logging inputs/outputs for each prediction.
     - id: G3
-      text: "How transparent are you with users and stakeholders about AI use?"
       type: single
-      options: ["None – no communication", "Policy only – AI mentioned in policies", "Docs & FAQs – published guides and FAQs", "Explain button – users can request details", "Full disclosure – proactive dashboards and alerts"]
+      options:
+        - value: None – no communication
+          label_en: None – no communication
+          label_fr: None – no communication
+        - value: Policy only – AI mentioned in policies
+          label_en: Policy only – AI mentioned in policies
+          label_fr: Policy only – AI mentioned in policies
+        - value: Docs & FAQs – published guides and FAQs
+          label_en: Docs & FAQs – published guides and FAQs
+          label_fr: Docs & FAQs – published guides and FAQs
+        - value: Explain button – users can request details
+          label_en: Explain button – users can request details
+          label_fr: Explain button – users can request details
+        - value: Full disclosure – proactive dashboards and alerts
+          label_en: Full disclosure – proactive dashboards and alerts
+          label_fr: Full disclosure – proactive dashboards and alerts
       required: true
-
+      text_en: How transparent are you with users and stakeholders about AI use?
+      text_fr: How transparent are you with users and stakeholders about AI use?
     - id: G4
-      text: "What level of incident response planning exists for AI failures or harms?"
       type: single
-      options: ["None – no response plan", "General IT plan – covers all incidents", "Manual rollback – human-driven recovery", "Automated rollback – system-driven recovery", "Playbook – comprehensive AI incident response"]
+      options:
+        - value: None – no response plan
+          label_en: None – no response plan
+          label_fr: None – no response plan
+        - value: General IT plan – covers all incidents
+          label_en: General IT plan – covers all incidents
+          label_fr: General IT plan – covers all incidents
+        - value: Manual rollback – human-driven recovery
+          label_en: Manual rollback – human-driven recovery
+          label_fr: Manual rollback – human-driven recovery
+        - value: Automated rollback – system-driven recovery
+          label_en: Automated rollback – system-driven recovery
+          label_fr: Automated rollback – system-driven recovery
+        - value: Playbook – comprehensive AI incident response
+          label_en: Playbook – comprehensive AI incident response
+          label_fr: Playbook – comprehensive AI incident response
       required: true
-
+      text_en: What level of incident response planning exists for AI failures or harms?
+      text_fr: What level of incident response planning exists for AI failures or harms?
     - id: G5
-      text: "What level of human oversight do you enforce on AI outputs?"
       type: single
-      options: ["None – AI runs without checks", "Final review – humans review before release", "Spot checks – random output audits", "Human-in-loop – humans embedded in workflow", "Escalation – automatic escalation to experts"]
+      options:
+        - value: None – AI runs without checks
+          label_en: None – AI runs without checks
+          label_fr: None – AI runs without checks
+        - value: Final review – humans review before release
+          label_en: Final review – humans review before release
+          label_fr: Final review – humans review before release
+        - value: Spot checks – random output audits
+          label_en: Spot checks – random output audits
+          label_fr: Spot checks – random output audits
+        - value: Human-in-loop – humans embedded in workflow
+          label_en: Human-in-loop – humans embedded in workflow
+          label_fr: Human-in-loop – humans embedded in workflow
+        - value: Escalation – automatic escalation to experts
+          label_en: Escalation – automatic escalation to experts
+          label_fr: Escalation – automatic escalation to experts
       required: true
-
+      text_en: What level of human oversight do you enforce on AI outputs?
+      text_fr: What level of human oversight do you enforce on AI outputs?
     - id: G6
-      text: "How deeply is privacy built into your AI development process?"
       type: single
-      options: ["Basic compliance – meets minimum legal requirements", "Enhanced controls – best-practice privacy measures", "PETs – uses privacy-enhancing technologies", "By design – privacy embedded in design phases", "Automated – privacy checks in CI/CD pipelines"]
+      options:
+        - value: Basic compliance – meets minimum legal requirements
+          label_en: Basic compliance – meets minimum legal requirements
+          label_fr: Basic compliance – meets minimum legal requirements
+        - value: Enhanced controls – best-practice privacy measures
+          label_en: Enhanced controls – best-practice privacy measures
+          label_fr: Enhanced controls – best-practice privacy measures
+        - value: PETs – uses privacy-enhancing technologies
+          label_en: PETs – uses privacy-enhancing technologies
+          label_fr: PETs – uses privacy-enhancing technologies
+        - value: By design – privacy embedded in design phases
+          label_en: By design – privacy embedded in design phases
+          label_fr: By design – privacy embedded in design phases
+        - value: Automated – privacy checks in CI/CD pipelines
+          label_en: Automated – privacy checks in CI/CD pipelines
+          label_fr: Automated – privacy checks in CI/CD pipelines
       required: true
-
+      text_en: How deeply is privacy built into your AI development process?
+      text_fr: How deeply is privacy built into your AI development process?
     - id: G7
-      text: "What is the status of independent audits for your AI systems?"
       type: single
       show_if:
-        track: [Reg, Tech]
-      options: ["None – no audits conducted", "Planned – audit scheduled", "In progress – audit underway", "Completed – initial audit done", "Ongoing – regular audit cycle"]
+        track:
+          - Reg
+          - Tech
+      options:
+        - value: None – no audits conducted
+          label_en: None – no audits conducted
+          label_fr: None – no audits conducted
+        - value: Planned – audit scheduled
+          label_en: Planned – audit scheduled
+          label_fr: Planned – audit scheduled
+        - value: In progress – audit underway
+          label_en: In progress – audit underway
+          label_fr: In progress – audit underway
+        - value: Completed – initial audit done
+          label_en: Completed – initial audit done
+          label_fr: Completed – initial audit done
+        - value: Ongoing – regular audit cycle
+          label_en: Ongoing – regular audit cycle
+          label_fr: Ongoing – regular audit cycle
       required: true
-
+      text_en: What is the status of independent audits for your AI systems?
+      text_fr: What is the status of independent audits for your AI systems?
     - id: G8
-      text: "How far along are you in mapping AI risks under the EU AI Act?"
       type: single
-      helper: "Mapping means identifying and documenting risks under EU rules (e.g. creating a risk register of AI use cases)."
-      options: ["Not aware – haven’t reviewed requirements", "Aware – know obligations but not mapped", "Mapping started – risk register in progress", "Completed – risk register finished", "Reported – findings shared with leadership"]
+      options:
+        - value: Not aware – haven’t reviewed requirements
+          label_en: Not aware – haven’t reviewed requirements
+          label_fr: Not aware – haven’t reviewed requirements
+        - value: Aware – know obligations but not mapped
+          label_en: Aware – know obligations but not mapped
+          label_fr: Aware – know obligations but not mapped
+        - value: Mapping started – risk register in progress
+          label_en: Mapping started – risk register in progress
+          label_fr: Mapping started – risk register in progress
+        - value: Completed – risk register finished
+          label_en: Completed – risk register finished
+          label_fr: Completed – risk register finished
+        - value: Reported – findings shared with leadership
+          label_en: Reported – findings shared with leadership
+          label_fr: Reported – findings shared with leadership
       required: true
-
-
+      text_en: How far along are you in mapping AI risks under the EU AI Act?
+      text_fr: How far along are you in mapping AI risks under the EU AI Act?
+      helper_en: Mapping means identifying and documenting risks under EU rules (e.g. creating a risk register of AI use cases).
+      helper_fr: Mapping means identifying and documenting risks under EU rules (e.g. creating a risk register of AI use cases).
     - id: G9
-      text: "How regularly do you test your AI models for fairness?"
       type: single
       show_if:
-        track: [Reg, Tech]
-      options: ["Never – no fairness tests", "Ad-hoc – tests only after incidents", "Pre-release – tests before each deployment", "Quarterly – scheduled fairness reviews", "Continuous – automated monitoring"]
+        track:
+          - Reg
+          - Tech
+      options:
+        - value: Never – no fairness tests
+          label_en: Never – no fairness tests
+          label_fr: Never – no fairness tests
+        - value: Ad-hoc – tests only after incidents
+          label_en: Ad-hoc – tests only after incidents
+          label_fr: Ad-hoc – tests only after incidents
+        - value: Pre-release – tests before each deployment
+          label_en: Pre-release – tests before each deployment
+          label_fr: Pre-release – tests before each deployment
+        - value: Quarterly – scheduled fairness reviews
+          label_en: Quarterly – scheduled fairness reviews
+          label_fr: Quarterly – scheduled fairness reviews
+        - value: Continuous – automated monitoring
+          label_en: Continuous – automated monitoring
+          label_fr: Continuous – automated monitoring
       required: true
-
+      text_en: How regularly do you test your AI models for fairness?
+      text_fr: How regularly do you test your AI models for fairness?
     - id: G10
-      text: "What governance body oversees your AI ethics and compliance?"
       type: single
-      helper: "Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel."
-      options: ["None – no oversight body", "Informal – occasional advisor reviews", "Ad-hoc – project-based ethics reviews", "Scheduled – regular ethics committee meetings", "External – includes independent ethics experts"]
+      options:
+        - value: None – no oversight body
+          label_en: None – no oversight body
+          label_fr: None – no oversight body
+        - value: Informal – occasional advisor reviews
+          label_en: Informal – occasional advisor reviews
+          label_fr: Informal – occasional advisor reviews
+        - value: Ad-hoc – project-based ethics reviews
+          label_en: Ad-hoc – project-based ethics reviews
+          label_fr: Ad-hoc – project-based ethics reviews
+        - value: Scheduled – regular ethics committee meetings
+          label_en: Scheduled – regular ethics committee meetings
+          label_fr: Scheduled – regular ethics committee meetings
+        - value: External – includes independent ethics experts
+          label_en: External – includes independent ethics experts
+          label_fr: External – includes independent ethics experts
       required: true
-
-
+      text_en: What governance body oversees your AI ethics and compliance?
+      text_fr: What governance body oversees your AI ethics and compliance?
+      helper_en: 'Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel.'
+      helper_fr: 'Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel.'
+  purpose_en: Governance, risk & ethics (to drive targeted policy, oversight, and training recommendations).
+  purpose_fr: Governance, risk & ethics (to drive targeted policy, oversight, and training recommendations).
 section_8:
-  purpose: "Implementation horizon, KPIs & vision (to align training and strategic planning)."
   questions:
-
     - id: P1
-      text: "When do you plan to roll out your AI initiatives?"
       type: single
-      helper: "Determines urgency and timing for targeted training."
-      options: ["Within 3 months", "3–6 months", "6–12 months", "Over 12 months"]
-      score_map: [100, 75, 50, 25]
+      options:
+        - value: Within 3 months
+          label_en: Within 3 months
+          label_fr: Within 3 months
+        - value: 3–6 months
+          label_en: 3–6 months
+          label_fr: 3–6 months
+        - value: 6–12 months
+          label_en: 6–12 months
+          label_fr: 6–12 months
+        - value: Over 12 months
+          label_en: Over 12 months
+          label_fr: Over 12 months
+      score_map:
+        - 100
+        - 75
+        - 50
+        - 25
       required: true
-
+      text_en: When do you plan to roll out your AI initiatives?
+      text_fr: When do you plan to roll out your AI initiatives?
+      helper_en: Determines urgency and timing for targeted training.
+      helper_fr: Determines urgency and timing for targeted training.
     - id: P2
-      text: "What level of risk are you comfortable taking on AI projects?"
       type: single
-      helper: "Risk tolerance means how much you’re willing to try new AI ideas, knowing minor setbacks (e.g., small budget overruns or model hiccups) can happen.For example, “Cautious” means you’ll run a small pilot first; “Bold” means you’ll launch a larger experiment with clear rollback plans."
-      options: ["Conservative – pilot tests before scaling", "Cautious – open to small experiments", "Balanced – willing to try new approaches with oversight", "Bold – ready for larger experiments with safeguards"]
-      score_map: [0,33,66,100]
+      options:
+        - value: Conservative – pilot tests before scaling
+          label_en: Conservative – pilot tests before scaling
+          label_fr: Conservative – pilot tests before scaling
+        - value: Cautious – open to small experiments
+          label_en: Cautious – open to small experiments
+          label_fr: Cautious – open to small experiments
+        - value: Balanced – willing to try new approaches with oversight
+          label_en: Balanced – willing to try new approaches with oversight
+          label_fr: Balanced – willing to try new approaches with oversight
+        - value: Bold – ready for larger experiments with safeguards
+          label_en: Bold – ready for larger experiments with safeguards
+          label_fr: Bold – ready for larger experiments with safeguards
+      score_map:
+        - 0
+        - 33
+        - 66
+        - 100
       required: true
-
+      text_en: What level of risk are you comfortable taking on AI projects?
+      text_fr: What level of risk are you comfortable taking on AI projects?
+      helper_en: Risk tolerance means how much you’re willing to try new AI ideas, knowing minor setbacks (e.g., small budget overruns or model hiccups) can happen.For example, “Cautious” means you’ll run a small pilot first; “Bold” means you’ll launch a larger experiment with clear rollback plans.
+      helper_fr: Risk tolerance means how much you’re willing to try new AI ideas, knowing minor setbacks (e.g., small budget overruns or model hiccups) can happen.For example, “Cautious” means you’ll run a small pilot first; “Bold” means you’ll launch a larger experiment with clear rollback plans.
     - id: P3
-      text: "Which success metrics are most important for your AI work? (Select up to 3)"
       type: multi
-      helper: "We’ll recommend training that drives these outcomes."
-      options: ["Return on Investment (ROI)", "Cost reduction", "Operational efficiency", "Customer experience", "Employee productivity", "Innovation outcomes", "Regulatory compliance", "Sustainability impact"]
+      options:
+        - value: Return on Investment (ROI)
+          label_en: Return on Investment (ROI)
+          label_fr: Return on Investment (ROI)
+        - value: Cost reduction
+          label_en: Cost reduction
+          label_fr: Cost reduction
+        - value: Operational efficiency
+          label_en: Operational efficiency
+          label_fr: Operational efficiency
+        - value: Customer experience
+          label_en: Customer experience
+          label_fr: Customer experience
+        - value: Employee productivity
+          label_en: Employee productivity
+          label_fr: Employee productivity
+        - value: Innovation outcomes
+          label_en: Innovation outcomes
+          label_fr: Innovation outcomes
+        - value: Regulatory compliance
+          label_en: Regulatory compliance
+          label_fr: Regulatory compliance
+        - value: Sustainability impact
+          label_en: Sustainability impact
+          label_fr: Sustainability impact
       max_select: 3
       score_per: 34
       cap: 100
       required: true
-
+      text_en: Which success metrics are most important for your AI work? (Select up to 3)
+      text_fr: Which success metrics are most important for your AI work? (Select up to 3)
+      helper_en: We’ll recommend training that drives these outcomes.
+      helper_fr: We’ll recommend training that drives these outcomes.
     - id: P4
-      text: "What is your preferred resource strategy for AI projects?"
       type: single
-      helper: "Determines focus on internal skill-building vs. external support."
-      options: ["Fully in-house build", "Hybrid – in-house + external", "Fully outsourced"]
-      score_map: [100, 50, 0]
+      options:
+        - value: Fully in-house build
+          label_en: Fully in-house build
+          label_fr: Fully in-house build
+        - value: Hybrid – in-house + external
+          label_en: Hybrid – in-house + external
+          label_fr: Hybrid – in-house + external
+        - value: Fully outsourced
+          label_en: Fully outsourced
+          label_fr: Fully outsourced
+      score_map:
+        - 100
+        - 50
+        - 0
       required: true
-
+      text_en: What is your preferred resource strategy for AI projects?
+      text_fr: What is your preferred resource strategy for AI projects?
+      helper_en: Determines focus on internal skill-building vs. external support.
+      helper_fr: Determines focus on internal skill-building vs. external support.
     - id: P5
-      text: "Which technology architectures do you prefer for AI solutions? (Select all)"
       type: multi
-      helper: "Guides technical workshops on relevant platforms."
-      options: ["Cloud-native", "Hybrid/on-premise", "API-first", "Low-code/no-code", "Open-source frameworks", "Enterprise software suites"]
+      options:
+        - value: Cloud-native
+          label_en: Cloud-native
+          label_fr: Cloud-native
+        - value: Hybrid/on-premise
+          label_en: Hybrid/on-premise
+          label_fr: Hybrid/on-premise
+        - value: API-first
+          label_en: API-first
+          label_fr: API-first
+        - value: Low-code/no-code
+          label_en: Low-code/no-code
+          label_fr: Low-code/no-code
+        - value: Open-source frameworks
+          label_en: Open-source frameworks
+          label_fr: Open-source frameworks
+        - value: Enterprise software suites
+          label_en: Enterprise software suites
+          label_fr: Enterprise software suites
       score_per: 17
       cap: 100
       required: true
-
+      text_en: Which technology architectures do you prefer for AI solutions? (Select all)
+      text_fr: Which technology architectures do you prefer for AI solutions? (Select all)
+      helper_en: Guides technical workshops on relevant platforms.
+      helper_fr: Guides technical workshops on relevant platforms.
     - id: P6
-      text: "What level of external support do you expect for AI implementation?"
       type: single
-      helper: "Helps determine consultant-led vs. self-paced learning."
-      options: ["None – fully self-service", "Occasional consulting", "Ongoing advisory", "Managed services", "Full outsourcing"]
+      options:
+        - value: None – fully self-service
+          label_en: None – fully self-service
+          label_fr: None – fully self-service
+        - value: Occasional consulting
+          label_en: Occasional consulting
+          label_fr: Occasional consulting
+        - value: Ongoing advisory
+          label_en: Ongoing advisory
+          label_fr: Ongoing advisory
+        - value: Managed services
+          label_en: Managed services
+          label_fr: Managed services
+        - value: Full outsourcing
+          label_en: Full outsourcing
+          label_fr: Full outsourcing
       hide_if:
-        total_questions: ">60"
+        total_questions: '>60'
       required: true
-
+      text_en: What level of external support do you expect for AI implementation?
+      text_fr: What level of external support do you expect for AI implementation?
+      helper_en: Helps determine consultant-led vs. self-paced learning.
+      helper_fr: Helps determine consultant-led vs. self-paced learning.
     - id: P7
-      text: "How significant of an organizational change are you prepared for to adopt AI?"
       type: single
-      helper: "Matches change-management training to readiness level."
-      options: ["Minimal changes", "Minor tweaks", "Moderate transformation", "Major transformation", "Continuous evolution"]
-      score_map: [0, 25, 50, 75, 100]
-
+      options:
+        - value: Minimal changes
+          label_en: Minimal changes
+          label_fr: Minimal changes
+        - value: Minor tweaks
+          label_en: Minor tweaks
+          label_fr: Minor tweaks
+        - value: Moderate transformation
+          label_en: Moderate transformation
+          label_fr: Moderate transformation
+        - value: Major transformation
+          label_en: Major transformation
+          label_fr: Major transformation
+        - value: Continuous evolution
+          label_en: Continuous evolution
+          label_fr: Continuous evolution
+      score_map:
+        - 0
+        - 25
+        - 50
+        - 75
+        - 100
       required: true
-
+      text_en: How significant of an organizational change are you prepared for to adopt AI?
+      text_fr: How significant of an organizational change are you prepared for to adopt AI?
+      helper_en: Matches change-management training to readiness level.
+      helper_fr: Matches change-management training to readiness level.
+  purpose_en: Implementation horizon, KPIs & vision (to align training and strategic planning).
+  purpose_fr: Implementation horizon, KPIs & vision (to align training and strategic planning).
 add_ons:
   - id: T9
-    show_if: { track: "TECH" }
-    text: "How do you deploy ML models and monitor them in production?"
+    show_if:
+      track: TECH
     type: single
-    helper: "Deployment and monitoring ensure reliability and fast issue detection."
     options:
-      - "No deployment – models not in production"
-      - "Manual scripts – ad-hoc launches"
-      - "CI/CD pipeline – automated builds & deploys"
-      - "MLOps platform (e.g. Kubeflow, MLflow) with monitoring"
-      - "Fully automated blue/green deployments + rollback"
-
+      - value: No deployment – models not in production
+        label_en: No deployment – models not in production
+        label_fr: No deployment – models not in production
+      - value: Manual scripts – ad-hoc launches
+        label_en: Manual scripts – ad-hoc launches
+        label_fr: Manual scripts – ad-hoc launches
+      - value: CI/CD pipeline – automated builds & deploys
+        label_en: CI/CD pipeline – automated builds & deploys
+        label_fr: CI/CD pipeline – automated builds & deploys
+      - value: MLOps platform (e.g. Kubeflow, MLflow) with monitoring
+        label_en: MLOps platform (e.g. Kubeflow, MLflow) with monitoring
+        label_fr: MLOps platform (e.g. Kubeflow, MLflow) with monitoring
+      - value: Fully automated blue/green deployments + rollback
+        label_en: Fully automated blue/green deployments + rollback
+        label_fr: Fully automated blue/green deployments + rollback
+    text_en: How do you deploy ML models and monitor them in production?
+    text_fr: How do you deploy ML models and monitor them in production?
+    helper_en: Deployment and monitoring ensure reliability and fast issue detection.
+    helper_fr: Deployment and monitoring ensure reliability and fast issue detection.
   - id: F8
-    show_if: { track: "REG" }
-    text: "Which mechanisms do you use for cross-border data transfers?"
+    show_if:
+      track: REG
     type: single
-    helper: "GDPR requires lawful transfer—select your standard approach."
     options:
-      - "No cross-border transfers"
-      - "Ad-hoc contracts"
-      - "Standard Contractual Clauses (SCCs)"
-      - "Binding Corporate Rules (BCRs)"
-      - "Adequacy decision + continuous monitoring"
-
+      - value: No cross-border transfers
+        label_en: No cross-border transfers
+        label_fr: No cross-border transfers
+      - value: Ad-hoc contracts
+        label_en: Ad-hoc contracts
+        label_fr: Ad-hoc contracts
+      - value: Standard Contractual Clauses (SCCs)
+        label_en: Standard Contractual Clauses (SCCs)
+        label_fr: Standard Contractual Clauses (SCCs)
+      - value: Binding Corporate Rules (BCRs)
+        label_en: Binding Corporate Rules (BCRs)
+        label_fr: Binding Corporate Rules (BCRs)
+      - value: Adequacy decision + continuous monitoring
+        label_en: Adequacy decision + continuous monitoring
+        label_fr: Adequacy decision + continuous monitoring
+    text_en: Which mechanisms do you use for cross-border data transfers?
+    text_fr: Which mechanisms do you use for cross-border data transfers?
+    helper_en: GDPR requires lawful transfer—select your standard approach.
+    helper_fr: GDPR requires lawful transfer—select your standard approach.
 ui:
   progress_counter: true
   save_resume: true
   ranking_accessible: true
   mobile_touch_tested: true
   auto_deselect_none: true
-
 validation:
-  - rule: "Other selected → text field required"
-  - rule: "All visible questions required"
-  - rule: "Cap visible questions at 60; auto-hide D2 then P6"
-
+  - rule: Other selected → text field required
+  - rule: All visible questions required
+  - rule: Cap visible questions at 60; auto-hide D2 then P6
 scoring:
   per_question: 0-100
   weight_by_track: weight_vectors
   neutral_for_hidden: 50
   confidence_penalty:
-    apply_to: [D2, unknown_like]
-
+    apply_to:
+      - D2
+      - unknown_like
 reporting:
   show_hidden_explanation: true
   benchmarks: by_track
-  store_only: true               # scores hidden from respondents
+  store_only: true
   admin_endpoint: /api/admin/assessment
-
 version:
-  assessment_version: "2.0"
-  schema_date: "2025-08-03"
+  assessment_version: '2.0'
+  schema_date: '2025-08-03'
