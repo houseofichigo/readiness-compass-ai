@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AssessmentValue, OrganizationProfile, Track } from '@/types/assessment';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 export interface AssessmentSubmission {
   id: string;
@@ -34,6 +35,7 @@ export function useAssessment() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const saveAssessment = async (
     responses: Record<string, AssessmentValue>,
@@ -114,8 +116,8 @@ export function useAssessment() {
       }
 
       toast({
-        title: "Assessment saved successfully!",
-        description: "Your assessment results have been saved to the database.",
+        title: t('assessment.toast.saveSuccess.title'),
+        description: t('assessment.toast.saveSuccess.description'),
       });
 
       return submission.id;
@@ -128,8 +130,8 @@ export function useAssessment() {
       const errorMessage = err.message || 'Failed to save assessment';
       setError(errorMessage);
       toast({
-        title: "Error saving assessment",
-        description: errorMessage,
+        title: t('assessment.toast.saveError.title'),
+        description: t('assessment.toast.saveError.description', { message: errorMessage }),
         variant: "destructive",
       });
       return null;
@@ -192,8 +194,8 @@ export function useAssessment() {
       const errorMessage = err.message || 'Failed to load assessment';
       setError(errorMessage);
       toast({
-        title: "Error loading assessment",
-        description: errorMessage,
+        title: t('assessment.toast.loadError.title'),
+        description: t('assessment.toast.loadError.description', { message: errorMessage }),
         variant: "destructive",
       });
       return null;

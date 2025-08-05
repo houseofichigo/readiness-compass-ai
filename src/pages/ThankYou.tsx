@@ -1,3 +1,4 @@
+// src/pages/ThankYou.tsx
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom";
 import Confetti from "react-confetti";
@@ -33,15 +34,13 @@ interface ThankYouPageData {
 }
 
 export default function ThankYou() {
+  const { i18n, t } = useTranslation();
+  const { trackLabels } = getAssessmentTranslations(i18n.language);
+  const { toast } = useToast();
+  const { loadAssessment } = useAssessment();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { toast } = useToast();
-  const { loadAssessment } = useAssessment();
-
-  // keep this approach:
-  const { i18n } = useTranslation();
-  const { trackLabels } = getAssessmentTranslations(i18n.language);
 
   const [showConfetti, setShowConfetti] = useState(true);
   const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
@@ -56,25 +55,21 @@ export default function ThankYou() {
   }, []);
 
   useEffect(() => {
-    const loadData = async () => {
+    async function load() {
       if (submissionIdFromUrl) {
-        try {
-          const loaded = await loadAssessment(submissionIdFromUrl);
-          if (loaded) {
-            setAssessmentData({
-              profile: loaded.profile,
-              track: loaded.profile.track,
-              responses: loaded.responses,
-              submissionId: submissionIdFromUrl,
-            });
-          }
-        } catch {
-          // silent
+        const loaded = await loadAssessment(submissionIdFromUrl);
+        if (loaded) {
+          setAssessmentData({
+            profile: loaded.profile,
+            track: loaded.profile.track,
+            responses: loaded.responses,
+            submissionId: submissionIdFromUrl,
+          });
         }
       }
       setIsLoading(false);
-    };
-    loadData();
+    }
+    load();
   }, [submissionIdFromUrl, loadAssessment]);
 
   const mockData: ThankYouPageData = {
@@ -105,23 +100,20 @@ export default function ThankYou() {
     return (
       <div className="min-h-screen bg-gradient-accent flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">Loading your results...</h2>
-          <p className="text-muted-foreground">
-            Please wait while we retrieve your assessment data.
-          </p>
+          <h2 className="text-2xl font-bold mb-2">{t("errors.loading.title")}</h2>
+          <p className="text-muted-foreground">{t("errors.loading.description")}</p>
         </div>
       </div>
     );
   }
 
-  const pageData = assessmentData || data || mockData;
-  const { profile, track, responses } = pageData;
+  const { profile, track, responses } = assessmentData || data || mockData;
   const totalQuestions = Object.keys(responses).length;
 
-  const handleComingSoon = (feature: string) => {
+  const handleComingSoon = (featureKey: string) => {
     toast({
-      title: "Coming Soon!",
-      description: `${feature} will be available soon. We'll notify you when it's ready.`,
+      title: t("toast.comingSoon.title"),
+      description: t("toast.comingSoon.description", { feature: t(featureKey) }),
     });
   };
 
@@ -149,58 +141,109 @@ export default function ThankYou() {
           </div>
           <div className="space-y-2">
             <h1 className="text-4xl font-bold text-foreground">
-              {i18n.t("assessment.thankYou.title")}
+              {t("assessment.thankYou.title")}
             </h1>
             <p className="text-lg text-primary">
-              {i18n.t("assessment.thankYou.subtitle")}
+              {t("assessment.thankYou.subtitle")}
             </p>
             <p className="text-muted-foreground">
-              Thank you, {profile.M0} team, for completing our comprehensive AI
-              readiness assessment
+              {t("assessment.thankYou.heroMessage", { organization: profile.M0 })}
             </p>
           </div>
         </div>
 
         {/* Status Cards */}
         <div className="grid md:grid-cols-3 gap-6">
-          {/* … three cards … */}
+          <Card className="p-6 text-center bg-blue-50 border-blue-200 hover-scale">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
+                <CheckCircle className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-foreground">
+                {t("assessment.thankYou.statusCards.complete.title")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("assessment.thankYou.statusCards.complete.description")}
+              </p>
+            </div>
+          </Card>
+          <Card className="p-6 text-center bg-yellow-50 border-yellow-200 hover-scale">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto">
+                <Clock className="w-6 h-6 text-yellow-600" />
+              </div>
+              <h3 className="font-semibold text-foreground">
+                {t("assessment.thankYou.statusCards.report.title")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("assessment.thankYou.statusCards.report.description")}
+              </p>
+            </div>
+          </Card>
+          <Card className="p-6 text-center bg-green-50 border-green-200 hover-scale">
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
+                <Rocket className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-foreground">
+                {t("assessment.thankYou.statusCards.action.title")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("assessment.thankYou.statusCards.action.description")}
+              </p>
+            </div>
+          </Card>
         </div>
 
-        {/* Quick Highlights */}
+        {/* Overview */}
         <Card className="p-8 space-y-6">
-          <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-foreground">
-              Assessment Overview
-            </h2>
-            <div className="grid md:grid-cols-3 gap-6 text-center">
-              <div>
-                <div className="text-3xl font-bold text-primary">
-                  {totalQuestions}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  Questions Answered
-                </div>
+          <h2 className="text-2xl font-bold text-foreground">
+            {t("assessment.thankYou.overview.title")}
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6 text-center">
+            <div>
+              <div className="text-3xl font-bold text-primary">
+                {totalQuestions}
               </div>
-              <div>
-                <Badge variant="outline" className="text-sm">
-                  {trackLabels[track]}
-                </Badge>
+              <div className="text-sm text-muted-foreground">
+                {t("assessment.thankYou.overview.questionsAnswered")}
               </div>
+            </div>
+            <div>
+              <Badge variant="outline" className="text-sm">
+                {trackLabels[track]}
+              </Badge>
             </div>
           </div>
         </Card>
 
-        {/* Resources Grid */}
+        {/* Resources */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* … resource cards … */}
+          <Card
+            className="p-6 hover-scale cursor-pointer"
+            onClick={() => handleComingSoon("assessment.thankYou.resources.implementationGuides.title")}
+          >
+            <div className="space-y-3">
+              <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
+                <BookOpen className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-foreground">
+                {t("assessment.thankYou.resources.implementationGuides.title")}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {t("assessment.thankYou.resources.implementationGuides.description")}
+              </p>
+            </div>
+          </Card>
+          {/* … repeat for each resource card … */}
         </div>
 
         {/* Footer */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-8">
           <Link to="/">
             <Button variant="outline" className="flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" />
-              {i18n.t("assessment.thankYou.actions.retake")}
+              {t("assessment.thankYou.actions.retake")}
             </Button>
           </Link>
           <Button
@@ -208,8 +251,33 @@ export default function ThankYou() {
             onClick={() => window.open("https://www.houseofichigo.com", "_blank")}
           >
             <Globe className="w-4 h-4 mr-2" />
-            {i18n.t("assessment.thankYou.actions.visitWebsite")}
+            {t("assessment.thankYou.actions.visitWebsite")}
           </Button>
+        </div>
+
+        {/* Footer Info */}
+        <div className="text-center space-y-4 pt-8 border-t border-border">
+          <h3 className="text-lg font-semibold text-foreground">
+            {t("assessment.thankYou.thanks.title")}
+          </h3>
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            {t("assessment.thankYou.thanks.description")}{" "}
+            {t("assessment.thankYou.footer.privacyNotice")}
+          </p>
+          <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <Shield className="w-4 h-4" />
+              <span>{t("assessment.thankYou.footer.dataPrivacy")}</span>
+            </div>
+            <span>•</span>
+            <span>{t("assessment.thankYou.footer.contact")}</span>
+          </div>
+          <p className="text-sm opacity-60">
+            {profile.M0} • {profile.M3} • {profile.M4_industry}
+          </p>
+          <Badge variant="outline" className="text-xs">
+            {trackLabels[track]}
+          </Badge>
         </div>
       </div>
     </div>

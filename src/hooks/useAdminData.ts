@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 export interface AdminAnalytics {
   total_submissions: number;
@@ -35,6 +36,7 @@ export function useAdminData() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const fetchAnalytics = async () => {
     try {
@@ -48,8 +50,8 @@ export function useAdminData() {
     } catch (err: any) {
       setError(err.message);
       toast({
-        title: "Error loading analytics",
-        description: err.message,
+        title: t('toast.admin.errorLoadingAnalytics.title'),
+        description: t('toast.admin.errorLoadingAnalytics.description', { message: err.message }),
         variant: "destructive",
       });
     }
@@ -102,8 +104,8 @@ export function useAdminData() {
     } catch (err: any) {
       setError(err.message);
       toast({
-        title: "Error loading submissions",
-        description: err.message,
+        title: t('toast.admin.errorLoadingSubmissions.title'),
+        description: t('toast.admin.errorLoadingSubmissions.description', { message: err.message }),
         variant: "destructive",
       });
     }
@@ -129,8 +131,8 @@ export function useAdminData() {
       return { submission, answers };
     } catch (err: any) {
       toast({
-        title: "Error loading submission details",
-        description: err.message,
+        title: t('toast.admin.errorLoadingSubmissionDetails.title'),
+        description: t('toast.admin.errorLoadingSubmissionDetails.description', { message: err.message }),
         variant: "destructive",
       });
       return null;
@@ -147,8 +149,8 @@ export function useAdminData() {
       if (error) throw error;
 
       toast({
-        title: "Submission deleted",
-        description: "The submission has been successfully deleted.",
+        title: t('toast.admin.submissionDeleted.title'),
+        description: t('toast.admin.submissionDeleted.description'),
       });
 
       // Refresh data
@@ -156,8 +158,8 @@ export function useAdminData() {
       fetchAnalytics();
     } catch (err: any) {
       toast({
-        title: "Error deleting submission",
-        description: err.message,
+        title: t('toast.admin.errorDeletingSubmission.title'),
+        description: t('toast.admin.errorDeletingSubmission.description', { message: err.message }),
         variant: "destructive",
       });
     }
