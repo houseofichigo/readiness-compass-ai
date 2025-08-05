@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
+import { getPlaceholder } from "@/lib/placeholders";
 
 interface OrganizationProfileFormProps {
   questions: Question[];
@@ -68,7 +69,7 @@ export function OrganizationProfileForm({
                   type="text"
                   value={responses[orgName.id] || ""}
                   onChange={(e) => onChange(orgName.id, e.target.value)}
-                  placeholder="Enter your organization name"
+                  placeholder={getPlaceholder('organizationName')}
                   className="focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 {renderHelper(orgName)}
@@ -84,7 +85,7 @@ export function OrganizationProfileForm({
                   type="text"
                   value={responses[fullName.id] || ""}
                   onChange={(e) => onChange(fullName.id, e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder={getPlaceholder('fullName')}
                   className="focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 {renderHelper(fullName)}
@@ -101,7 +102,7 @@ export function OrganizationProfileForm({
                   type="email"
                   value={responses[email.id] || ""}
                   onChange={(e) => onChange(email.id, e.target.value)}
-                  placeholder="your.name@company.com"
+                  placeholder={getPlaceholder('businessEmail')}
                   className="focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 {renderHelper(email)}
@@ -118,7 +119,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(role.id, value)}
                 >
                   <SelectTrigger className="focus-visible:ring-2 focus-visible:ring-primary/20 bg-background border border-border">
-                    <SelectValue placeholder="Select your primary role..." />
+                    <SelectValue placeholder={getPlaceholder('primaryRole')} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
                     {role.options?.map((opt) => {
@@ -151,7 +152,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(industry.id, value)}
                 >
                   <SelectTrigger className="focus-visible:ring-2 focus-visible:ring-primary/20 bg-background border border-border">
-                    <SelectValue placeholder="Select your industry..." />
+                    <SelectValue placeholder={getPlaceholder('industry')} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
                     {industry.options?.map((opt) => {
@@ -183,7 +184,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(country.id, value)}
                 >
                   <SelectTrigger className="focus-visible:ring-2 focus-visible:ring-primary/20 bg-background border border-border">
-                    <SelectValue placeholder="Select your country..." />
+                    <SelectValue placeholder={getPlaceholder('country')} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
                     {country.options?.map((opt) => {

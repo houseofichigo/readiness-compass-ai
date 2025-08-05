@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { getPlaceholder } from "@/lib/placeholders";
 
 interface ProgressiveMultiGroupQuestionProps {
   groups: QuestionGroup[];
@@ -68,7 +69,7 @@ export function ProgressiveMultiGroupQuestion({
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
-            placeholder="Search tools or categories..."
+            placeholder={getPlaceholder('searchTools')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"

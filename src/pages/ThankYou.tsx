@@ -5,14 +5,15 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, MessageSquare, Calculator, Shield, Phone, ArrowLeft } from "lucide-react";
+import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, MessageSquare, Calculator, Shield, Phone, ArrowLeft, Globe } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
 import { useAssessment } from "@/hooks/useAssessment";
 interface ThankYouPageData {
   profile: OrganizationProfile;
   track: Track;
-  responses: Record<string, any>;
+  responses: Record<string, unknown>;
   submissionId?: string;
 }
 export default function ThankYou() {
@@ -21,6 +22,7 @@ export default function ThankYou() {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { loadAssessment } = useAssessment();
+  const { t } = useTranslation();
   
   const [showConfetti, setShowConfetti] = useState(true);
   const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
@@ -105,11 +107,11 @@ export default function ThankYou() {
   const getTrackLabel = (track: Track) => {
     switch (track) {
       case "TECH":
-        return "Technical Track";
+        return t('assessment.welcome.tracksSection.technical.title');
       case "REG":
-        return "Regulated Track";
+        return t('assessment.welcome.tracksSection.regulated.title');
       default:
-        return "General Business Track";
+        return t('assessment.welcome.tracksSection.general.title');
     }
   };
   const handleComingSoon = (feature: string) => {
@@ -137,8 +139,8 @@ export default function ThankYou() {
           </div>
           
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-foreground">Assessment Complete</h1>
-            <p className="text-lg text-primary">8 key areas evaluated with detailed analysis</p>
+            <h1 className="text-4xl font-bold text-foreground">{t('assessment.thankYou.title')}</h1>
+            <p className="text-lg text-primary">{t('assessment.thankYou.subtitle')}</p>
             <p className="text-muted-foreground">
               Thank you, {profile.M0} team, for completing our comprehensive AI readiness assessment
             </p>
@@ -152,8 +154,8 @@ export default function ThankYou() {
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
                 <CheckCircle className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Assessment Complete</h3>
-              <p className="text-sm text-muted-foreground">8 key areas evaluated with detailed analysis</p>
+              <h3 className="font-semibold text-foreground">{t('assessment.thankYou.statusCards.complete.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('assessment.thankYou.statusCards.complete.description')}</p>
             </div>
           </Card>
 
@@ -162,8 +164,8 @@ export default function ThankYou() {
               <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto">
                 <Clock className="w-6 h-6 text-yellow-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Report Available Soon</h3>
-              <p className="text-sm text-muted-foreground">We will email your personalized report within 3 business days</p>
+              <h3 className="font-semibold text-foreground">{t('assessment.thankYou.statusCards.report.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('assessment.thankYou.statusCards.report.description')}</p>
             </div>
           </Card>
 
@@ -172,8 +174,8 @@ export default function ThankYou() {
               <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
                 <Rocket className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Take Action</h3>
-              <p className="text-sm text-muted-foreground">Implement recommendations to advance your AI journey</p>
+              <h3 className="font-semibold text-foreground">{t('assessment.thankYou.statusCards.action.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('assessment.thankYou.statusCards.action.description')}</p>
             </div>
           </Card>
         </div>
@@ -203,11 +205,11 @@ export default function ThankYou() {
             <div className="flex items-center justify-center gap-2 mb-2">
               <FileText className="w-5 h-5 text-blue-600" />
               <span className="font-semibold text-blue-900">
-                We will send you your detailed AI readiness report within 3 business days
+                {t('assessment.thankYou.preparing.noticeTitle')}
               </span>
             </div>
             <p className="text-sm text-blue-700">
-              Please check your inbox (and spam folder) to receive your personalized assessment results
+              {t('assessment.thankYou.preparing.noticeDescription')}
             </p>
           </div>
         </Card>
@@ -280,38 +282,38 @@ export default function ThankYou() {
 
         {/* Your Report Includes */}
         <Card className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-center text-foreground">Your report includes</h2>
-          
+          <h2 className="text-2xl font-bold text-center text-foreground">{t('assessment.thankYou.includes.title')}</h2>
+
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">AI Maturity Score</h3>
-                <p className="text-sm text-muted-foreground">Overall assessment of the 8 key areas</p>
+                <h3 className="font-semibold text-foreground">{t('assessment.thankYou.includes.maturityScore.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('assessment.thankYou.includes.maturityScore.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">Detailed Analysis by Section</h3>
-                <p className="text-sm text-muted-foreground">Identification of strengths and areas for improvement</p>
+                <h3 className="font-semibold text-foreground">{t('assessment.thankYou.includes.analysis.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('assessment.thankYou.includes.analysis.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">Operational Recommendations</h3>
-                <p className="text-sm text-muted-foreground">Concrete steps to advance your AI journey</p>
+                <h3 className="font-semibold text-foreground">{t('assessment.thankYou.includes.recommendations.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('assessment.thankYou.includes.recommendations.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">Implementation Roadmap</h3>
-                <p className="text-sm text-muted-foreground">Prioritized timeline for AI adoption</p>
+                <h3 className="font-semibold text-foreground">{t('assessment.thankYou.includes.roadmap.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('assessment.thankYou.includes.roadmap.description')}</p>
               </div>
             </div>
           </div>
@@ -333,20 +335,18 @@ export default function ThankYou() {
 
         {/* Footer Elements */}
         <div className="text-center space-y-4 pt-8 border-t border-border">
-          <h3 className="text-lg font-semibold text-foreground">Thank you for your participation</h3>
+          <h3 className="text-lg font-semibold text-foreground">{t('assessment.thankYou.thanks.title')}</h3>
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            Your data helps us improve our assessment and provide more relevant insights on AI readiness. 
-            We are committed to protecting your privacy and will only use your information to provide 
-            you with the requested assessment results and related resources.
+            {t('assessment.thankYou.thanks.description')} {t('assessment.thankYou.footer.privacyNotice')}
           </p>
-          
+
           <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Shield className="w-4 h-4" />
-              <span>Data Privacy Protected</span>
+              <span>{t('assessment.thankYou.footer.dataPrivacy')}</span>
             </div>
             <span>•</span>
-            <span>Contact: support@houseofichigo.com</span>
+            <span>{t('assessment.thankYou.footer.contact')}</span>
           </div>
 
           {/* Profile Info */}
