@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Shield } from 'lucide-react';
+import { getPlaceholder } from '@/lib/placeholders';
 
 export function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -62,7 +63,7 @@ export function AdminLogin() {
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@company.com"
+                placeholder={getPlaceholder('adminEmail')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required

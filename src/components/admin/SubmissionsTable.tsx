@@ -41,6 +41,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { getPlaceholder } from '@/lib/placeholders';
 
 export function SubmissionsTable() {
   const { submissions, isLoading, fetchSubmissions, exportToCSV, deleteSubmission } = useAdminData();
@@ -163,7 +164,7 @@ export function SubmissionsTable() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search submissions..."
+                  placeholder={getPlaceholder('searchSubmissions')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9 w-64"
