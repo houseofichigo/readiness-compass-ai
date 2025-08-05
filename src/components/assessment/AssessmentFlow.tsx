@@ -219,7 +219,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const visibleQuestions = getVisibleQuestions();
-  const sectionTitle = isAddOnPage ? "Additional Questions" : currentSection?.title;
+  const sectionTitle = isAddOnPage 
+    ? (language === 'fr' ? 'Questions supplémentaires' : 'Additional Questions') 
+    : currentSection?.title;
   const sectionPurpose = isAddOnPage ? undefined : currentSection?.purpose;
   const progressIndex = Math.min(currentPage, assessmentSections.length - 1);
 
@@ -269,7 +271,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
       <div className="flex justify-between">
         <Button onClick={goPrev} variant="outline" disabled={currentPage === 0 || isSubmitting}>
-          <ArrowLeft className="h-4 w-4" /> Previous
+          <ArrowLeft className="h-4 w-4" /> {language === 'fr' ? 'Précédent' : 'Previous'}
         </Button>
         <Button 
           onClick={() => {
@@ -284,8 +286,10 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? (<><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</>)
-            : (isAddOnPage || (isLastSection && !hasAddOns) ? "Complete Assessment" : <>Next <ArrowRight className="h-4 w-4" /></>)
+            ? (<><Loader2 className="h-4 w-4 animate-spin" /> {language === 'fr' ? 'Envoi en cours…' : 'Submitting…'}</>)
+            : (isAddOnPage || (isLastSection && !hasAddOns) 
+              ? (language === 'fr' ? 'Terminer l\'évaluation' : 'Complete Assessment') 
+              : <>{language === 'fr' ? 'Suivant' : 'Next'} <ArrowRight className="h-4 w-4" /></>)
           }
         </Button>
       </div>

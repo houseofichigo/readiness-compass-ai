@@ -462,6 +462,746 @@ locale_fr:
           - "5 – 15 %"
           - "> 15 %"
 
+  section_3:
+    purpose: "Fondation des données, sécurité, éthique et conformité"
+    questions:
+      D1:
+        text: "Où sont principalement stockées vos données critiques ?"
+        helper: "Ces données pilotent vos opérations, décisions et conformité"
+        options:
+          - "Fichiers et tableurs (Excel, Google Sheets, fichiers locaux)"
+          - "Bases de données (SQL, NoSQL, entrepôts de données)"
+          - "Cloud et SaaS (Google Drive, Salesforce, HubSpot)"
+          - "Outils internes et systèmes hérités"
+          - "Plateformes BI (Power BI, Looker, Tableau)"
+      D2:
+        text: "Quel volume de données générez-vous ou collectez-vous chaque mois ?"
+        options:
+          - "Ne sait pas"
+          - "< 1 Go"
+          - "1–10 Go"
+          - "10–100 Go"
+          - "> 100 Go"
+      D3:
+        text: "Dans quelle mesure votre gestion des données (structure, outils et traçabilité) est-elle mature ?"
+        options:
+          - "Pas de normes ni de visibilité"
+          - "Conventions de nommage basiques et documentation partielle"
+          - "Normes définies avec processus manuels"
+          - "Outils de schéma et suivi automatisé pour les systèmes clés"
+          - "Modèles versionnés avec traçabilité et gouvernance complètes"
+      D4:
+        text: "Quel est votre niveau de confiance dans la qualité et l'actualité de vos données critiques ?"
+        options:
+          - "Faible : données souvent obsolètes ou peu fiables"
+          - "Moyen : vérifications manuelles pour la qualité"
+          - "Élevé : tests périodiques de qualité des données"
+          - "Très élevé : alertes automatisées pour anomalies"
+          - "Excellent : surveillance et validation en temps réel"
+      D5:
+        text: "Quelles mesures de sécurité protègent votre infrastructure de données ?"
+        helper: "Chiffrement, contrôle d'accès et surveillance"
+        options:
+          - "Chiffrement au repos (AWS S3, Azure Blob)"
+          - "TLS/HTTPS en transit"
+          - "Contrôles d'accès par rôle (IAM, RBAC)"
+          - "Journaux d'audit et monitoring"
+          - "DLP (prévention des pertes de données)"
+          - "Tokenisation (Vault, etc.)"
+          - "Confidentialité différentielle"
+          - "Aucune"
+          - "Ne sait pas"
+          - "Autre (à préciser)"
+      D6:
+        text: "Comment gérez-vous la gouvernance et le nettoyage des données ?"
+        options:
+          - "Pas de responsable défini"
+          - "Nettoyages ponctuels"
+          - "Responsable désigné avec révisions périodiques"
+          - "Steward dédié avec routines mensuelles"
+          - "Gouvernance continue et monitoring"
+      D7:
+        text: "Quel est votre niveau de préparation pour un audit RGPD ou loi IA européenne ?"
+        helper: "Indiquez votre préparation aux audits externes ou internes"
+        options:
+          - "Aucune préparation"
+          - "Journaux basiques uniquement"
+          - "Traçabilité pour systèmes critiques"
+          - "Journaux explicatifs et scripts"
+          - "Contrôles de conformité automatisés"
+          - "Ne sait pas"
+      D8:
+        text: "Quel est le niveau de maturité de votre processus d'étiquetage et d'annotation des données ?"
+        options:
+          - "Aucun"
+          - "Étiquetage manuel ponctuel"
+          - "Directives définies"
+          - "Taxonomie standardisée"
+          - "Étiquetage automatisé et gestion d'ontologie"
+      D9:
+        text: "Utilisez-vous des données synthétiques ou tierces pour enrichir vos jeux de données ?"
+        options:
+          - "Non"
+          - "En phase d'exploration"
+          - "Projets pilotes limités"
+          - "Usage régulier en production"
+          - "Pipelines synthétiques avancés"
+      D10:
+        text: "Quel est le niveau de maturité de vos politiques d'éthique IA et de confidentialité des données ?"
+        helper: "Ex. : « Politiques + formation et contrôle » = guides documentés et ateliers"
+        options:
+          - "Pas de politique formelle"
+          - "Principes généraux uniquement"
+          - "Directives documentées sans formation"
+          - "Directives avec formation et contrôle"
+          - "Auditées et améliorées en continu"
+
+  section_4:
+    purpose: "Évaluer la maturité de la stack d'outils et leur intégration"
+    questions:
+      T0_tools:
+        text: "Quels outils utilisez-vous activement avec votre équipe ?"
+        helper: "Sélectionnez tous les outils pour personnaliser les recommandations d'automatisation"
+        groups:
+          Supervision des performances:
+            - "New Relic"
+            - "Datadog"
+            - "Dynatrace"
+            - "AppDynamics"
+            - "Elastic APM"
+            - "Sentry"
+            - "Splunk APM"
+            - "Pingdom"
+            - "Bubble"
+            - "Mistral"
+            - "Autre outil de supervision (à préciser)"
+          Supervision infrastructure et réseau:
+            - "Zabbix"
+            - "Nagios"
+            - "PRTG"
+            - "SolarWinds"
+            - "Site24x7"
+            - "ManageEngine"
+            - "Grafana"
+            - "Prometheus"
+            - "Checkmk"
+            - "Autre outil infrastructure (à préciser)"
+          Supervision Cloud et DevOps:
+            - "AWS CloudWatch"
+            - "Azure Monitor"
+            - "Google Cloud Operations"
+            - "LogicMonitor"
+            - "Sumo Logic"
+            - "PagerDuty"
+            - "StatusPage"
+            - "Autre outil cloud (à préciser)"
+          Analyse Web et UX:
+            - "Google Analytics"
+            - "Adobe Analytics"
+            - "Hotjar"
+            - "Mixpanel"
+            - "Amplitude"
+            - "Tealium"
+            - "Webflow"
+            - "Matomo"
+            - "Plausible"
+            - "Autre outil web (à préciser)"
+          Gestion des données & ETL:
+            - "Snowflake"
+            - "Databricks"
+            - "Fivetran"
+            - "Stitch"
+            - "Talend"
+            - "Apache Airflow"
+            - "Autre outil ETL (à préciser)"
+          Intégration API & automatisation:
+            - "Zapier"
+            - "Power Automate"
+            - "MuleSoft"
+            - "Make"
+            - "n8n"
+            - "Workato"
+            - "Tray.io"
+            - "Autre outil d'automatisation (à préciser)"
+          Marketing par e-mail & communication:
+            - "Mailchimp"
+            - "Constant Contact"
+            - "SendGrid"
+            - "Campaign Monitor"
+            - "ConvertKit"
+            - "ActiveCampaign"
+            - "GetResponse"
+            - "Cordial"
+            - "Brevo (Sendinblue)"
+            - "AWeber"
+            - "Autre outil d'email (à préciser)"
+          Gestion de la relation client & CRM:
+            - "Salesforce"
+            - "HubSpot"
+            - "Pipedrive"
+            - "Zoho CRM"
+            - "Freshsales"
+            - "Monday.com"
+            - "Close.io"
+            - "Zendesk"
+            - "Intercom"
+            - "Autre CRM (à préciser)"
+          E-commerce & paiement:
+            - "Shopify"
+            - "WooCommerce"
+            - "Stripe"
+            - "PayPal"
+            - "BigCommerce"
+            - "Magento"
+            - "Square"
+            - "Autre solution e-commerce (à préciser)"
+          Publicité numérique & marketing:
+            - "Google Ads"
+            - "Facebook Ads"
+            - "LinkedIn Ads"
+            - "Microsoft Advertising"
+            - "Twitter Ads"
+            - "Pinterest Ads"
+            - "TikTok Ads"
+            - "Autre plateforme publicitaire (à préciser)"
+          Business Intelligence & analytique:
+            - "Tableau"
+            - "Power BI"
+            - "Looker"
+            - "Qlik Sense"
+            - "Sisense"
+            - "Domo"
+            - "SurveyMonkey"
+            - "Autre outil BI (à préciser)"
+          Gestion de projet & productivité:
+            - "Asana"
+            - "Trello"
+            - "Jira"
+            - "Slack"
+            - "Microsoft Teams"
+            - "Notion"
+            - "ClickUp"
+            - "Autre outil de productivité (à préciser)"
+          Gestion financière & comptabilité:
+            - "QuickBooks"
+            - "Xero"
+            - "FreshBooks"
+            - "Sage"
+            - "Wave"
+            - "Odoo"
+            - "Henrri.net"
+            - "Autre outil comptable (à préciser)"
+          Gestion des processus métier:
+            - "Kissflow"
+            - "Nintex"
+            - "Pipefy"
+            - "ProcessMaker"
+            - "Appian"
+            - "Pegasystems"
+            - "Autre outil BPM (à préciser)"
+          Confidentialité & conformité RGPD:
+            - "OneTrust"
+            - "TrustArc"
+            - "CookieYes"
+            - "Usercentrics"
+            - "Didomi"
+            - "Cookiebot"
+            - "DataGrail"
+            - "Autre outil de confidentialité (à préciser)"
+          Sécurité & gestion des risques:
+            - "Qualys"
+            - "Rapid7"
+            - "Tenable"
+            - "CrowdStrike"
+            - "SentinelOne"
+            - "Splunk"
+            - "Autre outil de sécurité (à préciser)"
+          Audit & gouvernance:
+            - "AuditBoard"
+            - "MetricStream"
+            - "ServiceNow GRC"
+            - "RSA Archer"
+            - "LogicGate"
+            - "Resolver"
+            - "Autre outil GRC (à préciser)"
+          Conformité sectorielle spécifique:
+            - "Fenergo"
+            - "RegEd"
+            - "Thomson Reuters"
+            - "Autre outil sectoriel (à préciser)"
+          Gestion documentaire & archivage:
+            - "SharePoint"
+            - "DocuSign"
+            - "Box"
+            - "Dropbox Business"
+            - "M-Files"
+            - "FileHold"
+            - "Autre solution documentaire (à préciser)"
+      T1:
+        text: "Dans quelle mesure vos outils et systèmes sont-ils connectés ?"
+        options:
+          - "Isolés – aucune connexion"
+          - "Manuel – import/export CSV"
+          - "Batch – synchronisations programmées"
+          - "API – intégrations plateformes"
+          - "Temps réel – maillage événementiel"
+      T2:
+        text: "À quelle fréquence vos connexions de données échouent-elles ou posent-elles problème ?"
+        options:
+          - "Hebdomadaire – pannes fréquentes"
+          - "Mensuelle – erreurs occasionnelles"
+          - "Trimestrielle – rares problèmes"
+          - "Quasiment jamais – très stable"
+          - "Jamais – totalement fiable"
+      T3:
+        text: "Qui est responsable de la gestion et de la maintenance de vos intégrations système ?"
+        options:
+          - "Pas de responsable défini"
+          - "Agence ou freelance externe"
+          - "Équipe Ops/Produit"
+          - "Équipe technique interne"
+          - "Équipe dédiée aux intégrations"
+      T4:
+        text: "Comment êtes-vous connectés aux services IA externes et aux LLM ?"
+        helper: "Ex. : ChatGPT, Claude, Mistral, Copilot ou LLM interne"
+        options:
+          - "Accès interdit aux LLM externes"
+          - "Tests exploratoires uniquement"
+          - "Pilotes API"
+          - "Une API en production"
+          - "Plusieurs APIs en production + LLM interne"
+      T5:
+        text: "Quel accès avez-vous aux ressources GPU/TPU ?"
+        options:
+          - "Aucun"
+          - "Colab uniquement"
+          - "GPU/TPU cloud à la demande"
+          - "Budget GPU/TPU dédié"
+          - "Cluster IA managé"
+      T6:
+        text: "Dans quelle mesure votre architecture technique et data est-elle documentée ?"
+        options:
+          - "Aucune"
+          - "Schémas sommaires"
+          - "Systèmes critiques cartographiés"
+          - "Diagrammes complets"
+          - "Documentation auto-générée et maintenue"
+      T7:
+        text: "Quel niveau de plan de reprise d'activité avez-vous pour vos données et IA ?"
+        options:
+          - "Aucun plan"
+          - "Sauvegardes uniquement"
+          - "Basculage manuel"
+          - "Basculage automatisé"
+          - "Playbook IA-aware"
+      T8:
+        text: "Quels outils low-code ou no-code utilisez-vous pour l'automatisation ?"
+        helper: "Sélectionnez tous les outils ou choisissez "Aucun""
+        options:
+          - "Aucun"
+          - "Zapier"
+          - "Make"
+          - "n8n"
+          - "Power Automate"
+          - "UiPath"
+          - "Workato"
+          - "Airbyte"
+          - "Fivetran"
+          - "dbt"
+
+  section_5:
+    purpose: "Évaluer la maturité de l'automatisation et la gouvernance des agents IA"
+    questions:
+      A1:
+        text: "Quelles trois tâches bénéficieraient le plus de l'automatisation ?"
+        helper: "Classez vos priorités"
+        options:
+          - "Reporting"
+          - "Planification"
+          - "Saisie de données"
+          - "FAQ"
+          - "Tri des tickets"
+          - "Génération de contrats"
+          - "Gestion des stocks"
+          - "Vérifications de conformité"
+      A2:
+        text: "Quel est le niveau de maturité de vos efforts d'automatisation ?"
+        helper: "De l'absence d'automatisation à l'autonomie complète"
+        options:
+          - "0 – aucune automatisation"
+          - "1 – scripts ad hoc"
+          - "2 – outils basiques avec supervision"
+          - "3 – workflows intégrés"
+          - "4 – automatisation continue"
+          - "5 – processus entièrement autonomes"
+      A3:
+        text: "Quel est le statut actuel des agents IA dans vos opérations ?"
+        helper: "Permet d'orienter la formation dédiée"
+        options:
+          - "Aucun agent"
+          - "Prototype"
+          - "Un agent en production"
+          - "Plusieurs agents en production"
+          - "Déploiement généralisé"
+      A4:
+        text: "Pour quelles tâches envisagez-vous une automatisation par agents IA ?"
+        helper: "Sélectionnez tout ce qui s'applique"
+        options:
+          - "Support client"
+          - "Génération de rapports"
+          - "Rédaction d'e-mails"
+          - "Scoring des prospects"
+          - "Compte-rendu de réunions"
+          - "Veille marché"
+          - "Contrôle qualité"
+      A5:
+        text: "Quel niveau d'autonomie souhaitez-vous pour vos agents IA ?"
+        options:
+          - "Suggestions uniquement"
+          - "Approbation humaine requise"
+          - "Semi-automatisé"
+          - "Entièrement automatisé"
+      A6:
+        text: "Comment surveillez-vous et alertez-vous vos processus automatisés ?"
+        options:
+          - "Pas de surveillance"
+          - "Contrôles manuels"
+          - "Tableaux de bord KPI"
+          - "Alertes automatisées"
+          - "Observabilité et journalisation complètes"
+      A7:
+        text: "Quels sont les principaux freins à l'automatisation et au déploiement d'agents IA ?"
+        helper: "Sélectionnez tout ce qui s'applique"
+        options:
+          - "Silos de données"
+          - "Manque de ressources techniques"
+          - "Adhésion insuffisante"
+          - "Contraintes de conformité"
+          - "ROI incertain"
+          - "Budget limité"
+          - "Complexité d'intégration"
+      A8:
+        text: "Quelle interface préférez-vous pour interagir avec vos agents IA ?"
+        helper: "Permet de personnaliser l'interface"
+        options:
+          - "Chatbot (Slack/Teams)"
+          - "Widget intégré"
+          - "Tableau de bord"
+          - "Assistant e-mail"
+          - "API/CLI"
+          - "Assistant vocal"
+          - "Besoin de conseils"
+      A9:
+        text: "Quels processus de gouvernance appliquez-vous à vos agents IA ?"
+        options:
+          - "Aucun"
+          - "Vérifications ponctuelles"
+          - "Processus formel"
+          - "Journalisation avec supervision"
+          - "Audit continu"
+      A10:
+        text: "Quelle stratégie de reprise existe en cas d'échec des automatisations ou agents IA ?"
+        options:
+          - "Aucun plan"
+          - "Rollback manuel"
+          - "Procédures de bascule prédéfinies"
+          - "Rollback automatisé"
+          - "Boucles d'auto-réparation"
+      A11:
+        text: "Comment suivez-vous la qualité des résultats de vos agents IA ?"
+        options:
+          - "Pas de suivi"
+          - "Contrôles manuels ponctuels"
+          - "Tests avant déploiement"
+          - "Tests continus et contrôles ponctuels"
+          - "Surveillance qualité en continu"
+
+  section_6:
+    purpose: "Évaluer les capacités de l'équipe et la culture d'apprentissage"
+    questions:
+      C1:
+        text: "À quelle fréquence utilisez-vous des outils IA au quotidien ?"
+        options:
+          - "Jamais"
+          - "Rarement"
+          - "Mensuel"
+          - "Hebdomadaire"
+          - "Quotidien"
+      C2:
+        text: "Quel est votre niveau de confiance pour ces compétences en rédaction de prompts ?"
+        rows:
+          - "Rédaction de prompts basiques"
+          - "Utilisation d'exemples few-shot"
+          - "Formatage de prompts structurés"
+          - "Conception de chaînes de prompts"
+        columns:
+          - "Aucune confiance"
+          - "Un peu de confiance"
+          - "Confiant·e"
+          - "Très confiant·e"
+      C3:
+        text: "Comment partagez-vous vos apprentissages IA en interne ?"
+        options:
+          - "Aucun partage"
+          - "Astuces informelles"
+          - "Canal de chat dédié"
+          - "Ateliers réguliers"
+          - "Communauté de pratique active"
+      C3a:
+        text: "Quels sujets de formation IA priorisez-vous ? (Classez top 3)"
+        options:
+          - "Ingénierie de prompt"
+          - "Maîtrise des outils IA"
+          - "Littératie des données"
+          - "Fine-tuning de modèles"
+          - "Génération augmentée"
+          - "Orchestration d'agents"
+          - "Éthique et gouvernance"
+      C4:
+        text: "Quel budget annuel par personne allouez-vous à la montée en compétence IA ?"
+        options:
+          - "0 €"
+          - "< 200 €"
+          - "200–500 €"
+          - "500–1 000 €"
+          - "> 1 000 €"
+      C5:
+        text: "Combien d'heures par mois pouvez-vous consacrer à la formation IA ?"
+        options:
+          - "Aucune"
+          - "< 1 h"
+          - "1–3 h"
+          - "3–5 h"
+          - "> 5 h"
+      C6:
+        text: "Quel format de formation IA préférez-vous ?"
+        options:
+          - "Guides écrits"
+          - "Vidéos courtes"
+          - "Ateliers en direct"
+          - "Cours en autonomie"
+          - "Formats mixtes"
+      C7:
+        text: "À quelle fréquence faites-vous appel à des experts IA externes ?"
+        options:
+          - "Jamais"
+          - "Conseils ponctuels"
+          - "Séances régulières"
+          - "Accès à un réseau d'experts"
+          - "Comité conseil IA dédié"
+      C8:
+        text: "Qu'est-ce qui freine vos pilotes de projets IA ?"
+        options:
+          - "Budget limité"
+          - "Manque de compétences"
+          - "Silos de données"
+          - "Contraintes de conformité"
+          - "ROI incertain"
+          - "Complexité technique"
+      C9:
+        text: "Quel est votre degré d'ouverture aux pilotes IA ?"
+        options:
+          - "Résistant·e"
+          - "Prudent·e"
+          - "Intéressé·e"
+          - "Proactif·ve"
+          - "Pilotes actifs"
+      C10:
+        text: "À quelle fréquence collaborez-vous inter-fonctions sur l'IA ?"
+        options:
+          - "Jamais"
+          - "Occasionnellement"
+          - "Trimestriellement"
+          - "En squads"
+          - "Pratique intégrée"
+      C11:
+        text: "Vous sentez-vous en sécurité pour expérimenter et échouer avec l'IA ?"
+        helper: "Petites erreurs (bugs, sorties erronées) : quel niveau de confort ?"
+        options:
+          - "Pas du tout à l'aise"
+          - "Peu à l'aise"
+          - "Modérément à l'aise"
+          - "Souvent à l'aise"
+          - "Toujours encouragé·e"
+
+  section_7:
+    purpose: "Évaluer la gouvernance, les risques et l'éthique"
+    questions:
+      G1:
+        text: "Quel est le niveau de maturité de vos processus de gestion des risques et biais IA ?"
+        options:
+          - "Aucun processus"
+          - "Corrections réactives"
+          - "Tests avant déploiement"
+          - "Cadre formel défini"
+          - "Conforme au règlement IA UE"
+      G2:
+        text: "Pouvez-vous expliquer et auditer les décisions de vos modèles IA ?"
+        helper: "Traçabilité et journalisation pour audits"
+        options:
+          - "Pas de journalisation ni d'explications"
+          - "Modèles à haut risque uniquement"
+          - "Journaux d'audit"
+          - "Explications pour tous les modèles"
+          - "Prêt pour audit (outils et docs)"
+      G3:
+        text: "Dans quelle mesure êtes-vous transparent·e sur l'usage de l'IA auprès des parties prenantes ?"
+        options:
+          - "Aucune communication"
+          - "Mention dans les politiques"
+          - "Docs et FAQ publiés"
+          - "Bouton d'explication"
+          - "Tableaux de bord proactifs"
+      G4:
+        text: "Quel plan de réponse aux incidents IA appliquez-vous ?"
+        options:
+          - "Aucun plan"
+          - "Plan IT général"
+          - "Rollback manuel"
+          - "Rollback automatisé"
+          - "Playbook complet"
+      G5:
+        text: "Quel niveau de supervision humaine imposez-vous sur l'IA ?"
+        options:
+          - "Aucune"
+          - "Revue finale"
+          - "Vérifications aléatoires"
+          - "Humain-dans-la-boucle"
+          - "Escalade automatique"
+      G6:
+        text: "Quelle profondeur de confidentialité intégrez-vous dans vos process IA ?"
+        options:
+          - "Conformité basique"
+          - "Contrôles renforcés"
+          - "Technologies de confidentialité"
+          - "Par conception"
+          - "Vérifications CI/CD"
+      G7:
+        text: "Quel est le statut des audits indépendants de vos systèmes IA ?"
+        options:
+          - "Aucun audit"
+          - "Audit planifié"
+          - "Audit en cours"
+          - "Audit initial terminé"
+          - "Cycle d'audit continu"
+      G8:
+        text: "Où en êtes-vous dans la cartographie des risques IA selon le règlement UE ?"
+        helper: "Cartographie = registre des risques IA"
+        options:
+          - "Pas conscient·e"
+          - "Conscient·e mais non cartographié"
+          - "Cartographie en cours"
+          - "Registre terminé"
+          - "Résultats partagés"
+      G9:
+        text: "À quelle fréquence testez-vous l'équité de vos modèles IA ?"
+        options:
+          - "Jamais"
+          - "Ponctuellement après incidents"
+          - "Avant chaque déploiement"
+          - "Revue trimestrielle"
+          - "Surveillance continue"
+      G10:
+        text: "Quel organe de gouvernance supervise l'éthique et la conformité IA ?"
+        helper: "Comité, équipe conformité ou experts externes"
+        options:
+          - "Aucun"
+          - "Conseil occasionnel"
+          - "Revue projet-par-projet"
+          - "Réunions régulières"
+          - "Experts externes"
+
+  section_8:
+    purpose: "Aligner l'horizon de déploiement, les KPI et la vision"
+    questions:
+      P1:
+        text: "Quand prévoyez-vous de déployer vos initiatives IA ?"
+        helper: "Détermine l'urgence et le calendrier"
+        options:
+          - "D'ici 3 mois"
+          - "3–6 mois"
+          - "6–12 mois"
+          - "> 12 mois"
+      P2:
+        text: "Quel niveau de risque acceptez-vous pour vos projets IA ?"
+        helper: "Tolérance au risque pour nouvelles expérimentations"
+        options:
+          - "Conservateur – pilotes d'abord"
+          - "Prudent – petits tests"
+          - "Équilibré – supervision"
+          - "Audacieux – expérimentations larges"
+      P3:
+        text: "Quels indicateurs de succès sont prioritaires pour votre IA ? (Max 3)"
+        helper: "Nous adaptons la formation à ces objectifs"
+        options:
+          - "Retour sur investissement"
+          - "Réduction des coûts"
+          - "Efficacité opérationnelle"
+          - "Expérience client"
+          - "Productivité employés"
+          - "Innovation"
+          - "Conformité réglementaire"
+          - "Impact durable"
+      P4:
+        text: "Quelle stratégie de ressources privilégiez-vous pour vos projets IA ?"
+        helper: "Interne vs externe"
+        options:
+          - "Entièrement interne"
+          - "Hybride – interne et externe"
+          - "Entièrement externalisé"
+      P5:
+        text: "Quelles architectures techniques préférez-vous pour l'IA ?"
+        helper: "Guide les ateliers techniques"
+        options:
+          - "Cloud-native"
+          - "Hybride/on-premise"
+          - "API-first"
+          - "Low-code/no-code"
+          - "Frameworks open source"
+          - "Suites d'entreprise"
+      P6:
+        text: "Quel niveau de support externe attendez-vous pour l'IA ?"
+        options:
+          - "Aucun"
+          - "Consulting ponctuel"
+          - "Conseil continu"
+          - "Services managés"
+          - "Externalisation totale"
+      P7:
+        text: "Quel changement organisationnel êtes-vous prêt·e à engager pour l'IA ?"
+        helper: "Adapte la formation gestion du changement"
+        options:
+          - "Modifications minimales"
+          - "Ajustements mineurs"
+          - "Transformation modérée"
+          - "Transformation majeure"
+          - "Évolution continue"
+
+  add_ons:
+    T9:
+      text: "Comment déployez-vous et supervisez-vous vos modèles ML en production ?"
+      helper: "Garantit fiabilité et détection rapide"
+      options:
+        - "Pas de déploiement"
+        - "Scripts manuels"
+        - "Pipeline CI/CD"
+        - "Plateforme MLOps (Kubeflow, MLflow)"
+        - "Déploiement blue/green automatisé"
+    F8:
+      text: "Quels mécanismes utilisez-vous pour les transferts transfrontaliers de données ?"
+      helper: "Le RGPD impose un encadrement légal"
+      options:
+        - "Pas de transfert"
+        - "Contrats ad hoc"
+        - "Clauses contractuelles types"
+        - "Règles d'entreprise contraignantes"
+        - "Décision d'adéquation et suivi continu"
+
+  validation:
+    - "Autre sélectionné → champ texte requis"
+    - "Toutes les questions visibles sont obligatoires"
+    - "Limiter à 60 questions ; masquer D2 puis P6"
+
 meta:
   size_breakpoints:
     micro: 1-9
