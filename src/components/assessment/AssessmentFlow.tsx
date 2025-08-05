@@ -3,10 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
-import { AssessmentThankYou } from "./AssessmentThankYou";
 import { ConsentBanner } from "./ConsentBanner";
 import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
@@ -36,7 +35,7 @@ export function AssessmentFlow({
   const [currentPage, setCurrentPage] = useState(0);
   const [responses, setResponses] = useState<Record<string, AssessmentValue>>({});
   const [detectedTrack, setDetectedTrack] = useState<Track | null>(null);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTrackInfo, setShowTrackInfo] = useState(false);
 
   // Precompute global computed fields (e.g., from profile section)
@@ -129,18 +128,20 @@ export function AssessmentFlow({
       regulated: globalComputed.regulated as boolean || false
     };
     
+    setIsSubmitting(true);
     try {
       console.log("💾 Saving assessment data...");
       console.log("Complete profile:", profile);
       console.log("Responses:", responses);
-      
+
       // Call onComplete and wait for it to finish
       console.log("🔄 About to call onComplete function...");
       await onComplete(responses, profile);
+      navigate("/thank-you", { state: { profile, track: detectedTrack, responses } });
       console.log("🔄 onComplete completed successfully!");
-      
+
       console.log("✅ Assessment completed and saved successfully");
-      
+
     } catch (error) {
       console.error("❌ Error completing assessment:", error);
       toast({
@@ -148,6 +149,8 @@ export function AssessmentFlow({
         description: "Please try again or contact support if the issue persists.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -221,6 +224,7 @@ export function AssessmentFlow({
   };
 
   const handleNext = () => {
+    if (isSubmitting) return;
     console.log("🔵 handleNext called!");
     console.log("🔍 isFinalStep:", isFinalStep);
     console.log("🔍 isAddOnPage:", isAddOnPage);
@@ -276,8 +280,6 @@ export function AssessmentFlow({
     }
     goNext();
   };
-
-  // Remove the isCompleted state render since we now navigate to thank you page
 
   if (!currentSection && !isAddOnPage) {
     return <div>Section not found</div>;
@@ -345,7 +347,7 @@ export function AssessmentFlow({
           onClick={goPrev}
           variant="outline"
           className="flex items-center gap-2"
-          disabled={currentPage === 0}
+          disabled={currentPage === 0 || isSubmitting}
         >
           <ArrowLeft className="h-4 w-4" />
           Previous
@@ -357,10 +359,19 @@ export function AssessmentFlow({
             handleNext();
           }}
           className="flex items-center gap-2"
-          disabled={false}
+          disabled={isSubmitting}
         >
-          {isFinalStep ? "Complete Assessment" : "Next"}
-          <ArrowRight className="h-4 w-4" />
+          {isSubmitting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            <>
+              {isFinalStep ? "Complete Assessment" : "Next"}
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
     </div>
