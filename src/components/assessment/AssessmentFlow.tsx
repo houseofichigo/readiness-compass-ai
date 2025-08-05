@@ -105,9 +105,17 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
     setIsSubmitting(true);
     try {
+      // Debug: Check responses before submission
+      console.log("🔍 ASSESSMENT COMPLETION DEBUG:");
+      console.log("Total responses:", Object.keys(responses).length);
+      console.log("Sample responses:", Object.entries(responses).slice(0, 5));
+      console.log("Profile built:", profile);
+      
+      // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
-      navigate("/thank-you", { state: { profile, track: detectedTrack, responses } });
+      // Navigation is handled by onComplete in Index.tsx
     } catch (err) {
+      console.error("🚨 Assessment completion error:", err);
       toast({
         title: "Error completing assessment",
         description: "Please try again or contact support.",
