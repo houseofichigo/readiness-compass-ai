@@ -28,14 +28,7 @@ const Index = () => {
     responses: Record<string, AssessmentValue>,
     profile: OrganizationProfile
   ) => {
-    console.log("📝 Starting to save assessment to database...");
-    console.log("Profile data:", profile);
-    console.log("Response count:", Object.keys(responses).length);
-    console.log("First 5 responses:", Object.entries(responses).slice(0, 5));
-    
     if (Object.keys(responses).length === 0) {
-      console.error("🚨 CRITICAL: No responses to save! This is the problem!");
-      console.log("Complete responses object:", responses);
       throw new Error("No responses data to save");
     }
     
@@ -43,16 +36,14 @@ const Index = () => {
     const savedSubmissionId = await saveAssessment(responses, profile);
     
     if (savedSubmissionId) {
-      console.log("✅ Assessment saved with ID:", savedSubmissionId);
       setSubmissionId(savedSubmissionId);
       
-      // Navigate to thank you page using React Router (not window.location.href)
+      // Navigate to thank you page using React Router
       navigate(`/thank-you?submissionId=${savedSubmissionId}`, { 
         state: { submissionId: savedSubmissionId } 
       });
       
     } else {
-      console.error("❌ Failed to save assessment");
       throw new Error("Failed to save assessment to database");
     }
   };

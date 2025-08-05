@@ -29,10 +29,6 @@ export default function ThankYou() {
   const data = location.state as ThankYouPageData;
   const submissionIdFromUrl = searchParams.get('submissionId');
 
-  // Debug logging
-  console.log("ThankYou page data:", data);
-  console.log("Location state:", location.state);
-  console.log("Submission ID from URL:", submissionIdFromUrl);
   useEffect(() => {
     // Stop confetti after 5 seconds
     const timer = setTimeout(() => setShowConfetti(false), 5000);
@@ -42,7 +38,6 @@ export default function ThankYou() {
   useEffect(() => {
     const loadData = async () => {
       if (submissionIdFromUrl) {
-        console.log("Loading assessment data for submission:", submissionIdFromUrl);
         try {
           const loadedData = await loadAssessment(submissionIdFromUrl);
           if (loadedData) {
@@ -54,7 +49,7 @@ export default function ThankYou() {
             });
           }
         } catch (error) {
-          console.error("Error loading assessment:", error);
+          // Error handled silently in production
         }
       }
       setIsLoading(false);

@@ -44,9 +44,6 @@ export function useAssessment() {
     setError(null);
 
     try {
-      console.log("🔄 Preparing submission data...");
-      console.log("Profile received:", profile);
-      console.log("Responses count:", Object.keys(responses).length);
       
       // Create submission record
       const submissionData = {
@@ -66,7 +63,7 @@ export function useAssessment() {
         revenue: profile.M7_revenue || ''
       };
 
-      console.log("📝 Submission data to insert:", submissionData);
+      
 
       const { data: submission, error: submissionError } = await supabase
         .from('submissions')
@@ -75,14 +72,10 @@ export function useAssessment() {
         .single();
 
       if (submissionError) {
-        console.error("❌ Submission error:", submissionError);
         throw submissionError;
       }
-      
-      console.log("✅ Submission created:", submission);
 
       // Save individual answers
-      console.log("📋 Preparing answers data...");
       const answers = Object.entries(responses)
         .filter(([key, value]) => value !== undefined && value !== null && value !== "") // Filter out empty responses
         .map(([questionId, value]) => ({
@@ -91,26 +84,15 @@ export function useAssessment() {
           value: typeof value === 'string' ? value : JSON.stringify(value) // Handle both strings and complex objects
         }));
 
-      console.log(`📊 Inserting ${answers.length} answers...`);
-      console.log("Sample answers:", answers.slice(0, 3));
-      console.log("All question IDs:", Object.keys(responses));
-
-      if (answers.length === 0) {
-        console.warn("⚠️ No answers to save - responses object might be empty!");
-        console.log("Responses object:", responses);
-        // Don't throw error, just proceed - profile data is already saved
-      } else {
+      if (answers.length > 0) {
         const { error: answersError } = await supabase
           .from('answers')
           .insert(answers);
 
         if (answersError) {
-          console.error("❌ Answers error:", answersError);
           throw answersError;
         }
       }
-      
-      console.log("✅ All answers saved successfully!");
 
       toast({
         title: "Assessment saved successfully!",
@@ -119,11 +101,6 @@ export function useAssessment() {
 
       return submission.id;
     } catch (err: any) {
-      console.error("🚨 Complete error details:", err);
-      console.error("Error message:", err.message);
-      console.error("Error details:", err.details);
-      console.error("Error hint:", err.hint);
-      console.error("Error code:", err.code);
       
       const errorMessage = err.message || 'Failed to save assessment';
       setError(errorMessage);
