@@ -20,8 +20,8 @@ export function validateSection(
 
     const answer = responses[question.id];
     
-    // Required field validation - treat all questions as required by default
-    const isRequired = question.required !== false; // Default to true unless explicitly false
+    // Required field validation - only validate when explicitly marked
+    const isRequired = question.required === true;
     if (isRequired) {
       if (question.type === 'checkbox') {
         if (!answer) {
