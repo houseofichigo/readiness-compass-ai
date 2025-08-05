@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom";
 import Confetti from "react-confetti";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -335,10 +335,12 @@ export default function ThankYou() {
 
         {/* Footer Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button variant="outline" onClick={handleRetakeAssessment} className="flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" />
-            Retake Assessment
-          </Button>
+          <Link to="/">
+            <Button variant="outline" className="flex items-center gap-2">
+              <ArrowLeft className="w-4 h-4" />
+              Retake Assessment
+            </Button>
+          </Link>
           <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" onClick={() => window.open("https://www.houseofichigo.com", "_blank")}>
             <Globe className="w-4 h-4 mr-2" />
             Visit Our Website

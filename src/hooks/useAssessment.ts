@@ -83,11 +83,13 @@ export function useAssessment() {
 
       // Save individual answers
       console.log("📋 Preparing answers data...");
-      const answers = Object.entries(responses).map(([questionId, value]) => ({
-        submission_id: submission.id,
-        question_id: questionId,
-        value: JSON.stringify(value) // Convert value to JSON string for JSONB storage
-      }));
+      const answers = Object.entries(responses)
+        .filter(([key, value]) => value !== undefined && value !== null && value !== "") // Filter out empty responses
+        .map(([questionId, value]) => ({
+          submission_id: submission.id,
+          question_id: questionId,
+          value: typeof value === 'string' ? value : JSON.stringify(value) // Handle both strings and complex objects
+        }));
 
       console.log(`📊 Inserting ${answers.length} answers...`);
       console.log("Sample answers:", answers.slice(0, 3));
@@ -96,15 +98,16 @@ export function useAssessment() {
       if (answers.length === 0) {
         console.warn("⚠️ No answers to save - responses object might be empty!");
         console.log("Responses object:", responses);
-      }
+        // Don't throw error, just proceed - profile data is already saved
+      } else {
+        const { error: answersError } = await supabase
+          .from('answers')
+          .insert(answers);
 
-      const { error: answersError } = await supabase
-        .from('answers')
-        .insert(answers);
-
-      if (answersError) {
-        console.error("❌ Answers error:", answersError);
-        throw answersError;
+        if (answersError) {
+          console.error("❌ Answers error:", answersError);
+          throw answersError;
+        }
       }
       
       console.log("✅ All answers saved successfully!");
