@@ -250,7 +250,18 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         <Button onClick={goPrev} variant="outline" disabled={currentPage === 0 || isSubmitting}>
           <ArrowLeft className="h-4 w-4" /> Previous
         </Button>
-        <Button onClick={handleNext} disabled={isSubmitting}>
+        <Button 
+          onClick={() => {
+            console.log("🔴 BUTTON CLICKED - Starting handleNext");
+            console.log("🔍 CURRENT STATE:");
+            console.log("- isSubmitting:", isSubmitting);
+            console.log("- currentPage:", currentPage);
+            console.log("- Total sections:", assessmentSections.length);
+            console.log("- Total responses:", Object.keys(responses).length);
+            handleNext();
+          }} 
+          disabled={isSubmitting}
+        >
           {isSubmitting
             ? (<><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</>)
             : (isAddOnPage || (isLastSection && !hasAddOns) ? "Complete Assessment" : <>Next <ArrowRight className="h-4 w-4" /></>)
