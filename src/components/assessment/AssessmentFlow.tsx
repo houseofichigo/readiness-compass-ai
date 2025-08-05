@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { AssessmentThankYou } from "./AssessmentThankYou";
@@ -38,6 +38,7 @@ export function AssessmentFlow({
   const [detectedTrack, setDetectedTrack] = useState<Track | null>(null);
   const [isCompleted, setIsCompleted] = useState(false);
   const [showTrackInfo, setShowTrackInfo] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Precompute global computed fields (e.g., from profile section)
   const profileSection = assessmentSections.find(s => s.id === "section_0");
@@ -220,7 +221,7 @@ export function AssessmentFlow({
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     console.log("🔵 handleNext called!");
     console.log("🔍 isFinalStep:", isFinalStep);
     console.log("🔍 isAddOnPage:", isAddOnPage);
@@ -259,8 +260,12 @@ export function AssessmentFlow({
       }
       
       console.log("✅ Validation passed - calling completeAssessment()");
-      // Complete the assessment
-      completeAssessment();
+      setIsSubmitting(true);
+      try {
+        await completeAssessment();
+      } finally {
+        setIsSubmitting(false);
+      }
       return;
     }
     
@@ -345,7 +350,7 @@ export function AssessmentFlow({
           onClick={goPrev}
           variant="outline"
           className="flex items-center gap-2"
-          disabled={currentPage === 0}
+          disabled={currentPage === 0 || isSubmitting}
         >
           <ArrowLeft className="h-4 w-4" />
           Previous
@@ -354,10 +359,19 @@ export function AssessmentFlow({
         <Button
           onClick={handleNext}
           className="flex items-center gap-2"
-          disabled={false}
+          disabled={isSubmitting}
         >
-          {isFinalStep ? "Complete Assessment" : "Next"}
-          <ArrowRight className="h-4 w-4" />
+          {isSubmitting ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Submitting...
+            </>
+          ) : (
+            <>
+              {isFinalStep ? "Complete Assessment" : "Next"}
+              <ArrowRight className="h-4 w-4" />
+            </>
+          )}
         </Button>
       </div>
     </div>
