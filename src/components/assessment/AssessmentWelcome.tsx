@@ -2,43 +2,49 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock, Users, Shield, BarChart3, Brain } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface AssessmentWelcomeProps {
   onStart: () => void;
 }
 
 export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
+  const { t } = useTranslation();
+
   const features = [
     {
       icon: Brain,
-      title: "AI-Powered Assessment",
-      description: "Advanced algorithms evaluate your organization's AI readiness across 6 key dimensions"
+      title: t("assessment.welcome.features.aiPowered.title"),
+      description: t("assessment.welcome.features.aiPowered.description"),
     },
     {
       icon: Users,
-      title: "Personalized Experience", 
-      description: "Adaptive questionnaire tailored to your role, industry, and organization size"
+      title: t("assessment.welcome.features.personalized.title"), 
+      description: t("assessment.welcome.features.personalized.description")
     },
     {
       icon: BarChart3,
-      title: "Detailed Analytics",
-      description: "Comprehensive scoring with benchmarking against industry peers"
+      title: t("assessment.welcome.features.analytics.title"),
+      description: t("assessment.welcome.features.analytics.description")
     },
     {
       icon: Shield,
-      title: "Compliance Ready",
-      description: "Built-in assessment for GDPR, EU AI Act, and other regulatory frameworks"
+      title: t("assessment.welcome.features.compliance.title"),
+      description: t("assessment.welcome.features.compliance.description")
     }
   ];
 
-  const trackBenefits = [
-    "Strategic alignment assessment",
-    "Data foundation evaluation", 
-    "Technology stack analysis",
-    "Automation maturity scoring",
-    "Team capability mapping",
-    "Governance framework review"
-  ];
+  const trackBenefits = t("assessment.welcome.discover.items", {
+    returnObjects: true,
+  }) as string[];
+
+  const tracks = t("assessment.welcome.tracksSection", {
+    returnObjects: true,
+  }) as {
+    technical: { title: string; description: string; items: string[] };
+    regulated: { title: string; description: string; items: string[] };
+    general: { title: string; description: string; items: string[] };
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-12">
@@ -46,35 +52,36 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
       <div className="text-center space-y-6">
         <div className="space-y-4">
           <Badge className="bg-primary/10 text-primary border-primary/20 px-4 py-2">
-            AI Readiness Assessment v2.0
+            {t("assessment.welcome.badge")}
           </Badge>
           <h1 className="text-5xl md:text-6xl font-bold">
             <span className="bg-gradient-primary bg-clip-text text-transparent">
-              Measure Your
+              {t("assessment.welcome.title.highlight")}
             </span>
             <br />
-            <span className="text-foreground">AI Readiness</span>
+            <span className="text-foreground">
+              {t("assessment.welcome.title.rest")}
+            </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Comprehensive assessment platform that evaluates your organization's AI maturity 
-            across strategy, data, tools, automation, people, and governance dimensions.
+            {t("assessment.welcome.description")}
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            <span>15-20 minutes</span>
+          <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              <span>{t("assessment.welcome.duration")}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              <span>{t("assessment.welcome.questions")}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              <span>{t("assessment.welcome.tracks")}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4" />
-            <span>60 smart questions</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
-            <span>3 specialized tracks</span>
-          </div>
-        </div>
       </div>
 
       {/* Features Grid */}
@@ -96,15 +103,17 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-blue-500" />
-              <h3 className="font-semibold text-blue-700">Technical Track</h3>
+              <h3 className="font-semibold text-blue-700">
+                {tracks.technical.title}
+              </h3>
             </div>
             <p className="text-sm text-blue-600">
-              For Data/AI Leads, CTOs, and IT Leaders focusing on technical implementation and architecture.
+              {tracks.technical.description}
             </p>
             <ul className="text-xs text-blue-600 space-y-1">
-              <li>• Advanced technical assessments</li>
-              <li>• MLOps and deployment evaluation</li>
-              <li>• Architecture documentation review</li>
+              {tracks.technical.items.map((item, index) => (
+                <li key={index}>• {item}</li>
+              ))}
             </ul>
           </div>
         </Card>
@@ -113,15 +122,17 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-purple-500" />
-              <h3 className="font-semibold text-purple-700">Regulated Track</h3>
+              <h3 className="font-semibold text-purple-700">
+                {tracks.regulated.title}
+              </h3>
             </div>
             <p className="text-sm text-purple-600">
-              For organizations in regulated industries with compliance requirements.
+              {tracks.regulated.description}
             </p>
             <ul className="text-xs text-purple-600 space-y-1">
-              <li>• GDPR & EU AI Act compliance</li>
-              <li>• Risk management frameworks</li>
-              <li>• Audit readiness assessment</li>
+              {tracks.regulated.items.map((item, index) => (
+                <li key={index}>• {item}</li>
+              ))}
             </ul>
           </div>
         </Card>
@@ -130,15 +141,17 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-green-500" />
-              <h3 className="font-semibold text-green-700">General Business Track</h3>
+              <h3 className="font-semibold text-green-700">
+                {tracks.general.title}
+              </h3>
             </div>
             <p className="text-sm text-green-600">
-              For business leaders, founders, and functional heads starting their AI journey.
+              {tracks.general.description}
             </p>
             <ul className="text-xs text-green-600 space-y-1">
-              <li>• Business-focused assessments</li>
-              <li>• ROI and strategy alignment</li>
-              <li>• Change management readiness</li>
+              {tracks.general.items.map((item, index) => (
+                <li key={index}>• {item}</li>
+              ))}
             </ul>
           </div>
         </Card>
@@ -148,7 +161,9 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
       <Card className="p-8 bg-gradient-accent border-0">
         <div className="grid md:grid-cols-2 gap-8 items-center">
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold">What You'll Discover</h2>
+            <h2 className="text-3xl font-bold">
+              {t("assessment.welcome.discover.title")}
+            </h2>
             <ul className="space-y-3">
               {trackBenefits.map((benefit, index) => (
                 <li key={index} className="flex items-center gap-3">
@@ -165,13 +180,15 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
                   85
                 </div>
                 <div className="text-sm text-muted-foreground">
-                  Your AI Readiness Score
+                  {t("assessment.welcome.score.label")}
                 </div>
-                <Badge className="bg-green-500 text-white">Advanced</Badge>
+                <Badge className="bg-green-500 text-white">
+                  {t("assessment.welcome.score.badge")}
+                </Badge>
               </div>
             </div>
             <p className="text-sm text-muted-foreground text-center">
-              Get your personalized readiness score with actionable recommendations
+              {t("assessment.welcome.score.description")}
             </p>
           </div>
         </div>
@@ -179,15 +196,15 @@ export function AssessmentWelcome({ onStart }: AssessmentWelcomeProps) {
 
       {/* CTA */}
       <div className="text-center space-y-6">
-        <Button 
-          size="lg" 
+        <Button
+          size="lg"
           onClick={onStart}
           className="bg-gradient-primary hover:shadow-glow transition-all duration-300 text-lg px-8 py-4"
         >
-          Start Your AI Assessment
+          {t("assessment.welcome.cta.startButton")}
         </Button>
         <p className="text-sm text-muted-foreground">
-          Free assessment • No registration required • Instant results
+          {t("assessment.welcome.cta.disclaimer")}
         </p>
       </div>
     </div>
