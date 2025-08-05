@@ -105,7 +105,7 @@ section_0:
         "Arts, Entertainment & Recreation",
         "Accommodation & Food Services",
         "Public Administration",
-Non-profit & NGO
+        "Non-profit & NGO"
       ]
       required: true
 
@@ -338,6 +338,7 @@ section_2:
           - { track: "TECH" }
           - { track: "REG" }
           - { M6_size: ["10–49", "50–249", "250–999", "≥ 1 000"] }
+      required: true
 
     - id: F7
       text: "What percentage of your AI budget is allocated to ethics and bias mitigation?"
@@ -348,6 +349,7 @@ section_2:
         any_of:
           - { track: "REG" }
           - { F5: { not: ["None apply"] } }
+      required: true
 
 section_3:
   category: data
@@ -368,6 +370,7 @@ section_3:
       options: ["Don’t know", "< 1 GB", "1–10 GB", "10–100 GB", "> 100 GB"]
       hide_if:
         total_questions: ">60"
+      required: true
 
     - id: D3
       text: "How mature is your data management (structure, tools, and lineage)?"
@@ -379,6 +382,7 @@ section_3:
           - { M6_size: "1–9" }
           - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
       options: ["No standards or visibility", "Basic naming conventions & partial docs", "Defined standards with manual processes", "Schema tools & automated tracking for key systems", "Version-controlled models with full lineage & governance"]
+      required: true
 
     - id: D4
       text: "How confident are you in the accuracy and freshness of your critical data?"
@@ -390,6 +394,7 @@ section_3:
           - { M6_size: "1–9" }
           - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
       options: ["Low – data often outdated or unreliable", "Medium – manual checks for accuracy", "High – periodic data quality tests", "Very high – automated alerts for data issues", "Excellent – real-time monitoring & validation"]
+      required: true
 
     - id: D5
       text: "Which security controls protect your data infrastructure?"
@@ -404,12 +409,14 @@ section_3:
       text: "How is data stewardship and cleaning managed?"
       type: single
       options: ["No owner", "Occasional clean-ups", "Assigned owner with periodic review", "Dedicated steward with monthly routines", "Continuous stewardship and monitoring"]
+      required: true
 
     - id: D7
       text: "How prepared are you for GDPR or EU AI Act audits?"
       type: single
       helper: "All companies can face audits—regulators, investors, or internal risk teams may review your controls.Indicate your readiness level for upcoming compliance or security audits."
       options: ["None – no audit readiness", "Basic logs only", "Audit trail for critical systems", "Explainability logs + scripts", "Automated compliance checks", "I don’t know"]
+      required: true
 
     - id: D8
       text: "How mature is your data labeling and annotation process?"
@@ -417,6 +424,7 @@ section_3:
       show_if:
         track: [TECH, REG]
       options: ["None", "Ad-hoc manual labeling", "Defined guidelines", "Standard taxonomy across datasets", "Automated labeling & ontology management"]
+      required: true
 
     - id: D9
       text: "Do you use synthetic or third-party data to augment your datasets?"
@@ -424,12 +432,14 @@ section_3:
       show_if:
         track: "TECH"
       options: ["No", "Exploring options", "Limited pilots", "Regular production use", "Extensive synthetic data pipelines"]
+      required: true
 
     - id: D10
       text: "How developed are your AI ethics and data privacy policies?"
       type: single
       helper:  "Select the maturity stage of your policies and enforcement(e.g. ‘Policies + training & oversight’ means you’ve documented guidelines and run staff workshops)."
       options: ["No formal policies", "High-level principles only (no detailed guidance)", "Documented guidelines (but no training or oversight)", "Guidelines + training & oversight (staff workshops, reviews)", "Audited & continuously improved (regular audits + updates)"]
+      required: true
 
 section_4:
   category: tools
@@ -615,6 +625,8 @@ section_4:
           ]
 
 
+      required: true
+
     - id: T1
       text: "How well are your tools and systems connected?"
       type: single
@@ -625,6 +637,7 @@ section_4:
         "API – platform integrations",
         "Real-time – event-driven mesh"
       ]
+      required: true
 
     - id: T2
       text: "How often do data connections fail or cause issues?"
@@ -636,6 +649,7 @@ section_4:
         "Almost never – very stable",
         "Never – fully reliable"
       ]
+      required: true
 
     - id: T3
       text: "Who owns and maintains your system integrations?"
@@ -647,12 +661,14 @@ section_4:
         "Internal tech team",
         "Dedicated integration team"
       ]
+      required: true
 
     - id: T4
       text: "How well are you connected to external AI services and LLMs?"
       type: single
       helper: "Indicates which large-language models (LLMs) you’re allowed to use and any internal models you access.Examples: OpenAI (ChatGPT), Anthropic Claude, Mistral, GitHub Copilot, or your own on-premise LLM."
       options: ["Not allowed to use any external LLMs", "Exploratory tests only (e.g., trying ChatGPT, Claude, Mistral in sandbox)", "Pilot deployments (small projects using APIs)", "One API in production (e.g., ChatGPT or Copilot embedded in a workflow)", "Multiple APIs in production + internal LLM access"]
+      required: true
 
     - id: T5
       text: "What access do you have to GPU/TPU compute?"
@@ -665,6 +681,7 @@ section_4:
         "Dedicated GPU/TPU budget",
         "Managed AI compute cluster"
       ]
+      required: true
 
     - id: T6
       text: "How well is your technical or data architecture documented?"
@@ -677,6 +694,7 @@ section_4:
         "Full architecture diagrams",
         "Auto-generated & maintained docs"
       ]
+      required: true
 
     - id: T7
       text: "What level of disaster recovery planning exists for data & AI?"
@@ -689,6 +707,7 @@ section_4:
         "Automated failover",
         "AI-aware recovery playbook"
       ]
+      required: true
 
     - id: T8
       text: "Which low-code or no-code platforms do you use for automation?"
@@ -721,12 +740,14 @@ section_5:
       helper: "Choose the description that best fits how automated your processes are, from no automation to fully autonomous."
       options: ["None – no automation", "1 – ad-hoc scripts only", "2 – basic tools with manual oversight", "3 – integrated workflows across functions", "4 – continuous automation with monitoring", "5 – fully autonomous processes"]
       score_map: [0,25,50,75,100]
+      required: true
 
     - id: A3
       text: "What is the current status of AI agents in your operations?"
       type: single
       helper: "Helps us recommend the right agent training modules."
       options: ["None implemented – no AI agents", "Prototype built – early proof of concept", "One agent in production – single live agent", "Multiple agents live – several agents running", "Organization-wide deployment – agents across teams"]
+      required: true
 
     - id: A4
       text: "Which tasks are you considering for AI-agent automation?"
@@ -746,12 +767,14 @@ section_5:
         all_of:
           - { A3: "None implemented" }
           - { P2: "Conservative – preferring pilot tests before scaling" }
+      required: true
 
     - id: A6
       text: "How do you monitor and alert on your automated processes?"
       type: single
       helper: "Ensures reliability and rapid issue resolution."
       options: ["No monitoring", "Manual checks", "KPI dashboards", "Automated alerts", "Full observability & logging"]
+      required: true
 
     - id: A7
       text: "What are the main blockers to automating tasks and deploying AI agents?"
@@ -778,6 +801,7 @@ section_5:
       options: ["None", "Ad-hoc spot checks", "Formal review process", "Logging with oversight", "Continuous auditing"]
       hide_if:
         A3: "None implemented"
+      required: true
 
     - id: A10
       text: "What recovery or rollback strategy exists for failed automations or AI agents?"
@@ -786,6 +810,7 @@ section_5:
       options: ["No plan", "Manual rollback steps", "Pre-defined failover procedures", "Automated rollback", "Self-healing loops"]
       hide_if:
         A3: "None implemented"
+      required: true
 
     - id: A11
       text: "How do you track the accuracy and quality of AI agent outputs?"
@@ -794,6 +819,7 @@ section_5:
       options: ["No tracking", "Manual spot checks", "Release testing", "Ongoing tests + spot checks", "Continuous accuracy monitoring"]
       hide_if:
         A3: "None implemented"
+      required: true
 
 section_6:
   category: people
@@ -806,6 +832,7 @@ section_6:
       type: single
       options: ["Never", "Rarely", "Monthly", "Weekly", "Daily"]
       score_map: [0, 25, 50, 75, 100]
+      required: true
 
     # 2. Self-assessment: Prompt-writing skills
     - id: C2
@@ -817,12 +844,14 @@ section_6:
         - "Formatting structured prompts"
         - "Designing multi-step prompt chains"
       columns: ["No confidence", "Some confidence", "Confident", "Very confident"]
+      required: true
 
     # 3. Knowledge sharing and priority topics
     - id: C3
       text: "How do you and your team share AI learnings internally?"
       type: single
       options: ["None – no sharing", "Informal tips & tricks", "Dedicated chat channel", "Regular workshops", "Active Community of Practice"]
+      required: true
 
     - id: C3a
       text: "Which AI training topics should you and your team prioritize? (Rank top 3)"
@@ -838,22 +867,26 @@ section_6:
       text: "What annual budget do you and your team allocate per person for AI upskilling?"
       type: single
       options: ["0 €", "< 200 €", "200–500 €", "500–1 000 €", "> 1 000 €"]
+      required: true
 
     - id: C5
       text: "How many hours per month can you and your team dedicate to AI training?"
       type: single
       options: ["None", "< 1 hr", "1–3 hrs", "3–5 hrs", "> 5 hrs"]
+      required: true
 
     - id: C6
       text: "What format do you and your team prefer for AI training delivery?"
       type: single
       options: ["Text guides", "Short videos", "Live workshops", "Self-paced courses", "Mixed formats"]
+      required: true
 
     # 5. Culture & support
     - id: C7
       text: "How often do you and your team engage external AI experts?"
       type: single
       options: ["None – no external support", "Occasional advice", "Regular advisory sessions", "Access to expert network", "Dedicated AI advisory board"]
+      required: true
 
     - id: C8
       text: "What stops you and your team from piloting more AI projects?"
@@ -865,18 +898,21 @@ section_6:
       text: "How open are you and your team to piloting new AI projects?"
       type: single
       options: ["Resistant", "Cautious", "Interested", "Proactive", "Active pilots"]
+      required: true
 
     # 6. Collaboration & safety
     - id: C10
       text: "How frequently do you and your team collaborate across functions on AI initiatives?"
       type: single
       options: ["Never", "Occasionally", "Quarterly", "In squads", "Embedded practice"]
+      required: true
 
     - id: C11
       text: "How safe do you and your team feel to experiment and fail with AI?"
       type: single
       helper: "Everyone makes small mistakes (e.g. minor bugs, wrong outputs)—how safe do you feel experimenting and learning with AI?"
       options: ["No safety – fear of repercussions", "Low safety – rarely comfortable", "Moderate safety – sometimes comfortable", "High safety – often comfortable", "Full safety – always encouraged"]
+      required: true
 
 
 
@@ -889,6 +925,7 @@ section_7:
       text: "How mature are your processes for identifying and mitigating AI risks and biases?"
       type: single
       options: ["None – no risk or bias management", "Reactive fixes – ad-hoc corrections after issues", "Pre-release checks – bias tests before deployments", "Formal framework – defined policies and workflows", "AI Act–compliant – meets EU AI Act standards"]
+      required: true
 
     - id: G2
       text: "How well can you explain and audit AI model decisions?"
@@ -896,26 +933,31 @@ section_7:
       helper: "Explanation means you can trace why a model made a decision (e.g. feature importances, logs);auditing means you can review records later. For example, logging inputs/outputs for each prediction."
       options: ["None – no logging or explanations", "High-risk only – explain critical models", "Audit logs – structured logs for scripts", "All models – explanations for every model", "Audit-ready – tools & docs for compliance audits"]
       score_map: [0,25,50,75,100]
+      required: true
       
     - id: G3
       text: "How transparent are you with users and stakeholders about AI use?"
       type: single
       options: ["None – no communication", "Policy only – AI mentioned in policies", "Docs & FAQs – published guides and FAQs", "Explain button – users can request details", "Full disclosure – proactive dashboards and alerts"]
+      required: true
 
     - id: G4
       text: "What level of incident response planning exists for AI failures or harms?"
       type: single
       options: ["None – no response plan", "General IT plan – covers all incidents", "Manual rollback – human-driven recovery", "Automated rollback – system-driven recovery", "Playbook – comprehensive AI incident response"]
+      required: true
 
     - id: G5
       text: "What level of human oversight do you enforce on AI outputs?"
       type: single
       options: ["None – AI runs without checks", "Final review – humans review before release", "Spot checks – random output audits", "Human-in-loop – humans embedded in workflow", "Escalation – automatic escalation to experts"]
+      required: true
 
     - id: G6
       text: "How deeply is privacy built into your AI development process?"
       type: single
       options: ["Basic compliance – meets minimum legal requirements", "Enhanced controls – best-practice privacy measures", "PETs – uses privacy-enhancing technologies", "By design – privacy embedded in design phases", "Automated – privacy checks in CI/CD pipelines"]
+      required: true
 
     - id: G7
       text: "What is the status of independent audits for your AI systems?"
@@ -923,12 +965,14 @@ section_7:
       show_if:
         track: [Reg, Tech]
       options: ["None – no audits conducted", "Planned – audit scheduled", "In progress – audit underway", "Completed – initial audit done", "Ongoing – regular audit cycle"]
+      required: true
 
     - id: G8
       text: "How far along are you in mapping AI risks under the EU AI Act?"
       type: single
       helper: "Mapping means identifying and documenting risks under EU rules (e.g. creating a risk register of AI use cases)."
       options: ["Not aware – haven’t reviewed requirements", "Aware – know obligations but not mapped", "Mapping started – risk register in progress", "Completed – risk register finished", "Reported – findings shared with leadership"]
+      required: true
 
 
     - id: G9
@@ -937,12 +981,14 @@ section_7:
       show_if:
         track: [Reg, Tech]
       options: ["Never – no fairness tests", "Ad-hoc – tests only after incidents", "Pre-release – tests before each deployment", "Quarterly – scheduled fairness reviews", "Continuous – automated monitoring"]
+      required: true
 
     - id: G10
       text: "What governance body oversees your AI ethics and compliance?"
       type: single
       helper: "Governance bodies set and enforce rules—e.g. data‐privacy policies, bias‐review processes, acceptable‐use guidelines.   Examples: an internal AI ethics committee that reviews new models, a compliance team enforcing GDPR rules, or an external expert panel."
       options: ["None – no oversight body", "Informal – occasional advisor reviews", "Ad-hoc – project-based ethics reviews", "Scheduled – regular ethics committee meetings", "External – includes independent ethics experts"]
+      required: true
 
 
 section_8:
@@ -955,6 +1001,7 @@ section_8:
       helper: "Determines urgency and timing for targeted training."
       options: ["Within 3 months", "3–6 months", "6–12 months", "Over 12 months"]
       score_map: [100, 75, 50, 25]
+      required: true
 
     - id: P2
       text: "What level of risk are you comfortable taking on AI projects?"
@@ -962,6 +1009,7 @@ section_8:
       helper: "Risk tolerance means how much you’re willing to try new AI ideas, knowing minor setbacks (e.g., small budget overruns or model hiccups) can happen.For example, “Cautious” means you’ll run a small pilot first; “Bold” means you’ll launch a larger experiment with clear rollback plans."
       options: ["Conservative – pilot tests before scaling", "Cautious – open to small experiments", "Balanced – willing to try new approaches with oversight", "Bold – ready for larger experiments with safeguards"]
       score_map: [0,33,66,100]
+      required: true
 
     - id: P3
       text: "Which success metrics are most important for your AI work? (Select up to 3)"
@@ -971,6 +1019,7 @@ section_8:
       max_select: 3
       score_per: 34
       cap: 100
+      required: true
 
     - id: P4
       text: "What is your preferred resource strategy for AI projects?"
@@ -978,6 +1027,7 @@ section_8:
       helper: "Determines focus on internal skill-building vs. external support."
       options: ["Fully in-house build", "Hybrid – in-house + external", "Fully outsourced"]
       score_map: [100, 50, 0]
+      required: true
 
     - id: P5
       text: "Which technology architectures do you prefer for AI solutions? (Select all)"
@@ -986,6 +1036,7 @@ section_8:
       options: ["Cloud-native", "Hybrid/on-premise", "API-first", "Low-code/no-code", "Open-source frameworks", "Enterprise software suites"]
       score_per: 17
       cap: 100
+      required: true
 
     - id: P6
       text: "What level of external support do you expect for AI implementation?"
@@ -994,6 +1045,7 @@ section_8:
       options: ["None – fully self-service", "Occasional consulting", "Ongoing advisory", "Managed services", "Full outsourcing"]
       hide_if:
         total_questions: ">60"
+      required: true
 
     - id: P7
       text: "How significant of an organizational change are you prepared for to adopt AI?"
@@ -1002,6 +1054,7 @@ section_8:
       options: ["Minimal changes", "Minor tweaks", "Moderate transformation", "Major transformation", "Continuous evolution"]
       score_map: [0, 25, 50, 75, 100]
 
+      required: true
 
 add_ons:
   - id: T9
