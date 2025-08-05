@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { Outlet, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Separator } from '@/components/ui/separator';
 import { 
   LayoutDashboard, 
   FileText, 
@@ -17,19 +16,17 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+const navigation = [
+  { name: 'Executive Dashboard', href: '/admin', icon: LayoutDashboard, premium: true },
+  { name: 'Overview', href: '/admin/overview', icon: BarChart3 },
+  { name: 'Submissions', href: '/admin/submissions', icon: FileText },
+  { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+];
+
 export function AdminLayout() {
-  const { t } = useTranslation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, adminRole, signOut } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const navigation = [
-    { name: t('admin.navigation.dashboard'), href: '/admin', icon: LayoutDashboard, premium: true },
-    { name: t('admin.navigation.overview'), href: '/admin/overview', icon: BarChart3 },
-    { name: t('admin.navigation.submissions'), href: '/admin/submissions', icon: FileText },
-    { name: t('admin.navigation.analytics'), href: '/admin/analytics', icon: BarChart3 },
-  ];
 
   const handleLogout = async () => {
     await signOut();
@@ -60,7 +57,7 @@ export function AdminLayout() {
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Shield className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="font-semibold">{t('admin.portal')}</span>
+              <span className="font-semibold">Admin Portal</span>
             </div>
             <Button
               variant="ghost"
@@ -113,7 +110,7 @@ export function AdminLayout() {
                 <p className="text-xs text-muted-foreground capitalize">{adminRole}</p>
               </div>
               <Badge variant={isPremium ? "default" : "secondary"}>
-                {isPremium ? t('admin.roles.superAdmin') : t('admin.roles.analyst')}
+                {isPremium ? "Super Admin" : "Analyst"}
               </Badge>
             </div>
             <Button 
@@ -152,7 +149,6 @@ export function AdminLayout() {
             </div>
             
             <div className="flex items-center space-x-4">
-                <LanguageSwitcher />
               <div className="text-right">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="mr-1 h-3 w-3" />

@@ -1,31 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Shield } from 'lucide-react';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 export function AdminLogin() {
-  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+  
   const { user, isAdmin, signIn, isLoading } = useAuth();
 
-  // Redirect already‐signed‐in admins
+  // Redirect if already authenticated and admin
   if (!isLoading && user && isAdmin) {
     return <Navigate to="/admin" replace />;
   }
@@ -36,10 +27,11 @@ export function AdminLogin() {
     setError('');
 
     const { error: authError } = await signIn(email, password);
+    
     if (authError) {
       setError(authError.message);
     }
-
+    
     setIsSubmitting(false);
   };
 
@@ -53,77 +45,60 @@ export function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
-      {/* Language Switcher */}
-      <div className="fixed top-4 right-4 z-50">
-        <LanguageSwitcher />
-      </div>
-      
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
             <Shield className="h-6 w-6 text-primary-foreground" />
           </div>
-          <CardTitle className="text-2xl">
-            {t('admin_login.portal_title')}
-          </CardTitle>
+          <CardTitle className="text-2xl">Admin Portal</CardTitle>
           <CardDescription>
-            {t('admin_login.description')}
+            Sign in to access the AI Readiness Assessment dashboard
           </CardDescription>
         </CardHeader>
-
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
             <div className="space-y-2">
-              <Label htmlFor="email">{t('admin_login.email_label')}</Label>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder={t('admin_login.email_placeholder')}
+                placeholder="admin@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 disabled={isSubmitting}
               />
             </div>
-
-            {/* Password */}
             <div className="space-y-2">
-              <Label htmlFor="password">
-                {t('admin_login.password_label')}
-              </Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder={t('admin_login.password_placeholder')}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 disabled={isSubmitting}
               />
             </div>
-
-            {/* Error */}
+            
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
-            {/* Submit */}
-            <Button
-              type="submit"
-              className="w-full"
+            <Button 
+              type="submit" 
+              className="w-full" 
               disabled={isSubmitting}
-              aria-label={t('admin_login.sign_in')}
             >
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('admin_login.signing_in')}
+                  Signing in...
                 </>
               ) : (
-                t('admin_login.sign_in')
+                'Sign In'
               )}
             </Button>
           </form>

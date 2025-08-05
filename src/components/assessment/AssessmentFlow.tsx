@@ -10,13 +10,11 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 import { OrganizationProfileForm } from "./OrganizationProfileForm";
-import { assessmentSections, assessmentAddOns, getAssessmentSections, getAssessmentAddOns } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
 import { useToast } from "@/hooks/use-toast";
-import { useTranslation } from "react-i18next";
-
 
 interface AssessmentFlowProps {
   onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => Promise<void>;
@@ -34,7 +32,6 @@ const parseListLiteral = (lit: string): string[] => {
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const { toast } = useToast();
-  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
   const [currentPage, setCurrentPage] = useState(0);
@@ -42,19 +39,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [detectedTrack, setDetectedTrack] = useState<Track>("GEN");
   const [showTrackInfo, setShowTrackInfo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  // Get reactive sections that update when language changes
-  const [sections, setSections] = useState(getAssessmentSections());
-  const [addOns, setAddOns] = useState(getAssessmentAddOns());
-  
-  // Update sections when language changes
-  useEffect(() => {
-    setSections(getAssessmentSections());
-    setAddOns(getAssessmentAddOns());
-  }, [i18n.language]);
 
-  // Profile section computed fields  
-  const profileSection = sections.find(s => s.id === "section_0");
+  // Profile section computed fields
+  const profileSection = assessmentSections.find(s => s.id === "section_0");
   const evaluateComputed = (fields: ComputedField[] | undefined, rs: Record<string, any>) => {
     const values: Record<string, any> = {};
     fields?.forEach(f => {
@@ -74,16 +61,16 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   }, [responses, globalComputed]);
 
   // Which add-ons to show?
-  const visibleAddOns = addOns.filter(q =>
+  const visibleAddOns = assessmentAddOns.filter(q =>
     isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)
   );
 
-  const isLastSection = currentPage === sections.length - 1;
+  const isLastSection = currentPage === assessmentSections.length - 1;
   const hasAddOns = visibleAddOns.length > 0;
-  const isAddOnPage = currentPage === sections.length;
+  const isAddOnPage = currentPage === assessmentSections.length;
   const currentSection = isAddOnPage
     ? null
-    : sections[currentPage];
+    : assessmentSections[currentPage];
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -93,9 +80,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
   const goNextPage = () => {
     if (isLastSection && hasAddOns) {
-      setCurrentPage(sections.length);
+      setCurrentPage(assessmentSections.length);
     } else {
-      setCurrentPage(p => Math.min(sections.length, p + 1));
+      setCurrentPage(p => Math.min(assessmentSections.length, p + 1));
     }
     scrollToTop();
   };
@@ -128,8 +115,8 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     } catch (err) {
       console.error("🚨 Assessment completion error:", err);
       toast({
-        title: t("assessment.flow.toast.errorComplete.title"),
-        description: t("assessment.flow.toast.errorComplete.description"),
+        title: "Error completing assessment",
+        description: "Please try again or contact support.",
         variant: "destructive",
       });
     } finally {
@@ -159,7 +146,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     if (currentSection?.consentBanner?.required) {
       questions.push({
         id: `consent_${currentSection.id}`,
-        text: t("assessment.flow.consent"),
+        text: "Consent",
         type: "checkbox",
         required: true,
       } as any);
@@ -203,8 +190,8 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       console.log("❌ VALIDATION FAILED - Cannot proceed!");
       scrollToFirstError();
       toast({
-        title: t("assessment.flow.toast.incomplete.title"),
-        description: t("assessment.flow.toast.incomplete.description"),
+        title: "Please complete all required questions",
+        description: "Some questions still need your input.",
         variant: "destructive",
       });
       return;
@@ -221,9 +208,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const visibleQuestions = getVisibleQuestions();
-  const sectionTitle = isAddOnPage ? t("assessment.flow.additionalQuestions") : currentSection?.title;
+  const sectionTitle = isAddOnPage ? "Additional Questions" : currentSection?.title;
   const sectionPurpose = isAddOnPage ? undefined : currentSection?.purpose;
-  const progressIndex = Math.min(currentPage, sections.length - 1);
+  const progressIndex = Math.min(currentPage, assessmentSections.length - 1);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
@@ -250,7 +237,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         <div>
           <h2 className="text-2xl font-bold">{sectionTitle}</h2>
           {sectionPurpose && <p className="text-muted-foreground">{sectionPurpose}</p>}
-          <Progress value={((currentPage) / sections.length) * 100} className="w-full my-4" />
+          <Progress value={((currentPage) / assessmentSections.length) * 100} className="w-full my-4" />
         </div>
 
         {/* Use special layout for Organization Profile section (section_0) */}
@@ -271,7 +258,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
       <div className="flex justify-between">
         <Button onClick={goPrev} variant="outline" disabled={currentPage === 0 || isSubmitting}>
-          <ArrowLeft className="h-4 w-4" /> {t("assessment.flow.previous")}
+          <ArrowLeft className="h-4 w-4" /> Previous
         </Button>
         <Button 
           onClick={() => {
@@ -279,23 +266,16 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
             console.log("🔍 CURRENT STATE:");
             console.log("- isSubmitting:", isSubmitting);
             console.log("- currentPage:", currentPage);
-            console.log("- Total sections:", sections.length);
+            console.log("- Total sections:", assessmentSections.length);
             console.log("- Total responses:", Object.keys(responses).length);
             handleNext();
           }} 
           disabled={isSubmitting}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" /> {t("assessment.flow.submitting")}
-            </>
-          ) : isAddOnPage || (isLastSection && !hasAddOns) ? (
-            t("assessment.flow.complete")
-          ) : (
-            <>
-              {t("assessment.flow.next")} <ArrowRight className="h-4 w-4" />
-            </>
-          )}
+          {isSubmitting
+            ? (<><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</>)
+            : (isAddOnPage || (isLastSection && !hasAddOns) ? "Complete Assessment" : <>Next <ArrowRight className="h-4 w-4" /></>)
+          }
         </Button>
       </div>
     </div>

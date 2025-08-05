@@ -2,7 +2,6 @@ import React, { Component, ReactNode } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { withTranslation, WithTranslation } from 'react-i18next';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -10,12 +9,12 @@ interface ErrorBoundaryState {
   errorInfo?: React.ErrorInfo;
 }
 
-interface ErrorBoundaryProps extends WithTranslation {
+interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
-class ErrorBoundaryComponent extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -55,8 +54,6 @@ class ErrorBoundaryComponent extends Component<ErrorBoundaryProps, ErrorBoundary
   };
 
   render() {
-    const { t } = this.props;
-    
     if (this.state.hasError) {
       // Custom fallback UI
       if (this.props.fallback) {
@@ -72,33 +69,28 @@ class ErrorBoundaryComponent extends Component<ErrorBoundaryProps, ErrorBoundary
             
             <div className="space-y-2">
               <h1 className="text-2xl font-bold text-foreground">
-                {t('error_boundary.title')}
+                Something went wrong
               </h1>
               <p className="text-muted-foreground">
-                {t('error_boundary.message')}
+                We encountered an unexpected error. Please try refreshing the page or return to home.
               </p>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button onClick={this.handleReload} className="flex items-center gap-2" aria-label={t('error_boundary.reload')}>
+              <Button onClick={this.handleReload} className="flex items-center gap-2">
                 <RefreshCw className="h-4 w-4" />
-                {t('error_boundary.reload')}
+                Reload Page
               </Button>
-              <Button
-                variant="outline"
-                onClick={this.handleGoHome}
-                className="flex items-center gap-2"
-                aria-label={t('error_boundary.go_home')}
-              >
+              <Button variant="outline" onClick={this.handleGoHome} className="flex items-center gap-2">
                 <Home className="h-4 w-4" />
-                {t('error_boundary.go_home')}
+                Go Home
               </Button>
             </div>
 
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="text-left mt-6">
                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
-                  {t('error_boundary.details')}
+                  Error Details (Development Only)
                 </summary>
                 <pre className="mt-2 text-xs bg-muted p-4 rounded-md overflow-auto max-h-40">
                   {this.state.error.toString()}
@@ -114,5 +106,3 @@ class ErrorBoundaryComponent extends Component<ErrorBoundaryProps, ErrorBoundary
     return this.props.children;
   }
 }
-
-export const ErrorBoundary = withTranslation()(ErrorBoundaryComponent);
