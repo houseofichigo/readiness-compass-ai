@@ -221,8 +221,16 @@ export function AssessmentFlow({
   };
 
   const handleNext = () => {
+    console.log("🔵 handleNext called!");
+    console.log("🔍 isFinalStep:", isFinalStep);
+    console.log("🔍 isAddOnPage:", isAddOnPage);
+    console.log("🔍 isLastSection:", isLastSection);
+    console.log("🔍 hasAddOns:", hasAddOns);
+    console.log("🔍 currentPage:", currentPage);
+    
     // Check if we're on the final step and should complete
     if (isFinalStep) {
+      console.log("✅ This IS the final step - will complete assessment!");
       // Validate before completing
       const currentQuestions = isAddOnPage
         ? visibleAddOns
@@ -233,7 +241,14 @@ export function AssessmentFlow({
       const visibleIds = currentQuestions.map(q => q.id);
       const validation = validateSection(currentQuestions, responses, visibleIds);
       
+      console.log("🔍 Validation check:");
+      console.log("  - Questions to validate:", currentQuestions.length);
+      console.log("  - Visible IDs:", visibleIds);
+      console.log("  - Validation result:", validation);
+      console.log("  - Is valid:", validation.isValid);
+      
       if (!validation.isValid) {
+        console.log("❌ Validation failed - errors:", validation.errors);
         scrollToFirstError();
         toast({
           title: "Please complete all required questions",
@@ -243,6 +258,7 @@ export function AssessmentFlow({
         return;
       }
       
+      console.log("✅ Validation passed - calling completeAssessment()");
       // Complete the assessment
       completeAssessment();
       return;
