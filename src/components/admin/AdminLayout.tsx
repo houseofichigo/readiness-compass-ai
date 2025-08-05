@@ -3,7 +3,7 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -149,6 +149,7 @@ export function AdminLayout() {
             </div>
             
             <div className="flex items-center space-x-4">
+                <LanguageSwitcher />
               <div className="text-right">
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="mr-1 h-3 w-3" />
