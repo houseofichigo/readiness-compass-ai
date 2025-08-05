@@ -4,7 +4,8 @@ import Confetti from "react-confetti";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, MessageSquare, Calculator, Shield, Phone, Globe, ArrowLeft } from "lucide-react";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, MessageSquare, Calculator, Shield, Phone, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
 import { useAssessment } from "@/hooks/useAssessment";
@@ -22,7 +23,6 @@ export default function ThankYou() {
   const { loadAssessment } = useAssessment();
   
   const [showConfetti, setShowConfetti] = useState(true);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
   const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -125,18 +125,7 @@ export default function ThankYou() {
   return <div className="min-h-screen bg-gradient-accent">
       {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={200} gravity={0.1} />}
 
-      {/* Language Selector */}
-      <div className="absolute top-4 right-4 z-10">
-        <div className="flex items-center gap-2 bg-background/80 backdrop-blur-sm rounded-lg px-3 py-2">
-          <Globe className="w-4 h-4" />
-          <select value={selectedLanguage} onChange={e => setSelectedLanguage(e.target.value)} className="bg-transparent border-none outline-none text-sm">
-            <option value="English">🇺🇸 English</option>
-            <option value="Spanish">🇪🇸 Spanish</option>
-            <option value="French">🇫🇷 French</option>
-            <option value="German">🇩🇪 German</option>
-          </select>
-        </div>
-      </div>
+      <LanguageSwitcher className="absolute top-4 right-4 z-10" />
 
       <div className="max-w-6xl mx-auto p-6 space-y-8">
         {/* Hero Section */}

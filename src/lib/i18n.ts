@@ -1,5 +1,13 @@
-const i18n = {
-  language: 'en',
-};
+// src/i18n.ts
 
-export default i18n;
+class SimpleI18n {
+  language: string = 'en'
+
+  changeLanguage(lng: string) {
+    this.language = lng
+  }
+}
+
+const i18n = new SimpleI18n()
+
+export default i18n
