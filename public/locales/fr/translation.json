@@ -78,6 +78,7 @@
     "thankYou": {
       "title": "Évaluation terminée",
       "subtitle": "8 domaines clés évalués avec une analyse détaillée",
+      "heroMessage": "Merci à l'équipe {{organization}} d'avoir complété notre évaluation exhaustive de préparation à l'IA",
       "statusCards": {
         "complete": {
           "title": "Évaluation terminée",
@@ -161,6 +162,38 @@
         "title": "Merci pour votre participation",
         "description": "Vos données nous aident à améliorer notre évaluation et à fournir des informations plus pertinentes sur la préparation à l'IA."
       }
+    },
+    "flow": {
+      "additionalQuestions": "Questions supplémentaires",
+      "previous": "Précédent",
+      "next": "Suivant",
+      "complete": "Terminer l'évaluation",
+      "submitting": "Envoi…",
+      "consent": "Consentement",
+      "toast": {
+        "errorComplete": {
+          "title": "Erreur lors de la finalisation de l'évaluation",
+          "description": "Veuillez réessayer ou contacter le support."
+        },
+        "incomplete": {
+          "title": "Veuillez compléter toutes les questions obligatoires",
+          "description": "Certaines questions nécessitent encore votre réponse."
+        }
+      }
+    },
+    "toast": {
+      "saveSuccess": {
+        "title": "Évaluation enregistrée avec succès !",
+        "description": "Vos résultats ont été enregistrés dans la base de données."
+      },
+      "saveError": {
+        "title": "Erreur lors de l'enregistrement de l'évaluation",
+        "description": "{{message}}"
+      },
+      "loadError": {
+        "title": "Erreur lors du chargement de l'évaluation",
+        "description": "{{message}}"
+      }
     }
   },
   "admin": {
@@ -189,6 +222,38 @@
     "comingSoon": {
       "title": "Bientôt disponible !",
       "description": "{{feature}} sera bientôt disponible. Nous vous préviendrons lorsqu'elle sera prête."
+    },
+    "admin": {
+      "errorLoadingAnalytics": {
+        "title": "Erreur de chargement des analyses",
+        "description": "{{message}}"
+      },
+      "errorLoadingSubmissions": {
+        "title": "Erreur de chargement des soumissions",
+        "description": "{{message}}"
+      },
+      "errorLoadingSubmissionDetails": {
+        "title": "Erreur de chargement des détails de la soumission",
+        "description": "{{message}}"
+      },
+      "submissionDeleted": {
+        "title": "Soumission supprimée",
+        "description": "La soumission a été supprimée avec succès."
+      },
+      "errorDeletingSubmission": {
+        "title": "Erreur lors de la suppression de la soumission",
+        "description": "{{message}}"
+      }
+    },
+    "auth": {
+      "loginFailed": {
+        "title": "Échec de la connexion",
+        "description": "{{message}}"
+      },
+      "logoutFailed": {
+        "title": "Échec de la déconnexion",
+        "description": "{{message}}"
+      }
     }
   },
   "language": {

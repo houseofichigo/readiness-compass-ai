@@ -78,6 +78,7 @@
     "thankYou": {
       "title": "Assessment Complete",
       "subtitle": "8 key areas evaluated with detailed analysis",
+      "heroMessage": "Thank you, {{organization}} team, for completing our comprehensive AI readiness assessment",
       "statusCards": {
         "complete": {
           "title": "Assessment Complete",
@@ -161,6 +162,38 @@
         "title": "Thank you for your participation",
         "description": "Your data helps us improve our assessment and provide more relevant insights on AI readiness."
       }
+    },
+    "flow": {
+      "additionalQuestions": "Additional Questions",
+      "previous": "Previous",
+      "next": "Next",
+      "complete": "Complete Assessment",
+      "submitting": "Submitting…",
+      "consent": "Consent",
+      "toast": {
+        "errorComplete": {
+          "title": "Error completing assessment",
+          "description": "Please try again or contact support."
+        },
+        "incomplete": {
+          "title": "Please complete all required questions",
+          "description": "Some questions still need your input."
+        }
+      }
+    },
+    "toast": {
+      "saveSuccess": {
+        "title": "Assessment saved successfully!",
+        "description": "Your assessment results have been saved to the database."
+      },
+      "saveError": {
+        "title": "Error saving assessment",
+        "description": "{{message}}"
+      },
+      "loadError": {
+        "title": "Error loading assessment",
+        "description": "{{message}}"
+      }
     }
   },
   "admin": {
@@ -189,6 +222,38 @@
     "comingSoon": {
       "title": "Coming Soon!",
       "description": "{{feature}} will be available soon. We'll notify you when it's ready."
+    },
+    "admin": {
+      "errorLoadingAnalytics": {
+        "title": "Error loading analytics",
+        "description": "{{message}}"
+      },
+      "errorLoadingSubmissions": {
+        "title": "Error loading submissions",
+        "description": "{{message}}"
+      },
+      "errorLoadingSubmissionDetails": {
+        "title": "Error loading submission details",
+        "description": "{{message}}"
+      },
+      "submissionDeleted": {
+        "title": "Submission deleted",
+        "description": "The submission has been successfully deleted."
+      },
+      "errorDeletingSubmission": {
+        "title": "Error deleting submission",
+        "description": "{{message}}"
+      }
+    },
+    "auth": {
+      "loginFailed": {
+        "title": "Login failed",
+        "description": "{{message}}"
+      },
+      "logoutFailed": {
+        "title": "Logout failed",
+        "description": "{{message}}"
+      }
     }
   },
   "language": {

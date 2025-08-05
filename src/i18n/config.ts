@@ -1,21 +1,14 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-const resources = {
-  en: {
-    translation: {
-      welcome: 'Welcome',
-    },
-  },
-  fr: {
-    translation: {
-      welcome: 'Bienvenue',
-    },
-  },
-};
+import en from '../../public/locales/en/translation.json';
+import fr from '../../public/locales/fr/translation.json';
 
 i18n.use(initReactI18next).init({
-  resources,
+  resources: {
+    en: { translation: en },
+    fr: { translation: fr },
+  },
   lng: 'en',
   fallbackLng: 'en',
   interpolation: {

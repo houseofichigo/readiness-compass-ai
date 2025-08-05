@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useTranslation } from 'react-i18next';
 
 interface AuthContextType {
   user: User | null;
@@ -35,6 +36,7 @@ export function useAuthProvider() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminRole, setAdminRole] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   const checkAdminStatus = async (userEmail: string) => {
     try {
@@ -105,8 +107,8 @@ export function useAuthProvider() {
 
     if (error) {
       toast({
-        title: "Login failed",
-        description: error.message,
+        title: t('toast.auth.loginFailed.title'),
+        description: t('toast.auth.loginFailed.description', { message: error.message }),
         variant: "destructive",
       });
     }
@@ -118,8 +120,8 @@ export function useAuthProvider() {
     const { error } = await supabase.auth.signOut();
     if (error) {
       toast({
-        title: "Logout failed",
-        description: error.message,
+        title: t('toast.auth.logoutFailed.title'),
+        description: t('toast.auth.logoutFailed.description', { message: error.message }),
         variant: "destructive",
       });
     } else {
