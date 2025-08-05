@@ -303,11 +303,56 @@ export const assessmentComputed: Record<string, ComputedField[]> = {};
 
 // Dynamic exports that update with language
 export const assessmentSections = new Proxy([] as Section[], {
-  get() { return getAssessmentSections(); }
+  get(target, prop) {
+    const sections = getAssessmentSections();
+    const value = (sections as any)[prop];
+    if (typeof value === 'function') {
+      return value.bind(sections);
+    }
+    return value;
+  },
+  has(target, prop) {
+    return prop in getAssessmentSections();
+  },
+  ownKeys(target) {
+    return Reflect.ownKeys(getAssessmentSections());
+  },
+  getOwnPropertyDescriptor(target, prop) {
+    return Reflect.getOwnPropertyDescriptor(getAssessmentSections(), prop);
+  }
 });
+
 export const assessmentAddOns = new Proxy([] as Question[], {
-  get() { return getAssessmentAddOns(); }
+  get(target, prop) {
+    const addOns = getAssessmentAddOns();
+    const value = (addOns as any)[prop];
+    if (typeof value === 'function') {
+      return value.bind(addOns);
+    }
+    return value;
+  },
+  has(target, prop) {
+    return prop in getAssessmentAddOns();
+  },
+  ownKeys(target) {
+    return Reflect.ownKeys(getAssessmentAddOns());
+  },
+  getOwnPropertyDescriptor(target, prop) {
+    return Reflect.getOwnPropertyDescriptor(getAssessmentAddOns(), prop);
+  }
 });
+
 export const assessmentMeta = new Proxy({} as Record<string, unknown>, {
-  get() { return getAssessmentMeta(); }
+  get(target, prop) {
+    return getAssessmentMeta()[prop as keyof ReturnType<typeof getAssessmentMeta>];
+  },
+  has(target, prop) {
+    return prop in getAssessmentMeta();
+  },
+  ownKeys(target) {
+    return Reflect.ownKeys(getAssessmentMeta());
+  },
+  getOwnPropertyDescriptor(target, prop) {
+    return Reflect.getOwnPropertyDescriptor(getAssessmentMeta(), prop);
+  }
 });
