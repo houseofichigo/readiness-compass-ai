@@ -796,7 +796,7 @@ locale_fr:
           - "Playbook IA-aware"
       T8:
         text: "Quels outils low-code ou no-code utilisez-vous pour l'automatisation ?"
-        helper: "Sélectionnez tous les outils ou choisissez "Aucun""
+        helper: "Sélectionnez tous les outils ou choisissez 'Aucun'"
         options:
           - "Aucun"
           - "Zapier"

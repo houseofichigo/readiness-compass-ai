@@ -36,12 +36,14 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const navigate = useNavigate();
   const { language } = useLanguage();
   
-  // Update assessment language when context changes
+  // Update assessment language when context changes and force re-render
   React.useEffect(() => {
     setLanguage(language);
+    // Force component re-render to pick up new language data
+    setCurrentPage(prev => prev);
   }, [language]);
   
-  // Get localized content
+  // Get localized content - these will update when language changes
   const assessmentSections = getAssessmentSections();
   const assessmentAddOns = getAssessmentAddOns();
 

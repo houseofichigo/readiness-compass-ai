@@ -297,9 +297,17 @@ export function getAppTitle(): string {
   return schema.app_title || (schema.meta?.app_title as string) || "AI Readiness Assessment v2.0";
 }
 
-// Legacy exports for backward compatibility
-export const assessmentSections = buildSections();
-export const assessmentAddOns = buildAddOns();
-export const assessmentMeta = schema.meta ?? {};
+// Legacy exports for backward compatibility - get fresh data each time
 export const assessmentConsentBanners: Record<string, ConsentBanner> = {};
 export const assessmentComputed: Record<string, ComputedField[]> = {};
+
+// Dynamic exports that update with language
+export const assessmentSections = new Proxy([] as Section[], {
+  get() { return getAssessmentSections(); }
+});
+export const assessmentAddOns = new Proxy([] as Question[], {
+  get() { return getAssessmentAddOns(); }
+});
+export const assessmentMeta = new Proxy({} as Record<string, unknown>, {
+  get() { return getAssessmentMeta(); }
+});
