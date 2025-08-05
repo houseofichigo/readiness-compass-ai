@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
+import i18n from "@/lib/i18n";
 import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
 import { MatrixQuestion } from "./MatrixQuestion";
@@ -31,6 +32,7 @@ export function QuestionCard({
   onChange,
 }: QuestionCardProps) {
   const [inputValue, setInputValue] = useState(value || "");
+  const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
 
   useEffect(() => setInputValue(value || ""), [value]);
 
@@ -48,7 +50,11 @@ export function QuestionCard({
             type={question.type}
             value={inputValue}
             onChange={(e) => handleInputChange(e.target.value)}
-            placeholder={`Enter your ${question.text.toLowerCase()}`}
+            placeholder={
+              lang === "fr"
+                ? `Entrez votre ${question.text.toLowerCase()}`
+                : `Enter your ${question.text.toLowerCase()}`
+            }
             className="mt-2"
             required={question.required}
           />
@@ -83,7 +89,13 @@ export function QuestionCard({
           return (
             <Select value={value} onValueChange={onChange}>
               <SelectTrigger className="mt-4 bg-background border border-border">
-                <SelectValue placeholder="Select an option..." />
+                <SelectValue
+                  placeholder={
+                    lang === "fr"
+                      ? "Sélectionnez une option..."
+                      : "Select an option..."
+                  }
+                />
               </SelectTrigger>
               <SelectContent className="z-50 bg-background border border-border shadow-lg">
                 {flatOptions.map((opt) => {

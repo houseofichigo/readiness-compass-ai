@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import i18n from "@/lib/i18n";
 
 interface ProgressiveMultiGroupQuestionProps {
   groups: QuestionGroup[];
@@ -15,12 +16,13 @@ interface ProgressiveMultiGroupQuestionProps {
 }
 
 export function ProgressiveMultiGroupQuestion({ 
-  groups, 
-  value, 
-  onChange 
+  groups,
+  value,
+  onChange
 }: ProgressiveMultiGroupQuestionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+  const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
 
   const handleGroupToggle = (groupLabel: string) => {
     const newExpanded = new Set(expandedGroups);
@@ -68,7 +70,11 @@ export function ProgressiveMultiGroupQuestion({
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
-            placeholder="Search tools or categories..."
+            placeholder={
+              lang === "fr"
+                ? "Rechercher des outils ou des catégories..."
+                : "Search tools or categories..."
+            }
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-10"

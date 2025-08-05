@@ -41,6 +41,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import i18n from '@/lib/i18n';
 
 export function SubmissionsTable() {
   const { submissions, isLoading, fetchSubmissions, exportToCSV, deleteSubmission } = useAdminData();
@@ -48,6 +49,7 @@ export function SubmissionsTable() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionDetails | null>(null);
+  const lang = i18n.language?.startsWith('fr') ? 'fr' : 'en';
 
   // Filter submissions based on search and status
   const filteredSubmissions = useMemo(() => {
@@ -163,7 +165,11 @@ export function SubmissionsTable() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Search submissions..."
+                  placeholder={
+                    lang === 'fr'
+                      ? 'Rechercher des soumissions...'
+                      : 'Search submissions...'
+                  }
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-9 w-64"
