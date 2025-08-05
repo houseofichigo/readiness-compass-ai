@@ -1,9 +1,11 @@
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { t } from "@/i18n";
+import { useTranslation } from "react-i18next";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 const NotFound = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Log 404 errors only in development
@@ -17,6 +19,11 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      {/* Language Switcher */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+      
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-4">{t('not_found.title')}</h1>
         <p className="text-xl text-gray-600 mb-4">{t('not_found.message')}</p>

@@ -1,21 +1,24 @@
-import { useState } from 'react'
-import { Globe } from 'lucide-react'
-
-import i18n from '@/lib/i18n'
-import { cn } from '@/lib/utils'
+import { Globe } from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface LanguageSwitcherProps {
-  className?: string
+  className?: string;
 }
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
-  const [language, setLanguage] = useState(i18n.language)
+  const { i18n } = useTranslation();
 
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLang = e.target.value
-    i18n.changeLanguage(newLang)
-    setLanguage(newLang)
-  }
+  const handleLanguageChange = (value: string) => {
+    i18n.changeLanguage(value);
+  };
 
   return (
     <div
@@ -25,16 +28,15 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
       )}
     >
       <Globe className="w-4 h-4" />
-      <select
-        value={language}
-        onChange={handleChange}
-        className="bg-transparent border-none outline-none text-sm"
-      >
-        <option value="en">🇺🇸 English</option>
-        <option value="es">🇪🇸 Spanish</option>
-        <option value="fr">🇫🇷 French</option>
-        <option value="de">🇩🇪 German</option>
-      </select>
+      <Select value={i18n.language} onValueChange={handleLanguageChange}>
+        <SelectTrigger className="border-none bg-transparent shadow-none min-w-[120px]">
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="en">🇺🇸 English</SelectItem>
+          <SelectItem value="fr">🇫🇷 Français</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
-  )
+  );
 }

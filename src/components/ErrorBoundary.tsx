@@ -2,7 +2,7 @@ import React, { Component, ReactNode } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { t } from '@/i18n';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
 interface ErrorBoundaryState {
   hasError: boolean;
@@ -10,12 +10,12 @@ interface ErrorBoundaryState {
   errorInfo?: React.ErrorInfo;
 }
 
-interface ErrorBoundaryProps {
+interface ErrorBoundaryProps extends WithTranslation {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+class ErrorBoundaryComponent extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = {
@@ -55,6 +55,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   };
 
   render() {
+    const { t } = this.props;
+    
     if (this.state.hasError) {
       // Custom fallback UI
       if (this.props.fallback) {
@@ -112,3 +114,5 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     return this.props.children;
   }
 }
+
+export const ErrorBoundary = withTranslation()(ErrorBoundaryComponent);

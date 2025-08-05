@@ -55,12 +55,13 @@ const SECTION_TITLES: Record<string, { en: string; fr: string }> = {
 
 const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
 
-function pickLang<T extends Record<string, unknown>>(obj: T, key: string): unknown {
-  return (
+function pickLang<T extends Record<string, unknown>>(obj: T, key: string): string {
+  const result = (
     obj?.[`${key}_${lang}` as keyof T] ??
     obj?.[`${key}_en` as keyof T] ??
     (obj as Record<string, unknown>)[key]
   );
+  return typeof result === 'string' ? result : '';
 }
 
 interface RawQuestion {
@@ -173,14 +174,14 @@ const assessmentSections: Section[] = Object.entries(schema)
       computed = [],
     } = rawSec ?? {};
 
-    const purpose = pickLang(rawSec ?? {}, "purpose") || "";
+    const purpose = pickLang((rawSec ?? {}) as Record<string, unknown>, "purpose");
 
     const normalizedQuestions: Question[] = questions.map((q) => {
       const base: Partial<Question> = {
         id: q.id,
-        text: pickLang(q, "text"),
+        text: pickLang(q as Record<string, unknown>, "text"),
         type: q.type as QuestionType,
-        helper: pickLang(q, "helper"),
+        helper: pickLang(q as Record<string, unknown>, "helper"),
         required: q.required,
         showIf: q.show_if,
         hideIf: q.hide_if,
@@ -200,7 +201,7 @@ const assessmentSections: Section[] = Object.entries(schema)
 
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
-          label: pickLang(g, "label"),
+          label: pickLang(g as Record<string, unknown>, "label"),
           showIf: g.show_if,
           options: normalizeOptions(g.options) || [],
         }));
@@ -247,9 +248,9 @@ const assessmentSections: Section[] = Object.entries(schema)
 const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   const base: Partial<Question> = {
     id: q.id,
-    text: pickLang(q, "text"),
+    text: pickLang(q as unknown as Record<string, unknown>, "text"),
     type: q.type as QuestionType,
-    helper: pickLang(q, "helper"),
+    helper: pickLang(q as unknown as Record<string, unknown>, "helper"),
     required: q.required,
     showIf: q.show_if,
     hideIf: q.hide_if,
@@ -269,7 +270,7 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
 
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
-      label: pickLang(g, "label"),
+      label: pickLang(g as Record<string, unknown>, "label"),
       showIf: g.show_if,
       options: normalizeOptions(g.options) || [],
     }));
@@ -290,8 +291,8 @@ if (rawMeta.tracks && typeof rawMeta.tracks === "object") {
     localizedMeta.tracks = Object.fromEntries(
       Object.entries(rawMeta.tracks as Record<string, unknown>).map(([k, v]) => [
       k,
-      typeof v === "object"
-        ? (v[lang] ?? v.en ?? "")
+      typeof v === "object" && v !== null
+        ? ((v as Record<string, unknown>)[lang] ?? (v as Record<string, unknown>).en ?? "")
         : v,
     ])
   );

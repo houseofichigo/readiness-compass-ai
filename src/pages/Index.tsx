@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AssessmentWelcome } from "@/components/assessment/AssessmentWelcome";
 import { AssessmentFlow } from "@/components/assessment/AssessmentFlow";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
   AssessmentData,
   AssessmentResponse,
@@ -60,6 +61,11 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-accent">
+      {/* Language Switcher */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSwitcher />
+      </div>
+      
       {appState === "assessment" && (
         <AssessmentFlow onComplete={handleAssessmentComplete} />
       )}

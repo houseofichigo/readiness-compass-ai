@@ -87,7 +87,7 @@ export function AssessmentResults({
     governance: 0,
   };
   const weights =
-    weightVectors[track] ?? weightVectors.GEN ?? defaultWeights;
+    weightVectors[track] ?? weightVectors["GEN"] ?? defaultWeights;
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">

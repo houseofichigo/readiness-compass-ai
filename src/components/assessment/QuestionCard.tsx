@@ -123,7 +123,7 @@ export function QuestionCard({
                   value: typeof opt === "string" ? opt : opt.value,
                   label: typeof opt === "string" ? opt : opt.label,
                 }))
-            ).map(({ groupLabel, value: val, label }) => (
+            ).map(({ value: val, label }) => (
               <div key={val} className="flex items-center space-x-2">
                 <RadioGroupItem value={val} id={val} />
                 <Label htmlFor={val} className="font-normal cursor-pointer">
