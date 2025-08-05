@@ -10,7 +10,8 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 import { OrganizationProfileForm } from "./OrganizationProfileForm";
-import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
+import { getAssessmentSections, getAssessmentAddOns, setLanguage } from "@/data/assessmentQuestions";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
@@ -33,6 +34,16 @@ const parseListLiteral = (lit: string): string[] => {
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  
+  // Update assessment language when context changes
+  React.useEffect(() => {
+    setLanguage(language);
+  }, [language]);
+  
+  // Get localized content
+  const assessmentSections = getAssessmentSections();
+  const assessmentAddOns = getAssessmentAddOns();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [responses, setResponses] = useState<Record<string, AssessmentValue>>({});
