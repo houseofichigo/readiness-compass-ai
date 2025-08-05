@@ -15,6 +15,8 @@ import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 interface AssessmentFlowProps {
   onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => Promise<void>;
@@ -33,6 +35,7 @@ const parseListLiteral = (lit: string): string[] => {
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [responses, setResponses] = useState<Record<string, AssessmentValue>>({});
@@ -214,6 +217,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="flex justify-end mb-4">
+        <LanguageSwitcher />
+      </div>
       <AssessmentProgressBar
         currentSectionIndex={progressIndex}
         completedSections={progressIndex}
