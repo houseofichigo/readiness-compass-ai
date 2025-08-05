@@ -1,7 +1,7 @@
-// src/utils/visibilityAndTrack.ts
+// src/utils/questionVisibility.ts
 
 import { Question } from '@/types/assessment';
-import { assessmentMeta, assessmentSections } from '@/data/assessmentQuestions';
+import { getAssessmentMeta, getAssessmentSections } from '@/data/assessmentQuestions';
 
 interface EvalContext {
   responses: Record<string, unknown>;
@@ -125,8 +125,9 @@ const parseListLiteral = (literal: string): string[] => {
 
 /** Pull tech-roles from the track_detection rules */
 function getTechRoles(): string[] {
+  const meta = getAssessmentMeta();
   const precedence =
-    (assessmentMeta.track_detection as {
+    (meta.track_detection as {
       precedence?: Array<Record<string, unknown>>;
     } | undefined)?.precedence || [];
   const techRule = (precedence as Array<Record<string, unknown>>).find(
@@ -138,7 +139,8 @@ function getTechRoles(): string[] {
 
 /** Pull regulated industries from the computed logic */
 function getRegulatedIndustries(): string[] {
-  const prof = assessmentSections.find(s => s.id === 'section_0');
+  const sections = getAssessmentSections();
+  const prof = sections.find(s => s.id === 'section_0');
   const logic = prof?.computed?.find(c => c.id === 'regulated')?.logic || '';
   return parseListLiteral(logic as string || "");
 }
@@ -153,8 +155,9 @@ export function detectTrack(
   computed: Record<string, unknown> = {}
 ): string {
   // first, apply any YAML rules
+  const meta = getAssessmentMeta();
   const precedence =
-    (assessmentMeta.track_detection as {
+    (meta.track_detection as {
       precedence?: Array<Record<string, unknown>>;
     } | undefined)?.precedence;
   if (Array.isArray(precedence)) {

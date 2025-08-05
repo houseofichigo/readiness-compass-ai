@@ -39,7 +39,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // Update assessment language when context changes and force re-render
   React.useEffect(() => {
     setLanguage(language);
-    // Force component re-render to pick up new language data
+    // Force a state update to trigger re-render with new language data
     setCurrentPage(prev => prev);
   }, [language]);
   
