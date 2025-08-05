@@ -53,6 +53,7 @@ const SECTION_TITLES: Record<string, { en: string; fr: string }> = {
   },
 };
 
+// Get current language from i18n
 const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
 
 function pickLang<T extends Record<string, unknown>>(obj: T, key: string): string {

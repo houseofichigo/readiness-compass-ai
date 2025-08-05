@@ -200,6 +200,17 @@
     }
   },
   "admin": {
+    "portal": "Portail Administrateur",
+    "navigation": {
+      "dashboard": "Tableau de bord exécutif",
+      "overview": "Aperçu", 
+      "submissions": "Soumissions",
+      "analytics": "Analyses"
+    },
+    "roles": {
+      "superAdmin": "Super Administrateur",
+      "analyst": "Analyste"
+    },
     "login": {
       "title": "Portail admin",
       "description": "Connectez-vous pour accéder au tableau de bord de l'évaluation de préparation à l'IA",
