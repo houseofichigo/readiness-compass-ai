@@ -9,6 +9,7 @@ import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
+import { OrganizationProfileForm } from "./OrganizationProfileForm";
 import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
@@ -239,11 +240,20 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           <Progress value={((currentPage) / assessmentSections.length) * 100} className="w-full my-4" />
         </div>
 
-        {visibleQuestions.map(q => (
-          <div key={q.id} id={q.id} data-question-id={q.id}>
-            <QuestionCard question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} />
-          </div>
-        ))}
+        {/* Use special layout for Organization Profile section (section_0) */}
+        {currentSection?.id === "section_0" ? (
+          <OrganizationProfileForm
+            questions={visibleQuestions}
+            responses={responses}
+            onChange={handleAnswerChange}
+          />
+        ) : (
+          visibleQuestions.map(q => (
+            <div key={q.id} id={q.id} data-question-id={q.id}>
+              <QuestionCard question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} />
+            </div>
+          ))
+        )}
       </Card>
 
       <div className="flex justify-between">
