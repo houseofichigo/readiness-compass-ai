@@ -2,7 +2,10 @@
   "assessment": {
     "welcome": {
       "badge": "Évaluation de préparation à l'IA v2.0",
-      "title": "Mesurez votre préparation à l'IA",
+      "title": {
+        "highlight": "Mesurez votre",
+        "rest": "préparation à l'IA"
+      },
       "description": "Plateforme d'évaluation complète qui mesure la maturité IA de votre organisation à travers la stratégie, les données, les outils, l'automatisation, les personnes et la gouvernance.",
       "duration": "15-20 minutes",
       "questions": "60 questions intelligentes",

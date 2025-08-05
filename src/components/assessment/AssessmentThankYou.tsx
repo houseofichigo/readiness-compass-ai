@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, Clock, Rocket, BarChart3, FileText, Map, Lightbulb } from "lucide-react";
 import { OrganizationProfile, Track } from "@/types/assessment";
+import { useTranslation } from "react-i18next";
+import { getAssessmentTranslations } from "@/i18n/assessmentTranslations";
 
 interface AssessmentThankYouProps {
   profile: OrganizationProfile;
@@ -15,13 +17,8 @@ export function AssessmentThankYou({
   track,
   onRestart
 }: AssessmentThankYouProps) {
-  const getTrackLabel = (track: Track) => {
-    switch (track) {
-      case "TECH": return "Technical Track";
-      case "REG": return "Regulated Track";
-      default: return "General Business Track";
-    }
-  };
+  const { i18n } = useTranslation();
+  const { trackLabels } = getAssessmentTranslations(i18n.language);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-8">
@@ -158,7 +155,7 @@ export function AssessmentThankYou({
           {profile.M1} • {profile.M3} at {profile.M0}
         </p>
         <Badge variant="outline" className="text-xs">
-          {getTrackLabel(track)}
+          {trackLabels[track]}
         </Badge>
       </div>
     </div>

@@ -1,13 +1,3 @@
-// src/i18n.ts
+import i18n from '@/i18n/config';
 
-class SimpleI18n {
-  language: string = 'en'
-
-  changeLanguage(lng: string) {
-    this.language = lng
-  }
-}
-
-const i18n = new SimpleI18n()
-
-export default i18n
+export default i18n;
