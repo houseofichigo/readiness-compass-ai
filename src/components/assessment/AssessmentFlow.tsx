@@ -10,8 +10,7 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 import { OrganizationProfileForm } from "./OrganizationProfileForm";
-import { getAssessmentSections, getAssessmentAddOns, setLanguage } from "@/data/assessmentQuestions";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
@@ -34,18 +33,6 @@ const parseListLiteral = (lit: string): string[] => {
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { language } = useLanguage();
-  
-  // Update assessment language when context changes and force re-render
-  React.useEffect(() => {
-    setLanguage(language);
-    // Force a state update to trigger re-render with new language data
-    setCurrentPage(prev => prev);
-  }, [language]);
-  
-  // Get localized content - these will update when language changes
-  const assessmentSections = getAssessmentSections();
-  const assessmentAddOns = getAssessmentAddOns();
 
   const [currentPage, setCurrentPage] = useState(0);
   const [responses, setResponses] = useState<Record<string, AssessmentValue>>({});
@@ -221,9 +208,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const visibleQuestions = getVisibleQuestions();
-  const sectionTitle = isAddOnPage 
-    ? (language === 'fr' ? 'Questions supplémentaires' : 'Additional Questions') 
-    : currentSection?.title;
+  const sectionTitle = isAddOnPage ? "Additional Questions" : currentSection?.title;
   const sectionPurpose = isAddOnPage ? undefined : currentSection?.purpose;
   const progressIndex = Math.min(currentPage, assessmentSections.length - 1);
 
@@ -273,7 +258,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
       <div className="flex justify-between">
         <Button onClick={goPrev} variant="outline" disabled={currentPage === 0 || isSubmitting}>
-          <ArrowLeft className="h-4 w-4" /> {language === 'fr' ? 'Précédent' : 'Previous'}
+          <ArrowLeft className="h-4 w-4" /> Previous
         </Button>
         <Button 
           onClick={() => {
@@ -288,10 +273,8 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? (<><Loader2 className="h-4 w-4 animate-spin" /> {language === 'fr' ? 'Envoi en cours…' : 'Submitting…'}</>)
-            : (isAddOnPage || (isLastSection && !hasAddOns) 
-              ? (language === 'fr' ? 'Terminer l\'évaluation' : 'Complete Assessment') 
-              : <>{language === 'fr' ? 'Suivant' : 'Next'} <ArrowRight className="h-4 w-4" /></>)
+            ? (<><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</>)
+            : (isAddOnPage || (isLastSection && !hasAddOns) ? "Complete Assessment" : <>Next <ArrowRight className="h-4 w-4" /></>)
           }
         </Button>
       </div>

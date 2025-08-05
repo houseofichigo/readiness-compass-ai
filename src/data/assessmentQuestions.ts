@@ -12,25 +12,10 @@ import type {
   WeightVector,
 } from "@/types/assessment";
 
-type Language = 'en' | 'fr';
-
-// Store current language
-let currentLanguage: Language = 'en';
-
-// Function to set current language
-export function setLanguage(language: Language): void {
-  currentLanguage = language;
-}
-
-// Function to get current language
-export function getCurrentLanguage(): Language {
-  return currentLanguage;
-}
-
-// Titles for each section
-const SECTION_TITLES_EN: Record<string, string> = {
+// Titles for each section derived from the assessment YAML
+const SECTION_TITLES: Record<string, string> = {
   section_0: "Organization Profile",
-  section_1: "Strategy & Use-Case Readiness", 
+  section_1: "Strategy & Use-Case Readiness",
   section_2: "Budget, Runway & Compliance",
   section_3: "Data Foundation & Security",
   section_4: "Tool Stack & Integration",
@@ -38,18 +23,6 @@ const SECTION_TITLES_EN: Record<string, string> = {
   section_6: "Team Capability & Culture",
   section_7: "Governance, Risk & Ethics",
   section_8: "Implementation Horizon & Vision",
-};
-
-const SECTION_TITLES_FR: Record<string, string> = {
-  section_0: "Profil de l'organisation",
-  section_1: "Stratégie et préparation des cas d'usage",
-  section_2: "Budget, trésorerie et conformité", 
-  section_3: "Fondation des données et sécurité",
-  section_4: "Architecture d'outils et intégration",
-  section_5: "Automatisation et agents IA",
-  section_6: "Capacités de l'équipe et culture",
-  section_7: "Gouvernance, risques et éthique",
-  section_8: "Horizon et vision de mise en œuvre",
 };
 
 interface RawQuestion {
@@ -88,12 +61,6 @@ interface RawSection {
 
 interface AssessmentYaml {
   meta?: Record<string, unknown>;
-  app_title?: string;
-  locale_fr?: {
-    app_title?: string;
-    meta?: Record<string, unknown>;
-    [key: `section_${number}`]: RawSection | undefined;
-  };
   add_ons?: RawQuestion[];
   [key: `section_${number}`]: RawSection | undefined;
 }
@@ -132,227 +99,116 @@ function normalizeOptions(
   );
 }
 
-// Get content based on current language
-function getLocalizedContent(questionId: string, property: string, fallback: any = ""): any {
-  if (currentLanguage === 'fr' && schema.locale_fr) {
-    // Try to find the question in the French locale
-    for (const [sectionKey, sectionData] of Object.entries(schema.locale_fr)) {
-      if (sectionKey.startsWith('section_') && sectionData && typeof sectionData === 'object' && 'questions' in sectionData) {
-        const rawSection = sectionData as RawSection;
-        if (rawSection.questions) {
-          const question = rawSection.questions.find(q => q.id === questionId);
-          if (question && typeof question === 'object' && property in question) {
-            return (question as any)[property];
-          }
-        }
-      }
-    }
-  }
-  return fallback;
-}
+// Top-level maps for consent banners & computed logic
+const assessmentConsentBanners: Record<string, ConsentBanner> = {};
+const assessmentComputed: Record<string, ComputedField[]> = {};
 
-function getLocalizedSectionContent(sectionId: string, property: string, fallback: any = ""): any {
-  if (currentLanguage === 'fr' && schema.locale_fr) {
-    const sectionData = schema.locale_fr[sectionId as keyof typeof schema.locale_fr];
-    if (sectionData && typeof sectionData === 'object' && property in sectionData) {
-      return (sectionData as any)[property];
-    }
-  }
-  return fallback;
-}
+// Build Section[] from YAML
+const assessmentSections: Section[] = Object.entries(schema)
+  .filter(([key]) => key.startsWith("section_"))
+  .sort(([a], [b]) =>
+    a.localeCompare(b, undefined, { numeric: true })
+  )
+  .map(([id, rawSec]) => {
+    const {
+      category,
+      purpose = "",
+      questions = [],
+      consent_banner,
+      computed = [],
+    } = rawSec ?? {};
 
-// Function to build sections with current language
-function buildSections(): Section[] {
-  const titleMap = currentLanguage === 'fr' ? SECTION_TITLES_FR : SECTION_TITLES_EN;
-  
-  return Object.entries(schema)
-    .filter(([key]) => key.startsWith("section_"))
-    .sort(([a], [b]) =>
-      a.localeCompare(b, undefined, { numeric: true })
-    )
-    .map(([id, rawSec]) => {
-      const {
-        category,
-        purpose = "",
-        questions = [],
-        consent_banner,
-        computed = [],
-      } = rawSec ?? {};
-
-      const normalizedQuestions: Question[] = questions.map((q) => {
-        const localizedText = getLocalizedContent(q.id, 'text', q.text);
-        const localizedHelper = getLocalizedContent(q.id, 'helper', q.helper);
-        const localizedOptions = getLocalizedContent(q.id, 'options', q.options);
-        
-        const base: Partial<Question> = {
-          id: q.id,
-          text: localizedText,
-          type: q.type as QuestionType,
-          helper: localizedHelper,
-          required: q.required,
-          showIf: q.show_if,
-          hideIf: q.hide_if,
-          scoreMap: q.score_map,
-          scorePer: q.score_per,
-          cap: q.cap,
-          weight: q.weight,
-          maxRank: q.max_rank,
-          maxSelect: q.max_select,
-          scoreFormula: q.score_formula,
-          scoreByCount: q.score_by_count,
-        };
-
-        if (localizedOptions) base.options = normalizeOptions(localizedOptions);
-        if (q.rows) base.rows = [...q.rows];
-        if (q.columns) base.columns = [...q.columns];
-
-        if (q.groups) {
-          base.groups = q.groups.map((g) => ({
-            label: g.label,
-            showIf: g.show_if,
-            options: normalizeOptions(g.options) || [],
-          }));
-        }
-
-        return base as Question;
-      });
-
-      const localizedPurpose = getLocalizedSectionContent(id, 'purpose', purpose);
-      const localizedConsentBanner = getLocalizedSectionContent(id, 'consent_banner', consent_banner);
-
-      return {
-        id,
-        title: titleMap[id] ?? id,
-        purpose: localizedPurpose,
-        ...(category ? { category } : {}),
-        questions: normalizedQuestions,
-        ...(localizedConsentBanner ? { consentBanner: localizedConsentBanner } : {}),
-        ...(computed.length ? { computed } : {}),
+    const normalizedQuestions: Question[] = questions.map((q) => {
+      const base: Partial<Question> = {
+        id: q.id,
+        text: q.text,
+        type: q.type as QuestionType,
+        helper: q.helper,
+        required: q.required,
+        showIf: q.show_if,
+        hideIf: q.hide_if,
+        scoreMap: q.score_map,
+        scorePer: q.score_per,
+        cap: q.cap,
+        weight: q.weight,
+        maxRank: q.max_rank,
+        maxSelect: q.max_select,
+        scoreFormula: q.score_formula,
+        scoreByCount: q.score_by_count,
       };
+
+      if (q.options)   base.options = normalizeOptions(q.options);
+      if (q.rows)      base.rows    = [...q.rows];
+      if (q.columns)   base.columns = [...q.columns];
+
+      if (q.groups) {
+        base.groups = q.groups.map((g) => ({
+          label: g.label,
+          showIf: g.show_if,
+          options: normalizeOptions(g.options) || [],
+        }));
+      }
+
+      return base as Question;
     });
-}
 
-// Function to build add-ons with current language
-function buildAddOns(): Question[] {
-  return (schema.add_ons ?? []).map((q) => {
-    const localizedText = getLocalizedContent(q.id, 'text', q.text);
-    const localizedHelper = getLocalizedContent(q.id, 'helper', q.helper);
-    const localizedOptions = getLocalizedContent(q.id, 'options', q.options);
-    
-    const base: Partial<Question> = {
-      id: q.id,
-      text: localizedText,
-      type: q.type as QuestionType,
-      helper: localizedHelper,
-      required: q.required,
-      showIf: q.show_if,
-      hideIf: q.hide_if,
-      scoreMap: q.score_map,
-      scorePer: q.score_per,
-      cap: q.cap,
-      weight: q.weight,
-      maxRank: q.max_rank,
-      maxSelect: q.max_select,
-      scoreFormula: q.score_formula,
-      scoreByCount: q.score_by_count,
+    if (consent_banner) {
+      assessmentConsentBanners[id] = consent_banner;
+    }
+    if (computed.length) {
+      assessmentComputed[id] = computed;
+    }
+
+    return {
+      id,
+      title: SECTION_TITLES[id] ?? id,
+      purpose,
+      ...(category ? { category } : {}),
+      questions: normalizedQuestions,
+      ...(consent_banner ? { consentBanner: consent_banner } : {}),
+      ...(computed.length ? { computed } : {}),
     };
-
-    if (localizedOptions) base.options = normalizeOptions(localizedOptions);
-    if (q.rows) base.rows = [...q.rows];
-    if (q.columns) base.columns = [...q.columns];
-
-    if (q.groups) {
-      base.groups = q.groups.map((g) => ({
-        label: g.label,
-        showIf: g.show_if,
-        options: normalizeOptions(g.options) || [],
-      }));
-    }
-
-    return base as Question;
   });
-}
 
-// Functions to get current data
-export function getAssessmentSections(): Section[] {
-  return buildSections();
-}
+// Top-level “add_ons” questions
+const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
+  const base: Partial<Question> = {
+    id: q.id,
+    text: q.text,
+    type: q.type as QuestionType,
+    helper: q.helper,
+    required: q.required,
+    showIf: q.show_if,
+    hideIf: q.hide_if,
+    scoreMap: q.score_map,
+    scorePer: q.score_per,
+    cap: q.cap,
+    weight: q.weight,
+    maxRank: q.max_rank,
+    maxSelect: q.max_select,
+    scoreFormula: q.score_formula,
+    scoreByCount: q.score_by_count,
+  };
 
-export function getAssessmentAddOns(): Question[] {
-  return buildAddOns();
-}
+  if (q.options)  base.options  = normalizeOptions(q.options);
+  if (q.rows)     base.rows     = [...q.rows];
+  if (q.columns)  base.columns  = [...q.columns];
 
-export function getAssessmentMeta(): Record<string, unknown> {
-  const baseMeta = schema.meta ?? {};
-  if (currentLanguage === 'fr' && schema.locale_fr?.meta) {
-    return { ...baseMeta, ...schema.locale_fr.meta };
+  if (q.groups) {
+    base.groups = q.groups.map((g) => ({
+      label: g.label,
+      showIf: g.show_if,
+      options: normalizeOptions(g.options) || [],
+    }));
   }
-  return baseMeta;
-}
 
-export function getAppTitle(): string {
-  if (currentLanguage === 'fr' && schema.locale_fr?.app_title) {
-    return schema.locale_fr.app_title;
-  }
-  return schema.app_title || (schema.meta?.app_title as string) || "AI Readiness Assessment v2.0";
-}
-
-// Legacy exports for backward compatibility - get fresh data each time
-export const assessmentConsentBanners: Record<string, ConsentBanner> = {};
-export const assessmentComputed: Record<string, ComputedField[]> = {};
-
-// Dynamic exports that update with language
-export const assessmentSections = new Proxy([] as Section[], {
-  get(target, prop) {
-    const sections = getAssessmentSections();
-    const value = (sections as any)[prop];
-    if (typeof value === 'function') {
-      return value.bind(sections);
-    }
-    return value;
-  },
-  has(target, prop) {
-    return prop in getAssessmentSections();
-  },
-  ownKeys(target) {
-    return Reflect.ownKeys(getAssessmentSections());
-  },
-  getOwnPropertyDescriptor(target, prop) {
-    return Reflect.getOwnPropertyDescriptor(getAssessmentSections(), prop);
-  }
+  return base as Question;
 });
 
-export const assessmentAddOns = new Proxy([] as Question[], {
-  get(target, prop) {
-    const addOns = getAssessmentAddOns();
-    const value = (addOns as any)[prop];
-    if (typeof value === 'function') {
-      return value.bind(addOns);
-    }
-    return value;
-  },
-  has(target, prop) {
-    return prop in getAssessmentAddOns();
-  },
-  ownKeys(target) {
-    return Reflect.ownKeys(getAssessmentAddOns());
-  },
-  getOwnPropertyDescriptor(target, prop) {
-    return Reflect.getOwnPropertyDescriptor(getAssessmentAddOns(), prop);
-  }
-});
-
-export const assessmentMeta = new Proxy({} as Record<string, unknown>, {
-  get(target, prop) {
-    return getAssessmentMeta()[prop as keyof ReturnType<typeof getAssessmentMeta>];
-  },
-  has(target, prop) {
-    return prop in getAssessmentMeta();
-  },
-  ownKeys(target) {
-    return Reflect.ownKeys(getAssessmentMeta());
-  },
-  getOwnPropertyDescriptor(target, prop) {
-    return Reflect.getOwnPropertyDescriptor(getAssessmentMeta(), prop);
-  }
-});
+export {
+  assessmentSections,
+  assessmentConsentBanners,
+  assessmentComputed,
+  assessmentAddOns,
+};
+export const assessmentMeta = schema.meta ?? {};
