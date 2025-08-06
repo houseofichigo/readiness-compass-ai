@@ -53,6 +53,11 @@ export const frResources = {
         questionsRemaining: "{{count}} questions restantes",
         track: "Filière : {{track}}",
         trackInfo: "En fonction de votre rôle et secteur, nous avons personnalisé les questions pour votre filière",
+        complete: "Terminé",
+        sectionsComplete: "Sections terminées",
+        sectionsRemaining: "Sections restantes",
+        questionsRemaining_plural: "Questions restantes",
+        generalTrack: "Filière générale",
       },
       validation: {
         required: "Ce champ est requis",

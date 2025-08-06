@@ -1,6 +1,7 @@
 // src/components/assessment/AssessmentProgressBar.tsx
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { CheckCircle2, Clock, HelpCircle } from "lucide-react";
 import { Track } from "@/types/assessment";
 import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
@@ -15,12 +16,6 @@ interface AssessmentProgressBarProps {
   globalComputed?: Record<string, any>;
 }
 
-const trackLabels: Record<Track, string> = {
-  TECH: "Technical Track",
-  REG: "Regulated Track",
-  GEN: "General Track",
-};
-
 export function AssessmentProgressBar({
   currentSectionIndex,
   completedSections,
@@ -29,6 +24,8 @@ export function AssessmentProgressBar({
   responses = {},
   globalComputed = {},
 }: AssessmentProgressBarProps) {
+  const { t } = useTranslation();
+
   // Calculate remaining questions dynamically based on current responses and track
   const calculateRemainingQuestions = () => {
     if (!detectedTrack) return null;
@@ -88,13 +85,13 @@ export function AssessmentProgressBar({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground">
-          AI Readiness Assessment
+          {t('assessment.title')}
         </h1>
         <div className="text-right">
           <div className="text-2xl font-bold text-primary">
             {progressPercentage}%
           </div>
-          <div className="text-sm text-muted-foreground">Complete</div>
+          <div className="text-sm text-muted-foreground">{t('assessment.progress.complete')}</div>
         </div>
       </div>
 
@@ -106,7 +103,7 @@ export function AssessmentProgressBar({
             <div className="text-2xl font-bold text-green-600">
               {completedSections}
             </div>
-            <div className="text-sm text-green-700">Sections Complete</div>
+            <div className="text-sm text-green-700">{t('assessment.progress.sectionsComplete')}</div>
           </div>
         </div>
 
@@ -116,7 +113,7 @@ export function AssessmentProgressBar({
             <div className="text-2xl font-bold text-orange-600">
               {totalSections - completedSections}
             </div>
-            <div className="text-sm text-orange-700">Sections Remaining</div>
+            <div className="text-sm text-orange-700">{t('assessment.progress.sectionsRemaining')}</div>
           </div>
         </div>
 
@@ -128,7 +125,7 @@ export function AssessmentProgressBar({
             </div>
             <div className="text-sm text-gray-700">
               {showQuestionCount && detectedTrack && questionData
-                ? `Questions Remaining (${trackLabels[detectedTrack]})`
+                ? `${t('assessment.progress.questionsRemaining_plural')} (${t(`tracks.${detectedTrack}`)})`
                 : currentSectionIndex === 0 
                   ? "Complete Profile First"
                   : "Select Role to See Count"}
@@ -140,8 +137,8 @@ export function AssessmentProgressBar({
       {/* Current section indicator */}
       <div className="mb-4">
         <div className="text-sm text-muted-foreground mb-2">
-          Section {currentSectionIndex + 1} of {totalSections}:{" "}
-          {assessmentSections[currentSectionIndex]?.title}
+          {t('assessment.progress.sectionOf', { current: currentSectionIndex + 1, total: totalSections })}:{" "}
+          {t(`sections.${assessmentSections[currentSectionIndex]?.id}`) || assessmentSections[currentSectionIndex]?.title}
         </div>
         {!showQuestionCount && currentSectionIndex === 0 && (
           <div className="text-sm text-muted-foreground">
@@ -177,7 +174,7 @@ export function AssessmentProgressBar({
               </div>
               <div className="text-center">
                 <div className="text-xs font-medium text-foreground">
-                  {section.title}
+                  {t(`sections.${section.id}`) || section.title}
                 </div>
                 <div className="text-xs text-muted-foreground">
                   {isCurrent ? "Current" : isCompleted ? "Complete" : "Pending"}

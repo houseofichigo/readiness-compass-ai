@@ -496,5 +496,669 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
       { value: "5–15%", label: "5 – 15 %" },
       { value: "> 15%", label: "> 15 %" }
     ]
+  },
+
+  // Data Foundation & Security (Section 3)
+  D1: {
+    text: "Où sont principalement stockées vos données critiques ?",
+    helper: "Ces données pilotent vos opérations, décisions et conformité",
+    options: [
+      { value: "Files and spreadsheets (Excel, Google Sheets, local files)", label: "Fichiers et tableurs (Excel, Google Sheets, fichiers locaux)" },
+      { value: "Databases (SQL, NoSQL, data warehouses)", label: "Bases de données (SQL, NoSQL, entrepôts de données)" },
+      { value: "Cloud and SaaS (Google Drive, Salesforce, HubSpot)", label: "Cloud et SaaS (Google Drive, Salesforce, HubSpot)" },
+      { value: "Internal tools and legacy systems", label: "Outils internes et systèmes hérités" },
+      { value: "BI platforms (Power BI, Looker, Tableau)", label: "Plateformes BI (Power BI, Looker, Tableau)" }
+    ]
+  },
+  D2: {
+    text: "Quel volume de données générez-vous ou collectez-vous chaque mois ?",
+    options: [
+      { value: "Don't know", label: "Ne sait pas" },
+      { value: "< 1 GB", label: "< 1 Go" },
+      { value: "1–10 GB", label: "1–10 Go" },
+      { value: "10–100 GB", label: "10–100 Go" },
+      { value: "> 100 GB", label: "> 100 Go" }
+    ]
+  },
+  D3: {
+    text: "Dans quelle mesure votre gestion des données (structure, outils et traçabilité) est-elle mature ?",
+    options: [
+      { value: "No standards or visibility", label: "Pas de normes ni de visibilité" },
+      { value: "Basic naming conventions and partial documentation", label: "Conventions de nommage basiques et documentation partielle" },
+      { value: "Defined standards with manual processes", label: "Normes définies avec processus manuels" },
+      { value: "Schema tooling and automated tracking for key systems", label: "Outils de schéma et suivi automatisé pour les systèmes clés" },
+      { value: "Versioned models with full lineage and governance", label: "Modèles versionnés avec traçabilité et gouvernance complètes" }
+    ]
+  },
+  D4: {
+    text: "Quel est votre niveau de confiance dans la qualité et l'actualité de vos données critiques ?",
+    options: [
+      { value: "Low: data often stale or unreliable", label: "Faible : données souvent obsolètes ou peu fiables" },
+      { value: "Medium: manual quality checks", label: "Moyen : vérifications manuelles pour la qualité" },
+      { value: "High: periodic data quality testing", label: "Élevé : tests périodiques de qualité des données" },
+      { value: "Very high: automated anomaly alerts", label: "Très élevé : alertes automatisées pour anomalies" },
+      { value: "Excellent: real-time monitoring and validation", label: "Excellent : surveillance et validation en temps réel" }
+    ]
+  },
+  D5: {
+    text: "Quelles mesures de sécurité protègent votre infrastructure de données ?",
+    helper: "Chiffrement, contrôle d'accès et surveillance",
+    options: [
+      { value: "Encryption at rest (AWS S3, Azure Blob)", label: "Chiffrement au repos (AWS S3, Azure Blob)" },
+      { value: "TLS/HTTPS in transit", label: "TLS/HTTPS en transit" },
+      { value: "Role-based access controls (IAM, RBAC)", label: "Contrôles d'accès par rôle (IAM, RBAC)" },
+      { value: "Audit logs & monitoring", label: "Journaux d'audit et monitoring" },
+      { value: "DLP (data loss prevention)", label: "DLP (prévention des pertes de données)" },
+      { value: "Tokenization (Vault, etc.)", label: "Tokenisation (Vault, etc.)" },
+      { value: "Differential privacy", label: "Confidentialité différentielle" },
+      { value: "None", label: "Aucune" },
+      { value: "I don't know", label: "Ne sait pas" },
+      { value: "Other (please specify)", label: "Autre (à préciser)" }
+    ]
+  },
+  D6: {
+    text: "Comment gérez-vous la gouvernance et le nettoyage des données ?",
+    options: [
+      { value: "No owner defined", label: "Pas de responsable défini" },
+      { value: "Occasional clean-ups", label: "Nettoyages ponctuels" },
+      { value: "Assigned owner with periodic review", label: "Responsable désigné avec révisions périodiques" },
+      { value: "Dedicated steward with monthly routines", label: "Steward dédié avec routines mensuelles" },
+      { value: "Continuous governance and monitoring", label: "Gouvernance continue et monitoring" }
+    ]
+  },
+  D7: {
+    text: "Quel est votre niveau de préparation pour un audit RGPD ou loi IA européenne ?",
+    helper: "Indiquez votre préparation aux audits externes ou internes",
+    options: [
+      { value: "None – no audit readiness", label: "Aucune préparation" },
+      { value: "Basic logs only", label: "Journaux basiques uniquement" },
+      { value: "Audit trail for critical systems", label: "Traçabilité pour systèmes critiques" },
+      { value: "Explainability logs + scripts", label: "Journaux explicatifs et scripts" },
+      { value: "Automated compliance checks", label: "Contrôles de conformité automatisés" },
+      { value: "I don't know", label: "Ne sait pas" }
+    ]
+  },
+  D8: {
+    text: "Quel est le niveau de maturité de votre processus d'étiquetage et d'annotation des données ?",
+    options: [
+      { value: "None", label: "Aucun" },
+      { value: "Ad-hoc manual labeling", label: "Étiquetage manuel ponctuel" },
+      { value: "Defined guidelines", label: "Directives définies" },
+      { value: "Standardized taxonomy", label: "Taxonomie standardisée" },
+      { value: "Automated labeling and ontology management", label: "Étiquetage automatisé et gestion d'ontologie" }
+    ]
+  },
+  D9: {
+    text: "Utilisez-vous des données synthétiques ou tierces pour enrichir vos jeux de données ?",
+    options: [
+      { value: "No", label: "Non" },
+      { value: "Exploring", label: "En phase d'exploration" },
+      { value: "Limited pilot projects", label: "Projets pilotes limités" },
+      { value: "Regular production use", label: "Usage régulier en production" },
+      { value: "Advanced synthetic pipelines", label: "Pipelines synthétiques avancés" }
+    ]
+  },
+  D10: {
+    text: "Quel est le niveau de maturité de vos politiques d'éthique IA et de confidentialité des données ?",
+    helper: "Ex. : « Politiques + formation et contrôle » = guides documentés et ateliers",
+    options: [
+      { value: "No formal policies", label: "Pas de politique formelle" },
+      { value: "High-level principles only", label: "Principes généraux uniquement" },
+      { value: "Documented guidelines (but no training or oversight)", label: "Directives documentées sans formation" },
+      { value: "Guidelines + training & oversight", label: "Directives avec formation et contrôle" },
+      { value: "Audited & continuously improved", label: "Auditées et améliorées en continu" }
+    ]
+  },
+
+  // Tool Stack & Integration (Section 4)
+  T0_tools: {
+    text: "Quels outils utilisez-vous activement avec votre équipe ?",
+    helper: "Sélectionnez tous les outils pour personnaliser les recommandations d'automatisation"
+  },
+  T1: {
+    text: "Dans quelle mesure vos outils et systèmes sont-ils connectés ?",
+    options: [
+      { value: "Isolated – no connections", label: "Isolés – aucune connexion" },
+      { value: "Manual – CSV import/export", label: "Manuel – import/export CSV" },
+      { value: "Batch – scheduled syncing", label: "Batch – synchronisations programmées" },
+      { value: "API – platform integrations", label: "API – intégrations plateformes" },
+      { value: "Real-time – event mesh", label: "Temps réel – maillage événementiel" }
+    ]
+  },
+  T2: {
+    text: "À quelle fréquence vos connexions de données échouent-elles ou posent-elles problème ?",
+    options: [
+      { value: "Weekly – frequent breakages", label: "Hebdomadaire – pannes fréquentes" },
+      { value: "Monthly – occasional errors", label: "Mensuelle – erreurs occasionnelles" },
+      { value: "Quarterly – rare issues", label: "Trimestrielle – rares problèmes" },
+      { value: "Almost never – very stable", label: "Quasiment jamais – très stable" },
+      { value: "Never – completely reliable", label: "Jamais – totalement fiable" }
+    ]
+  },
+  T3: {
+    text: "Qui est responsable de la gestion et de la maintenance de vos intégrations système ?",
+    options: [
+      { value: "No owner defined", label: "Pas de responsable défini" },
+      { value: "External agency or freelancer", label: "Agence ou freelance externe" },
+      { value: "Ops/Product team", label: "Équipe Ops/Produit" },
+      { value: "Internal technical team", label: "Équipe technique interne" },
+      { value: "Dedicated integrations team", label: "Équipe dédiée aux intégrations" }
+    ]
+  },
+  T4: {
+    text: "Comment êtes-vous connectés aux services IA externes et aux LLM ?",
+    helper: "Ex. : ChatGPT, Claude, Mistral, Copilot ou LLM interne",
+    options: [
+      { value: "Forbidden access to external LLMs", label: "Accès interdit aux LLM externes" },
+      { value: "Exploratory testing only", label: "Tests exploratoires uniquement" },
+      { value: "API pilots", label: "Pilotes API" },
+      { value: "One API in production", label: "Une API en production" },
+      { value: "Multiple APIs in production + internal LLM", label: "Plusieurs APIs en production + LLM interne" }
+    ]
+  },
+  T5: {
+    text: "Quel accès avez-vous aux ressources GPU/TPU ?",
+    options: [
+      { value: "None", label: "Aucun" },
+      { value: "Colab only", label: "Colab uniquement" },
+      { value: "On-demand cloud GPU/TPU", label: "GPU/TPU cloud à la demande" },
+      { value: "Dedicated GPU/TPU budget", label: "Budget GPU/TPU dédié" },
+      { value: "Managed AI cluster", label: "Cluster IA managé" }
+    ]
+  },
+  T6: {
+    text: "Dans quelle mesure votre architecture technique et data est-elle documentée ?",
+    options: [
+      { value: "None", label: "Aucune" },
+      { value: "High-level diagrams", label: "Schémas sommaires" },
+      { value: "Critical systems mapped", label: "Systèmes critiques cartographiés" },
+      { value: "Comprehensive diagrams", label: "Diagrammes complets" },
+      { value: "Auto-generated and maintained documentation", label: "Documentation auto-générée et maintenue" }
+    ]
+  },
+  T7: {
+    text: "Quel niveau de plan de reprise d'activité avez-vous pour vos données et IA ?",
+    options: [
+      { value: "No plan", label: "Aucun plan" },
+      { value: "Backups only", label: "Sauvegardes uniquement" },
+      { value: "Manual failover", label: "Basculage manuel" },
+      { value: "Automated failover", label: "Basculage automatisé" },
+      { value: "AI-aware playbooks", label: "Playbook IA-aware" }
+    ]
+  },
+  T8: {
+    text: "Quels outils low-code ou no-code utilisez-vous pour l'automatisation ?",
+    helper: "Sélectionnez tous les outils ou choisissez « Aucun »",
+    options: [
+      { value: "None", label: "Aucun" },
+      { value: "Zapier", label: "Zapier" },
+      { value: "Make", label: "Make" },
+      { value: "n8n", label: "n8n" },
+      { value: "Power Automate", label: "Power Automate" },
+      { value: "UiPath", label: "UiPath" },
+      { value: "Workato", label: "Workato" },
+      { value: "Airbyte", label: "Airbyte" },
+      { value: "Fivetran", label: "Fivetran" },
+      { value: "dbt", label: "dbt" }
+    ]
+  },
+
+  // Automation & AI Agents (Section 5)
+  A1: {
+    text: "Quelles trois tâches bénéficieraient le plus de l'automatisation ?",
+    helper: "Classez vos priorités",
+    options: [
+      { value: "Reporting", label: "Reporting" },
+      { value: "Scheduling", label: "Planification" },
+      { value: "Data entry", label: "Saisie de données" },
+      { value: "FAQ", label: "FAQ" },
+      { value: "Ticket triage", label: "Tri des tickets" },
+      { value: "Contract generation", label: "Génération de contrats" },
+      { value: "Inventory management", label: "Gestion des stocks" },
+      { value: "Compliance checks", label: "Vérifications de conformité" }
+    ]
+  },
+  A2: {
+    text: "Quel est le niveau de maturité de vos efforts d'automatisation ?",
+    helper: "De l'absence d'automatisation à l'autonomie complète",
+    options: [
+      { value: "0 – no automation", label: "0 – aucune automatisation" },
+      { value: "1 – ad-hoc scripts", label: "1 – scripts ad hoc" },
+      { value: "2 – basic tools with supervision", label: "2 – outils basiques avec supervision" },
+      { value: "3 – integrated workflows", label: "3 – workflows intégrés" },
+      { value: "4 – continuous automation", label: "4 – automatisation continue" },
+      { value: "5 – fully autonomous processes", label: "5 – processus entièrement autonomes" }
+    ]
+  },
+  A3: {
+    text: "Quel est le statut actuel des agents IA dans vos opérations ?",
+    helper: "Permet d'orienter la formation dédiée",
+    options: [
+      { value: "No agents", label: "Aucun agent" },
+      { value: "Prototype", label: "Prototype" },
+      { value: "One agent in production", label: "Un agent en production" },
+      { value: "Multiple agents in production", label: "Plusieurs agents en production" },
+      { value: "Widespread deployment", label: "Déploiement généralisé" }
+    ]
+  },
+  A4: {
+    text: "Pour quelles tâches envisagez-vous une automatisation par agents IA ?",
+    helper: "Sélectionnez tout ce qui s'applique",
+    options: [
+      { value: "Customer support", label: "Support client" },
+      { value: "Report generation", label: "Génération de rapports" },
+      { value: "Email drafting", label: "Rédaction d'e-mails" },
+      { value: "Lead scoring", label: "Scoring des prospects" },
+      { value: "Meeting summaries", label: "Compte-rendu de réunions" },
+      { value: "Market monitoring", label: "Veille marché" },
+      { value: "Quality control", label: "Contrôle qualité" }
+    ]
+  },
+  A5: {
+    text: "Quel niveau d'autonomie souhaitez-vous pour vos agents IA ?",
+    options: [
+      { value: "Suggestions only", label: "Suggestions uniquement" },
+      { value: "Human approval required", label: "Approbation humaine requise" },
+      { value: "Semi-automated", label: "Semi-automatisé" },
+      { value: "Fully automated", label: "Entièrement automatisé" }
+    ]
+  },
+  A6: {
+    text: "Comment surveillez-vous et alertez-vous vos processus automatisés ?",
+    options: [
+      { value: "No monitoring", label: "Pas de surveillance" },
+      { value: "Manual checks", label: "Contrôles manuels" },
+      { value: "KPI dashboards", label: "Tableaux de bord KPI" },
+      { value: "Automated alerts", label: "Alertes automatisées" },
+      { value: "Full observability and logging", label: "Observabilité et journalisation complètes" }
+    ]
+  },
+  A7: {
+    text: "Quels sont les principaux freins à l'automatisation et au déploiement d'agents IA ?",
+    helper: "Sélectionnez tout ce qui s'applique",
+    options: [
+      { value: "Data silos", label: "Silos de données" },
+      { value: "Lack of technical resources", label: "Manque de ressources techniques" },
+      { value: "Insufficient buy-in", label: "Adhésion insuffisante" },
+      { value: "Compliance constraints", label: "Contraintes de conformité" },
+      { value: "Uncertain ROI", label: "ROI incertain" },
+      { value: "Limited budget", label: "Budget limité" },
+      { value: "Integration complexity", label: "Complexité d'intégration" }
+    ]
+  },
+  A8: {
+    text: "Quelle interface préférez-vous pour interagir avec vos agents IA ?",
+    helper: "Permet de personnaliser l'interface",
+    options: [
+      { value: "Chatbot (Slack/Teams)", label: "Chatbot (Slack/Teams)" },
+      { value: "Embedded widget", label: "Widget intégré" },
+      { value: "Dashboard", label: "Tableau de bord" },
+      { value: "Email assistant", label: "Assistant e-mail" },
+      { value: "API/CLI", label: "API/CLI" },
+      { value: "Voice assistant", label: "Assistant vocal" },
+      { value: "Need guidance", label: "Besoin de conseils" }
+    ]
+  },
+  A9: {
+    text: "Quels processus de gouvernance appliquez-vous à vos agents IA ?",
+    options: [
+      { value: "None", label: "Aucun" },
+      { value: "Ad-hoc checks", label: "Vérifications ponctuelles" },
+      { value: "Formal process", label: "Processus formel" },
+      { value: "Logging with oversight", label: "Journalisation avec supervision" },
+      { value: "Continuous audit", label: "Audit continu" }
+    ]
+  },
+  A10: {
+    text: "Quelle stratégie de reprise existe en cas d'échec des automatisations ou agents IA ?",
+    options: [
+      { value: "No plan", label: "Aucun plan" },
+      { value: "Manual rollback", label: "Rollback manuel" },
+      { value: "Predefined fallback procedures", label: "Procédures de bascule prédéfinies" },
+      { value: "Automated rollback", label: "Rollback automatisé" },
+      { value: "Self-healing loops", label: "Boucles d'auto-réparation" }
+    ]
+  },
+  A11: {
+    text: "Comment suivez-vous la qualité des résultats de vos agents IA ?",
+    options: [
+      { value: "No tracking", label: "Pas de suivi" },
+      { value: "Manual spot checks", label: "Contrôles manuels ponctuels" },
+      { value: "Pre-deployment testing", label: "Tests avant déploiement" },
+      { value: "Continuous testing and spot checks", label: "Tests continus et contrôles ponctuels" },
+      { value: "Continuous quality monitoring", label: "Surveillance qualité en continu" }
+    ]
+  },
+
+  // Team Capability & Culture (Section 6)
+  C1: {
+    text: "À quelle fréquence utilisez-vous des outils IA au quotidien ?",
+    options: [
+      { value: "Never", label: "Jamais" },
+      { value: "Rarely", label: "Rarement" },
+      { value: "Monthly", label: "Mensuel" },
+      { value: "Weekly", label: "Hebdomadaire" },
+      { value: "Daily", label: "Quotidien" }
+    ]
+  },
+  C2: {
+    text: "Quel est votre niveau de confiance pour ces compétences en rédaction de prompts ?",
+    options: [
+      { value: "Basic prompt writing", label: "Rédaction de prompts basiques" },
+      { value: "Using few-shot examples", label: "Utilisation d'exemples few-shot" },
+      { value: "Structured prompt formatting", label: "Formatage de prompts structurés" },
+      { value: "Prompt chain design", label: "Conception de chaînes de prompts" }
+    ]
+  },
+  C3: {
+    text: "Comment partagez-vous vos apprentissages IA en interne ?",
+    options: [
+      { value: "No sharing", label: "Aucun partage" },
+      { value: "Informal tips", label: "Astuces informelles" },
+      { value: "Dedicated chat channel", label: "Canal de chat dédié" },
+      { value: "Regular workshops", label: "Ateliers réguliers" },
+      { value: "Active community of practice", label: "Communauté de pratique active" }
+    ]
+  },
+  C3a: {
+    text: "Quels sujets de formation IA priorisez-vous ? (Classez top 3)",
+    options: [
+      { value: "Prompt engineering", label: "Ingénierie de prompt" },
+      { value: "AI tool mastery", label: "Maîtrise des outils IA" },
+      { value: "Data literacy", label: "Littératie des données" },
+      { value: "Model fine-tuning", label: "Fine-tuning de modèles" },
+      { value: "Retrieval-augmented generation", label: "Génération augmentée" },
+      { value: "Agent orchestration", label: "Orchestration d'agents" },
+      { value: "Ethics and governance", label: "Éthique et gouvernance" }
+    ]
+  },
+  C4: {
+    text: "Quel budget annuel par personne allouez-vous à la montée en compétence IA ?",
+    options: [
+      { value: "€0", label: "0 €" },
+      { value: "< €200", label: "< 200 €" },
+      { value: "€200–500", label: "200–500 €" },
+      { value: "€500–1,000", label: "500–1 000 €" },
+      { value: "> €1,000", label: "> 1 000 €" }
+    ]
+  },
+  C5: {
+    text: "Combien d'heures par mois pouvez-vous consacrer à la formation IA ?",
+    options: [
+      { value: "None", label: "Aucune" },
+      { value: "< 1h", label: "< 1 h" },
+      { value: "1–3h", label: "1–3 h" },
+      { value: "3–5h", label: "3–5 h" },
+      { value: "> 5h", label: "> 5 h" }
+    ]
+  },
+  C6: {
+    text: "Quel format de formation IA préférez-vous ?",
+    options: [
+      { value: "Written guides", label: "Guides écrits" },
+      { value: "Short videos", label: "Vidéos courtes" },
+      { value: "Live workshops", label: "Ateliers en direct" },
+      { value: "Self-paced courses", label: "Cours en autonomie" },
+      { value: "Mixed formats", label: "Formats mixtes" }
+    ]
+  },
+  C7: {
+    text: "À quelle fréquence faites-vous appel à des experts IA externes ?",
+    options: [
+      { value: "Never", label: "Jamais" },
+      { value: "Ad-hoc advice", label: "Conseils ponctuels" },
+      { value: "Regular sessions", label: "Séances régulières" },
+      { value: "Expert network access", label: "Accès à un réseau d'experts" },
+      { value: "Dedicated AI advisory board", label: "Comité conseil IA dédié" }
+    ]
+  },
+  C8: {
+    text: "Qu'est-ce qui freine vos pilotes de projets IA ?",
+    options: [
+      { value: "Limited budget", label: "Budget limité" },
+      { value: "Lack of skills", label: "Manque de compétences" },
+      { value: "Data silos", label: "Silos de données" },
+      { value: "Compliance constraints", label: "Contraintes de conformité" },
+      { value: "Uncertain ROI", label: "ROI incertain" },
+      { value: "Technical complexity", label: "Complexité technique" }
+    ]
+  },
+  C9: {
+    text: "Quel est votre degré d'ouverture aux pilotes IA ?",
+    options: [
+      { value: "Resistant", label: "Résistant·e" },
+      { value: "Cautious", label: "Prudent·e" },
+      { value: "Interested", label: "Intéressé·e" },
+      { value: "Proactive", label: "Proactif·ve" },
+      { value: "Active pilots", label: "Pilotes actifs" }
+    ]
+  },
+  C10: {
+    text: "À quelle fréquence collaborez-vous inter-fonctions sur l'IA ?",
+    options: [
+      { value: "Never", label: "Jamais" },
+      { value: "Occasionally", label: "Occasionnellement" },
+      { value: "Quarterly", label: "Trimestriellement" },
+      { value: "Cross-functional squads", label: "En squads" },
+      { value: "Embedded practice", label: "Pratique intégrée" }
+    ]
+  },
+  C11: {
+    text: "Vous sentez-vous en sécurité pour expérimenter et échouer avec l'IA ?",
+    helper: "Petites erreurs (bugs, sorties erronées) : quel niveau de confort ?",
+    options: [
+      { value: "Not comfortable at all", label: "Pas du tout à l'aise" },
+      { value: "Slightly comfortable", label: "Peu à l'aise" },
+      { value: "Moderately comfortable", label: "Modérément à l'aise" },
+      { value: "Often comfortable", label: "Souvent à l'aise" },
+      { value: "Always encouraged", label: "Toujours encouragé·e" }
+    ]
+  },
+
+  // Governance, Risk & Ethics (Section 7)
+  G1: {
+    text: "Quel est le niveau de maturité de vos processus de gestion des risques et biais IA ?",
+    options: [
+      { value: "No process", label: "Aucun processus" },
+      { value: "Reactive fixes", label: "Corrections réactives" },
+      { value: "Pre-deployment testing", label: "Tests avant déploiement" },
+      { value: "Formal framework defined", label: "Cadre formel défini" },
+      { value: "EU AI Act compliant", label: "Conforme au règlement IA UE" }
+    ]
+  },
+  G2: {
+    text: "Pouvez-vous expliquer et auditer les décisions de vos modèles IA ?",
+    helper: "Traçabilité et journalisation pour audits",
+    options: [
+      { value: "No logging or explanations", label: "Pas de journalisation ni d'explications" },
+      { value: "High-risk models only", label: "Modèles à haut risque uniquement" },
+      { value: "Audit logs", label: "Journaux d'audit" },
+      { value: "Explanations for all models", label: "Explications pour tous les modèles" },
+      { value: "Audit-ready (tooling and docs)", label: "Prêt pour audit (outils et docs)" }
+    ]
+  },
+  G3: {
+    text: "Dans quelle mesure êtes-vous transparent·e sur l'usage de l'IA auprès des parties prenantes ?",
+    options: [
+      { value: "No communication", label: "Aucune communication" },
+      { value: "Mentioned in policies", label: "Mention dans les politiques" },
+      { value: "Published docs and FAQs", label: "Docs et FAQ publiés" },
+      { value: "Explanation button", label: "Bouton d'explication" },
+      { value: "Proactive dashboards", label: "Tableaux de bord proactifs" }
+    ]
+  },
+  G4: {
+    text: "Quel plan de réponse aux incidents IA appliquez-vous ?",
+    options: [
+      { value: "No plan", label: "Aucun plan" },
+      { value: "General IT plan", label: "Plan IT général" },
+      { value: "Manual rollback", label: "Rollback manuel" },
+      { value: "Automated rollback", label: "Rollback automatisé" },
+      { value: "Comprehensive playbook", label: "Playbook complet" }
+    ]
+  },
+  G5: {
+    text: "Quel niveau de supervision humaine imposez-vous sur l'IA ?",
+    options: [
+      { value: "None", label: "Aucune" },
+      { value: "Final review", label: "Revue finale" },
+      { value: "Random audits", label: "Vérifications aléatoires" },
+      { value: "Human-in-the-loop", label: "Humain-dans-la-boucle" },
+      { value: "Automated escalation", label: "Escalade automatique" }
+    ]
+  },
+  G6: {
+    text: "Quelle profondeur de confidentialité intégrez-vous dans vos process IA ?",
+    options: [
+      { value: "Basic compliance", label: "Conformité basique" },
+      { value: "Enhanced controls", label: "Contrôles renforcés" },
+      { value: "Privacy technologies", label: "Technologies de confidentialité" },
+      { value: "Privacy by design", label: "Par conception" },
+      { value: "CI/CD privacy checks", label: "Vérifications CI/CD" }
+    ]
+  },
+  G7: {
+    text: "Quel est le statut des audits indépendants de vos systèmes IA ?",
+    options: [
+      { value: "No audit", label: "Aucun audit" },
+      { value: "Audit planned", label: "Audit planifié" },
+      { value: "Audit underway", label: "Audit en cours" },
+      { value: "Initial audit completed", label: "Audit initial terminé" },
+      { value: "Continuous audit cycle", label: "Cycle d'audit continu" }
+    ]
+  },
+  G8: {
+    text: "Où en êtes-vous dans la cartographie des risques IA selon le règlement UE ?",
+    helper: "Cartographie = registre des risques IA",
+    options: [
+      { value: "Not aware", label: "Pas conscient·e" },
+      { value: "Aware but not mapped", label: "Conscient·e mais non cartographié" },
+      { value: "Mapping underway", label: "Cartographie en cours" },
+      { value: "Registry completed", label: "Registre terminé" },
+      { value: "Results shared", label: "Résultats partagés" }
+    ]
+  },
+  G9: {
+    text: "À quelle fréquence testez-vous l'équité de vos modèles IA ?",
+    options: [
+      { value: "Never", label: "Jamais" },
+      { value: "Post-incident only", label: "Ponctuellement après incidents" },
+      { value: "Before each deployment", label: "Avant chaque déploiement" },
+      { value: "Quarterly review", label: "Revue trimestrielle" },
+      { value: "Continuous monitoring", label: "Surveillance continue" }
+    ]
+  },
+  G10: {
+    text: "Quel organe de gouvernance supervise l'éthique et la conformité IA ?",
+    helper: "Comité, équipe conformité ou experts externes",
+    options: [
+      { value: "None", label: "Aucun" },
+      { value: "Ad-hoc advice", label: "Conseil occasionnel" },
+      { value: "Project-by-project review", label: "Revue projet-par-projet" },
+      { value: "Regular meetings", label: "Réunions régulières" },
+      { value: "External experts", label: "Experts externes" }
+    ]
+  },
+
+  // Implementation Horizon & Vision (Section 8)
+  P1: {
+    text: "Quand prévoyez-vous de déployer vos initiatives IA ?",
+    helper: "Détermine l'urgence et le calendrier",
+    options: [
+      { value: "Within 3 months", label: "D'ici 3 mois" },
+      { value: "3–6 months", label: "3–6 mois" },
+      { value: "6–12 months", label: "6–12 mois" },
+      { value: "> 12 months", label: "> 12 mois" }
+    ]
+  },
+  P2: {
+    text: "Quel niveau de risque acceptez-vous pour vos projets IA ?",
+    helper: "Tolérance au risque pour nouvelles expérimentations",
+    options: [
+      { value: "Conservative – pilots first", label: "Conservateur – pilotes d'abord" },
+      { value: "Cautious – small tests", label: "Prudent – petits tests" },
+      { value: "Balanced – with oversight", label: "Équilibré – supervision" },
+      { value: "Bold – broad experiments", label: "Audacieux – expérimentations larges" }
+    ]
+  },
+  P3: {
+    text: "Quels indicateurs de succès sont prioritaires pour votre IA ? (Max 3)",
+    helper: "Nous adaptons la formation à ces objectifs",
+    options: [
+      { value: "Return on investment", label: "Retour sur investissement" },
+      { value: "Cost reduction", label: "Réduction des coûts" },
+      { value: "Operational efficiency", label: "Efficacité opérationnelle" },
+      { value: "Customer experience", label: "Expérience client" },
+      { value: "Employee productivity", label: "Productivité employés" },
+      { value: "Innovation", label: "Innovation" },
+      { value: "Regulatory compliance", label: "Conformité réglementaire" },
+      { value: "Sustainable impact", label: "Impact durable" }
+    ]
+  },
+  P4: {
+    text: "Quelle stratégie de ressources privilégiez-vous pour vos projets IA ?",
+    helper: "Interne vs externe",
+    options: [
+      { value: "Fully internal", label: "Entièrement interne" },
+      { value: "Hybrid – internal and external", label: "Hybride – interne et externe" },
+      { value: "Fully outsourced", label: "Entièrement externalisé" }
+    ]
+  },
+  P5: {
+    text: "Quelles architectures techniques préférez-vous pour l'IA ?",
+    helper: "Guide les ateliers techniques",
+    options: [
+      { value: "Cloud-native", label: "Cloud-native" },
+      { value: "Hybrid/on-premise", label: "Hybride/on-premise" },
+      { value: "API-first", label: "API-first" },
+      { value: "Low-code/no-code", label: "Low-code/no-code" },
+      { value: "Open source frameworks", label: "Frameworks open source" },
+      { value: "Enterprise suites", label: "Suites d'entreprise" }
+    ]
+  },
+  P6: {
+    text: "Quel niveau de support externe attendez-vous pour l'IA ?",
+    options: [
+      { value: "None", label: "Aucun" },
+      { value: "Ad-hoc consulting", label: "Consulting ponctuel" },
+      { value: "Ongoing advisory", label: "Conseil continu" },
+      { value: "Managed services", label: "Services managés" },
+      { value: "Full outsourcing", label: "Externalisation totale" }
+    ]
+  },
+  P7: {
+    text: "Quel changement organisationnel êtes-vous prêt·e à engager pour l'IA ?",
+    helper: "Adapte la formation gestion du changement",
+    options: [
+      { value: "Minimal changes", label: "Modifications minimales" },
+      { value: "Minor adjustments", label: "Ajustements mineurs" },
+      { value: "Moderate transformation", label: "Transformation modérée" },
+      { value: "Major transformation", label: "Transformation majeure" },
+      { value: "Continuous evolution", label: "Évolution continue" }
+    ]
+  },
+
+  // Add-on questions
+  T9: {
+    text: "Comment déployez-vous et supervisez-vous vos modèles ML en production ?",
+    helper: "Garantit fiabilité et détection rapide",
+    options: [
+      { value: "No deployment", label: "Pas de déploiement" },
+      { value: "Manual scripts", label: "Scripts manuels" },
+      { value: "CI/CD pipeline", label: "Pipeline CI/CD" },
+      { value: "MLOps platform (Kubeflow, MLflow)", label: "Plateforme MLOps (Kubeflow, MLflow)" },
+      { value: "Automated blue/green deployment", label: "Déploiement blue/green automatisé" }
+    ]
+  },
+  F8: {
+    text: "Quels mécanismes utilisez-vous pour les transferts transfrontaliers de données ?",
+    helper: "Le RGPD impose un encadrement légal",
+    options: [
+      { value: "No transfers", label: "Pas de transfert" },
+      { value: "Ad-hoc contracts", label: "Contrats ad hoc" },
+      { value: "Standard contractual clauses", label: "Clauses contractuelles types" },
+      { value: "Binding corporate rules", label: "Règles d'entreprise contraignantes" },
+      { value: "Adequacy decision and ongoing monitoring", label: "Décision d'adéquation et suivi continu" }
+    ]
   }
 };
