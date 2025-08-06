@@ -40,20 +40,41 @@ export type Database = {
       }
       answers: {
         Row: {
+          answer_score: number | null
           answered_at: string
+          question_helper: string | null
           question_id: string
+          question_options: Json | null
+          question_required: boolean | null
+          question_text: string | null
+          question_type: string | null
+          section_id: string | null
           submission_id: string
           value: Json | null
         }
         Insert: {
+          answer_score?: number | null
           answered_at?: string
+          question_helper?: string | null
           question_id: string
+          question_options?: Json | null
+          question_required?: boolean | null
+          question_text?: string | null
+          question_type?: string | null
+          section_id?: string | null
           submission_id: string
           value?: Json | null
         }
         Update: {
+          answer_score?: number | null
           answered_at?: string
+          question_helper?: string | null
           question_id?: string
+          question_options?: Json | null
+          question_required?: boolean | null
+          question_text?: string | null
+          question_type?: string | null
+          section_id?: string | null
           submission_id?: string
           value?: Json | null
         }
