@@ -53,6 +53,11 @@ export const enResources = {
         questionsRemaining: "{{count}} questions remaining",
         track: "Track: {{track}}",
         trackInfo: "Based on your role and industry, we've customized the questions for your track",
+        complete: "Complete",
+        sectionsComplete: "Sections complete",
+        sectionsRemaining: "Sections remaining", 
+        questionsRemaining_plural: "Questions remaining",
+        generalTrack: "General Track",
       },
       validation: {
         required: "This field is required",
@@ -63,6 +68,7 @@ export const enResources = {
       consent: {
         accept: "I agree to the data processing terms",
         required: "You must accept to continue",
+        dataProcessing: "By proceeding, you agree to process your data for this readiness report and related communications.",
       },
       additionalQuestions: "Additional Questions",
       thankYou: {
@@ -90,6 +96,14 @@ export const enResources = {
       other: "Other",
       specifyOther: "Please specify",
       preferNotToSay: "Prefer not to say",
+      basicInformation: "Basic Information",
+      organizationDetails: "Organization Details",
+      enterOrgName: "Enter your organization name",
+      enterFullName: "Enter your full name",
+      enterEmail: "your.name@company.com",
+      selectRole: "Select your primary role...",
+      selectIndustry: "Select your industry...",
+      selectCountry: "Select your country...",
     },
 
     // Notifications and messages
