@@ -167,6 +167,9 @@ export const frResources = {
       TECH: "Technique / Responsable données",
       REG: "Réglementaire / Conformité",
       GEN: "Affaires générales",
+      technical: "Filière technique",
+      regulated: "Filière réglementée",
+      general: "Filière affaires générales",
     },
 
     // Size breakpoints
@@ -177,5 +180,92 @@ export const frResources = {
       large: "grande",
       enterprise: "entreprise",
     },
+
+    // Thank You page
+    thankYou: {
+      title: "Évaluation terminée",
+      subtitle: "8 domaines clés évalués avec analyse détaillée",
+      thankMessage: "Merci, équipe {{company}}, d'avoir complété notre évaluation complète de préparation à l'IA",
+      status: {
+        complete: {
+          title: "Évaluation terminée",
+          description: "8 domaines clés évalués avec analyse détaillée"
+        },
+        report: {
+          title: "Rapport disponible bientôt",
+          description: "Nous vous enverrons votre rapport personnalisé dans les 3 jours ouvrables"
+        },
+        action: {
+          title: "Passer à l'action", 
+          description: "Mettre en œuvre les recommandations pour faire progresser votre parcours IA"
+        }
+      },
+      overview: {
+        title: "Aperçu de l'évaluation",
+        questionsAnswered: "Questions répondues",
+        keyAreas: "Domaines clés évalués",
+        reportNotice: "Nous vous enverrons votre rapport détaillé de préparation à l'IA dans les 3 jours ouvrables",
+        emailCheck: "Veuillez vérifier votre boîte de réception (et dossier spam) pour recevoir vos résultats d'évaluation personnalisés"
+      },
+      resources: {
+        implementation: {
+          title: "Guides de mise en œuvre",
+          description: "Guides étape par étape pour implémenter les solutions IA"
+        },
+        bestPractices: {
+          title: "Bibliothèque de meilleures pratiques",
+          description: "Meilleures pratiques de l'industrie et études de cas"
+        },
+        consultation: {
+          title: "Consultation d'experts",
+          description: "Sessions individuelles avec des experts IA"
+        },
+        training: {
+          title: "Ressources de formation", 
+          description: "Programmes de formation complets pour votre équipe"
+        },
+        community: {
+          title: "Accès communauté",
+          description: "Connectez-vous avec d'autres organisations orientées IA"
+        },
+        calculator: {
+          title: "Calculateur de ROI",
+          description: "Calculez le retour potentiel sur les investissements IA"
+        }
+      },
+      reportIncludes: {
+        title: "Votre rapport inclut",
+        maturityScore: {
+          title: "Score de maturité IA",
+          description: "Évaluation globale des 8 domaines clés"
+        },
+        analysis: {
+          title: "Analyse détaillée par section",
+          description: "Identification des forces et des domaines d'amélioration"
+        },
+        recommendations: {
+          title: "Recommandations opérationnelles",
+          description: "Étapes concrètes pour faire progresser votre parcours IA"
+        },
+        roadmap: {
+          title: "Feuille de route de mise en œuvre",
+          description: "Calendrier priorisé pour l'adoption de l'IA"
+        }
+      },
+      actions: {
+        retake: "Refaire l'évaluation",
+        website: "Visiter notre site web"
+      },
+      footer: {
+        thankYou: "Merci de votre participation",
+        privacy: "Vos données nous aident à améliorer notre évaluation et à fournir des informations plus pertinentes sur la préparation à l'IA. Nous nous engageons à protéger votre vie privée et n'utiliserons vos informations que pour vous fournir les résultats d'évaluation demandés et les ressources connexes.",
+        dataProtected: "Confidentialité des données protégée",
+        contact: "Contact : support@houseofichigo.com"
+      },
+      comingSoon: {
+        title: "Bientôt disponible !",
+        description: "{{feature}} sera disponible prochainement. Nous vous préviendrons quand ce sera prêt."
+      }
+    }
   },
 };

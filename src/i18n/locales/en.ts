@@ -167,6 +167,9 @@ export const enResources = {
       TECH: "Technical / Data Lead",
       REG: "Regulatory / Compliance", 
       GEN: "General Business",
+      technical: "Technical Track",
+      regulated: "Regulated Track",
+      general: "General Business Track",
     },
 
     // Size breakpoints
@@ -177,5 +180,92 @@ export const enResources = {
       large: "large",
       enterprise: "enterprise",
     },
+
+    // Thank You page
+    thankYou: {
+      title: "Assessment Complete",
+      subtitle: "8 key areas evaluated with detailed analysis",
+      thankMessage: "Thank you, {{company}} team, for completing our comprehensive AI readiness assessment",
+      status: {
+        complete: {
+          title: "Assessment Complete",
+          description: "8 key areas evaluated with detailed analysis"
+        },
+        report: {
+          title: "Report Available Soon", 
+          description: "We will email your personalized report within 3 business days"
+        },
+        action: {
+          title: "Take Action",
+          description: "Implement recommendations to advance your AI journey"
+        }
+      },
+      overview: {
+        title: "Assessment Overview",
+        questionsAnswered: "Questions Answered",
+        keyAreas: "Key Areas Evaluated",
+        reportNotice: "We will send you your detailed AI readiness report within 3 business days",
+        emailCheck: "Please check your inbox (and spam folder) to receive your personalized assessment results"
+      },
+      resources: {
+        implementation: {
+          title: "Implementation Guides",
+          description: "Step-by-step guides to implement AI solutions"
+        },
+        bestPractices: {
+          title: "Best Practices Library", 
+          description: "Industry best practices and case studies"
+        },
+        consultation: {
+          title: "Expert Consultation",
+          description: "One-on-one sessions with AI experts"
+        },
+        training: {
+          title: "Training Resources",
+          description: "Comprehensive training programs for your team"
+        },
+        community: {
+          title: "Community Access",
+          description: "Connect with other AI-forward organizations"
+        },
+        calculator: {
+          title: "ROI Calculator",
+          description: "Calculate potential return on AI investments"
+        }
+      },
+      reportIncludes: {
+        title: "Your report includes",
+        maturityScore: {
+          title: "AI Maturity Score",
+          description: "Overall assessment of the 8 key areas"
+        },
+        analysis: {
+          title: "Detailed Analysis by Section",
+          description: "Identification of strengths and areas for improvement"
+        },
+        recommendations: {
+          title: "Operational Recommendations", 
+          description: "Concrete steps to advance your AI journey"
+        },
+        roadmap: {
+          title: "Implementation Roadmap",
+          description: "Prioritized timeline for AI adoption"
+        }
+      },
+      actions: {
+        retake: "Retake Assessment",
+        website: "Visit Our Website"
+      },
+      footer: {
+        thankYou: "Thank you for your participation",
+        privacy: "Your data helps us improve our assessment and provide more relevant insights on AI readiness. We are committed to protecting your privacy and will only use your information to provide you with the requested assessment results and related resources.",
+        dataProtected: "Data Privacy Protected",
+        contact: "Contact: support@houseofichigo.com"
+      },
+      comingSoon: {
+        title: "Coming Soon!",
+        description: "{{feature}} will be available soon. We'll notify you when it's ready."
+      }
+    }
   },
 };

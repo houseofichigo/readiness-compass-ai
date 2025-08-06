@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams, Link } from "react-router-dom";
 import Confetti from "react-confetti";
+import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -8,6 +9,7 @@ import { CheckCircle, Clock, Rocket, FileText, BookOpen, Users, GraduationCap, M
 import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
 import { useAssessment } from "@/hooks/useAssessment";
+import { LanguageSelector } from "@/components/language/LanguageSelector";
 interface ThankYouPageData {
   profile: OrganizationProfile;
   track: Track;
@@ -20,9 +22,9 @@ export default function ThankYou() {
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const { loadAssessment } = useAssessment();
+  const { t } = useTranslation();
   
   const [showConfetti, setShowConfetti] = useState(true);
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
   const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   
@@ -105,17 +107,17 @@ export default function ThankYou() {
   const getTrackLabel = (track: Track) => {
     switch (track) {
       case "TECH":
-        return "Technical Track";
+        return t('tracks.technical');
       case "REG":
-        return "Regulated Track";
+        return t('tracks.regulated');
       default:
-        return "General Business Track";
+        return t('tracks.general');
     }
   };
   const handleComingSoon = (feature: string) => {
     toast({
-      title: "Coming Soon!",
-      description: `${feature} will be available soon. We'll notify you when it's ready.`
+      title: t('thankYou.comingSoon.title'),
+      description: t('thankYou.comingSoon.description', { feature })
     });
   };
   const handleRetakeAssessment = () => {
@@ -127,15 +129,7 @@ export default function ThankYou() {
 
       {/* Language Selector */}
       <div className="absolute top-4 right-4 z-10">
-        <div className="flex items-center gap-2 bg-background/80 backdrop-blur-sm rounded-lg px-3 py-2">
-          <Globe className="w-4 h-4" />
-          <select value={selectedLanguage} onChange={e => setSelectedLanguage(e.target.value)} className="bg-transparent border-none outline-none text-sm">
-            <option value="English">🇺🇸 English</option>
-            <option value="Spanish">🇪🇸 Spanish</option>
-            <option value="French">🇫🇷 French</option>
-            <option value="German">🇩🇪 German</option>
-          </select>
-        </div>
+        <LanguageSelector />
       </div>
 
       <div className="max-w-6xl mx-auto p-6 space-y-8">
@@ -148,10 +142,10 @@ export default function ThankYou() {
           </div>
           
           <div className="space-y-2">
-            <h1 className="text-4xl font-bold text-foreground">Assessment Complete</h1>
-            <p className="text-lg text-primary">8 key areas evaluated with detailed analysis</p>
+            <h1 className="text-4xl font-bold text-foreground">{t('thankYou.title')}</h1>
+            <p className="text-lg text-primary">{t('thankYou.subtitle')}</p>
             <p className="text-muted-foreground">
-              Thank you, {profile.M0} team, for completing our comprehensive AI readiness assessment
+              {t('thankYou.thankMessage', { company: profile.M0 })}
             </p>
           </div>
         </div>
@@ -163,8 +157,8 @@ export default function ThankYou() {
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto">
                 <CheckCircle className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Assessment Complete</h3>
-              <p className="text-sm text-muted-foreground">8 key areas evaluated with detailed analysis</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.status.complete.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.status.complete.description')}</p>
             </div>
           </Card>
 
@@ -173,8 +167,8 @@ export default function ThankYou() {
               <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mx-auto">
                 <Clock className="w-6 h-6 text-yellow-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Report Available Soon</h3>
-              <p className="text-sm text-muted-foreground">We will email your personalized report within 3 business days</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.status.report.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.status.report.description')}</p>
             </div>
           </Card>
 
@@ -183,8 +177,8 @@ export default function ThankYou() {
               <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto">
                 <Rocket className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Take Action</h3>
-              <p className="text-sm text-muted-foreground">Implement recommendations to advance your AI journey</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.status.action.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.status.action.description')}</p>
             </div>
           </Card>
         </div>
@@ -192,15 +186,15 @@ export default function ThankYou() {
         {/* Quick Highlights Card */}
         <Card className="p-8 space-y-6">
           <div className="text-center space-y-4">
-            <h2 className="text-2xl font-bold text-foreground">Assessment Overview</h2>
+            <h2 className="text-2xl font-bold text-foreground">{t('thankYou.overview.title')}</h2>
             <div className="grid md:grid-cols-3 gap-6 text-center">
               <div>
                 <div className="text-3xl font-bold text-primary">{totalQuestions}</div>
-                <div className="text-sm text-muted-foreground">Questions Answered</div>
+                <div className="text-sm text-muted-foreground">{t('thankYou.overview.questionsAnswered')}</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-primary">8</div>
-                <div className="text-sm text-muted-foreground">Key Areas Evaluated</div>
+                <div className="text-sm text-muted-foreground">{t('thankYou.overview.keyAreas')}</div>
               </div>
               <div>
                 <Badge variant="outline" className="text-sm">
@@ -214,11 +208,11 @@ export default function ThankYou() {
             <div className="flex items-center justify-center gap-2 mb-2">
               <FileText className="w-5 h-5 text-blue-600" />
               <span className="font-semibold text-blue-900">
-                We will send you your detailed AI readiness report within 3 business days
+                {t('thankYou.overview.reportNotice')}
               </span>
             </div>
             <p className="text-sm text-blue-700">
-              Please check your inbox (and spam folder) to receive your personalized assessment results
+              {t('thankYou.overview.emailCheck')}
             </p>
           </div>
         </Card>
@@ -228,101 +222,101 @@ export default function ThankYou() {
 
         {/* Resource Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon("Implementation Guides")}>
+          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon(t('thankYou.resources.implementation.title'))}>
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-full bg-purple-100 flex items-center justify-center">
                 <BookOpen className="w-6 h-6 text-purple-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Implementation Guides</h3>
-              <p className="text-sm text-muted-foreground">Step-by-step guides to implement AI solutions</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.resources.implementation.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.resources.implementation.description')}</p>
             </div>
           </Card>
 
-          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon("Best Practices Library")}>
+          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon(t('thankYou.resources.bestPractices.title'))}>
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center">
                 <FileText className="w-6 h-6 text-indigo-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Best Practices Library</h3>
-              <p className="text-sm text-muted-foreground">Industry best practices and case studies</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.resources.bestPractices.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.resources.bestPractices.description')}</p>
             </div>
           </Card>
 
-          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon("Expert Consultation")}>
+          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon(t('thankYou.resources.consultation.title'))}>
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
                 <Users className="w-6 h-6 text-orange-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Expert Consultation</h3>
-              <p className="text-sm text-muted-foreground">One-on-one sessions with AI experts</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.resources.consultation.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.resources.consultation.description')}</p>
             </div>
           </Card>
 
-          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon("Training Resources")}>
+          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon(t('thankYou.resources.training.title'))}>
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
                 <GraduationCap className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Training Resources</h3>
-              <p className="text-sm text-muted-foreground">Comprehensive training programs for your team</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.resources.training.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.resources.training.description')}</p>
             </div>
           </Card>
 
-          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon("Community Access")}>
+          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon(t('thankYou.resources.community.title'))}>
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-full bg-pink-100 flex items-center justify-center">
                 <MessageSquare className="w-6 h-6 text-pink-600" />
               </div>
-              <h3 className="font-semibold text-foreground">Community Access</h3>
-              <p className="text-sm text-muted-foreground">Connect with other AI-forward organizations</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.resources.community.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.resources.community.description')}</p>
             </div>
           </Card>
 
-          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon("ROI Calculator")}>
+          <Card className="p-6 hover-scale cursor-pointer" onClick={() => handleComingSoon(t('thankYou.resources.calculator.title'))}>
             <div className="space-y-3">
               <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center">
                 <Calculator className="w-6 h-6 text-yellow-600" />
               </div>
-              <h3 className="font-semibold text-foreground">ROI Calculator</h3>
-              <p className="text-sm text-muted-foreground">Calculate potential return on AI investments</p>
+              <h3 className="font-semibold text-foreground">{t('thankYou.resources.calculator.title')}</h3>
+              <p className="text-sm text-muted-foreground">{t('thankYou.resources.calculator.description')}</p>
             </div>
           </Card>
         </div>
 
         {/* Your Report Includes */}
         <Card className="p-8 space-y-6">
-          <h2 className="text-2xl font-bold text-center text-foreground">Your report includes</h2>
+          <h2 className="text-2xl font-bold text-center text-foreground">{t('thankYou.reportIncludes.title')}</h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">AI Maturity Score</h3>
-                <p className="text-sm text-muted-foreground">Overall assessment of the 8 key areas</p>
+                <h3 className="font-semibold text-foreground">{t('thankYou.reportIncludes.maturityScore.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('thankYou.reportIncludes.maturityScore.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">Detailed Analysis by Section</h3>
-                <p className="text-sm text-muted-foreground">Identification of strengths and areas for improvement</p>
+                <h3 className="font-semibold text-foreground">{t('thankYou.reportIncludes.analysis.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('thankYou.reportIncludes.analysis.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">Operational Recommendations</h3>
-                <p className="text-sm text-muted-foreground">Concrete steps to advance your AI journey</p>
+                <h3 className="font-semibold text-foreground">{t('thankYou.reportIncludes.recommendations.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('thankYou.reportIncludes.recommendations.description')}</p>
               </div>
             </div>
 
             <div className="flex items-start gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 mt-1 flex-shrink-0" />
               <div>
-                <h3 className="font-semibold text-foreground">Implementation Roadmap</h3>
-                <p className="text-sm text-muted-foreground">Prioritized timeline for AI adoption</p>
+                <h3 className="font-semibold text-foreground">{t('thankYou.reportIncludes.roadmap.title')}</h3>
+                <p className="text-sm text-muted-foreground">{t('thankYou.reportIncludes.roadmap.description')}</p>
               </div>
             </div>
           </div>
@@ -333,31 +327,29 @@ export default function ThankYou() {
           <Link to="/">
             <Button variant="outline" className="flex items-center gap-2">
               <ArrowLeft className="w-4 h-4" />
-              Retake Assessment
+              {t('thankYou.actions.retake')}
             </Button>
           </Link>
           <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" onClick={() => window.open("https://www.houseofichigo.com", "_blank")}>
             <Globe className="w-4 h-4 mr-2" />
-            Visit Our Website
+            {t('thankYou.actions.website')}
           </Button>
         </div>
 
         {/* Footer Elements */}
         <div className="text-center space-y-4 pt-8 border-t border-border">
-          <h3 className="text-lg font-semibold text-foreground">Thank you for your participation</h3>
+          <h3 className="text-lg font-semibold text-foreground">{t('thankYou.footer.thankYou')}</h3>
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            Your data helps us improve our assessment and provide more relevant insights on AI readiness. 
-            We are committed to protecting your privacy and will only use your information to provide 
-            you with the requested assessment results and related resources.
+            {t('thankYou.footer.privacy')}
           </p>
           
           <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Shield className="w-4 h-4" />
-              <span>Data Privacy Protected</span>
+              <span>{t('thankYou.footer.dataProtected')}</span>
             </div>
             <span>•</span>
-            <span>Contact: support@houseofichigo.com</span>
+            <span>{t('thankYou.footer.contact')}</span>
           </div>
 
           {/* Profile Info */}
