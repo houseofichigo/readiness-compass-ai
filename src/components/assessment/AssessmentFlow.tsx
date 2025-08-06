@@ -17,6 +17,7 @@ import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
 import { useToast } from "@/hooks/use-toast";
+import { getLocalizedSection, getLocalizedQuestion } from "@/utils/assessmentUtils";
 
 interface AssessmentFlowProps {
   onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => Promise<void>;
@@ -73,7 +74,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const isAddOnPage = currentPage === assessmentSections.length;
   const currentSection = isAddOnPage
     ? null
-    : assessmentSections[currentPage];
+    : getLocalizedSection(assessmentSections[currentPage], i18n.language);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -135,7 +136,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const getVisibleQuestions = () => {
-    if (isAddOnPage) return visibleAddOns;
+    if (isAddOnPage) return visibleAddOns.map(q => getLocalizedQuestion(q, i18n.language));
     return currentSection
       ? currentSection.questions.filter(q =>
           isQuestionVisible(q, responses, detectedTrack, 0, globalComputed)

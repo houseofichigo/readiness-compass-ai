@@ -22,8 +22,8 @@ export function LanguageSelector() {
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
   const handleLanguageChange = (languageCode: string) => {
-    i18n.changeLanguage(languageCode);
     updatePreferences({ language: languageCode });
+    i18n.changeLanguage(languageCode);
   };
 
   return (
