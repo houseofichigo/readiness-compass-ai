@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ import { DragDropQuestionRank } from "./DragDropQuestionRank";
 import { MultiSelectQuestion } from "./MultiSelectQuestion";
 import { MatrixQuestion } from "./MatrixQuestion";
 import { ProgressiveMultiGroupQuestion } from "./ProgressiveMultiGroupQuestion";
+import { getLocalizedQuestion } from "@/utils/assessmentUtils";
 
 interface QuestionCardProps {
   question: Question;
@@ -30,6 +32,8 @@ export function QuestionCard({
   value,
   onChange,
 }: QuestionCardProps) {
+  const { i18n, t } = useTranslation();
+  const localizedQuestion = getLocalizedQuestion(question, i18n.language);
   const [inputValue, setInputValue] = useState(value || "");
 
   useEffect(() => setInputValue(value || ""), [value]);
@@ -40,17 +44,17 @@ export function QuestionCard({
   };
 
   const renderQuestionInput = () => {
-    switch (question.type) {
+    switch (localizedQuestion.type) {
       case "text":
       case "email":
         return (
           <Input
-            type={question.type}
+            type={localizedQuestion.type}
             value={inputValue}
             onChange={(e) => handleInputChange(e.target.value)}
-            placeholder={`Enter your ${question.text.toLowerCase()}`}
+            placeholder={t('form.enterText')}
             className="mt-2"
-            required={question.required}
+            required={localizedQuestion.required}
           />
         );
 
@@ -69,21 +73,21 @@ export function QuestionCard({
         // Handles radio groups as well as dropdowns (industry_dropdown & country_dropdown)
         const flatOptions: Array<
           string | { value: string; label: string }
-        > = question.options || question.groups?.flatMap((g) => g.options) || [];
+        > = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];
 
         // Use dropdown for: explicit dropdown types, questions with many options (>8), or specific questions like M3 (Primary role)
         const shouldUseDropdown = 
-          question.type === "dropdown" || 
-          question.type === "industry_dropdown" ||
+          localizedQuestion.type === "dropdown" || 
+          localizedQuestion.type === "industry_dropdown" ||
           flatOptions.length > 8 ||
-          question.id === "M3"; // Primary role question
+          localizedQuestion.id === "M3"; // Primary role question
 
         if (shouldUseDropdown) {
           // Render as <Select> for dropdowns
           return (
             <Select value={value} onValueChange={onChange}>
               <SelectTrigger className="mt-4 bg-background border border-border">
-                <SelectValue placeholder="Select an option..." />
+                <SelectValue placeholder={t('form.pleaseSelect')} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-background border border-border shadow-lg">
                 {flatOptions.map((opt) => {
@@ -111,8 +115,8 @@ export function QuestionCard({
             onValueChange={onChange}
             className="mt-4 space-y-3"
           >
-            {question.groups?.length
-              ? question.groups.map((group) => (
+            {localizedQuestion.groups?.length
+              ? localizedQuestion.groups.map((group) => (
                   <div key={group.label} className="space-y-2">
                     <Label className="text-sm font-medium">
                       {group.label}
@@ -152,7 +156,7 @@ export function QuestionCard({
       case "multi":
         return (
           <MultiSelectQuestion
-            options={question.options || []}
+            options={localizedQuestion.options || []}
             value={value || []}
             onChange={onChange}
           />
@@ -162,20 +166,20 @@ export function QuestionCard({
         // Grouped checkboxes with progressive disclosure
         return (
           <ProgressiveMultiGroupQuestion
-            groups={question.groups || []}
+            groups={localizedQuestion.groups || []}
             value={value || []}
             onChange={onChange}
           />
         );
 
       case "rank": {
-        const rankOpts = question.options || question.groups?.flatMap((g) => g.options) || [];
+        const rankOpts = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];
         return (
           <DragDropQuestionRank
             options={rankOpts}
             value={value || []}
             onChange={onChange}
-            maxRank={question.maxRank || 3}
+            maxRank={localizedQuestion.maxRank || 3}
           />
         );
       }
@@ -183,8 +187,8 @@ export function QuestionCard({
       case "matrix":
         return (
           <MatrixQuestion
-            rows={question.rows?.map(r => typeof r === 'string' ? { value: r, label: r } : r) || []}
-            columns={question.columns?.map(c => typeof c === 'string' ? { value: c, label: c } : c) || []}
+            rows={localizedQuestion.rows?.map(r => typeof r === 'string' ? { value: r, label: r } : r) || []}
+            columns={localizedQuestion.columns?.map(c => typeof c === 'string' ? { value: c, label: c } : c) || []}
             value={value || {}}
             onChange={onChange}
           />
@@ -197,10 +201,10 @@ export function QuestionCard({
 
   return (
     <Card className="mb-6 p-4">
-      <Label className="font-semibold">{question.text}</Label>
-      {question.helper && (
+      <Label className="font-semibold">{localizedQuestion.text}</Label>
+      {localizedQuestion.helper && (
         <p className="mt-2 mb-4 text-sm text-muted-foreground">
-          {question.helper}
+          {localizedQuestion.helper}
         </p>
       )}
       {renderQuestionInput()}

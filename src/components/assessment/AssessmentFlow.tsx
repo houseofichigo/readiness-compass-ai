@@ -2,10 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { LanguageSelector } from "@/components/language/LanguageSelector";
 import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
@@ -31,6 +33,7 @@ const parseListLiteral = (lit: string): string[] => {
 };
 
 export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
+  const { t, i18n } = useTranslation();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -208,12 +211,16 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const visibleQuestions = getVisibleQuestions();
-  const sectionTitle = isAddOnPage ? "Additional Questions" : currentSection?.title;
+  const sectionTitle = isAddOnPage ? t('assessment.additionalQuestions') : t(`sections.${currentSection?.id}`) || currentSection?.title;
   const sectionPurpose = isAddOnPage ? undefined : currentSection?.purpose;
   const progressIndex = Math.min(currentPage, assessmentSections.length - 1);
 
   return (
     <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-3xl font-bold">{t('assessment.title')}</h1>
+        <LanguageSelector />
+      </div>
       <AssessmentProgressBar
         currentSectionIndex={progressIndex}
         completedSections={progressIndex}
@@ -258,7 +265,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
       <div className="flex justify-between">
         <Button onClick={goPrev} variant="outline" disabled={currentPage === 0 || isSubmitting}>
-          <ArrowLeft className="h-4 w-4" /> Previous
+          <ArrowLeft className="h-4 w-4" /> {t('common.previous')}
         </Button>
         <Button 
           onClick={() => {
@@ -273,8 +280,8 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? (<><Loader2 className="h-4 w-4 animate-spin" /> Submitting…</>)
-            : (isAddOnPage || (isLastSection && !hasAddOns) ? "Complete Assessment" : <>Next <ArrowRight className="h-4 w-4" /></>)
+            ? (<><Loader2 className="h-4 w-4 animate-spin" /> {t('common.submitting')}</>)
+            : (isAddOnPage || (isLastSection && !hasAddOns) ? t('common.completeAssessment') : <>{t('common.next')} <ArrowRight className="h-4 w-4" /></>)
           }
         </Button>
       </div>
