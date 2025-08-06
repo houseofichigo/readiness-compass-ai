@@ -212,6 +212,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
       { value: "North Macedonia", label: "Macédoine du Nord" },
       { value: "Norway", label: "Norvège" },
       { value: "Oman", label: "Oman" },
+      { value: "Palestine", label: "Palestine" },
       { value: "Pakistan", label: "Pakistan" },
       { value: "Palau", label: "Palaos" },
       { value: "Panama", label: "Panama" },
