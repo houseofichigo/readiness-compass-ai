@@ -159,12 +159,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     const validation = validateSection(questions, responses, ids);
     
     // Debug validation
-    console.log("🔍 VALIDATION DEBUG:");
-    console.log("- Visible questions:", questions.length);
-    console.log("- Question IDs:", ids);
-    console.log("- Validation result:", validation.isValid);
-    console.log("- Validation errors:", validation.errors);
-    console.log("- Current responses:", Object.keys(responses));
+    // Validation check for current section
     
     return validation.isValid;
   };
@@ -270,12 +265,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         </Button>
         <Button 
           onClick={() => {
-            console.log("🔴 BUTTON CLICKED - Starting handleNext");
-            console.log("🔍 CURRENT STATE:");
-            console.log("- isSubmitting:", isSubmitting);
-            console.log("- currentPage:", currentPage);
-            console.log("- Total sections:", assessmentSections.length);
-            console.log("- Total responses:", Object.keys(responses).length);
+            // Handle next button click
             handleNext();
           }} 
           disabled={isSubmitting}

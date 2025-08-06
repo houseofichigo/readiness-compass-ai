@@ -44,7 +44,7 @@ export function useAssessment() {
     setError(null);
 
     try {
-      console.log("💾 SUPABASE - Saving", Object.keys(responses).length, "responses");
+      // Save assessment responses to Supabase
       
       // Create submission record
       const submissionData = {
@@ -75,11 +75,11 @@ export function useAssessment() {
         .single();
 
       if (submissionError) {
-        console.error("❌ Submission error details:", submissionError);
+        // Error creating submission
         throw submissionError;
       }
       
-      console.log("✅ Submission created, processing", Object.keys(responses).length, "answers");
+      // Submission created successfully, now save individual answers
 
       // Save individual answers
       const answers = Object.entries(responses)
@@ -96,7 +96,7 @@ export function useAssessment() {
           value: value // Store the value directly as JSONB can handle any type
         }));
 
-      console.log(`📊 Prepared ${answers.length} answers for insertion:`, answers.slice(0, 3));
+      // Prepared answers for database insertion
 
       if (answers.length > 0) {
         const { error: answersError } = await supabase
@@ -104,13 +104,13 @@ export function useAssessment() {
           .insert(answers);
 
         if (answersError) {
-          console.error("❌ Answers insertion error:", answersError);
+          // Error inserting answers
           throw answersError;
         }
         
-        console.log("✅ All answers inserted successfully");
+        // All answers inserted successfully
       } else {
-        console.warn("⚠️ No answers to save - responses were empty or filtered out");
+        // No valid answers to save
       }
 
       toast({
@@ -120,10 +120,7 @@ export function useAssessment() {
 
       return submission.id;
     } catch (err: any) {
-      console.error("🚨 Complete saveAssessment error:", err);
-      console.error("Error message:", err?.message);
-      console.error("Error details:", err?.details);
-      console.error("Error hint:", err?.hint);
+      // Error occurred during assessment save process
       
       const errorMessage = err.message || 'Failed to save assessment';
       setError(errorMessage);
