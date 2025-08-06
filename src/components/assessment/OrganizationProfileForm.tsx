@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Question } from "@/types/assessment";
+import { getLocalizedQuestion } from "@/utils/assessmentUtils";
 
 interface OrganizationProfileFormProps {
   questions: Question[];
@@ -23,8 +25,13 @@ export function OrganizationProfileForm({
   responses,
   onChange,
 }: OrganizationProfileFormProps) {
-  // Helper to find question by ID
-  const findQuestion = (id: string) => questions.find(q => q.id === id);
+  const { t, i18n } = useTranslation();
+  
+  // Helper to find question by ID and localize it
+  const findQuestion = (id: string) => {
+    const question = questions.find(q => q.id === id);
+    return question ? getLocalizedQuestion(question, i18n.language) : undefined;
+  };
 
   // Helper to render field label with required asterisk
   const renderLabel = (question: Question) => (
@@ -55,7 +62,7 @@ export function OrganizationProfileForm({
       {/* Basic Information Section */}
       <Card className="p-6 border border-border/50">
         <h3 className="text-lg font-semibold mb-6 pb-2 border-b border-border/30">
-          Basic Information
+          {t("form.basicInformation")}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -68,7 +75,7 @@ export function OrganizationProfileForm({
                   type="text"
                   value={responses[orgName.id] || ""}
                   onChange={(e) => onChange(orgName.id, e.target.value)}
-                  placeholder="Enter your organization name"
+                  placeholder={t("form.enterOrgName")}
                   className="focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 {renderHelper(orgName)}
@@ -84,7 +91,7 @@ export function OrganizationProfileForm({
                   type="text"
                   value={responses[fullName.id] || ""}
                   onChange={(e) => onChange(fullName.id, e.target.value)}
-                  placeholder="Enter your full name"
+                  placeholder={t("form.enterFullName")}
                   className="focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 {renderHelper(fullName)}
@@ -101,7 +108,7 @@ export function OrganizationProfileForm({
                   type="email"
                   value={responses[email.id] || ""}
                   onChange={(e) => onChange(email.id, e.target.value)}
-                  placeholder="your.name@company.com"
+                  placeholder={t("form.enterEmail")}
                   className="focus-visible:ring-2 focus-visible:ring-primary/20"
                 />
                 {renderHelper(email)}
@@ -118,7 +125,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(role.id, value)}
                 >
                   <SelectTrigger className="focus-visible:ring-2 focus-visible:ring-primary/20 bg-background border border-border">
-                    <SelectValue placeholder="Select your primary role..." />
+                    <SelectValue placeholder={t("form.selectRole")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
                     {role.options?.map((opt) => {
@@ -151,7 +158,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(industry.id, value)}
                 >
                   <SelectTrigger className="focus-visible:ring-2 focus-visible:ring-primary/20 bg-background border border-border">
-                    <SelectValue placeholder="Select your industry..." />
+                    <SelectValue placeholder={t("form.selectIndustry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
                     {industry.options?.map((opt) => {
@@ -183,7 +190,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(country.id, value)}
                 >
                   <SelectTrigger className="focus-visible:ring-2 focus-visible:ring-primary/20 bg-background border border-border">
-                    <SelectValue placeholder="Select your country..." />
+                    <SelectValue placeholder={t("form.selectCountry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
                     {country.options?.map((opt) => {
@@ -211,7 +218,7 @@ export function OrganizationProfileForm({
       {/* Organization Details Section */}
       <Card className="p-6 border border-border/50">
         <h3 className="text-lg font-semibold mb-6 pb-2 border-b border-border/30">
-          Organization Details
+          {t("form.organizationDetails")}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

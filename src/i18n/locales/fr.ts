@@ -68,6 +68,7 @@ export const frResources = {
       consent: {
         accept: "J'accepte les conditions de traitement des données",
         required: "Vous devez accepter pour continuer",
+        dataProcessing: "En continuant, vous acceptez le traitement de vos données pour ce rapport de préparation et les communications associées.",
       },
       additionalQuestions: "Questions supplémentaires",
       thankYou: {
@@ -95,6 +96,14 @@ export const frResources = {
       other: "Autre",
       specifyOther: "Veuillez préciser",
       preferNotToSay: "Préfère ne pas dire",
+      basicInformation: "Informations de base",
+      organizationDetails: "Détails de l'organisation",
+      enterOrgName: "Saisissez le nom de votre organisation",
+      enterFullName: "Saisissez votre nom complet",
+      enterEmail: "votre.nom@entreprise.com",
+      selectRole: "Sélectionnez votre rôle principal...",
+      selectIndustry: "Sélectionnez votre secteur...",
+      selectCountry: "Sélectionnez votre pays...",
     },
 
     // Notifications and messages
