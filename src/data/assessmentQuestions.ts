@@ -72,7 +72,7 @@ try {
     throw new Error('Invalid YAML structure');
   }
 } catch (error) {
-  console.error('Failed to load assessment YAML:', error);
+  // Failed to load assessment YAML
   // Fallback to minimal schema to prevent app crash
   schema = {
     meta: { title: "Assessment unavailable" },
