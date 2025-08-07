@@ -106,29 +106,21 @@ export async function syncQuestionsToSupabase() {
       });
     });
 
-    // Delete existing questions for this assessment
-    const { error: deleteError } = await supabase
-      .from('questions')
-      .delete()
-      .eq('assessment_id', 'ai_readiness_v2');
-
-    if (deleteError) {
-      console.error("Error deleting existing questions:", deleteError);
-      return { success: false, error: deleteError };
-    }
-
-    // Insert new questions in batches
+    // Upsert questions in batches (INSERT ON CONFLICT UPDATE)
     const batchSize = 50;
     for (let i = 0; i < questionsToInsert.length; i += batchSize) {
       const batch = questionsToInsert.slice(i, i + batchSize);
       
-      const { error: insertError } = await supabase
+      const { error: upsertError } = await supabase
         .from('questions')
-        .insert(batch);
+        .upsert(batch, { 
+          onConflict: 'id',
+          ignoreDuplicates: false 
+        });
 
-      if (insertError) {
-        console.error(`Error inserting questions batch ${i / batchSize + 1}:`, insertError);
-        return { success: false, error: insertError };
+      if (upsertError) {
+        console.error(`Error upserting questions batch ${i / batchSize + 1}:`, upsertError);
+        return { success: false, error: upsertError };
       }
     }
 
@@ -156,25 +148,17 @@ export async function syncSectionsToSupabase() {
       pillar_score: section.pillar_score || null,
     }));
 
-    // Delete existing sections for this assessment
-    const { error: deleteError } = await supabase
+    // Upsert sections (INSERT ON CONFLICT UPDATE)
+    const { error: upsertError } = await supabase
       .from('sections')
-      .delete()
-      .eq('assessment_id', 'ai_readiness_v2');
+      .upsert(sectionsToInsert, { 
+        onConflict: 'id',
+        ignoreDuplicates: false 
+      });
 
-    if (deleteError) {
-      console.error("Error deleting existing sections:", deleteError);
-      return { success: false, error: deleteError };
-    }
-
-    // Insert new sections
-    const { error: insertError } = await supabase
-      .from('sections')
-      .insert(sectionsToInsert);
-
-    if (insertError) {
-      console.error("Error inserting sections:", insertError);
-      return { success: false, error: insertError };
+    if (upsertError) {
+      console.error("Error upserting sections:", upsertError);
+      return { success: false, error: upsertError };
     }
 
     console.log(`Successfully synced ${sectionsToInsert.length} sections to Supabase`);
