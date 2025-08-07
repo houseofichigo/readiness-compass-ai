@@ -39,7 +39,12 @@ export function useAssessment() {
         });
 
       if (subErr) {
-        console.error('[saveAssessment] Submission insert failed:', subErr);
+        console.error('[saveAssessment] Submission insert failed:', {
+          message: subErr.message,
+          code: (subErr as any).code,
+          details: (subErr as any).details,
+          hint: (subErr as any).hint,
+        });
         setError(subErr.message || 'Failed to create submission');
         toast.error('Failed to create submission');
         return null;
@@ -68,8 +73,14 @@ export function useAssessment() {
           .insert(answers);
 
         if (ansErr) {
-          console.error('[saveAssessment] Answers insert failed:', ansErr, { firstAnswer: answers[0] });
-          setError(ansErr.message);
+          console.error('[saveAssessment] Answers insert failed:', {
+            message: ansErr.message,
+            code: (ansErr as any).code,
+            details: (ansErr as any).details,
+            hint: (ansErr as any).hint,
+            firstAnswer: answers[0],
+          });
+          setError(ansErr.message || 'Failed to save answers');
           toast.error('Failed to save answers');
           return null;
         }

@@ -107,23 +107,28 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     ? null
     : getLocalizedSection(assessmentSections[currentPage], i18n.language);
 
-  const scrollToTop = () => {
-    const el = document.getElementById('assessment-top');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  const scrollToTopRaf = () => {
+    // Next-tick scroll to ensure we're at the very top of new sections/add-ons
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = document.getElementById('assessment-top');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
   };
 
   // Ensure scroll-to-top after section changes (post-render)
   useEffect(() => {
-    scrollToTop();
+    scrollToTopRaf();
   }, [currentPage]);
 
   const goPrev = () => {
     setCurrentPage(p => Math.max(0, p - 1));
-    scrollToTop();
+    scrollToTopRaf();
   };
   const goNextPage = () => {
     if (isLastSection && hasAddOns) {
@@ -131,7 +136,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     } else {
       setCurrentPage(p => Math.min(assessmentSections.length, p + 1));
     }
-    scrollToTop();
+    scrollToTopRaf();
   };
 
   const completeAssessment = async () => {
