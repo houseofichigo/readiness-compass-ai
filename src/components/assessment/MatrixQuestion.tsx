@@ -1,8 +1,8 @@
-import { QuestionOption } from "@/types/assessment";
+import { QuestionChoice } from "@/types/assessment";
 
 interface MatrixQuestionProps {
-  rows: QuestionOption[];
-  columns: QuestionOption[];
+  rows: QuestionChoice[];
+  columns: QuestionChoice[];
   value: Record<string, string>;
   onChange: (value: Record<string, string>) => void;
 }

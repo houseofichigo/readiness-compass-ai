@@ -1,17 +1,17 @@
-import { QuestionOption } from "@/types/assessment";
+import { QuestionChoice } from "@/types/assessment";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
 interface DragDropQuestionRankProps {
-  options: QuestionOption[];
+  choices: QuestionChoice[];
   value: string[];
   onChange: (value: string[]) => void;
   maxRank: number;
 }
 
 export function DragDropQuestionRank({ 
-  options, 
+  choices, 
   value, 
   onChange, 
   maxRank 
@@ -69,35 +69,30 @@ export function DragDropQuestionRank({
       </div>
       
       <div className="grid gap-3">
-        {options.map((option) => {
-          const rank = getRankPosition(option.value);
-          const isSelected = rank !== null;
-          
-          return (
-            <Card
-              key={`option-${option.value}`}
-              className={`p-4 cursor-pointer transition-all duration-200 ${
-                isSelected 
-                  ? "bg-primary/10 border-primary shadow-md" 
-                  : "hover:bg-muted/50 hover:border-border"
-              }`}
-              draggable={isSelected}
-              onDragStart={(e) => isSelected && handleDragStart(e, option.value)}
-              onDragOver={isSelected ? handleDragOver : undefined}
-              onDrop={(e) => isSelected && handleDrop(e, value.length)}
-              onClick={() => handleOptionClick(option.value)}
-            >
-              <div className="flex items-center justify-between">
-                <span className="font-medium">{option.label}</span>
-                {isSelected && (
-                  <Badge variant="default" className="bg-primary">
-                    #{rank}
-                  </Badge>
-                )}
-              </div>
-            </Card>
-          );
-        })}
+        {choices.map((choice) => (
+          <Card
+            key={`choice-${choice.value}`}
+            className={`p-4 cursor-pointer transition-all duration-200 ${
+              getRankPosition(choice.value) !== null 
+                ? "bg-primary/10 border-primary shadow-md" 
+                : "hover:bg-muted/50 hover:border-border"
+            }`}
+            draggable={getRankPosition(choice.value) !== null}
+            onDragStart={(e) => getRankPosition(choice.value) !== null && handleDragStart(e, choice.value)}
+            onDragOver={getRankPosition(choice.value) !== null ? handleDragOver : undefined}
+            onDrop={(e) => getRankPosition(choice.value) !== null && handleDrop(e, value.length)}
+            onClick={() => handleOptionClick(choice.value)}
+          >
+            <div className="flex items-center justify-between">
+              <span className="font-medium">{choice.label}</span>
+              {getRankPosition(choice.value) !== null && (
+                <Badge variant="default" className="bg-primary">
+                  #{getRankPosition(choice.value)}
+                </Badge>
+              )}
+            </div>
+          </Card>
+        ))}
       </div>
       
       {value.length > 0 && (
@@ -105,11 +100,11 @@ export function DragDropQuestionRank({
           <h4 className="font-medium mb-2">Your Rankings:</h4>
           <div className="space-y-1">
             {value.map((item, index) => {
-              const option = options.find(opt => opt.value === item);
+              const choice = choices.find(opt => opt.value === item);
               return (
                 <div key={`ranking-${item}`} className="flex items-center gap-2">
                   <Badge variant="outline">#{index + 1}</Badge>
-                  <span>{option?.label}</span>
+                  <span>{choice?.label}</span>
                 </div>
               );
             })}

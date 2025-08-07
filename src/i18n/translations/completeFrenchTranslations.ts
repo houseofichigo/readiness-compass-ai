@@ -1,10 +1,10 @@
-import { QuestionOption } from '@/types/assessment';
+import { QuestionChoice } from '@/types/assessment';
 
 interface TranslationEntry {
   text?: string;
   helper?: string;
   purpose?: string;
-  options?: QuestionOption[];
+  choices?: QuestionChoice[];
 }
 
 export const frenchTranslations: Record<string, TranslationEntry> = {
@@ -29,7 +29,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   M3: {
     text: "Quel est votre rôle principal ?",
     helper: "Cela détermine votre filière de recommandations",
-    options: [
+    choices: [
       { value: "Founder/CEO", label: "Fondateur·rice / CEO" },
       { value: "Executive", label: "Cadre dirigeant·e" },
       { value: "Marketing Lead", label: "Responsable Marketing" },
@@ -57,7 +57,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   M4_industry: {
     text: "Quel est votre secteur d'activité et sous-secteur ?",
-    options: [
+    choices: [
       { value: "Agriculture, forestry and fishing", label: "Agriculture, forêt et pêche" },
       { value: "Mining and quarrying", label: "Extraction minière et carrières" },
       { value: "Utilities (electricity, gas, water, waste)", label: "Services publics (électricité, gaz, eau, déchets)" },
@@ -81,7 +81,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   M5_country: {
     text: "Dans quel pays êtes-vous basé·e ?",
-    options: [
+    choices: [
       { value: "Afghanistan", label: "Afghanistan" },
       { value: "Albania", label: "Albanie" },
       { value: "Algeria", label: "Algérie" },
@@ -278,7 +278,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   M6_size: {
     text: "Taille de l'entreprise (équivalent temps plein – ETP)",
-    options: [
+    choices: [
       { value: "1–9", label: "1–9" },
       { value: "10–49", label: "10–49" },
       { value: "50–249", label: "50–249" },
@@ -289,7 +289,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   M7_revenue: {
     text: "Quel est votre chiffre d'affaires annuel ?",
-    options: [
+    choices: [
       { value: "< €250 k", label: "< 250 000 €" },
       { value: "€250 k–1 M", label: "250 000–1 M €" },
       { value: "€1 M–€5 M", label: "1–5 M €" },
@@ -304,7 +304,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   S1: {
     text: "Combien de cas d'usage IA avez-vous identifiés pour mise en œuvre dans les 12 prochains mois ?",
     helper: "Définit votre maturité de planification et votre niveau de préparation",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Ideas only", label: "Idées seulement" },
       { value: "1–2 documented use cases", label: "1–2 cas documentés" },
@@ -315,7 +315,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   S2: {
     text: "Comment décidez-vous quelles opportunités IA prioriser ?",
     helper: "Sélectionnez le processus que vous utilisez actuellement",
-    options: [
+    choices: [
       { value: "No formal process", label: "Pas de processus formel" },
       { value: "Ad-hoc based on perceived value", label: "Au cas par cas selon la valeur perçue" },
       { value: "Impact × Effort matrix", label: "Matrice Impact × Effort" },
@@ -326,7 +326,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S3: {
     text: "Dans quelle mesure vos indicateurs IA sont-ils intégrés aux KPI ou OKR de l'entreprise ?",
-    options: [
+    choices: [
       { value: "No AI KPI/OKRs defined", label: "Pas d'IA KPI/OKR définis" },
       { value: "KPIs written but not tracked", label: "KPI rédigés mais non suivis" },
       { value: "KPIs tracked but not linked", label: "KPI suivis mais non reliés" },
@@ -337,7 +337,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   S4: {
     text: "Comment évaluez-vous le ROI de vos projets IA ?",
     helper: "Choisissez la méthode conforme à votre pratique actuelle",
-    options: [
+    choices: [
       { value: "No ROI estimation", label: "Pas d'estimation de ROI" },
       { value: "Rough empirical estimates", label: "Estimations empiriques approximatives" },
       { value: "Simple cost-benefit analysis", label: "Analyse coût – bénéfice simplifiée" },
@@ -347,7 +347,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S5: {
     text: "Quel est votre délai typique de l'idée à un impact IA mesurable ?",
-    options: [
+    choices: [
       { value: "12+ months", label: "Plus de 12 mois" },
       { value: "6–12 months", label: "6 – 12 mois" },
       { value: "3–6 months", label: "3 – 6 mois" },
@@ -357,7 +357,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S6: {
     text: "Comment suivez-vous les avancées IA de vos concurrents et du secteur ?",
-    options: [
+    choices: [
       { value: "No tracking", label: "Non suivi" },
       { value: "Ad-hoc research", label: "Recherches ponctuelles" },
       { value: "Annual review", label: "Revue annuelle" },
@@ -367,7 +367,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S7: {
     text: "Classez vos quatre principaux objectifs stratégiques pour les initiatives IA ?",
-    options: [
+    choices: [
       { value: "Productivity", label: "Productivité" },
       { value: "Cost reduction", label: "Réduction des coûts" },
       { value: "Revenue growth", label: "Croissance du chiffre d'affaires" },
@@ -379,7 +379,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S8: {
     text: "Quel est le niveau d'adhésion de votre comité de direction à la stratégie IA ?",
-    options: [
+    choices: [
       { value: "No buy-in", label: "Pas d'adhésion" },
       { value: "Ad-hoc discussions", label: "Discussions ponctuelles" },
       { value: "Interest without action", label: "Intérêt sans action" },
@@ -389,7 +389,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S9: {
     text: "Quelles équipes participent à la définition des cas d'usage IA ?",
-    options: [
+    choices: [
       { value: "Executive leadership", label: "Direction exécutive" },
       { value: "Product and marketing", label: "Produit et marketing" },
       { value: "Operations", label: "Opérations" },
@@ -402,7 +402,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S10: {
     text: "Dans quelle mesure votre organisation est-elle prête à gérer le changement induit par l'IA ?",
-    options: [
+    choices: [
       { value: "Not prepared", label: "Pas prête" },
       { value: "Ad-hoc preparation", label: "Préparation ad hoc" },
       { value: "Formal process for some projects", label: "Processus formel pour certains projets" },
@@ -412,7 +412,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S11: {
     text: "Dans quelle mesure vos objectifs IA sont-ils assortis d'indicateurs clairs ?",
-    options: [
+    choices: [
       { value: "No clear goals", label: "Pas d'objectifs clairs" },
       { value: "Goals defined without metrics", label: "Objectifs définis sans indicateurs" },
       { value: "Some metrics tracked", label: "Quelques indicateurs suivis" },
@@ -422,7 +422,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   S12: {
     text: "Quelle est votre approche pour piloter et déployer vos projets IA ?",
-    options: [
+    choices: [
       { value: "POC only with strict controls", label: "POC uniquement avec contrôles stricts" },
       { value: "Small pilots with gated access", label: "Petits pilotes en accès contrôlé" },
       { value: "Case-by-case security review", label: "Revue sécurité au cas par cas" },
@@ -434,7 +434,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   // Budget & Compliance (Section 2)
   F1: {
     text: "Quel est votre budget mensuel pour les initiatives IA et données ?",
-    options: [
+    choices: [
       { value: "< €100", label: "< 100 €" },
       { value: "€100–500", label: "100 – 500 €" },
       { value: "€500–2,000", label: "500 – 2 000 €" },
@@ -445,7 +445,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   F3: {
     text: "Combien de temps pouvez-vous financer vos efforts IA sans nouvel apport ?",
     helper: "Indiquez votre trésorerie disponible pour vos projets IA",
-    options: [
+    choices: [
       { value: "< 3 months", label: "Moins de 3 mois" },
       { value: "3–6 months", label: "3 – 6 mois" },
       { value: "6–12 months", label: "6 – 12 mois" },
@@ -455,7 +455,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   F4: {
     text: "Quel est le niveau de soutien de votre conseil ou de vos investisseurs pour l'IA ?",
-    options: [
+    choices: [
       { value: "No support", label: "Pas de soutien" },
       { value: "Discussion without commitment", label: "Discussion sans engagement" },
       { value: "Open to AI initiatives", label: "Ouverts aux initiatives IA" },
@@ -466,7 +466,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   F5: {
     text: "Quels cadres réglementaires ou de sécurité supplémentaires s'appliquent à votre organisation ?",
     helper: "Le RGPD et le règlement IA européen s'appliquent par défaut",
-    options: [
+    choices: [
       { value: "MiFID II / MDR – Finance & health (EU)", label: "MiFID II / MDR – Finance & santé (UE)" },
       { value: "ISO 27001 – Information security", label: "ISO 27001 – Sécurité de l'information" },
       { value: "PCI-DSS – Payment security", label: "PCI-DSS – Sécurité des paiements" },
@@ -480,7 +480,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   F6: {
     text: "Quel niveau de partenariats stratégiques avez-vous pour l'IA ?",
     helper: "Choisissez l'activité partenariale IA actuelle",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Exploratory discussions", label: "Discussions exploratoires" },
       { value: "One active partnership", label: "Un partenariat actif" },
@@ -490,7 +490,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   F7: {
     text: "Quelle part de votre budget IA est consacrée à l'éthique et à la lutte contre les biais ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucune" },
       { value: "Planned next year", label: "Prévue l'an prochain" },
       { value: "< 5%", label: "< 5 %" },
@@ -503,7 +503,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   D1: {
     text: "Où sont principalement stockées vos données critiques ?",
     helper: "Ces données pilotent vos opérations, décisions et conformité",
-    options: [
+    choices: [
       { value: "Files and spreadsheets (Excel, Google Sheets, local files)", label: "Fichiers et tableurs (Excel, Google Sheets, fichiers locaux)" },
       { value: "Databases (SQL, NoSQL, data warehouses)", label: "Bases de données (SQL, NoSQL, entrepôts de données)" },
       { value: "Cloud and SaaS (Google Drive, Salesforce, HubSpot)", label: "Cloud et SaaS (Google Drive, Salesforce, HubSpot)" },
@@ -513,7 +513,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   D2: {
     text: "Quel volume de données générez-vous ou collectez-vous chaque mois ?",
-    options: [
+    choices: [
       { value: "Don't know", label: "Ne sait pas" },
       { value: "< 1 GB", label: "< 1 Go" },
       { value: "1–10 GB", label: "1–10 Go" },
@@ -523,7 +523,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   D3: {
     text: "Dans quelle mesure votre gestion des données (structure, outils et traçabilité) est-elle mature ?",
-    options: [
+    choices: [
       { value: "No standards or visibility", label: "Pas de normes ni de visibilité" },
       { value: "Basic naming conventions and partial documentation", label: "Conventions de nommage basiques et documentation partielle" },
       { value: "Defined standards with manual processes", label: "Normes définies avec processus manuels" },
@@ -533,7 +533,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   D4: {
     text: "Quel est votre niveau de confiance dans la qualité et l'actualité de vos données critiques ?",
-    options: [
+    choices: [
       { value: "Low: data often stale or unreliable", label: "Faible : données souvent obsolètes ou peu fiables" },
       { value: "Medium: manual quality checks", label: "Moyen : vérifications manuelles pour la qualité" },
       { value: "High: periodic data quality testing", label: "Élevé : tests périodiques de qualité des données" },
@@ -544,7 +544,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   D5: {
     text: "Quelles mesures de sécurité protègent votre infrastructure de données ?",
     helper: "Chiffrement, contrôle d'accès et surveillance",
-    options: [
+    choices: [
       { value: "Encryption at rest (AWS S3, Azure Blob)", label: "Chiffrement au repos (AWS S3, Azure Blob)" },
       { value: "TLS/HTTPS in transit", label: "TLS/HTTPS en transit" },
       { value: "Role-based access controls (IAM, RBAC)", label: "Contrôles d'accès par rôle (IAM, RBAC)" },
@@ -559,7 +559,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   D6: {
     text: "Comment gérez-vous la gouvernance et le nettoyage des données ?",
-    options: [
+    choices: [
       { value: "No owner defined", label: "Pas de responsable défini" },
       { value: "Occasional clean-ups", label: "Nettoyages ponctuels" },
       { value: "Assigned owner with periodic review", label: "Responsable désigné avec révisions périodiques" },
@@ -570,7 +570,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   D7: {
     text: "Quel est votre niveau de préparation pour un audit RGPD ou loi IA européenne ?",
     helper: "Indiquez votre préparation aux audits externes ou internes",
-    options: [
+    choices: [
       { value: "None – no audit readiness", label: "Aucune préparation" },
       { value: "Basic logs only", label: "Journaux basiques uniquement" },
       { value: "Audit trail for critical systems", label: "Traçabilité pour systèmes critiques" },
@@ -581,7 +581,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   D8: {
     text: "Quel est le niveau de maturité de votre processus d'étiquetage et d'annotation des données ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Ad-hoc manual labeling", label: "Étiquetage manuel ponctuel" },
       { value: "Defined guidelines", label: "Directives définies" },
@@ -591,7 +591,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   D9: {
     text: "Utilisez-vous des données synthétiques ou tierces pour enrichir vos jeux de données ?",
-    options: [
+    choices: [
       { value: "No", label: "Non" },
       { value: "Exploring", label: "En phase d'exploration" },
       { value: "Limited pilot projects", label: "Projets pilotes limités" },
@@ -602,7 +602,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   D10: {
     text: "Quel est le niveau de maturité de vos politiques d'éthique IA et de confidentialité des données ?",
     helper: "Ex. : « Politiques + formation et contrôle » = guides documentés et ateliers",
-    options: [
+    choices: [
       { value: "No formal policies", label: "Pas de politique formelle" },
       { value: "High-level principles only", label: "Principes généraux uniquement" },
       { value: "Documented guidelines (but no training or oversight)", label: "Directives documentées sans formation" },
@@ -618,7 +618,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   T1: {
     text: "Dans quelle mesure vos outils et systèmes sont-ils connectés ?",
-    options: [
+    choices: [
       { value: "Isolated – no connections", label: "Isolés – aucune connexion" },
       { value: "Manual – CSV import/export", label: "Manuel – import/export CSV" },
       { value: "Batch – scheduled syncing", label: "Batch – synchronisations programmées" },
@@ -628,7 +628,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   T2: {
     text: "À quelle fréquence vos connexions de données échouent-elles ou posent-elles problème ?",
-    options: [
+    choices: [
       { value: "Weekly – frequent breakages", label: "Hebdomadaire – pannes fréquentes" },
       { value: "Monthly – occasional errors", label: "Mensuelle – erreurs occasionnelles" },
       { value: "Quarterly – rare issues", label: "Trimestrielle – rares problèmes" },
@@ -638,7 +638,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   T3: {
     text: "Qui est responsable de la gestion et de la maintenance de vos intégrations système ?",
-    options: [
+    choices: [
       { value: "No owner defined", label: "Pas de responsable défini" },
       { value: "External agency or freelancer", label: "Agence ou freelance externe" },
       { value: "Ops/Product team", label: "Équipe Ops/Produit" },
@@ -649,7 +649,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   T4: {
     text: "Comment êtes-vous connectés aux services IA externes et aux LLM ?",
     helper: "Ex. : ChatGPT, Claude, Mistral, Copilot ou LLM interne",
-    options: [
+    choices: [
       { value: "Forbidden access to external LLMs", label: "Accès interdit aux LLM externes" },
       { value: "Exploratory testing only", label: "Tests exploratoires uniquement" },
       { value: "API pilots", label: "Pilotes API" },
@@ -659,7 +659,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   T5: {
     text: "Quel accès avez-vous aux ressources GPU/TPU ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Colab only", label: "Colab uniquement" },
       { value: "On-demand cloud GPU/TPU", label: "GPU/TPU cloud à la demande" },
@@ -669,7 +669,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   T6: {
     text: "Dans quelle mesure votre architecture technique et data est-elle documentée ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucune" },
       { value: "High-level diagrams", label: "Schémas sommaires" },
       { value: "Critical systems mapped", label: "Systèmes critiques cartographiés" },
@@ -679,7 +679,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   T7: {
     text: "Quel niveau de plan de reprise d'activité avez-vous pour vos données et IA ?",
-    options: [
+    choices: [
       { value: "No plan", label: "Aucun plan" },
       { value: "Backups only", label: "Sauvegardes uniquement" },
       { value: "Manual failover", label: "Basculage manuel" },
@@ -690,7 +690,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   T8: {
     text: "Quels outils low-code ou no-code utilisez-vous pour l'automatisation ?",
     helper: "Sélectionnez tous les outils ou choisissez « Aucun »",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Zapier", label: "Zapier" },
       { value: "Make", label: "Make" },
@@ -708,7 +708,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   A1: {
     text: "Quelles trois tâches bénéficieraient le plus de l'automatisation ?",
     helper: "Classez vos priorités",
-    options: [
+    choices: [
       { value: "Reporting", label: "Reporting" },
       { value: "Scheduling", label: "Planification" },
       { value: "Data entry", label: "Saisie de données" },
@@ -722,7 +722,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   A2: {
     text: "Quel est le niveau de maturité de vos efforts d'automatisation ?",
     helper: "De l'absence d'automatisation à l'autonomie complète",
-    options: [
+    choices: [
       { value: "0 – no automation", label: "0 – aucune automatisation" },
       { value: "1 – ad-hoc scripts", label: "1 – scripts ad hoc" },
       { value: "2 – basic tools with supervision", label: "2 – outils basiques avec supervision" },
@@ -734,7 +734,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   A3: {
     text: "Quel est le statut actuel des agents IA dans vos opérations ?",
     helper: "Permet d'orienter la formation dédiée",
-    options: [
+    choices: [
       { value: "No agents", label: "Aucun agent" },
       { value: "Prototype", label: "Prototype" },
       { value: "One agent in production", label: "Un agent en production" },
@@ -745,7 +745,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   A4: {
     text: "Pour quelles tâches envisagez-vous une automatisation par agents IA ?",
     helper: "Sélectionnez tout ce qui s'applique",
-    options: [
+    choices: [
       { value: "Customer support", label: "Support client" },
       { value: "Report generation", label: "Génération de rapports" },
       { value: "Email drafting", label: "Rédaction d'e-mails" },
@@ -757,7 +757,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   A5: {
     text: "Quel niveau d'autonomie souhaitez-vous pour vos agents IA ?",
-    options: [
+    choices: [
       { value: "Suggestions only", label: "Suggestions uniquement" },
       { value: "Human approval required", label: "Approbation humaine requise" },
       { value: "Semi-automated", label: "Semi-automatisé" },
@@ -766,7 +766,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   A6: {
     text: "Comment surveillez-vous et alertez-vous vos processus automatisés ?",
-    options: [
+    choices: [
       { value: "No monitoring", label: "Pas de surveillance" },
       { value: "Manual checks", label: "Contrôles manuels" },
       { value: "KPI dashboards", label: "Tableaux de bord KPI" },
@@ -777,7 +777,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   A7: {
     text: "Quels sont les principaux freins à l'automatisation et au déploiement d'agents IA ?",
     helper: "Sélectionnez tout ce qui s'applique",
-    options: [
+    choices: [
       { value: "Data silos", label: "Silos de données" },
       { value: "Lack of technical resources", label: "Manque de ressources techniques" },
       { value: "Insufficient buy-in", label: "Adhésion insuffisante" },
@@ -790,7 +790,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   A8: {
     text: "Quelle interface préférez-vous pour interagir avec vos agents IA ?",
     helper: "Permet de personnaliser l'interface",
-    options: [
+    choices: [
       { value: "Chatbot (Slack/Teams)", label: "Chatbot (Slack/Teams)" },
       { value: "Embedded widget", label: "Widget intégré" },
       { value: "Dashboard", label: "Tableau de bord" },
@@ -802,7 +802,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   A9: {
     text: "Quels processus de gouvernance appliquez-vous à vos agents IA ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Ad-hoc checks", label: "Vérifications ponctuelles" },
       { value: "Formal process", label: "Processus formel" },
@@ -812,7 +812,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   A10: {
     text: "Quelle stratégie de reprise existe en cas d'échec des automatisations ou agents IA ?",
-    options: [
+    choices: [
       { value: "No plan", label: "Aucun plan" },
       { value: "Manual rollback", label: "Rollback manuel" },
       { value: "Predefined fallback procedures", label: "Procédures de bascule prédéfinies" },
@@ -822,7 +822,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   A11: {
     text: "Comment suivez-vous la qualité des résultats de vos agents IA ?",
-    options: [
+    choices: [
       { value: "No tracking", label: "Pas de suivi" },
       { value: "Manual spot checks", label: "Contrôles manuels ponctuels" },
       { value: "Pre-deployment testing", label: "Tests avant déploiement" },
@@ -834,7 +834,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   // Team Capability & Culture (Section 6)
   C1: {
     text: "À quelle fréquence utilisez-vous des outils IA au quotidien ?",
-    options: [
+    choices: [
       { value: "Never", label: "Jamais" },
       { value: "Rarely", label: "Rarement" },
       { value: "Monthly", label: "Mensuel" },
@@ -844,7 +844,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C2: {
     text: "Quel est votre niveau de confiance pour ces compétences en rédaction de prompts ?",
-    options: [
+    choices: [
       { value: "Basic prompt writing", label: "Rédaction de prompts basiques" },
       { value: "Using few-shot examples", label: "Utilisation d'exemples few-shot" },
       { value: "Structured prompt formatting", label: "Formatage de prompts structurés" },
@@ -853,7 +853,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C3: {
     text: "Comment partagez-vous vos apprentissages IA en interne ?",
-    options: [
+    choices: [
       { value: "No sharing", label: "Aucun partage" },
       { value: "Informal tips", label: "Astuces informelles" },
       { value: "Dedicated chat channel", label: "Canal de chat dédié" },
@@ -863,7 +863,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C3a: {
     text: "Quels sujets de formation IA priorisez-vous ? (Classez top 3)",
-    options: [
+    choices: [
       { value: "Prompt engineering", label: "Ingénierie de prompt" },
       { value: "AI tool mastery", label: "Maîtrise des outils IA" },
       { value: "Data literacy", label: "Littératie des données" },
@@ -875,7 +875,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C4: {
     text: "Quel budget annuel par personne allouez-vous à la montée en compétence IA ?",
-    options: [
+    choices: [
       { value: "€0", label: "0 €" },
       { value: "< €200", label: "< 200 €" },
       { value: "€200–500", label: "200–500 €" },
@@ -885,7 +885,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C5: {
     text: "Combien d'heures par mois pouvez-vous consacrer à la formation IA ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucune" },
       { value: "< 1h", label: "< 1 h" },
       { value: "1–3h", label: "1–3 h" },
@@ -895,7 +895,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C6: {
     text: "Quel format de formation IA préférez-vous ?",
-    options: [
+    choices: [
       { value: "Written guides", label: "Guides écrits" },
       { value: "Short videos", label: "Vidéos courtes" },
       { value: "Live workshops", label: "Ateliers en direct" },
@@ -905,7 +905,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C7: {
     text: "À quelle fréquence faites-vous appel à des experts IA externes ?",
-    options: [
+    choices: [
       { value: "Never", label: "Jamais" },
       { value: "Ad-hoc advice", label: "Conseils ponctuels" },
       { value: "Regular sessions", label: "Séances régulières" },
@@ -915,7 +915,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C8: {
     text: "Qu'est-ce qui freine vos pilotes de projets IA ?",
-    options: [
+    choices: [
       { value: "Limited budget", label: "Budget limité" },
       { value: "Lack of skills", label: "Manque de compétences" },
       { value: "Data silos", label: "Silos de données" },
@@ -926,7 +926,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C9: {
     text: "Quel est votre degré d'ouverture aux pilotes IA ?",
-    options: [
+    choices: [
       { value: "Resistant", label: "Résistant·e" },
       { value: "Cautious", label: "Prudent·e" },
       { value: "Interested", label: "Intéressé·e" },
@@ -936,7 +936,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   C10: {
     text: "À quelle fréquence collaborez-vous inter-fonctions sur l'IA ?",
-    options: [
+    choices: [
       { value: "Never", label: "Jamais" },
       { value: "Occasionally", label: "Occasionnellement" },
       { value: "Quarterly", label: "Trimestriellement" },
@@ -947,7 +947,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   C11: {
     text: "Vous sentez-vous en sécurité pour expérimenter et échouer avec l'IA ?",
     helper: "Petites erreurs (bugs, sorties erronées) : quel niveau de confort ?",
-    options: [
+    choices: [
       { value: "Not comfortable at all", label: "Pas du tout à l'aise" },
       { value: "Slightly comfortable", label: "Peu à l'aise" },
       { value: "Moderately comfortable", label: "Modérément à l'aise" },
@@ -959,7 +959,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   // Governance, Risk & Ethics (Section 7)
   G1: {
     text: "Quel est le niveau de maturité de vos processus de gestion des risques et biais IA ?",
-    options: [
+    choices: [
       { value: "No process", label: "Aucun processus" },
       { value: "Reactive fixes", label: "Corrections réactives" },
       { value: "Pre-deployment testing", label: "Tests avant déploiement" },
@@ -970,7 +970,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   G2: {
     text: "Pouvez-vous expliquer et auditer les décisions de vos modèles IA ?",
     helper: "Traçabilité et journalisation pour audits",
-    options: [
+    choices: [
       { value: "No logging or explanations", label: "Pas de journalisation ni d'explications" },
       { value: "High-risk models only", label: "Modèles à haut risque uniquement" },
       { value: "Audit logs", label: "Journaux d'audit" },
@@ -980,7 +980,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   G3: {
     text: "Dans quelle mesure êtes-vous transparent·e sur l'usage de l'IA auprès des parties prenantes ?",
-    options: [
+    choices: [
       { value: "No communication", label: "Aucune communication" },
       { value: "Mentioned in policies", label: "Mention dans les politiques" },
       { value: "Published docs and FAQs", label: "Docs et FAQ publiés" },
@@ -990,7 +990,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   G4: {
     text: "Quel plan de réponse aux incidents IA appliquez-vous ?",
-    options: [
+    choices: [
       { value: "No plan", label: "Aucun plan" },
       { value: "General IT plan", label: "Plan IT général" },
       { value: "Manual rollback", label: "Rollback manuel" },
@@ -1000,7 +1000,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   G5: {
     text: "Quel niveau de supervision humaine imposez-vous sur l'IA ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucune" },
       { value: "Final review", label: "Revue finale" },
       { value: "Random audits", label: "Vérifications aléatoires" },
@@ -1010,7 +1010,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   G6: {
     text: "Quelle profondeur de confidentialité intégrez-vous dans vos process IA ?",
-    options: [
+    choices: [
       { value: "Basic compliance", label: "Conformité basique" },
       { value: "Enhanced controls", label: "Contrôles renforcés" },
       { value: "Privacy technologies", label: "Technologies de confidentialité" },
@@ -1020,7 +1020,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   G7: {
     text: "Quel est le statut des audits indépendants de vos systèmes IA ?",
-    options: [
+    choices: [
       { value: "No audit", label: "Aucun audit" },
       { value: "Audit planned", label: "Audit planifié" },
       { value: "Audit underway", label: "Audit en cours" },
@@ -1031,7 +1031,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   G8: {
     text: "Où en êtes-vous dans la cartographie des risques IA selon le règlement UE ?",
     helper: "Cartographie = registre des risques IA",
-    options: [
+    choices: [
       { value: "Not aware", label: "Pas conscient·e" },
       { value: "Aware but not mapped", label: "Conscient·e mais non cartographié" },
       { value: "Mapping underway", label: "Cartographie en cours" },
@@ -1041,7 +1041,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   G9: {
     text: "À quelle fréquence testez-vous l'équité de vos modèles IA ?",
-    options: [
+    choices: [
       { value: "Never", label: "Jamais" },
       { value: "Post-incident only", label: "Ponctuellement après incidents" },
       { value: "Before each deployment", label: "Avant chaque déploiement" },
@@ -1052,7 +1052,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   G10: {
     text: "Quel organe de gouvernance supervise l'éthique et la conformité IA ?",
     helper: "Comité, équipe conformité ou experts externes",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Ad-hoc advice", label: "Conseil occasionnel" },
       { value: "Project-by-project review", label: "Revue projet-par-projet" },
@@ -1065,7 +1065,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   P1: {
     text: "Quand prévoyez-vous de déployer vos initiatives IA ?",
     helper: "Détermine l'urgence et le calendrier",
-    options: [
+    choices: [
       { value: "Within 3 months", label: "D'ici 3 mois" },
       { value: "3–6 months", label: "3–6 mois" },
       { value: "6–12 months", label: "6–12 mois" },
@@ -1075,7 +1075,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   P2: {
     text: "Quel niveau de risque acceptez-vous pour vos projets IA ?",
     helper: "Tolérance au risque pour nouvelles expérimentations",
-    options: [
+    choices: [
       { value: "Conservative – pilots first", label: "Conservateur – pilotes d'abord" },
       { value: "Cautious – small tests", label: "Prudent – petits tests" },
       { value: "Balanced – with oversight", label: "Équilibré – supervision" },
@@ -1085,7 +1085,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   P3: {
     text: "Quels indicateurs de succès sont prioritaires pour votre IA ? (Max 3)",
     helper: "Nous adaptons la formation à ces objectifs",
-    options: [
+    choices: [
       { value: "Return on investment", label: "Retour sur investissement" },
       { value: "Cost reduction", label: "Réduction des coûts" },
       { value: "Operational efficiency", label: "Efficacité opérationnelle" },
@@ -1099,7 +1099,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   P4: {
     text: "Quelle stratégie de ressources privilégiez-vous pour vos projets IA ?",
     helper: "Interne vs externe",
-    options: [
+    choices: [
       { value: "Fully internal", label: "Entièrement interne" },
       { value: "Hybrid – internal and external", label: "Hybride – interne et externe" },
       { value: "Fully outsourced", label: "Entièrement externalisé" }
@@ -1108,7 +1108,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   P5: {
     text: "Quelles architectures techniques préférez-vous pour l'IA ?",
     helper: "Guide les ateliers techniques",
-    options: [
+    choices: [
       { value: "Cloud-native", label: "Cloud-native" },
       { value: "Hybrid/on-premise", label: "Hybride/on-premise" },
       { value: "API-first", label: "API-first" },
@@ -1119,7 +1119,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   },
   P6: {
     text: "Quel niveau de support externe attendez-vous pour l'IA ?",
-    options: [
+    choices: [
       { value: "None", label: "Aucun" },
       { value: "Ad-hoc consulting", label: "Consulting ponctuel" },
       { value: "Ongoing advisory", label: "Conseil continu" },
@@ -1130,7 +1130,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   P7: {
     text: "Quel changement organisationnel êtes-vous prêt·e à engager pour l'IA ?",
     helper: "Adapte la formation gestion du changement",
-    options: [
+    choices: [
       { value: "Minimal changes", label: "Modifications minimales" },
       { value: "Minor adjustments", label: "Ajustements mineurs" },
       { value: "Moderate transformation", label: "Transformation modérée" },
@@ -1143,7 +1143,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   T9: {
     text: "Comment déployez-vous et supervisez-vous vos modèles ML en production ?",
     helper: "Garantit fiabilité et détection rapide",
-    options: [
+    choices: [
       { value: "No deployment", label: "Pas de déploiement" },
       { value: "Manual scripts", label: "Scripts manuels" },
       { value: "CI/CD pipeline", label: "Pipeline CI/CD" },
@@ -1154,7 +1154,7 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
   F8: {
     text: "Quels mécanismes utilisez-vous pour les transferts transfrontaliers de données ?",
     helper: "Le RGPD impose un encadrement légal",
-    options: [
+    choices: [
       { value: "No transfers", label: "Pas de transfert" },
       { value: "Ad-hoc contracts", label: "Contrats ad hoc" },
       { value: "Standard contractual clauses", label: "Clauses contractuelles types" },

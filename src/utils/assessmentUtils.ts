@@ -1,4 +1,4 @@
-import { Question, Section, QuestionOption } from '@/types/assessment';
+import { Question, Section, QuestionChoice } from '@/types/assessment';
 import { frenchTranslations } from '@/i18n/translations/completeFrenchTranslations';
 
 export function getLocalizedText(
@@ -20,23 +20,23 @@ export function getLocalizedText(
   return ''; // Fall back to original
 }
 
-export function getLocalizedOptions(
+export function getLocalizedChoices(
   questionId: string,
-  originalOptions: QuestionOption[] | undefined,
+  originalChoices: QuestionChoice[] | undefined,
   language: string = 'en'
-): QuestionOption[] | undefined {
-  if (!originalOptions || language === 'en') {
-    return originalOptions;
+): QuestionChoice[] | undefined {
+  if (!originalChoices || language === 'en') {
+    return originalChoices;
   }
   
   if (language === 'fr') {
     const translation = frenchTranslations[questionId];
-    if (translation && translation.options) {
-      return translation.options as QuestionOption[];
+    if (translation && translation.choices) {
+      return translation.choices as QuestionChoice[];
     }
   }
   
-  return originalOptions;
+  return originalChoices;
 }
 
 export function getLocalizedQuestion(question: Question, language: string = 'en'): Question {
@@ -47,13 +47,13 @@ export function getLocalizedQuestion(question: Question, language: string = 'en'
   if (language === 'fr') {
     const localizedText = getLocalizedText(question.id, 'text', language);
     const localizedHelper = getLocalizedText(question.id, 'helper', language);
-    const localizedOptions = getLocalizedOptions(question.id, question.options, language);
+    const localizedChoices = getLocalizedChoices(question.id, question.choices, language);
     
     return {
       ...question,
       text: localizedText || question.text,
       helper: localizedHelper || question.helper,
-      options: localizedOptions || question.options,
+      choices: localizedChoices || question.choices,
     };
   }
   

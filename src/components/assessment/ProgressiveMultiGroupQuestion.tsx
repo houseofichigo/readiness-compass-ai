@@ -45,7 +45,7 @@ export function ProgressiveMultiGroupQuestion({
   };
 
   const getSelectedCountInGroup = (group: QuestionGroup): number => {
-    return group.options.filter(opt => 
+    return group.choices.filter(opt => 
       value.includes(typeof opt === 'string' ? opt : opt.value)
     ).length;
   };
@@ -58,8 +58,8 @@ export function ProgressiveMultiGroupQuestion({
       return true;
     }
     
-    // Search in options
-    return group.options.some(opt => {
+    // Search in choices
+    return group.choices.some(opt => {
       const optLabel = typeof opt === 'string' ? opt : opt.label;
       return optLabel.toLowerCase().includes(searchTerm.toLowerCase());
     });
@@ -96,8 +96,8 @@ export function ProgressiveMultiGroupQuestion({
           const selectedInGroup = getSelectedCountInGroup(group);
           const isExpanded = expandedGroups.has(group.label);
           
-          // Filter options based on search
-          const filteredOptions = group.options.filter(opt => {
+          // Filter choices based on search
+          const filteredChoices = group.choices.filter(opt => {
             if (!searchTerm) return true;
             const optLabel = typeof opt === 'string' ? opt : opt.label;
             return optLabel.toLowerCase().includes(searchTerm.toLowerCase());
@@ -127,7 +127,7 @@ export function ProgressiveMultiGroupQuestion({
                         </Badge>
                       )}
                       <Badge variant="outline" className="text-xs">
-                        {group.options.length} tools
+                        {group.choices.length} tools
                       </Badge>
                     </div>
                   </div>
@@ -136,28 +136,28 @@ export function ProgressiveMultiGroupQuestion({
                 <CollapsibleContent>
                   <div className="px-4 pb-4 space-y-3 border-t bg-accent/20">
                     <div className="pt-3 space-y-2">
-                       {filteredOptions.map((opt) => {
-                         const optValue = typeof opt === 'string' ? opt : opt.value;
-                         const optLabel = typeof opt === 'string' ? opt : opt.label;
-                         
-                         return (
-                           <div key={`${group.label}-${optValue}`} className="flex items-center space-x-2">
-                             <Checkbox
-                               id={`${group.label}-${optValue}`}
-                               checked={value.includes(optValue)}
-                               onCheckedChange={(checked) => 
-                                 handleOptionChange(optValue, checked as boolean)
-                               }
-                             />
-                             <Label 
-                               htmlFor={`${group.label}-${optValue}`} 
-                               className="font-normal cursor-pointer text-sm"
-                             >
-                               {optLabel}
-                             </Label>
-                           </div>
-                         );
-                       })}
+                       {filteredChoices.map((opt) => {
+                          const optValue = typeof opt === 'string' ? opt : opt.value;
+                          const optLabel = typeof opt === 'string' ? opt : opt.label;
+                          
+                          return (
+                            <div key={`${group.label}-${optValue}`} className="flex items-center space-x-2">
+                              <Checkbox
+                                id={`${group.label}-${optValue}`}
+                                checked={value.includes(optValue)}
+                                onCheckedChange={(checked) => 
+                                  handleOptionChange(optValue, checked as boolean)
+                                }
+                              />
+                              <Label 
+                                htmlFor={`${group.label}-${optValue}`} 
+                                className="font-normal cursor-pointer text-sm"
+                              >
+                                {optLabel}
+                              </Label>
+                            </div>
+                          );
+                        })}
                     </div>
                   </div>
                 </CollapsibleContent>

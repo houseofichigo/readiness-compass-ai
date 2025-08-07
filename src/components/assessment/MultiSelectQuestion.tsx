@@ -1,15 +1,15 @@
-import { QuestionOption } from "@/types/assessment";
+import { QuestionChoice } from "@/types/assessment";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 
 interface MultiSelectQuestionProps {
-  options: QuestionOption[];
+  choices: QuestionChoice[];
   value: string[];
   onChange: (value: string[]) => void;
 }
 
 export function MultiSelectQuestion({ 
-  options, 
+  choices, 
   value, 
   onChange 
 }: MultiSelectQuestionProps) {
@@ -31,20 +31,20 @@ export function MultiSelectQuestion({
         Select all that apply
       </div>
       
-      {options.map((option) => (
-        <div key={option.value} className="flex items-center space-x-2">
+      {choices.map((choice) => (
+        <div key={choice.value} className="flex items-center space-x-2">
           <Checkbox
-            id={option.value}
-            checked={value.includes(option.value)}
+            id={choice.value}
+            checked={value.includes(choice.value)}
             onCheckedChange={(checked) => 
-              handleOptionChange(option.value, checked as boolean)
+              handleOptionChange(choice.value, checked as boolean)
             }
           />
           <Label 
-            htmlFor={option.value} 
+            htmlFor={choice.value} 
             className="font-normal cursor-pointer text-sm"
           >
-            {option.label}
+            {choice.label}
           </Label>
         </div>
       ))}
@@ -54,8 +54,8 @@ export function MultiSelectQuestion({
           <div className="text-sm font-medium mb-1">Selected:</div>
           <div className="text-sm text-muted-foreground">
             {value.map(item => {
-              const option = options.find(opt => opt.value === item);
-              return option?.label;
+              const choice = choices.find(opt => opt.value === item);
+              return choice?.label;
             }).join(", ")}
           </div>
         </div>

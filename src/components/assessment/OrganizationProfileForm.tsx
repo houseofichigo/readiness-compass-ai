@@ -124,7 +124,7 @@ export function OrganizationProfileForm({
           </div>
           
           <div className="space-y-2">
-            {role && role.options ? (
+            {role && role.choices ? (
               <>
                 {renderLabel(role)}
                 <Select 
@@ -135,7 +135,7 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectRole")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {role.options.map((opt, index) => {
+                    {role.choices.map((opt, index) => {
                       if (!opt) return null;
                       const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                       const label = typeof opt === "string" ? opt : (opt?.label || val);

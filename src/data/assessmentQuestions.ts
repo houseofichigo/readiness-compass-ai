@@ -5,7 +5,7 @@ import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
 import type {
   Section,
   Question,
-  QuestionOption,
+  QuestionChoice,
   ConsentBanner,
   ComputedField,
   QuestionType,
@@ -31,13 +31,13 @@ interface RawQuestion {
   type: string;
   helper?: string;
   required?: boolean;
-  options?: Array<string | QuestionOption>;
+  options?: Array<string | QuestionChoice>;
   rows?: string[];
   columns?: string[];
   groups?: Array<{
     label: string;
     show_if?: Record<string, unknown>;
-    options: Array<string | QuestionOption>;
+    options: Array<string | QuestionChoice>;
   }>;
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
@@ -91,9 +91,9 @@ try {
 }
 
 // Normalize a mixed array of strings or objects into QuestionOption[]
-function normalizeOptions(
-  opts?: Array<string | QuestionOption>
-): QuestionOption[] | undefined {
+function normalizeChoices(
+  opts?: Array<string | QuestionChoice>
+): QuestionChoice[] | undefined {
   return opts?.map((o) =>
     typeof o === "string" ? { value: o, label: o } : o
   );
@@ -137,7 +137,7 @@ const assessmentSections: Section[] = Object.entries(schema)
         scoreByCount: q.score_by_count,
       };
 
-      if (q.options)   base.options = normalizeOptions(q.options);
+      if (q.options)   base.choices = normalizeChoices(q.options);
       if (q.rows)      base.rows    = [...q.rows];
       if (q.columns)   base.columns = [...q.columns];
 
@@ -145,7 +145,7 @@ const assessmentSections: Section[] = Object.entries(schema)
         base.groups = q.groups.map((g) => ({
           label: g.label,
           showIf: g.show_if,
-          options: normalizeOptions(g.options) || [],
+          choices: normalizeChoices(g.options) || [],
         }));
       }
 
@@ -190,7 +190,7 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     scoreByCount: q.score_by_count,
   };
 
-  if (q.options)  base.options  = normalizeOptions(q.options);
+  if (q.options)  base.choices  = normalizeChoices(q.options);
   if (q.rows)     base.rows     = [...q.rows];
   if (q.columns)  base.columns  = [...q.columns];
 
@@ -198,7 +198,7 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     base.groups = q.groups.map((g) => ({
       label: g.label,
       showIf: g.show_if,
-      options: normalizeOptions(g.options) || [],
+      choices: normalizeChoices(g.options) || [],
     }));
   }
 
