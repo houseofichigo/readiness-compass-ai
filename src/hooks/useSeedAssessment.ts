@@ -21,9 +21,17 @@ export function useSeedAssessment() {
         ]);
 
         if ((qCount ?? 0) > 0 && (cCount ?? 0) > 0) {
-          seededRef.current = true;
-          return; // already seeded
+          // Database already has data, proceeding with idempotent upsert to backfill scores/reasoning/model_input_context.
         }
+
+        // Helper to compute default per-choice scores for multi/select questions
+        const computeOptionScore = (q: any, optionValue: string | undefined): number | null => {
+          const sp = (q?.scorePer ?? (q as any)?.scorePer) as number | null;
+          if (sp == null) return null;
+          const v = (optionValue ?? '').toLowerCase();
+          if (v.startsWith('none') || v === "i don’t know" || v === "i don't know" || v.startsWith('other')) return 0;
+          return sp;
+        };
 
         // 2) Build minimal payload expected by the seed_assessment RPC
         const payload = assessmentSections.map((s, sIdx) => ({
@@ -48,13 +56,18 @@ export function useSeedAssessment() {
             maxRank: (q as any).maxRank ?? null,
             maxSelect: (q as any).maxSelect ?? null,
             scoreByCount: (q as any).scoreByCount ?? null,
-            options: ((((q as any).options) || []) as any[]).map((o: any) => ({
-              value: o.value,
-              label: o.label,
-              score: o.score ?? null,
-              reasoning: o.reasoning ?? null,
-              model_input_context: o.model_input_context ?? null,
-            })),
+            options: ((((q as any).options) || []) as any[]).map((o: any) => {
+              const val = o.value ?? o.label;
+              const qReason = (q as any).reasoning ?? null;
+              const qMic = (q as any).model_input_context ?? null;
+              return {
+                value: val,
+                label: o.label ?? val,
+                score: o.score ?? computeOptionScore(q, val),
+                reasoning: o.reasoning ?? qReason,
+                model_input_context: o.model_input_context ?? qMic,
+              };
+            }),
           })),
         }));
 

@@ -1,0 +1,134 @@
+-- Enhance auto-population of answer scoring and backfill choice scores, reasoning, and model input context
+
+-- 1) Replace set_answer_scoring with smarter max_possible_score logic
+create or replace function public.set_answer_scoring()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  lbl text;
+  sc double precision;
+  mx double precision;
+  mx_choice double precision;
+  mx_calc double precision;
+  ch_count int;
+  q_score_per int;
+  q_cap int;
+  q_formula text;
+begin
+  -- Copy label/score from selected choice for single-choice answers
+  if new.chosen_value is not null then
+    select qc.label, qc.score into lbl, sc
+    from public.question_choices qc
+    where qc.question_id = new.question_id and qc.value = new.chosen_value;
+
+    if lbl is not null then new.chosen_label := lbl; end if;
+    if sc is not null then new.score := sc; end if;
+  end if;
+
+  -- Derive max_possible_score
+  select q.score_per, q.cap, q.score_formula into q_score_per, q_cap, q_formula
+  from public.questions q where q.id = new.question_id;
+
+  -- If formula-based with 100 - k*count pattern, set 100
+  if q_formula is not null and position('100 -' in q_formula) > 0 then
+    mx := 100;
+  else
+    -- Try from choices
+    select max(qc.score) into mx_choice
+    from public.question_choices qc where qc.question_id = new.question_id;
+
+    -- Try from score_per * option_count (capped)
+    if q_score_per is not null then
+      select count(*) into ch_count from public.question_choices qc where qc.question_id = new.question_id;
+      mx_calc := q_score_per * ch_count;
+      if q_cap is not null then
+        if mx_calc > q_cap then mx_calc := q_cap; end if;
+      end if;
+    end if;
+
+    mx := coalesce(mx_choice, mx_calc);
+  end if;
+
+  if mx is not null then new.max_possible_score := mx; end if;
+
+  return new;
+end;
+$$;
+
+-- Recreate trigger for answer scoring (idempotent)
+drop trigger if exists trg_answers_set_scoring on public.answers;
+create trigger trg_answers_set_scoring
+before insert or update on public.answers
+for each row execute procedure public.set_answer_scoring();
+
+-- 2) Ensure compute trigger exists so section/overall/pillar scores keep up to date
+drop trigger if exists trg_answers_compute on public.answers;
+create trigger trg_answers_compute
+after insert or update on public.answers
+for each row execute function public.trigger_compute_on_answers();
+
+-- 3) Backfill reasoning and model_input_context on choices from their question when missing
+update public.question_choices qc
+set reasoning = q.reasoning
+from public.questions q
+where qc.question_id = q.id
+  and qc.reasoning is null
+  and q.reasoning is not null;
+
+update public.question_choices qc
+set model_input_context = q.score_formula -- temporarily use score_formula? NO, fix to model_input_context
+from public.questions q
+where false; -- placeholder to avoid mistake
+
+-- Correct backfill for model_input_context
+update public.question_choices qc
+set model_input_context = q.model_input_context
+from (
+  select id, score_formula, helper, text, type, required, sequence, show_if, hide_if, score_map, score_map_by_bucket, score_per, cap, weight, max_rank, max_select, score_by_count, helper as q_helper, score_formula as q_formula, null::text as model_input_context, reasoning
+  from public.questions
+) as q2 -- need access to model_input_context; if column exists
+where false; -- Fallback, since questions table has model_input_context column? It does not. We'll map from question table if available.
+
+-- Since public.questions does not have model_input_context column, we cannot bulk inherit it from question-level.
+-- However, options provided through seeding already carry model_input_context when present. We'll still backfill reasoning from question-level.
+
+-- 4) Backfill per-choice scores for specific questions using score_per, with sensible zeroing of 'None'/'I don’t know'/'Other'
+update public.question_choices qc
+set score = case
+  when qc.value ilike 'none%' then 0
+  when lower(qc.value) in ('i don’t know','i don''t know') then 0
+  when qc.value ilike 'other%' then 0
+  else q.score_per::double precision
+end
+from public.questions q
+where qc.question_id = q.id
+  and q.id in ('A8','A4','D1','D5','S9','T8')
+  and q.score_per is not null
+  and qc.score is null;
+
+-- 5) Ensure C9 mapping exists (if null)
+update public.question_choices qc
+set score = v.score::double precision
+from (
+  values
+    ('Resistant',1),
+    ('Cautious',2),
+    ('Interested',3),
+    ('Proactive',4),
+    ('Active pilots',5)
+) as v(lbl, score)
+where qc.question_id = 'C9' and qc.score is null and qc.label = v.lbl;
+
+-- 6) Re-run scoring on existing answers and submissions to populate fields and pillar scores
+update public.answers set chosen_value = chosen_value;
+
+do $$
+declare sid uuid;
+begin
+  for sid in select id from public.submissions loop
+    perform public.compute_submission_scores(sid);
+  end loop;
+end $$;

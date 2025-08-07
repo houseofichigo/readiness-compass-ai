@@ -38,6 +38,8 @@ interface RawQuestion {
   type: string;
   helper?: string;
   required?: boolean;
+  reasoning?: string;
+  model_input_context?: string;
   options?: Array<string | QuestionOption>;
   choices?: Array<string | RawChoice>;
   rows?: string[];
@@ -202,6 +204,10 @@ const assessmentSections: Section[] = Object.entries(schema)
         scoreByCount: q.score_by_count,
       };
 
+      // Carry question-level metadata for later seeding
+      (base as any).reasoning = (q as any).reasoning;
+      (base as any).model_input_context = (q as any).model_input_context;
+
       // Handle new choices structure or legacy options
       if (q.choices) {
         if (q.score_map_by_bucket) {
@@ -262,8 +268,12 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     maxRank: q.max_rank,
     maxSelect: q.max_select,
     scoreFormula: q.score_formula,
-    scoreByCount: q.score_by_count,
-  };
+      scoreByCount: q.score_by_count,
+    };
+
+  // Carry question-level metadata for later seeding
+  (base as any).reasoning = (q as any).reasoning;
+  (base as any).model_input_context = (q as any).model_input_context;
 
   // Handle new choices structure or legacy options
   if (q.choices) {
