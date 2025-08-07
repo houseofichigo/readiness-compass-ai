@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { toast } from "sonner";
 import type { AssessmentValue, OrganizationProfile } from '@/types/assessment';
 import { supabase } from '@/integrations/supabase/client';
+import { assessmentSections, assessmentAddOns } from '@/data/assessmentQuestions';
 
 export function useAssessment() {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,13 +46,19 @@ export function useAssessment() {
         return null;
       }
 
-      // 2) Insert answers in bulk
-      const answers = Object.entries(responses).map(([questionId, value]) => ({
-        submission_id: submissionId,
-        question_id: questionId,
-        raw_response: value as any,
-        chosen_value: typeof value === 'string' ? (value as string) : null,
-      }));
+      // 2) Insert answers in bulk (filter only real question IDs to avoid FK violations)
+      const sectionQuestionIds = assessmentSections.flatMap(s => (s.questions || []).map(q => q.id));
+      const addOnIds = (assessmentAddOns || []).map(q => q.id);
+      const validIds = new Set<string>([...sectionQuestionIds, ...addOnIds]);
+
+      const answers = Object.entries(responses)
+        .filter(([questionId]) => validIds.has(questionId))
+        .map(([questionId, value]) => ({
+          submission_id: submissionId,
+          question_id: questionId,
+          raw_response: value as any,
+          chosen_value: typeof value === 'string' ? (value as string) : null,
+        }));
 
       if (answers.length > 0) {
         const { error: ansErr } = await supabase
