@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AssessmentWelcome } from "@/components/assessment/AssessmentWelcome";
 import { AssessmentFlow } from "@/components/assessment/AssessmentFlow";
@@ -13,6 +13,7 @@ import {
 import { assessmentSections } from "@/data/assessmentQuestions";
 import { useAssessment } from "@/hooks/useAssessment";
 import { Logger } from "@/utils/logger";
+import { healthCheck } from "@/utils/healthCheck";
 
 type AppState = "welcome" | "assessment" | "results";
 
@@ -23,7 +24,18 @@ const Index = () => {
     null
   );
   const [submissionId, setSubmissionId] = useState<string | null>(null);
-  const { saveAssessment, isLoading } = useAssessment();
+  const { saveAssessment } = useAssessment();
+
+  // Production health check on mount
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      healthCheck.checkServices().then(result => {
+        if (result.status !== 'healthy') {
+          Logger.warn('Health check failed:', result.details);
+        }
+      });
+    }
+  }, []);
 
   const handleAssessmentComplete = async (
     responses: Record<string, AssessmentValue>,
