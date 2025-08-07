@@ -26,8 +26,13 @@ export function ProgressiveMultiGroupQuestion({
 
   // Enhanced group filtering using the same logic as questions
   const visibleGroups = useMemo(() => {
+    console.log('[GROUP DEBUG] Total groups:', groups.length, 'detectedTrack:', detectedTrack);
+    
     return groups.filter(group => {
-      if (!group.showIf) return true;
+      if (!group.showIf) {
+        console.log('[GROUP DEBUG]', group.label, 'no showIf condition - visible');
+        return true;
+      }
       
       // Create a mock question to leverage existing visibility logic
       const mockQuestion = {
@@ -37,7 +42,9 @@ export function ProgressiveMultiGroupQuestion({
         showIf: group.showIf
       };
       
-      return isQuestionVisible(mockQuestion, {}, detectedTrack, 0, {});
+      const isVisible = isQuestionVisible(mockQuestion, {}, detectedTrack, 0, {});
+      console.log('[GROUP DEBUG]', group.label, 'visible:', isVisible, 'showIf:', group.showIf);
+      return isVisible;
     });
   }, [groups, detectedTrack]);
 

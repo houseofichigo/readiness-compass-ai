@@ -92,6 +92,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   // Keep detectedTrack up to date
   useEffect(() => {
     const newTrack = detectTrack(responses, globalComputed) as Track;
+    console.log('[TRACK DEBUG] Detected track:', newTrack, 'from responses:', responses, 'computed:', globalComputed);
     setDetectedTrack(newTrack);
   }, [responses, globalComputed]);
 

@@ -43,9 +43,11 @@ interface RawQuestion {
   rows?: string[];
   columns?: string[];
   groups?: Array<{
-    label: string;
+    label?: string;
+    value?: string; // YAML uses 'value' field for group label
     show_if?: Record<string, unknown>;
-    options: Array<string | QuestionOption>;
+    options?: Array<string | QuestionOption>;
+    choices?: Array<string | RawChoice>; // YAML uses 'choices' for group options
   }>;
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
@@ -216,9 +218,9 @@ const assessmentSections: Section[] = Object.entries(schema)
 
       if (q.groups) {
         base.groups = q.groups.map((g) => ({
-          label: g.label,
+          label: g.value || g.label, // Handle YAML using 'value' field for group label
           showIf: g.show_if,
-          options: normalizeOptions(g.options) || [],
+          options: normalizeChoices(g.choices || g.options) || [], // Handle YAML using 'choices' for group options
         }));
       }
 
@@ -279,9 +281,9 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
 
   if (q.groups) {
     base.groups = q.groups.map((g) => ({
-      label: g.label,
+      label: g.value || g.label, // Handle YAML using 'value' field for group label
       showIf: g.show_if,
-      options: normalizeOptions(g.options) || [],
+      options: normalizeChoices(g.choices || g.options) || [], // Handle YAML using 'choices' for group options
     }));
   }
 
