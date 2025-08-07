@@ -14,6 +14,104 @@ export type Database = {
   }
   public: {
     Tables: {
+      analytics_events: {
+        Row: {
+          browser_info: Json | null
+          country_code: string | null
+          created_at: string
+          device_type: string | null
+          event_category: string | null
+          event_data: Json | null
+          event_name: string
+          id: string
+          ip_address: unknown | null
+          load_time_ms: number | null
+          new_value: Json | null
+          organization_id: string | null
+          previous_value: Json | null
+          question_id: string | null
+          response_time_ms: number | null
+          screen_size: string | null
+          section_id: string | null
+          submission_id: string | null
+          timezone: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          browser_info?: Json | null
+          country_code?: string | null
+          created_at?: string
+          device_type?: string | null
+          event_category?: string | null
+          event_data?: Json | null
+          event_name: string
+          id?: string
+          ip_address?: unknown | null
+          load_time_ms?: number | null
+          new_value?: Json | null
+          organization_id?: string | null
+          previous_value?: Json | null
+          question_id?: string | null
+          response_time_ms?: number | null
+          screen_size?: string | null
+          section_id?: string | null
+          submission_id?: string | null
+          timezone?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          browser_info?: Json | null
+          country_code?: string | null
+          created_at?: string
+          device_type?: string | null
+          event_category?: string | null
+          event_data?: Json | null
+          event_name?: string
+          id?: string
+          ip_address?: unknown | null
+          load_time_ms?: number | null
+          new_value?: Json | null
+          organization_id?: string | null
+          previous_value?: Json | null
+          question_id?: string | null
+          response_time_ms?: number | null
+          screen_size?: string | null
+          section_id?: string | null
+          submission_id?: string | null
+          timezone?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "analytics_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "analytics_events_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       answers: {
         Row: {
           chosen_label: string | null
@@ -85,6 +183,104 @@ export type Database = {
           },
           {
             foreignKeyName: "answers_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessment_sessions: {
+        Row: {
+          active_time_seconds: number | null
+          completed_at: string | null
+          completion_percentage: number | null
+          created_at: string
+          exit_question_id: string | null
+          exit_reason: string | null
+          help_requests: number | null
+          id: string
+          idle_time_seconds: number | null
+          organization_id: string | null
+          paused_at: string | null
+          questions_answered: number | null
+          questions_skipped: number | null
+          questions_total: number | null
+          resumed_at: string | null
+          revision_count: number | null
+          section_id: string | null
+          started_at: string | null
+          submission_id: string | null
+          time_spent_seconds: number | null
+        }
+        Insert: {
+          active_time_seconds?: number | null
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          exit_question_id?: string | null
+          exit_reason?: string | null
+          help_requests?: number | null
+          id?: string
+          idle_time_seconds?: number | null
+          organization_id?: string | null
+          paused_at?: string | null
+          questions_answered?: number | null
+          questions_skipped?: number | null
+          questions_total?: number | null
+          resumed_at?: string | null
+          revision_count?: number | null
+          section_id?: string | null
+          started_at?: string | null
+          submission_id?: string | null
+          time_spent_seconds?: number | null
+        }
+        Update: {
+          active_time_seconds?: number | null
+          completed_at?: string | null
+          completion_percentage?: number | null
+          created_at?: string
+          exit_question_id?: string | null
+          exit_reason?: string | null
+          help_requests?: number | null
+          id?: string
+          idle_time_seconds?: number | null
+          organization_id?: string | null
+          paused_at?: string | null
+          questions_answered?: number | null
+          questions_skipped?: number | null
+          questions_total?: number | null
+          resumed_at?: string | null
+          revision_count?: number | null
+          section_id?: string | null
+          started_at?: string | null
+          submission_id?: string | null
+          time_spent_seconds?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_sessions_exit_question_id_fkey"
+            columns: ["exit_question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_sessions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_sessions_submission_id_fkey"
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
@@ -199,6 +395,39 @@ export type Database = {
           },
         ]
       }
+      question_scores: {
+        Row: {
+          question_id: string
+          score: number | null
+          submission_id: string
+        }
+        Insert: {
+          question_id: string
+          score?: number | null
+          submission_id: string
+        }
+        Update: {
+          question_id?: string
+          score?: number | null
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_scores_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questions: {
         Row: {
           cap: number | null
@@ -272,6 +501,39 @@ export type Database = {
             columns: ["section_id"]
             isOneToOne: false
             referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      section_scores: {
+        Row: {
+          score: number | null
+          section_id: string
+          submission_id: string
+        }
+        Insert: {
+          score?: number | null
+          section_id: string
+          submission_id: string
+        }
+        Update: {
+          score?: number | null
+          section_id?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "section_scores_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "section_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
             referencedColumns: ["id"]
           },
         ]
