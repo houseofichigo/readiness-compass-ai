@@ -18,6 +18,9 @@ export interface QuestionOption {
   value: string;
   label: string;
   description?: string;
+  score?: number;
+  reasoning?: string;
+  model_input_context?: string;
 }
 
 // Group of options
@@ -58,6 +61,7 @@ export interface Question {
   maxSelect?: number;
   scoreByCount?: Record<string, number>;
   scoreFormula?: string;
+  scoreMapByBucket?: Record<string, string[]>;
 }
 
 // Banner shown in certain sections
@@ -91,6 +95,7 @@ export interface Section {
   questions: Question[];
   consentBanner?: ConsentBanner;
   computed?: ComputedField[];
+  pillar_score?: number;
 }
 
 // Overall assessment data

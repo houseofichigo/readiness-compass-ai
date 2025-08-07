@@ -104,7 +104,17 @@ function scoreQuestion(question: Question, answer: unknown): number {
     if (scorePer !== undefined) {
       return Math.min(answer.length * scorePer, cap ?? 100);
     }
-    // mapped choices
+    // new option-based scoring for multi-select
+    if (options) {
+      const scores = (answer as string[]).map((val) => {
+        const option = options.find((opt) => opt.value === val);
+        return option?.score ?? 0;
+      });
+      return scores.length
+        ? scores.reduce((a, b) => a + b, 0) / scores.length
+        : 50;
+    }
+    // fallback to scoreMap
     if (scoreMap && options) {
       const scores = (answer as string[]).map((val) => {
         const idx = options.findIndex((opt) => opt.value === val);
@@ -120,6 +130,25 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return answer ? 100 : 0;
   }
 
+  // new option-based scoring for single-select
+  if (options && typeof answer === "string") {
+    const option = options.find((opt) => opt.value === answer);
+    if (option?.score !== undefined) {
+      return option.score * 20; // Convert 1-5 scale to 0-100
+    }
+  }
+
+  // handle score_map_by_bucket structure (like country scoring)
+  if (question.scoreMapByBucket && typeof answer === "string") {
+    for (const [scoreStr, countries] of Object.entries(question.scoreMapByBucket)) {
+      const score = parseInt(scoreStr);
+      if (countries.includes(answer) || countries.includes("*")) {
+        return score * 20; // Convert 1-5 scale to 0-100
+      }
+    }
+  }
+
+  // fallback to scoreMap
   if (scoreMap && options && typeof answer === "string") {
     const idx = options.findIndex((opt) => opt.value === answer);
     if (idx >= 0 && scoreMap[idx] != null) return scoreMap[idx];

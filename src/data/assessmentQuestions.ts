@@ -49,6 +49,7 @@ interface RawQuestion {
   max_select?: number;
   score_formula?: string;
   score_by_count?: Record<string, number>;
+  score_map_by_bucket?: Record<string, string[]>;
 }
 
 interface RawSection {
@@ -95,7 +96,16 @@ function normalizeOptions(
   opts?: Array<string | QuestionOption>
 ): QuestionOption[] | undefined {
   return opts?.map((o) =>
-    typeof o === "string" ? { value: o, label: o } : o
+    typeof o === "string" 
+      ? { value: o, label: o } 
+      : {
+          value: o.value,
+          label: o.label,
+          description: o.description,
+          score: o.score,
+          reasoning: o.reasoning,
+          model_input_context: o.model_input_context,
+        }
   );
 }
 
@@ -135,6 +145,7 @@ const assessmentSections: Section[] = Object.entries(schema)
         maxSelect: q.max_select,
         scoreFormula: q.score_formula,
         scoreByCount: q.score_by_count,
+        scoreMapByBucket: q.score_map_by_bucket,
       };
 
       if (q.options)   base.options = normalizeOptions(q.options);
