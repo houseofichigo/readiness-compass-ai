@@ -492,6 +492,10 @@ section_0:
           score: 5
           reasoning: "Enterprise scale → strong AI capability"
           model_input_context: "Organization is enterprise—very strong AI maturity."
+        - label: "Prefer not to say"
+          score: 0
+          reasoning: "No scoring data available"
+          model_input_context: "Organization size not disclosed."
 
     - id: M7_revenue
       text: "Annual revenue"

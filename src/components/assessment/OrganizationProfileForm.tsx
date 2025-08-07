@@ -232,18 +232,20 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(companySize.id, value)}
                   className="space-y-3"
                 >
-                  {companySize.options?.map((opt) => {
+                  {companySize.options?.map((opt, index) => {
                     const val = typeof opt === "string" ? opt : opt.value;
                     const label = typeof opt === "string" ? opt : opt.label;
+                    // Create safe ID by removing special characters
+                    const safeId = `size-${index}-${val.replace(/[^a-zA-Z0-9]/g, '-')}`;
                     return (
                       <div key={val} className="flex items-center space-x-3">
                         <RadioGroupItem 
                           value={val} 
-                          id={`size-${val}`}
+                          id={safeId}
                           className="mt-0.5" 
                         />
                         <Label
-                          htmlFor={`size-${val}`}
+                          htmlFor={safeId}
                           className="font-normal cursor-pointer text-sm"
                         >
                           {label}
@@ -266,18 +268,20 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(revenue.id, value)}
                   className="space-y-3"
                 >
-                  {revenue.options?.map((opt) => {
+                  {revenue.options?.map((opt, index) => {
                     const val = typeof opt === "string" ? opt : opt.value;
                     const label = typeof opt === "string" ? opt : opt.label;
+                    // Create safe ID by removing special characters
+                    const safeId = `revenue-${index}-${val.replace(/[^a-zA-Z0-9]/g, '-')}`;
                     return (
                       <div key={val} className="flex items-center space-x-3">
                         <RadioGroupItem 
                           value={val} 
-                          id={`revenue-${val}`}
+                          id={safeId}
                           className="mt-0.5" 
                         />
                         <Label
-                          htmlFor={`revenue-${val}`}
+                          htmlFor={safeId}
                           className="font-normal cursor-pointer text-sm"
                         >
                           {label}
