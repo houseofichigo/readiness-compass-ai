@@ -878,6 +878,10 @@ export type Database = {
         Args: { _org_id: string; _user_id?: string }
         Returns: boolean
       }
+      load_submission_data: {
+        Args: { _submission_id: string }
+        Returns: Json
+      }
       record_analytics_event: {
         Args: {
           _submission_id: string
