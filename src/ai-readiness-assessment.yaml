@@ -1,3 +1,34 @@
+# AI Readiness Assessment v2.0
+# Schema-date: 2025-08-03
+
+meta:
+  locale_default: en
+  size_breakpoints:
+    micro: 1-9
+    small: 10-49
+    medium: 50-249
+    large: 250-999
+    enterprise: 1000+
+  max_visible_questions: 60
+  tracks:
+    TECH:   "Technical / Data-Lead"
+    REG:    "Regulated / Compliance"
+    GEN:    "General Business"
+  track_detection:
+    precedence:
+      - if: "role in [CIO / CTO, IT Lead, Data / AI Lead, ML Engineer, Data Engineer, DevOps Engineer, Security Architect, Infrastructure Manager]"
+        then: TECH
+      - if: "computed.regulated or role in [Legal / Compliance Lead, Privacy Officer, Compliance Manager, Risk Manager, Audit Lead, Governance Officer]"
+        then: REG
+      - else: GEN
+  weight_vectors:
+    TECH: { Strategy: 20, Data: 30, Tools: 20, Automation: 15, People: 5, Governance: 10 }
+    REG:  { Strategy: 10, Data: 20, Tools: 10, Automation: 10, People: 5, Governance: 45 }
+    GEN:  { Strategy: 25, Data: 15, Tools: 15, Automation: 15, People: 15, Governance: 15 }
+  question_cap:
+    max_questions: 60
+    auto_hide: [D2, P6]
+
 section_0:
   purpose: "Collect organization profile for track detection and personalized recommendations."
   consent_banner:
@@ -2591,3 +2622,33 @@ add_ons:
       - value: "Adequacy decision + continuous monitoring"
         score: 5
     required: true
+
+ui:
+  progress_counter: true
+  save_resume: true
+  ranking_accessible: true
+  mobile_touch_tested: true
+  auto_deselect_none: true
+
+validation:
+  - rule: "Other selected → text field required"
+  - rule: "All visible questions required"
+  - rule: "Cap visible questions at 60; auto-hide D2 then P6"
+
+scoring:
+  use_explicit_option_scores: true
+  weight_by_track: weight_vectors
+  neutral_for_hidden: 50
+  confidence_penalty:
+    apply_to: [D2, unknown_like]
+
+reporting:
+  show_hidden_explanation: true
+  benchmarks: by_track
+  store_only: true
+  admin_endpoint: /api/admin/assessment
+
+version:
+  assessment_version: "2.0"
+  schema_date: "2025-08-03"
+
