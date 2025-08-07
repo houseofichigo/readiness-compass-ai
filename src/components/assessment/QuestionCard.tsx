@@ -71,15 +71,15 @@ export function QuestionCard({
       case "dropdown":
       case "industry_dropdown": {
         // Handles radio groups as well as dropdowns (industry_dropdown & country_dropdown)
-        const flatOptions: Array<
+        const flatChoices: Array<
           string | { value: string; label: string }
-        > = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];
+        > = localizedQuestion.choices || localizedQuestion.groups?.flatMap((g) => g.choices) || [];
 
         // Use dropdown for: explicit dropdown types, questions with many options (>8), or specific questions like M3 (Primary role)
         const shouldUseDropdown = 
           localizedQuestion.type === "dropdown" || 
           localizedQuestion.type === "industry_dropdown" ||
-          flatOptions.length > 8 ||
+          flatChoices.length > 8 ||
           localizedQuestion.id === "M3"; // Primary role question
 
         if (shouldUseDropdown) {
@@ -90,7 +90,7 @@ export function QuestionCard({
                 <SelectValue placeholder={t('form.pleaseSelect')} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-background border border-border shadow-lg">
-                {flatOptions.map((opt, index) => {
+                {flatChoices.map((opt, index) => {
                   const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                   const label = typeof opt === "string" ? opt : (opt?.label || val);
                   return (
@@ -121,7 +121,7 @@ export function QuestionCard({
                     <Label className="text-sm font-medium">
                       {group.label}
                     </Label>
-                    {group.options.map((opt) => (
+                    {group.choices.map((opt) => (
                       <div
                         key={opt.value}
                         className="flex items-center space-x-2"
@@ -137,7 +137,7 @@ export function QuestionCard({
                     ))}
                   </div>
                 ))
-              : flatOptions.map((opt, index) => {
+              : flatChoices.map((opt, index) => {
                   const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                   const label = typeof opt === "string" ? opt : (opt?.label || val);
                   const safeId = `${localizedQuestion.id}-${index}-${String(val).replace(/[^a-zA-Z0-9]/g, '-')}`;
@@ -157,7 +157,7 @@ export function QuestionCard({
       case "multi":
         return (
           <MultiSelectQuestion
-            options={localizedQuestion.options || []}
+            choices={localizedQuestion.choices || []}
             value={value || []}
             onChange={onChange}
           />
@@ -174,10 +174,10 @@ export function QuestionCard({
         );
 
       case "rank": {
-        const rankOpts = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];
+        const rankOpts = localizedQuestion.choices || localizedQuestion.groups?.flatMap((g) => g.choices) || [];
         return (
           <DragDropQuestionRank
-            options={rankOpts}
+            choices={rankOpts}
             value={value || []}
             onChange={onChange}
             maxRank={localizedQuestion.maxRank || 3}

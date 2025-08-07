@@ -161,7 +161,7 @@ export function OrganizationProfileForm({
 
           {/* Row 3: Industry & sub-sector | Country */}
           <div className="space-y-2">
-            {industry && industry.options ? (
+            {industry && industry.choices ? (
               <>
                 {renderLabel(industry)}
                 <Select 
@@ -172,7 +172,7 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectIndustry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {industry.options.map((opt, index) => {
+                    {industry.choices.map((opt, index) => {
                       if (!opt) return null;
                       const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                       const label = typeof opt === "string" ? opt : (opt?.label || val);
@@ -197,7 +197,7 @@ export function OrganizationProfileForm({
           </div>
           
           <div className="space-y-2">
-            {country && country.options ? (
+            {country && country.choices ? (
               <>
                 {renderLabel(country)}
                 <Select 
@@ -208,7 +208,7 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectCountry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {country.options.map((opt, index) => {
+                    {country.choices.map((opt, index) => {
                       if (!opt) return null;
                       const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                       const label = typeof opt === "string" ? opt : (opt?.label || val);
@@ -243,7 +243,7 @@ export function OrganizationProfileForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Row 1: Company size | Annual revenue */}
           <div className="space-y-4">
-            {companySize && companySize.options ? (
+            {companySize && companySize.choices ? (
               <>
                 {renderLabel(companySize)}
                 <RadioGroup
@@ -251,7 +251,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(companySize.id, value)}
                   className="space-y-3"
                 >
-                  {companySize.options.map((opt, index) => {
+                  {companySize.choices.map((opt, index) => {
                     // Handle both string and object options safely
                     const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                     const label = typeof opt === "string" ? opt : (opt?.label || val);
@@ -284,7 +284,7 @@ export function OrganizationProfileForm({
           </div>
           
           <div className="space-y-4">
-            {revenue && revenue.options ? (
+            {revenue && revenue.choices ? (
               <>
                 {renderLabel(revenue)}
                 <RadioGroup
@@ -292,7 +292,7 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(revenue.id, value)}
                   className="space-y-3"
                 >
-                  {revenue.options.map((opt, index) => {
+                  {revenue.choices.map((opt, index) => {
                     // Handle both string and object options safely
                     const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
                     const label = typeof opt === "string" ? opt : (opt?.label || val);
