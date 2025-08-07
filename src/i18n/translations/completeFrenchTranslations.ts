@@ -283,19 +283,19 @@ export const frenchTranslations: Record<string, TranslationEntry> = {
       { value: "10–49", label: "10–49" },
       { value: "50–249", label: "50–249" },
       { value: "250–999", label: "250–999" },
-      { value: "≥ 1,000", label: "≥ 1 000" },
+      { value: "≥ 1 000", label: "≥ 1 000" },
       { value: "Prefer not to say", label: "Préfère ne pas dire" }
     ]
   },
   M7_revenue: {
     text: "Quel est votre chiffre d'affaires annuel ?",
     options: [
-      { value: "< €250k", label: "< 250 000 €" },
-      { value: "€250k–1M", label: "250 000–1 M €" },
-      { value: "€1–5M", label: "1–5 M €" },
-      { value: "€5–20M", label: "5–20 M €" },
-      { value: "€20–100M", label: "20–100 M €" },
-      { value: "> €100M", label: "> 100 M €" },
+      { value: "< €250 k", label: "< 250 000 €" },
+      { value: "€250 k–1 M", label: "250 000–1 M €" },
+      { value: "€1 M–€5 M", label: "1–5 M €" },
+      { value: "€5 M–€20 M", label: "5–20 M €" },
+      { value: "€20 M–€100 M", label: "20–100 M €" },
+      { value: "> €100 M", label: "> 100 M €" },
       { value: "Prefer not to say", label: "Préfère ne pas dire" }
     ]
   },
