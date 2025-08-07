@@ -125,7 +125,21 @@ export default function ThankYou() {
     navigate("/");
   };
   const totalQuestions = Object.keys(responses).length;
-  return <div className="min-h-screen bg-gradient-accent">
+  return (
+    <>
+      <SEO
+        title="Thank You | AI Readiness Assessment"
+        description="Thank you for completing the AI Readiness Assessment. Access your next steps and resources."
+        canonical={typeof window !== 'undefined' ? window.location.href : 'https://www.ai.houseofichigo.com/thank-you'}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'Thank You - AI Readiness Assessment',
+          url: typeof window !== 'undefined' ? window.location.href : 'https://www.ai.houseofichigo.com/thank-you',
+          description: 'Thank you for completing the AI Readiness Assessment.'
+        }}
+      />
+      <div className="min-h-screen bg-gradient-accent">
       {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={200} gravity={0.1} />}
 
       {/* Language Selector */}
@@ -364,5 +378,6 @@ export default function ThankYou() {
           </div>
         </div>
       </div>
-    </div>;
+    </>
+  );
 }

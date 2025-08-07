@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Shield } from 'lucide-react';
+import { SEO } from '@/components/SEO';
 
 export function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -47,7 +48,14 @@ export function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+    <>
+      <SEO
+        title="Admin Login | AI Readiness Assessment"
+        description="Sign in to access the AI Readiness Assessment dashboard"
+        canonical={typeof window !== 'undefined' ? window.location.href : 'https://www.ai.houseofichigo.com/admin/login'}
+        robots="noindex,nofollow"
+      />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
@@ -119,5 +127,6 @@ export function AdminLogin() {
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }
