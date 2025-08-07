@@ -435,6 +435,13 @@ export type Database = {
       }
     }
     Functions: {
+      backfill_answer_option_metadata: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          updated_count: number
+          total_processed: number
+        }[]
+      }
       get_admin_dashboard_data: {
         Args: Record<PropertyKey, never>
         Returns: Json

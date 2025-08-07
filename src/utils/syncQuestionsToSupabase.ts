@@ -78,10 +78,10 @@ export async function syncQuestionsToSupabase() {
           // Initialize question-level fields
           reasoning: {},
           model_input_context: {},
-          weight: question.weight || null,
-          score_per: question.score_per || null,
-          cap: question.cap || null,
-          score_formula: question.score_formula || null,
+          weight: null, // Not available in Question type yet
+          score_per: null, // Not available in Question type yet  
+          cap: null, // Not available in Question type yet
+          score_formula: null, // Not available in Question type yet
         };
 
         // Validate question structure and log any issues
