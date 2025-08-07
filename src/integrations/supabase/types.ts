@@ -717,6 +717,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      seed_assessment: {
+        Args: { _sections: Json }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"

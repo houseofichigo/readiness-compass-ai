@@ -15,38 +15,44 @@ import { AdminLogin } from "@/pages/AdminLogin";
 import Index from "./pages/Index";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
+import { useSeedAssessment } from "@/hooks/useSeedAssessment";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/thank-you" element={<ThankYou />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/*" element={
-                <ProtectedRoute>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }>
-                <Route index element={<ExecutiveDashboard />} />
-                <Route path="overview" element={<OverviewDashboard />} />
-                <Route path="submissions" element={<SubmissionsTable />} />
-                <Route path="analytics" element={<AnalyticsDashboard />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+const App = () => {
+  // One-time seed sync of sections/questions from YAML → DB
+  useSeedAssessment();
+
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <AuthProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/thank-you" element={<ThankYou />} />
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/*" element={
+                  <ProtectedRoute>
+                    <AdminLayout />
+                  </ProtectedRoute>
+                }>
+                  <Route index element={<ExecutiveDashboard />} />
+                  <Route path="overview" element={<OverviewDashboard />} />
+                  <Route path="submissions" element={<SubmissionsTable />} />
+                  <Route path="analytics" element={<AnalyticsDashboard />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;
