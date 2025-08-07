@@ -810,6 +810,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      compute_submission_scores: {
+        Args: { _submission_id: string }
+        Returns: undefined
+      }
       get_is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -826,7 +830,7 @@ export type Database = {
         Returns: boolean
       }
       seed_assessment: {
-        Args: { _sections: Json }
+        Args: { _sections: Json } | { _sections: Json; _add_ons?: Json }
         Returns: undefined
       }
       submission_org: {
