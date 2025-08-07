@@ -136,7 +136,76 @@ export function useAssessment() {
   };
 
   const loadAssessment = async (submissionId: string) => {
-    return null;
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      console.log('[loadAssessment] Loading submission:', submissionId);
+      
+      // Fetch submission and its answers
+      const { data: submission, error: subErr } = await supabase
+        .from('submissions')
+        .select(`
+          *,
+          answers (
+            question_id,
+            raw_response,
+            chosen_value,
+            score,
+            pillar_scores,
+            reasoning,
+            model_input_context
+          )
+        `)
+        .eq('id', submissionId)
+        .single();
+
+      if (subErr) {
+        console.error('[loadAssessment] Failed to load submission:', subErr.message);
+        setError(subErr.message);
+        return null;
+      }
+
+      if (!submission) {
+        console.warn('[loadAssessment] No submission found for ID:', submissionId);
+        return null;
+      }
+
+      // Convert answers array to responses object
+      const responses: Record<string, any> = {};
+      submission.answers?.forEach((answer: any) => {
+        responses[answer.question_id] = answer.raw_response;
+      });
+
+      // Build profile from responses (M0, M1, etc.)
+      const profile: any = {};
+      Object.entries(responses).forEach(([questionId, value]) => {
+        if (questionId.startsWith('M')) {
+          profile[questionId] = value;
+        }
+      });
+
+      console.log('[loadAssessment] Loaded successfully:', {
+        submissionId,
+        answersCount: submission.answers?.length || 0,
+        profileKeys: Object.keys(profile)
+      });
+
+      return {
+        submissionId,
+        profile,
+        responses,
+        totalScore: submission.total_score,
+        pillarScores: submission.pillar_scores,
+        percentageScore: submission.percentage_score
+      };
+    } catch (e: any) {
+      console.error('[loadAssessment] Unexpected error:', e);
+      setError(e?.message || 'Failed to load assessment');
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getRecentAssessments = async (limit: number = 10) => {

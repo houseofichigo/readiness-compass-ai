@@ -225,12 +225,12 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   };
 
   const handleNext = async () => {
-    if (isSubmitting) return;
-
-    const onFinalStep = isAddOnPage || (isLastSection && !hasAddOns);
+    // Prevent double submission while processing
+    if (isSubmitting) {
+      return;
+    }
 
     if (!canProceed()) {
-      
       scrollToFirstError();
       toast({
         title: "Please complete all required questions",
@@ -238,6 +238,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         variant: "destructive",
       });
       return;
+    }
+
+    // Check if we're at the end of the assessment
+    const onFinalStep = (isLastSection && !hasAddOns) || isAddOnPage;
+
+    if (!onFinalStep) {
+      scrollToTopRaf();
     }
 
     if (onFinalStep) {
@@ -308,7 +315,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
           onClick={() => {
             handleNext();
           }} 
-          disabled={isSubmitting}
+          disabled={isSubmitting || !canProceed}
         >
           {isSubmitting
             ? (<><Loader2 className="h-4 w-4 animate-spin" /> {t('common.submitting')}</>)
