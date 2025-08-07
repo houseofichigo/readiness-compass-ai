@@ -847,6 +847,18 @@ export type Database = {
         Args: { _submission_id: string }
         Returns: undefined
       }
+      ensure_organization_and_attach_submission: {
+        Args: {
+          _submission_id: string
+          _name: string
+          _industry?: string
+          _country?: string
+          _size_bucket?: string
+          _revenue_bucket?: string
+          _track?: string
+        }
+        Returns: string
+      }
       get_is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
@@ -866,9 +878,33 @@ export type Database = {
         Args: { _org_id: string; _user_id?: string }
         Returns: boolean
       }
+      record_analytics_event: {
+        Args: {
+          _submission_id: string
+          _event_name: string
+          _event_category?: string
+          _event_data?: Json
+          _section_id?: string
+          _question_id?: string
+        }
+        Returns: string
+      }
+      record_assessment_session: {
+        Args: {
+          _submission_id: string
+          _section_id?: string
+          _started_at?: string
+          _completed_at?: string
+        }
+        Returns: string
+      }
       seed_assessment: {
         Args: { _sections: Json } | { _sections: Json; _add_ons?: Json }
         Returns: undefined
+      }
+      slugify: {
+        Args: { _input: string }
+        Returns: string
       }
       submission_org: {
         Args: { _submission_id: string }

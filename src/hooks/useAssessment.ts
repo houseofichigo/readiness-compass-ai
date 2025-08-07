@@ -88,6 +88,40 @@ export function useAssessment() {
         console.warn('[saveAssessment] No valid answers to insert (all filtered or empty).');
       }
 
+      // Populate organization, sessions, and analytics via secure RPCs (won't block on failure)
+      try {
+        const orgName = (profile?.M0 || (responses['M0'] as string) || '').toString();
+        const { error: orgErr } = await supabase.rpc('ensure_organization_and_attach_submission', {
+          _submission_id: submissionId,
+          _name: orgName,
+          _industry: (profile?.M4_industry || (responses['M4_industry'] as string) || null) as string | null,
+          _country: (profile?.M5_country || (responses['M5_country'] as string) || null) as string | null,
+          _size_bucket: (profile?.M6_size || (responses['M6_size'] as string) || null) as string | null,
+          _revenue_bucket: (profile?.M7_revenue || (responses['M7_revenue'] as string) || null) as string | null,
+          _track: (profile?.track || null) as any,
+        });
+        if (orgErr) console.warn('[saveAssessment] ensure_organization RPC failed:', orgErr.message);
+
+        const { error: sessErr } = await supabase.rpc('record_assessment_session', {
+          _submission_id: submissionId,
+        });
+        if (sessErr) console.warn('[saveAssessment] record_assessment_session RPC failed:', sessErr.message);
+
+        const { error: evtErr } = await supabase.rpc('record_analytics_event', {
+          _submission_id: submissionId,
+          _event_name: 'assessment_submitted',
+          _event_category: 'assessment',
+          _event_data: {
+            utm_source: params.get('utm_source'),
+            utm_medium: params.get('utm_medium'),
+            utm_campaign: params.get('utm_campaign'),
+          },
+        });
+        if (evtErr) console.warn('[saveAssessment] record_analytics_event RPC failed:', evtErr.message);
+      } catch (rpcErr) {
+        console.warn('[saveAssessment] Non-blocking RPC error:', rpcErr);
+      }
+
       toast.success('Assessment submitted');
       console.log('[saveAssessment] Completed OK for submission:', submissionId);
       return submissionId;
