@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      answers: {
+        Row: {
+          chosen_label: string | null
+          chosen_value: string | null
+          confidence_score: number | null
+          created_at: string
+          final_response_at: string | null
+          first_response_at: string | null
+          id: string
+          max_possible_score: number | null
+          model_input_context: string | null
+          pillar_scores: Json | null
+          question_id: string
+          raw_response: Json | null
+          reasoning: string | null
+          response_time_seconds: number | null
+          revision_count: number | null
+          score: number | null
+          submission_id: string
+          updated_at: string
+        }
+        Insert: {
+          chosen_label?: string | null
+          chosen_value?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          final_response_at?: string | null
+          first_response_at?: string | null
+          id?: string
+          max_possible_score?: number | null
+          model_input_context?: string | null
+          pillar_scores?: Json | null
+          question_id: string
+          raw_response?: Json | null
+          reasoning?: string | null
+          response_time_seconds?: number | null
+          revision_count?: number | null
+          score?: number | null
+          submission_id: string
+          updated_at?: string
+        }
+        Update: {
+          chosen_label?: string | null
+          chosen_value?: string | null
+          confidence_score?: number | null
+          created_at?: string
+          final_response_at?: string | null
+          first_response_at?: string | null
+          id?: string
+          max_possible_score?: number | null
+          model_input_context?: string | null
+          pillar_scores?: Json | null
+          question_id?: string
+          raw_response?: Json | null
+          reasoning?: string | null
+          response_time_seconds?: number | null
+          revision_count?: number | null
+          score?: number | null
+          submission_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "answers_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "answers_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           annual_revenue_exact: number | null
@@ -121,6 +199,83 @@ export type Database = {
           },
         ]
       }
+      questions: {
+        Row: {
+          cap: number | null
+          created_at: string
+          helper: string | null
+          hide_if: Json | null
+          id: string
+          max_rank: number | null
+          max_select: number | null
+          required: boolean | null
+          score_by_count: Json | null
+          score_formula: string | null
+          score_map: Json | null
+          score_map_by_bucket: Json | null
+          score_per: number | null
+          section_id: string
+          sequence: number | null
+          show_if: Json | null
+          text: string
+          type: string
+          updated_at: string
+          weight: number[] | null
+        }
+        Insert: {
+          cap?: number | null
+          created_at?: string
+          helper?: string | null
+          hide_if?: Json | null
+          id: string
+          max_rank?: number | null
+          max_select?: number | null
+          required?: boolean | null
+          score_by_count?: Json | null
+          score_formula?: string | null
+          score_map?: Json | null
+          score_map_by_bucket?: Json | null
+          score_per?: number | null
+          section_id: string
+          sequence?: number | null
+          show_if?: Json | null
+          text: string
+          type: string
+          updated_at?: string
+          weight?: number[] | null
+        }
+        Update: {
+          cap?: number | null
+          created_at?: string
+          helper?: string | null
+          hide_if?: Json | null
+          id?: string
+          max_rank?: number | null
+          max_select?: number | null
+          required?: boolean | null
+          score_by_count?: Json | null
+          score_formula?: string | null
+          score_map?: Json | null
+          score_map_by_bucket?: Json | null
+          score_per?: number | null
+          section_id?: string
+          sequence?: number | null
+          show_if?: Json | null
+          text?: string
+          type?: string
+          updated_at?: string
+          weight?: number[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sections: {
         Row: {
           category: string | null
@@ -147,6 +302,77 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      submissions: {
+        Row: {
+          active_time_minutes: number | null
+          completed: boolean
+          completion_time_minutes: number | null
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          max_possible_score: number | null
+          organization_id: string | null
+          percentage_score: number | null
+          pillar_scores: Json | null
+          readiness_level: string | null
+          referrer_url: string | null
+          total_score: number | null
+          updated_at: string
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          active_time_minutes?: number | null
+          completed?: boolean
+          completion_time_minutes?: number | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          max_possible_score?: number | null
+          organization_id?: string | null
+          percentage_score?: number | null
+          pillar_scores?: Json | null
+          readiness_level?: string | null
+          referrer_url?: string | null
+          total_score?: number | null
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          active_time_minutes?: number | null
+          completed?: boolean
+          completion_time_minutes?: number | null
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          max_possible_score?: number | null
+          organization_id?: string | null
+          percentage_score?: number | null
+          pillar_scores?: Json | null
+          readiness_level?: string | null
+          referrer_url?: string | null
+          total_score?: number | null
+          updated_at?: string
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "submissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tracks: {
         Row: {
