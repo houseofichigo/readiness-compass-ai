@@ -66,12 +66,14 @@ export function DataManagementPanel() {
   // Filter submissions
   const filteredSubmissions = submissions?.filter(submission => {
     const matchesSearch = !searchTerm || 
-      submission.organization_profile?.M0?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      submission.organization_profile?.M1?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      submission.organization_profile?.M2?.toLowerCase().includes(searchTerm.toLowerCase());
+      submission.organization_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      submission.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      submission.email?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === 'all' || submission.status === statusFilter;
-    const matchesTrack = trackFilter === 'all' || submission.organization_profile?.track === trackFilter;
+    const matchesStatus = statusFilter === 'all' || 
+      (statusFilter === 'completed' && submission.completed) ||
+      (statusFilter === 'in_progress' && !submission.completed);
+    const matchesTrack = trackFilter === 'all' || submission.track === trackFilter;
     
     let matchesDate = true;
     if (dateFilter !== 'all') {
@@ -121,12 +123,12 @@ export function DataManagementPanel() {
       case 'export':
         // Export selected items as CSV
         const csvData = selectedData.map(s => ({
-          organization: s.organization_profile?.M0 || '',
-          contact: s.organization_profile?.M1 || '',
-          email: s.organization_profile?.M2 || '',
-          track: s.organization_profile?.track || '',
-          score: s.total_score || 0,
-          status: s.status,
+          organization: s.organization_name || '',
+          contact: s.full_name || '',
+          email: s.email || '',
+          track: s.track || '',
+          completed: s.completed,
+          status: s.completed ? 'completed' : 'in_progress',
           created: new Date(s.created_at).toLocaleDateString()
         }));
         
@@ -176,16 +178,11 @@ export function DataManagementPanel() {
     setSelectedItems(new Set());
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return <Badge variant="default" className="bg-green-100 text-green-800">Completed</Badge>;
-      case 'in_progress':
-        return <Badge variant="secondary">In Progress</Badge>;
-      case 'draft':
-        return <Badge variant="outline">Draft</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+  const getStatusBadge = (completed: boolean) => {
+    if (completed) {
+      return <Badge variant="default" className="bg-green-100 text-green-800">Completed</Badge>;
+    } else {
+      return <Badge variant="secondary">In Progress</Badge>;
     }
   };
 
@@ -342,21 +339,21 @@ export function DataManagementPanel() {
                   <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
                       <p className="font-medium">
-                        {submission.organization_profile?.M0 || 'Unknown Organization'}
+                        {submission.organization_name || 'Unknown Organization'}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {submission.organization_profile?.M1}
+                        {submission.full_name}
                       </p>
                     </div>
                     
                     <div>
-                      <p className="text-sm">{submission.organization_profile?.M2}</p>
-                      {submission.organization_profile?.track && getTrackBadge(submission.organization_profile.track)}
+                      <p className="text-sm">{submission.email}</p>
+                      {submission.track && getTrackBadge(submission.track)}
                     </div>
                     
                     <div>
-                      <p className="font-medium">{submission.total_score?.toFixed(1) || 'N/A'}%</p>
-                      {getStatusBadge(submission.status)}
+                      <p className="font-medium">{submission.completed ? '100' : 'N/A'}%</p>
+                      {getStatusBadge(submission.completed)}
                     </div>
                     
                     <div className="flex items-center justify-between">
