@@ -1,10 +1,7 @@
-// TEMPORARY STUB - Phase 1 Cleanup
-// This file contains stub implementations to prevent TypeScript errors
-// Will be replaced with full implementation in Phase 2
-
-import { createContext, useContext, useState, ReactNode, createElement } from 'react';
-import { toast } from "sonner";
+import { createContext, useContext, useEffect, useMemo, useState, ReactNode, createElement } from 'react';
+import { toast } from 'sonner';
 import type { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
   user: User | null;
@@ -13,6 +10,7 @@ interface AuthContextType {
   isAdmin: boolean;
   adminRole: string | null;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -34,20 +32,87 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 function useAuthProvider(): AuthContextType {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [adminRole, setAdminRole] = useState<string | null>(null);
+
+  const refreshAdmin = async (u: User | null) => {
+    if (!u) { setIsAdmin(false); return; }
+    try {
+      const { data, error } = await supabase.rpc('get_is_admin');
+      if (error) {
+        console.warn('get_is_admin error:', error.message);
+        setIsAdmin(false);
+      } else {
+        setIsAdmin(Boolean(data));
+      }
+    } catch (e) {
+      console.warn('get_is_admin failed:', e);
+      setIsAdmin(false);
+    }
+  };
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
+      setSession(s);
+      setUser(s?.user ?? null);
+      if (s?.user) {
+        setTimeout(() => { refreshAdmin(s.user); }, 0);
+      } else {
+        setIsAdmin(false);
+      }
+      setIsLoading(false);
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      if (session?.user) { refreshAdmin(session.user); }
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const signIn = async (email: string, password: string) => {
-    console.warn('Database is empty - authentication will be implemented in Phase 2');
-    toast.error('Authentication temporarily disabled during database rebuild');
-    return { error: new Error('Authentication disabled during database rebuild') };
+    setIsLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      toast.error(error.message || 'Sign in failed');
+      setIsLoading(false);
+      return { error };
+    }
+    toast.success('Signed in');
+    setIsLoading(false);
+    return { error: null };
+  };
+
+  const signUp = async (email: string, password: string) => {
+    setIsLoading(true);
+    const redirectUrl = `${window.location.origin}/`;
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: redirectUrl },
+    });
+    if (error) {
+      toast.error(error.message || 'Sign up failed');
+      setIsLoading(false);
+      return { error };
+    }
+    toast.success('Check your email to confirm your account');
+    setIsLoading(false);
+    return { error: null };
   };
 
   const signOut = async () => {
-    console.warn('Database is empty - sign out will be implemented in Phase 2');
-    toast.error('Sign out temporarily disabled during database rebuild');
+    await supabase.auth.signOut();
+    setUser(null);
+    setSession(null);
+    setIsAdmin(false);
+    toast.success('Signed out');
   };
+
+  const adminRole = useMemo(() => (isAdmin ? 'admin' : null), [isAdmin]);
 
   return {
     user,
@@ -56,6 +121,7 @@ function useAuthProvider(): AuthContextType {
     isAdmin,
     adminRole,
     signIn,
+    signUp,
     signOut,
   };
 }

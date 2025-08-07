@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,8 +13,9 @@ export function AdminLogin() {
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [isSignup, setIsSignup] = useState(false);
   
-  const { user, isAdmin, signIn, isLoading } = useAuth();
+  const { user, isAdmin, signIn, signUp, isLoading } = useAuth();
 
   // Redirect if already authenticated and admin
   if (!isLoading && user && isAdmin) {
@@ -26,7 +27,9 @@ export function AdminLogin() {
     setIsSubmitting(true);
     setError('');
 
-    const { error: authError } = await signIn(email, password);
+    const { error: authError } = isSignup
+      ? await signUp(email, password)
+      : await signIn(email, password);
     
     if (authError) {
       setError(authError.message);
@@ -52,7 +55,7 @@ export function AdminLogin() {
           </div>
           <CardTitle className="text-2xl">Admin Portal</CardTitle>
           <CardDescription>
-            Sign in to access the AI Readiness Assessment dashboard
+            {isSignup ? 'Create an admin account' : 'Sign in to access the AI Readiness Assessment dashboard'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -87,20 +90,31 @@ export function AdminLogin() {
               </Alert>
             )}
 
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                'Sign In'
-              )}
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isSignup ? 'Creating account...' : 'Signing in...'}
+                  </>
+                ) : (
+                  isSignup ? 'Create Account' : 'Sign In'
+                )}
+              </Button>
+              <Button
+                type="button"
+                variant="secondary"
+                className="w-full"
+                onClick={() => setIsSignup((v) => !v)}
+                disabled={isSubmitting}
+              >
+                {isSignup ? 'Have an account? Sign In' : 'New here? Sign Up'}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
