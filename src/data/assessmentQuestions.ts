@@ -2,7 +2,7 @@
 
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
-import { ensureQuestionsExist } from "@/utils/autoSync";
+// Import will be done dynamically to avoid circular dependency issues
 import type {
   Section,
   Question,
@@ -208,7 +208,9 @@ export {
 };
 export const assessmentMeta = schema.meta ?? {};
 
-// Ensure questions are synced to Supabase
+// Ensure questions are synced to Supabase - done dynamically to avoid circular dependencies
 if (typeof window !== 'undefined') {
-  ensureQuestionsExist().catch(console.error);
+  import("@/utils/autoSync")
+    .then(({ ensureQuestionsExist }) => ensureQuestionsExist())
+    .catch(console.error);
 }
