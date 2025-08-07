@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { assessmentSections, assessmentAddOns } from '@/data/assessmentQuestions';
-import { toast } from 'sonner';
+
 
 
 // Seeding logic: idempotent upsert of sections & questions from YAML
@@ -100,19 +100,16 @@ export function useSeedAssessment() {
         // 3) Upsert via RPC (function is SECURITY DEFINER and bypasses RLS)
         const { error } = await supabase.rpc('seed_assessment', { _sections: payload as any, _add_ons: addOnsPayload as any });
         if (error) {
-          toast.error(`Seeding failed: ${error.message}`);
-          // Retry once after a short delay in case of race conditions
+          // Silent fail in production; retry once
           setTimeout(async () => {
             const { error: error2 } = await supabase.rpc('seed_assessment', { _sections: payload as any, _add_ons: addOnsPayload as any });
-            if (error2) {
-              toast.error(`Seeding failed again: ${error2.message}`);
-            } else {
+            if (!error2) {
+              // Verified counts
               const [{ count: qAfter }, { count: sAfter }, { count: cAfter }] = await Promise.all([
                 supabase.from('questions').select('*', { count: 'exact', head: true }),
                 supabase.from('sections').select('*', { count: 'exact', head: true }),
                 supabase.from('question_choices').select('*', { count: 'exact', head: true }),
               ]);
-              toast.success(`Seeded OK. Sections: ${sAfter ?? 0}, Questions: ${qAfter ?? 0}, Choices: ${cAfter ?? 0}`);
               seededRef.current = true;
             }
           }, 800);
@@ -125,11 +122,9 @@ export function useSeedAssessment() {
           supabase.from('sections').select('*', { count: 'exact', head: true }),
           supabase.from('question_choices').select('*', { count: 'exact', head: true }),
         ]);
-        toast.success(`Seeded OK. Sections: ${sAfter ?? 0}, Questions: ${qAfter ?? 0}, Choices: ${cAfter ?? 0}`);
         seededRef.current = true;
       } catch (e) {
-        
-        toast.error('Seed init failed');
+        // Silent failure; seeding will retry on next load
       }
     };
 

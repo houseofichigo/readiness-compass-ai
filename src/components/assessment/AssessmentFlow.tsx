@@ -109,6 +109,11 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
+  // Ensure scroll-to-top after section changes (post-render)
+  useEffect(() => {
+    scrollToTop();
+  }, [currentPage]);
+
   const goPrev = () => {
     setCurrentPage(p => Math.max(0, p - 1));
     scrollToTop();

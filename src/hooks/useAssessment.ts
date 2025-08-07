@@ -20,28 +20,29 @@ export function useAssessment() {
     setError(null);
 
     try {
-      // 1) Create submission (anonymous)
+      // 1) Create submission (anonymous) with client-generated id to avoid RETURNING
+      const submissionId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
+        ? (globalThis.crypto as Crypto).randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
       const params = new URLSearchParams(window.location.search);
-      const { data: sub, error: subErr } = await supabase
+      const { error: subErr } = await supabase
         .from('submissions')
         .insert({
+          id: submissionId,
           completed: true,
           user_agent: navigator.userAgent,
           referrer_url: document.referrer || null,
           utm_source: params.get('utm_source'),
           utm_medium: params.get('utm_medium'),
           utm_campaign: params.get('utm_campaign'),
-        })
-        .select('id')
-        .maybeSingle();
+        });
 
-      if (subErr || !sub?.id) {
-        setError(subErr?.message || 'Failed to create submission');
+      if (subErr) {
+        setError(subErr.message || 'Failed to create submission');
         toast.error('Failed to create submission');
         return null;
       }
-
-      const submissionId = sub.id as string;
 
       // 2) Insert answers in bulk
       const answers = Object.entries(responses).map(([questionId, value]) => ({

@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import { SEO } from '@/components/SEO';
 
 const navigation = [
-  { name: 'Executive Dashboard', href: '/admin', icon: LayoutDashboard, premium: true },
+  { name: 'Executive Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Overview', href: '/admin/overview', icon: BarChart3 },
   { name: 'Submissions', href: '/admin/submissions', icon: FileText },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
@@ -83,23 +83,12 @@ export function AdminLayout() {
                     "flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                     isActive
                       ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted",
-                    item.premium && !isPremium && "opacity-50 cursor-not-allowed"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   )
                 }
-                onClick={(e) => {
-                  if (item.premium && !isPremium) {
-                    e.preventDefault();
-                  }
-                }}
               >
                 <item.icon className="mr-3 h-4 w-4" />
                 {item.name}
-                {item.premium && (
-                  <Badge variant="secondary" className="ml-auto text-xs">
-                    Pro
-                  </Badge>
-                )}
               </NavLink>
             ))}
           </nav>
