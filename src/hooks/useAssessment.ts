@@ -1,3 +1,4 @@
+
 // TEMPORARY STUB - Phase 1 Cleanup
 // This file contains stub implementations to prevent TypeScript errors
 // Will be replaced with full implementation in Phase 2
@@ -36,7 +37,7 @@ export function useAssessment() {
           utm_source: params.get('utm_source'),
           utm_medium: params.get('utm_medium'),
           utm_campaign: params.get('utm_campaign'),
-        });
+        }, { returning: 'minimal' }); // important: no SELECT needed
 
       if (subErr) {
         setError(subErr.message || 'Failed to create submission');
@@ -53,7 +54,9 @@ export function useAssessment() {
       }));
 
       if (answers.length > 0) {
-        const { error: ansErr } = await supabase.from('answers').insert(answers);
+        const { error: ansErr } = await supabase
+          .from('answers')
+          .insert(answers, { returning: 'minimal' }); // important: no SELECT needed
         if (ansErr) {
           setError(ansErr.message);
           toast.error('Failed to save answers');
