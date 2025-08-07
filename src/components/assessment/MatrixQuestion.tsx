@@ -1,8 +1,8 @@
-import { QuestionChoice } from "@/types/assessment";
+import { QuestionOption } from "@/types/assessment";
 
 interface MatrixQuestionProps {
-  rows: QuestionChoice[];
-  columns: QuestionChoice[];
+  rows: QuestionOption[];
+  columns: QuestionOption[];
   value: Record<string, string>;
   onChange: (value: Record<string, string>) => void;
 }
@@ -19,7 +19,7 @@ export function MatrixQuestion({ rows, columns, value, onChange }: MatrixQuestio
           <tr>
             <th className="text-left"></th>
             {columns.map((col) => (
-              <th key={`header-${col.value}`} className="px-4 py-2 text-center text-sm font-medium">
+              <th key={col.value} className="px-4 py-2 text-center text-sm font-medium">
                 {col.label}
               </th>
             ))}
@@ -27,10 +27,10 @@ export function MatrixQuestion({ rows, columns, value, onChange }: MatrixQuestio
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={`row-${row.value}`} className="border-t">
+            <tr key={row.value} className="border-t">
               <td className="pr-4 py-2 text-sm">{row.label}</td>
               {columns.map((col) => (
-                <td key={`cell-${row.value}-${col.value}`} className="text-center py-2">
+                <td key={col.value} className="text-center py-2">
                   <input
                     type="radio"
                     id={`${row.value}-${col.value}`}

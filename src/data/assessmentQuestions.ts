@@ -5,7 +5,7 @@ import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
 import type {
   Section,
   Question,
-  QuestionChoice,
+  QuestionOption,
   ConsentBanner,
   ComputedField,
   QuestionType,
@@ -31,13 +31,13 @@ interface RawQuestion {
   type: string;
   helper?: string;
   required?: boolean;
-  options?: Array<string | QuestionChoice>;
+  options?: Array<string | QuestionOption>;
   rows?: string[];
   columns?: string[];
   groups?: Array<{
     label: string;
     show_if?: Record<string, unknown>;
-    options: Array<string | QuestionChoice>;
+    options: Array<string | QuestionOption>;
   }>;
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
@@ -72,7 +72,7 @@ try {
     throw new Error('Invalid YAML structure');
   }
 } catch (error) {
-  // Failed to load assessment YAML
+  console.error('Failed to load assessment YAML:', error);
   // Fallback to minimal schema to prevent app crash
   schema = {
     meta: { title: "Assessment unavailable" },
@@ -90,24 +90,13 @@ try {
   };
 }
 
-// Enhanced normalize function to handle both YAML and database formats
-function normalizeChoices(
-  opts?: Array<string | QuestionChoice>
-): QuestionChoice[] | undefined {
-  return opts?.map((o) => {
-    if (typeof o === "string") {
-      return { value: o, label: o };
-    }
-    // Ensure we have both value and label with all new fields
-    return {
-      value: o.value || o.label || '',
-      label: o.label || o.value || '',
-      score: o.score,
-      reasoning: o.reasoning,
-      model_input_context: o.model_input_context,
-      description: o.description
-    };
-  });
+// Normalize a mixed array of strings or objects into QuestionOption[]
+function normalizeOptions(
+  opts?: Array<string | QuestionOption>
+): QuestionOption[] | undefined {
+  return opts?.map((o) =>
+    typeof o === "string" ? { value: o, label: o } : o
+  );
 }
 
 // Top-level maps for consent banners & computed logic
@@ -148,7 +137,7 @@ const assessmentSections: Section[] = Object.entries(schema)
         scoreByCount: q.score_by_count,
       };
 
-      if (q.options)   base.choices = normalizeChoices(q.options);
+      if (q.options)   base.options = normalizeOptions(q.options);
       if (q.rows)      base.rows    = [...q.rows];
       if (q.columns)   base.columns = [...q.columns];
 
@@ -156,7 +145,7 @@ const assessmentSections: Section[] = Object.entries(schema)
         base.groups = q.groups.map((g) => ({
           label: g.label,
           showIf: g.show_if,
-          choices: normalizeChoices(g.options) || [],
+          options: normalizeOptions(g.options) || [],
         }));
       }
 
@@ -201,7 +190,7 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     scoreByCount: q.score_by_count,
   };
 
-  if (q.options)  base.choices  = normalizeChoices(q.options);
+  if (q.options)  base.options  = normalizeOptions(q.options);
   if (q.rows)     base.rows     = [...q.rows];
   if (q.columns)  base.columns  = [...q.columns];
 
@@ -209,7 +198,7 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     base.groups = q.groups.map((g) => ({
       label: g.label,
       showIf: g.show_if,
-      choices: normalizeChoices(g.options) || [],
+      options: normalizeOptions(g.options) || [],
     }));
   }
 

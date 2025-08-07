@@ -27,29 +27,10 @@ export function OrganizationProfileForm({
 }: OrganizationProfileFormProps) {
   const { t, i18n } = useTranslation();
   
-  // Helper function to find a question by ID with enhanced error handling
-  const findQuestion = (id: string): Question | undefined => {
+  // Helper to find question by ID and localize it
+  const findQuestion = (id: string) => {
     const question = questions.find(q => q.id === id);
-    if (!question) {
-      console.error(`Question with ID ${id} not found in questions array`);
-      return undefined;
-    }
-    
-    try {
-      const localizedQuestion = getLocalizedQuestion(question, i18n.language);
-      
-      // Debug logging for choices availability
-      if (!localizedQuestion.choices || localizedQuestion.choices.length === 0) {
-        console.warn(`Question ${id} has no choices available:`, localizedQuestion);
-      } else {
-        console.log(`Question ${id} loaded successfully with ${localizedQuestion.choices.length} choices`);
-      }
-      
-      return localizedQuestion;
-    } catch (error) {
-      console.error(`Error localizing question ${id}:`, error);
-      return question; // Fallback to original question
-    }
+    return question ? getLocalizedQuestion(question, i18n.language) : undefined;
   };
 
   // Helper to render field label with required asterisk
@@ -136,7 +117,7 @@ export function OrganizationProfileForm({
           </div>
           
           <div className="space-y-2">
-            {role && role.choices ? (
+            {role && (
               <>
                 {renderLabel(role)}
                 <Select 
@@ -147,15 +128,13 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectRole")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {role.choices.map((opt, index) => {
-                      if (!opt) return null;
-                      const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                      const label = typeof opt === "string" ? opt : (opt?.label || val);
-                      if (!val) return null;
+                    {role.options?.map((opt) => {
+                      const val = typeof opt === "string" ? opt : opt.value;
+                      const label = typeof opt === "string" ? opt : opt.label;
                       return (
                         <SelectItem 
-                          key={`role-${index}`} 
-                          value={String(val)}
+                          key={val} 
+                          value={val}
                           className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                         >
                           {label}
@@ -166,14 +145,12 @@ export function OrganizationProfileForm({
                 </Select>
                 {renderHelper(role)}
               </>
-            ) : (
-              <div className="text-muted-foreground">Role options not available</div>
             )}
           </div>
 
           {/* Row 3: Industry & sub-sector | Country */}
           <div className="space-y-2">
-            {industry && industry.choices ? (
+            {industry && (
               <>
                 {renderLabel(industry)}
                 <Select 
@@ -184,15 +161,13 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectIndustry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {industry.choices.map((opt, index) => {
-                      if (!opt) return null;
-                      const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                      const label = typeof opt === "string" ? opt : (opt?.label || val);
-                      if (!val) return null;
+                    {industry.options?.map((opt) => {
+                      const val = typeof opt === "string" ? opt : opt.value;
+                      const label = typeof opt === "string" ? opt : opt.label;
                       return (
                         <SelectItem 
-                          key={`industry-${index}`} 
-                          value={String(val)}
+                          key={val} 
+                          value={val}
                           className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                         >
                           {label}
@@ -203,15 +178,11 @@ export function OrganizationProfileForm({
                 </Select>
                 {renderHelper(industry)}
               </>
-            ) : (
-              <div className="text-muted-foreground">
-                {industry ? 'Loading industry options...' : 'Industry question not found'}
-              </div>
             )}
           </div>
           
           <div className="space-y-2">
-            {country && country.choices ? (
+            {country && (
               <>
                 {renderLabel(country)}
                 <Select 
@@ -222,15 +193,13 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectCountry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {country.choices.map((opt, index) => {
-                      if (!opt) return null;
-                      const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                      const label = typeof opt === "string" ? opt : (opt?.label || val);
-                      if (!val) return null;
+                    {country.options?.map((opt) => {
+                      const val = typeof opt === "string" ? opt : opt.value;
+                      const label = typeof opt === "string" ? opt : opt.label;
                       return (
                         <SelectItem 
-                          key={`country-${index}`} 
-                          value={String(val)}
+                          key={val} 
+                          value={val}
                           className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                         >
                           {label}
@@ -241,10 +210,6 @@ export function OrganizationProfileForm({
                 </Select>
                 {renderHelper(country)}
               </>
-            ) : (
-              <div className="text-muted-foreground">
-                {country ? 'Loading country options...' : 'Country question not found'}
-              </div>
             )}
           </div>
         </div>
@@ -259,7 +224,7 @@ export function OrganizationProfileForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Row 1: Company size | Annual revenue */}
           <div className="space-y-4">
-            {companySize && companySize.choices ? (
+            {companySize && (
               <>
                 {renderLabel(companySize)}
                 <RadioGroup
@@ -267,23 +232,18 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(companySize.id, value)}
                   className="space-y-3"
                 >
-                  {companySize.choices.map((opt, index) => {
-                    // Handle both string and object options safely
-                    const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                    const label = typeof opt === "string" ? opt : (opt?.label || val);
-                    
-                    // Create safe ID by removing special characters
-                    const safeId = `size-${index}-${String(val).replace(/[^a-zA-Z0-9]/g, '-')}`;
-                    
+                  {companySize.options?.map((opt) => {
+                    const val = typeof opt === "string" ? opt : opt.value;
+                    const label = typeof opt === "string" ? opt : opt.label;
                     return (
-                      <div key={`size-${index}`} className="flex items-center space-x-3">
+                      <div key={val} className="flex items-center space-x-3">
                         <RadioGroupItem 
-                          value={String(val)} 
-                          id={safeId}
+                          value={val} 
+                          id={`size-${val}`}
                           className="mt-0.5" 
                         />
                         <Label
-                          htmlFor={safeId}
+                          htmlFor={`size-${val}`}
                           className="font-normal cursor-pointer text-sm"
                         >
                           {label}
@@ -294,13 +254,11 @@ export function OrganizationProfileForm({
                 </RadioGroup>
                 {renderHelper(companySize)}
               </>
-            ) : (
-              <div className="text-muted-foreground">Company size options not available</div>
             )}
           </div>
           
           <div className="space-y-4">
-            {revenue && revenue.choices ? (
+            {revenue && (
               <>
                 {renderLabel(revenue)}
                 <RadioGroup
@@ -308,23 +266,18 @@ export function OrganizationProfileForm({
                   onValueChange={(value) => onChange(revenue.id, value)}
                   className="space-y-3"
                 >
-                  {revenue.choices.map((opt, index) => {
-                    // Handle both string and object options safely
-                    const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                    const label = typeof opt === "string" ? opt : (opt?.label || val);
-                    
-                    // Create safe ID by removing special characters
-                    const safeId = `revenue-${index}-${String(val).replace(/[^a-zA-Z0-9]/g, '-')}`;
-                    
+                  {revenue.options?.map((opt) => {
+                    const val = typeof opt === "string" ? opt : opt.value;
+                    const label = typeof opt === "string" ? opt : opt.label;
                     return (
-                      <div key={`revenue-${index}`} className="flex items-center space-x-3">
+                      <div key={val} className="flex items-center space-x-3">
                         <RadioGroupItem 
-                          value={String(val)} 
-                          id={safeId}
+                          value={val} 
+                          id={`revenue-${val}`}
                           className="mt-0.5" 
                         />
                         <Label
-                          htmlFor={safeId}
+                          htmlFor={`revenue-${val}`}
                           className="font-normal cursor-pointer text-sm"
                         >
                           {label}
@@ -335,8 +288,6 @@ export function OrganizationProfileForm({
                 </RadioGroup>
                 {renderHelper(revenue)}
               </>
-            ) : (
-              <div className="text-muted-foreground">Annual revenue options not available</div>
             )}
           </div>
         </div>

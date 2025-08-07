@@ -71,15 +71,15 @@ export function QuestionCard({
       case "dropdown":
       case "industry_dropdown": {
         // Handles radio groups as well as dropdowns (industry_dropdown & country_dropdown)
-        const flatChoices: Array<
+        const flatOptions: Array<
           string | { value: string; label: string }
-        > = localizedQuestion.choices || localizedQuestion.groups?.flatMap((g) => g.choices) || [];
+        > = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];
 
         // Use dropdown for: explicit dropdown types, questions with many options (>8), or specific questions like M3 (Primary role)
         const shouldUseDropdown = 
           localizedQuestion.type === "dropdown" || 
           localizedQuestion.type === "industry_dropdown" ||
-          flatChoices.length > 8 ||
+          flatOptions.length > 8 ||
           localizedQuestion.id === "M3"; // Primary role question
 
         if (shouldUseDropdown) {
@@ -90,13 +90,13 @@ export function QuestionCard({
                 <SelectValue placeholder={t('form.pleaseSelect')} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-background border border-border shadow-lg">
-                {flatChoices.map((opt, index) => {
-                  const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                  const label = typeof opt === "string" ? opt : (opt?.label || val);
+                {flatOptions.map((opt) => {
+                  const val = typeof opt === "string" ? opt : opt.value;
+                  const label = typeof opt === "string" ? opt : opt.label;
                   return (
                     <SelectItem 
-                      key={`${val}-${index}`} 
-                      value={String(val)}
+                      key={val} 
+                      value={val}
                       className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                     >
                       {label}
@@ -121,7 +121,7 @@ export function QuestionCard({
                     <Label className="text-sm font-medium">
                       {group.label}
                     </Label>
-                    {group.choices.map((opt) => (
+                    {group.options.map((opt) => (
                       <div
                         key={opt.value}
                         className="flex items-center space-x-2"
@@ -137,14 +137,13 @@ export function QuestionCard({
                     ))}
                   </div>
                 ))
-              : flatChoices.map((opt, index) => {
-                  const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
-                  const label = typeof opt === "string" ? opt : (opt?.label || val);
-                  const safeId = `${localizedQuestion.id}-${index}-${String(val).replace(/[^a-zA-Z0-9]/g, '-')}`;
+              : flatOptions.map((opt) => {
+                  const val = typeof opt === "string" ? opt : opt.value;
+                  const label = typeof opt === "string" ? opt : opt.label;
                   return (
-                    <div key={`${val}-${index}`} className="flex items-center space-x-2">
-                      <RadioGroupItem value={String(val)} id={safeId} />
-                      <Label htmlFor={safeId} className="font-normal cursor-pointer">
+                    <div key={val} className="flex items-center space-x-2">
+                      <RadioGroupItem value={val} id={val} />
+                      <Label htmlFor={val} className="font-normal cursor-pointer">
                         {label}
                       </Label>
                     </div>
@@ -157,7 +156,7 @@ export function QuestionCard({
       case "multi":
         return (
           <MultiSelectQuestion
-            choices={localizedQuestion.choices || []}
+            options={localizedQuestion.options || []}
             value={value || []}
             onChange={onChange}
           />
@@ -174,10 +173,10 @@ export function QuestionCard({
         );
 
       case "rank": {
-        const rankOpts = localizedQuestion.choices || localizedQuestion.groups?.flatMap((g) => g.choices) || [];
+        const rankOpts = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];
         return (
           <DragDropQuestionRank
-            choices={rankOpts}
+            options={rankOpts}
             value={value || []}
             onChange={onChange}
             maxRank={localizedQuestion.maxRank || 3}

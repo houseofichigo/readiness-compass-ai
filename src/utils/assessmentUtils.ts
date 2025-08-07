@@ -1,4 +1,4 @@
-import { Question, Section, QuestionChoice } from '@/types/assessment';
+import { Question, Section, QuestionOption } from '@/types/assessment';
 import { frenchTranslations } from '@/i18n/translations/completeFrenchTranslations';
 
 export function getLocalizedText(
@@ -20,23 +20,23 @@ export function getLocalizedText(
   return ''; // Fall back to original
 }
 
-export function getLocalizedChoices(
+export function getLocalizedOptions(
   questionId: string,
-  originalChoices: QuestionChoice[] | undefined,
+  originalOptions: QuestionOption[] | undefined,
   language: string = 'en'
-): QuestionChoice[] | undefined {
-  if (!originalChoices || language === 'en') {
-    return originalChoices;
+): QuestionOption[] | undefined {
+  if (!originalOptions || language === 'en') {
+    return originalOptions;
   }
   
   if (language === 'fr') {
     const translation = frenchTranslations[questionId];
-    if (translation && translation.choices) {
-      return translation.choices as QuestionChoice[];
+    if (translation && translation.options) {
+      return translation.options as QuestionOption[];
     }
   }
   
-  return originalChoices;
+  return originalOptions;
 }
 
 export function getLocalizedQuestion(question: Question, language: string = 'en'): Question {
@@ -44,20 +44,16 @@ export function getLocalizedQuestion(question: Question, language: string = 'en'
     return question;
   }
   
-  if (language === 'fr') {
-    const localizedText = getLocalizedText(question.id, 'text', language);
-    const localizedHelper = getLocalizedText(question.id, 'helper', language);
-    const localizedChoices = getLocalizedChoices(question.id, question.choices, language);
-    
-    return {
-      ...question,
-      text: localizedText || question.text,
-      helper: localizedHelper || question.helper,
-      choices: localizedChoices || question.choices,
-    };
-  }
+  const localizedText = getLocalizedText(question.id, 'text', language);
+  const localizedHelper = getLocalizedText(question.id, 'helper', language);
+  const localizedOptions = getLocalizedOptions(question.id, question.options, language);
   
-  return question;
+  return {
+    ...question,
+    text: localizedText || question.text,
+    helper: localizedHelper || question.helper,
+    options: localizedOptions || question.options,
+  };
 }
 
 export function getLocalizedSection(section: Section, language: string = 'en'): Section {

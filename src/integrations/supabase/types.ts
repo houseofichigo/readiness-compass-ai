@@ -40,82 +40,22 @@ export type Database = {
       }
       answers: {
         Row: {
-          answer_score: number | null
           answered_at: string
-          cap: number | null
-          category: string | null
-          option_model_input_context: string | null
-          option_reasoning: string | null
-          option_score: number | null
-          pillar_logic: Json | null
-          pillar_options: Json | null
-          pillar_scores: Json | null
-          purpose: string | null
-          question_helper: string | null
           question_id: string
-          question_options: Json | null
-          question_required: boolean | null
-          question_text: string | null
-          question_type: string | null
-          score_formula: string | null
-          score_map_by_bucket: Json | null
-          score_per: number | null
-          section_id: string | null
           submission_id: string
           value: Json | null
-          weight: number[] | null
         }
         Insert: {
-          answer_score?: number | null
           answered_at?: string
-          cap?: number | null
-          category?: string | null
-          option_model_input_context?: string | null
-          option_reasoning?: string | null
-          option_score?: number | null
-          pillar_logic?: Json | null
-          pillar_options?: Json | null
-          pillar_scores?: Json | null
-          purpose?: string | null
-          question_helper?: string | null
           question_id: string
-          question_options?: Json | null
-          question_required?: boolean | null
-          question_text?: string | null
-          question_type?: string | null
-          score_formula?: string | null
-          score_map_by_bucket?: Json | null
-          score_per?: number | null
-          section_id?: string | null
           submission_id: string
           value?: Json | null
-          weight?: number[] | null
         }
         Update: {
-          answer_score?: number | null
           answered_at?: string
-          cap?: number | null
-          category?: string | null
-          option_model_input_context?: string | null
-          option_reasoning?: string | null
-          option_score?: number | null
-          pillar_logic?: Json | null
-          pillar_options?: Json | null
-          pillar_scores?: Json | null
-          purpose?: string | null
-          question_helper?: string | null
           question_id?: string
-          question_options?: Json | null
-          question_required?: boolean | null
-          question_text?: string | null
-          question_type?: string | null
-          score_formula?: string | null
-          score_map_by_bucket?: Json | null
-          score_per?: number | null
-          section_id?: string | null
           submission_id?: string
           value?: Json | null
-          weight?: number[] | null
         }
         Relationships: [
           {
@@ -160,6 +100,99 @@ export type Database = {
         }
         Relationships: []
       }
+      computed_definitions: {
+        Row: {
+          conditions: Json | null
+          field_id: string
+          formula: string | null
+          logic: string | null
+          section_id: string
+        }
+        Insert: {
+          conditions?: Json | null
+          field_id: string
+          formula?: string | null
+          logic?: string | null
+          section_id: string
+        }
+        Update: {
+          conditions?: Json | null
+          field_id?: string
+          formula?: string | null
+          logic?: string | null
+          section_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "computed_definitions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      computed_values: {
+        Row: {
+          field_id: string
+          submission_id: string
+          value: Json | null
+        }
+        Insert: {
+          field_id: string
+          submission_id: string
+          value?: Json | null
+        }
+        Update: {
+          field_id?: string
+          submission_id?: string
+          value?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "computed_values_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      consent_banners: {
+        Row: {
+          consent_text: string | null
+          description: string | null
+          required: boolean
+          section_id: string
+          text: string | null
+          title: string | null
+        }
+        Insert: {
+          consent_text?: string | null
+          description?: string | null
+          required?: boolean
+          section_id: string
+          text?: string | null
+          title?: string | null
+        }
+        Update: {
+          consent_text?: string | null
+          description?: string | null
+          required?: boolean
+          section_id?: string
+          text?: string | null
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consent_banners_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: true
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -187,114 +220,176 @@ export type Database = {
         }
         Relationships: []
       }
+      question_scores: {
+        Row: {
+          question_id: string
+          score: number | null
+          submission_id: string
+        }
+        Insert: {
+          question_id: string
+          score?: number | null
+          submission_id: string
+        }
+        Update: {
+          question_id?: string
+          score?: number | null
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_scores_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "question_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       questions: {
         Row: {
-          assessment_id: string
+          assessment_id: string | null
           cap: number | null
-          category: string
           columns: Json | null
           created_at: string
           groups: Json | null
-          helper: string
-          hide_if: Json
+          helper: string | null
+          hide_if: Json | null
           id: string
           is_add_on: boolean
-          max_rank: number
-          max_select: number
-          model_input_context: Json | null
-          options: Json
-          pillar_logic: Json
-          pillar_options: Json
-          pillar_scores: Json
-          purpose: string
-          reasoning: Json | null
+          max_rank: number | null
+          max_select: number | null
+          options: Json | null
           required: boolean
           rows: Json | null
+          score_by_count: Json | null
           score_formula: string | null
-          score_map_by_bucket: Json
+          score_map: Json | null
           score_per: number | null
-          section_id: string
+          section_id: string | null
           sequence: number
-          show_if: Json
+          show_if: Json | null
           text: string
           type: string
           updated_at: string
-          weight: number[] | null
+          weight: Json | null
         }
         Insert: {
-          assessment_id: string
+          assessment_id?: string | null
           cap?: number | null
-          category: string
           columns?: Json | null
           created_at?: string
           groups?: Json | null
-          helper: string
-          hide_if: Json
+          helper?: string | null
+          hide_if?: Json | null
           id: string
           is_add_on?: boolean
-          max_rank: number
-          max_select: number
-          model_input_context?: Json | null
-          options: Json
-          pillar_logic: Json
-          pillar_options: Json
-          pillar_scores: Json
-          purpose: string
-          reasoning?: Json | null
+          max_rank?: number | null
+          max_select?: number | null
+          options?: Json | null
           required?: boolean
           rows?: Json | null
+          score_by_count?: Json | null
           score_formula?: string | null
-          score_map_by_bucket: Json
+          score_map?: Json | null
           score_per?: number | null
-          section_id: string
+          section_id?: string | null
           sequence: number
-          show_if: Json
+          show_if?: Json | null
           text: string
           type: string
           updated_at?: string
-          weight?: number[] | null
+          weight?: Json | null
         }
         Update: {
-          assessment_id?: string
+          assessment_id?: string | null
           cap?: number | null
-          category?: string
           columns?: Json | null
           created_at?: string
           groups?: Json | null
-          helper?: string
-          hide_if?: Json
+          helper?: string | null
+          hide_if?: Json | null
           id?: string
           is_add_on?: boolean
-          max_rank?: number
-          max_select?: number
-          model_input_context?: Json | null
-          options?: Json
-          pillar_logic?: Json
-          pillar_options?: Json
-          pillar_scores?: Json
-          purpose?: string
-          reasoning?: Json | null
+          max_rank?: number | null
+          max_select?: number | null
+          options?: Json | null
           required?: boolean
           rows?: Json | null
+          score_by_count?: Json | null
           score_formula?: string | null
-          score_map_by_bucket?: Json
+          score_map?: Json | null
           score_per?: number | null
-          section_id?: string
+          section_id?: string | null
           sequence?: number
-          show_if?: Json
+          show_if?: Json | null
           text?: string
           type?: string
           updated_at?: string
-          weight?: number[] | null
+          weight?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "questions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      section_scores: {
+        Row: {
+          score: number | null
+          section_id: string
+          submission_id: string
+        }
+        Insert: {
+          score?: number | null
+          section_id: string
+          submission_id: string
+        }
+        Update: {
+          score?: number | null
+          section_id?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "section_scores_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "sections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "section_scores_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sections: {
         Row: {
           assessment_id: string | null
           category: string | null
           id: string
-          pillar_score: number | null
           purpose: string | null
           sequence: number
           title: string
@@ -303,7 +398,6 @@ export type Database = {
           assessment_id?: string | null
           category?: string | null
           id: string
-          pillar_score?: number | null
           purpose?: string | null
           sequence: number
           title: string
@@ -312,7 +406,6 @@ export type Database = {
           assessment_id?: string | null
           category?: string | null
           id?: string
-          pillar_score?: number | null
           purpose?: string | null
           sequence?: number
           title?: string
@@ -405,6 +498,73 @@ export type Database = {
           },
         ]
       }
+      track_detection_rules: {
+        Row: {
+          condition: Json
+          id: number
+          precedence: number
+          track_id: string
+        }
+        Insert: {
+          condition: Json
+          id?: number
+          precedence: number
+          track_id: string
+        }
+        Update: {
+          condition?: Json
+          id?: number
+          precedence?: number
+          track_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_detection_rules_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      track_weights: {
+        Row: {
+          automation: number
+          data: number
+          governance: number
+          people: number
+          strategy: number
+          tools: number
+          track_id: string
+        }
+        Insert: {
+          automation: number
+          data: number
+          governance: number
+          people: number
+          strategy: number
+          tools: number
+          track_id: string
+        }
+        Update: {
+          automation?: number
+          data?: number
+          governance?: number
+          people?: number
+          strategy?: number
+          tools?: number
+          track_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_weights_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: true
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tracks: {
         Row: {
           id: string
@@ -435,13 +595,6 @@ export type Database = {
       }
     }
     Functions: {
-      backfill_answer_option_metadata: {
-        Args: Record<PropertyKey, never>
-        Returns: {
-          updated_count: number
-          total_processed: number
-        }[]
-      }
       get_admin_dashboard_data: {
         Args: Record<PropertyKey, never>
         Returns: Json
@@ -495,10 +648,6 @@ export type Database = {
       is_admin: {
         Args: { user_email: string }
         Returns: boolean
-      }
-      sync_questions_from_yaml: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
       }
       track_analytics_event: {
         Args: {

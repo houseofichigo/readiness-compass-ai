@@ -13,21 +13,18 @@ export type QuestionType =
   | "dropdown"
   | "industry_dropdown";
 
-// Choice for single/multi/etc questions
-export interface QuestionChoice {
+// Option for single/multi/etc questions
+export interface QuestionOption {
   value: string;
   label: string;
   description?: string;
-  score?: number;
-  reasoning?: string;
-  model_input_context?: string;
 }
 
-// Group of choices
+// Group of options
 export interface QuestionGroup {
   label: string;
   showIf?: Record<string, unknown>;
-  choices: QuestionChoice[];
+  options: QuestionOption[];
 }
 
 // Core question shape
@@ -39,11 +36,11 @@ export interface Question {
   required?: boolean;
 
   // For single/multi/dropdown etc.
-  choices?: QuestionChoice[];
+  options?: QuestionOption[];
 
   // For matrix
-  rows?: (string | QuestionChoice)[];
-  columns?: (string | QuestionChoice)[];
+  rows?: (string | QuestionOption)[];
+  columns?: (string | QuestionOption)[];
 
   // For grouped checkboxes
   groups?: QuestionGroup[];

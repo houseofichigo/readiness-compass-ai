@@ -110,13 +110,14 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
     setIsSubmitting(true);
     try {
-      // Assessment completion initiated
+      // Debug: Log assessment completion
+      console.log("🔍 ASSESSMENT COMPLETION - Saving", Object.keys(responses).length, "responses");
       
       // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
       // Navigation is handled by onComplete in Index.tsx
     } catch (err) {
-      // Assessment completion failed
+      console.error("🚨 Assessment completion error:", err);
       toast({
         title: "Error completing assessment",
         description: "Please try again or contact support.",
@@ -158,7 +159,12 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     const validation = validateSection(questions, responses, ids);
     
     // Debug validation
-    // Validation check for current section
+    console.log("🔍 VALIDATION DEBUG:");
+    console.log("- Visible questions:", questions.length);
+    console.log("- Question IDs:", ids);
+    console.log("- Validation result:", validation.isValid);
+    console.log("- Validation errors:", validation.errors);
+    console.log("- Current responses:", Object.keys(responses));
     
     return validation.isValid;
   };
@@ -178,8 +184,14 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     if (isSubmitting) return;
 
     const onFinalStep = isAddOnPage || (isLastSection && !hasAddOns);
+    console.log("🔍 BUTTON CLICK DEBUG:");
+    console.log("- Is final step:", onFinalStep);
+    console.log("- Is add-on page:", isAddOnPage);
+    console.log("- Is last section:", isLastSection);
+    console.log("- Has add-ons:", hasAddOns);
 
     if (!canProceed()) {
+      console.log("❌ VALIDATION FAILED - Cannot proceed!");
       scrollToFirstError();
       toast({
         title: "Please complete all required questions",
@@ -189,9 +201,12 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       return;
     }
 
+    console.log("✅ VALIDATION PASSED - Proceeding...");
     if (onFinalStep) {
+      console.log("🚀 CALLING completeAssessment()");
       await completeAssessment();
     } else {
+      console.log("➡️ Going to next page");
       goNextPage();
     }
   };
@@ -255,7 +270,12 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         </Button>
         <Button 
           onClick={() => {
-            // Handle next button click
+            console.log("🔴 BUTTON CLICKED - Starting handleNext");
+            console.log("🔍 CURRENT STATE:");
+            console.log("- isSubmitting:", isSubmitting);
+            console.log("- currentPage:", currentPage);
+            console.log("- Total sections:", assessmentSections.length);
+            console.log("- Total responses:", Object.keys(responses).length);
             handleNext();
           }} 
           disabled={isSubmitting}

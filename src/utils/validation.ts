@@ -33,7 +33,7 @@ export function validateSection(
     }
 
     // "Other" field validation - handle various "Other" patterns
-    if (question.choices) {
+    if (question.options) {
       const hasOtherSelected = Array.isArray(answer) 
         ? answer.some(a => String(a).includes('Other (please specify)') || String(a) === 'Other')
         : String(answer).includes('Other (please specify)') || answer === 'Other';
