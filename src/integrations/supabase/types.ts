@@ -444,6 +444,10 @@ export type Database = {
         Args: { user_email: string }
         Returns: boolean
       }
+      sync_questions_from_yaml: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       track_analytics_event: {
         Args: {
           _event_name: string

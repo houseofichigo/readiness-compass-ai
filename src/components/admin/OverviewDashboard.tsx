@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAdminData } from '@/hooks/useAdminData';
+import { DataSyncButton } from './DataSyncButton';
 import { 
   FileText, 
   Building, 
@@ -83,6 +84,7 @@ export function OverviewDashboard() {
             Assessment platform performance at a glance
           </p>
         </div>
+        <DataSyncButton />
       </div>
 
       {/* Summary Cards */}
