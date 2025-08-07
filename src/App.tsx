@@ -7,10 +7,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProtectedRoute } from "@/components/admin/ProtectedRoute";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { ExecutiveDashboard } from "@/components/admin/ExecutiveDashboard";
-import { OverviewDashboard } from "@/components/admin/OverviewDashboard";
-import { SubmissionsTable } from "@/components/admin/SubmissionsTable";
-import { AnalyticsDashboard } from "@/components/admin/AnalyticsDashboard";
+import { LazyAdminRoutes } from "@/components/LazyAdminRoutes";
 import { AdminLogin } from "@/pages/AdminLogin";
 import Index from "./pages/Index";
 import ThankYou from "./pages/ThankYou";
@@ -43,10 +40,7 @@ const App = () => {
                     <AdminLayout />
                   </ProtectedRoute>
                 }>
-                  <Route index element={<ExecutiveDashboard />} />
-                  <Route path="overview" element={<OverviewDashboard />} />
-                  <Route path="submissions" element={<SubmissionsTable />} />
-                  <Route path="analytics" element={<AnalyticsDashboard />} />
+                  <Route path="*" element={<LazyAdminRoutes />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
