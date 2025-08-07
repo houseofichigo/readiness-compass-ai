@@ -5,6 +5,7 @@ import { DataSyncButton } from './DataSyncButton';
 import { TestSyncComponent } from './TestSyncComponent';
 import { ManualSyncTrigger } from './ManualSyncTrigger';
 import { DiagnosticTest } from './DiagnosticTest';
+import { ComprehensiveSync } from './ComprehensiveSync';
 import { 
   FileText, 
   Building, 
@@ -230,9 +231,8 @@ export function OverviewDashboard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <TestSyncComponent />
-            <ManualSyncTrigger />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <ComprehensiveSync />
             <DiagnosticTest />
           </div>
         </CardContent>
