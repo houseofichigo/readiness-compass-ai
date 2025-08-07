@@ -126,7 +126,7 @@ export default function ThankYou() {
   };
   const totalQuestions = Object.keys(responses).length;
   return (
-    <>
+    <div className="min-h-screen bg-gradient-accent">
       <SEO
         title="Thank You | AI Readiness Assessment"
         description="Thank you for completing the AI Readiness Assessment. Access your next steps and resources."
@@ -139,7 +139,6 @@ export default function ThankYou() {
           description: 'Thank you for completing the AI Readiness Assessment.'
         }}
       />
-      <div className="min-h-screen bg-gradient-accent">
       {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={200} gravity={0.1} />}
 
       {/* Language Selector */}
@@ -378,6 +377,6 @@ export default function ThankYou() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
