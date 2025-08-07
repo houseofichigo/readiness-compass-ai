@@ -7,20 +7,34 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-
 interface ProgressiveMultiGroupQuestionProps {
   groups: QuestionGroup[];
   value: string[];
   onChange: (value: string[]) => void;
+  detectedTrack?: string;
 }
 
 export function ProgressiveMultiGroupQuestion({ 
   groups, 
   value, 
-  onChange 
+  onChange,
+  detectedTrack = 'GEN' 
 }: ProgressiveMultiGroupQuestionProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
+
+  // Filter groups based on track-based show_if conditions
+  const visibleGroups = groups.filter(group => {
+    if (!group.showIf) return true;
+    
+    // Simple track-based filtering for show_if: { track: "TECH" }
+    if (group.showIf.track) {
+      return group.showIf.track === detectedTrack;
+    }
+    
+    // More complex conditions can be handled here
+    return true;
+  });
 
   const handleGroupToggle = (groupLabel: string) => {
     const newExpanded = new Set(expandedGroups);
@@ -44,7 +58,7 @@ export function ProgressiveMultiGroupQuestion({
     ).length;
   };
 
-  const filteredGroups = groups.filter(group => {
+  const filteredGroups = visibleGroups.filter(group => {
     if (!searchTerm) return true;
     
     // Search in group label

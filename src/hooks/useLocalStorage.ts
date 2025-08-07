@@ -7,6 +7,7 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       if (process.env.NODE_ENV === 'development') {
+        // Keep localStorage errors as console.error for debugging storage issues
         console.error(`Error reading localStorage key "${key}":`, error);
       }
       return initialValue;

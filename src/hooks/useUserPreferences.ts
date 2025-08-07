@@ -24,6 +24,7 @@ export function useUserPreferences() {
     try {
       localStorage.setItem(PREFERENCES_KEY, JSON.stringify(newPreferences));
     } catch (error) {
+      // Keep preferences warnings as console.warn for debugging
       console.warn('Failed to save user preferences:', error);
     }
   };

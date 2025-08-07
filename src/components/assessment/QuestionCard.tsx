@@ -25,12 +25,14 @@ interface QuestionCardProps {
   question: Question;
   value?: any;
   onChange: (value: any) => void;
+  detectedTrack?: string;
 }
 
 export function QuestionCard({
   question,
   value,
   onChange,
+  detectedTrack = 'GEN'
 }: QuestionCardProps) {
   const { i18n, t } = useTranslation();
   const localizedQuestion = getLocalizedQuestion(question, i18n.language);
@@ -162,15 +164,20 @@ export function QuestionCard({
           />
         );
 
-      case "multi_group":
+      case "multi_group": {
         // Grouped checkboxes with progressive disclosure
+        // Filter groups based on track and other conditions
+        const { groups = [] } = localizedQuestion;
+        
         return (
           <ProgressiveMultiGroupQuestion
-            groups={localizedQuestion.groups || []}
+            groups={groups}
             value={value || []}
             onChange={onChange}
+            detectedTrack={detectedTrack}
           />
         );
+      }
 
       case "rank": {
         const rankOpts = localizedQuestion.options || localizedQuestion.groups?.flatMap((g) => g.options) || [];

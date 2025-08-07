@@ -81,6 +81,7 @@ try {
     throw new Error('Invalid YAML structure');
   }
 } catch (error) {
+  // Keep this as console.error since this is a critical loading error that should always be visible
   console.error('Failed to load assessment YAML:', error);
   // Fallback to minimal schema to prevent app crash
   schema = {

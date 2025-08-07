@@ -18,6 +18,7 @@ import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/ty
 import { validateSection } from "@/utils/validation";
 import { useToast } from "@/hooks/use-toast";
 import { getLocalizedSection, getLocalizedQuestion } from "@/utils/assessmentUtils";
+import { Logger } from "@/utils/logger";
 
 interface AssessmentFlowProps {
   onComplete: (responses: Record<string, AssessmentValue>, profile: OrganizationProfile) => Promise<void>;
@@ -140,13 +141,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     setIsSubmitting(true);
     try {
       // Debug: Log assessment completion
-      console.log("🔍 ASSESSMENT COMPLETION - Saving", Object.keys(responses).length, "responses");
+      Logger.log("🔍 ASSESSMENT COMPLETION - Saving", Object.keys(responses).length, "responses");
       
       // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
       // Navigation is handled by onComplete in Index.tsx
     } catch (err) {
-      console.error("🚨 Assessment completion error:", err);
+      Logger.error("🚨 Assessment completion error:", err);
       toast({
         title: "Error completing assessment",
         description: "Please try again or contact support.",
@@ -188,12 +189,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     const validation = validateSection(questions, responses, ids);
     
     // Debug validation
-    console.log("🔍 VALIDATION DEBUG:");
-    console.log("- Visible questions:", questions.length);
-    console.log("- Question IDs:", ids);
-    console.log("- Validation result:", validation.isValid);
-    console.log("- Validation errors:", validation.errors);
-    console.log("- Current responses:", Object.keys(responses));
+    Logger.debug("VALIDATION DEBUG", {
+      "Visible questions": questions.length,
+      "Question IDs": ids,
+      "Validation result": validation.isValid,
+      "Validation errors": validation.errors,
+      "Current responses": Object.keys(responses)
+    });
     
     return validation.isValid;
   };
@@ -213,14 +215,15 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     if (isSubmitting) return;
 
     const onFinalStep = isAddOnPage || (isLastSection && !hasAddOns);
-    console.log("🔍 BUTTON CLICK DEBUG:");
-    console.log("- Is final step:", onFinalStep);
-    console.log("- Is add-on page:", isAddOnPage);
-    console.log("- Is last section:", isLastSection);
-    console.log("- Has add-ons:", hasAddOns);
+    Logger.debug("BUTTON CLICK DEBUG", {
+      "Is final step": onFinalStep,
+      "Is add-on page": isAddOnPage,
+      "Is last section": isLastSection,
+      "Has add-ons": hasAddOns
+    });
 
     if (!canProceed()) {
-      console.log("❌ VALIDATION FAILED - Cannot proceed!");
+      Logger.log("❌ VALIDATION FAILED - Cannot proceed!");
       scrollToFirstError();
       toast({
         title: "Please complete all required questions",
@@ -230,12 +233,12 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       return;
     }
 
-    console.log("✅ VALIDATION PASSED - Proceeding...");
+    Logger.log("✅ VALIDATION PASSED - Proceeding...");
     if (onFinalStep) {
-      console.log("🚀 CALLING completeAssessment()");
+      Logger.log("🚀 CALLING completeAssessment()");
       await completeAssessment();
     } else {
-      console.log("➡️ Going to next page");
+      Logger.log("➡️ Going to next page");
       goNextPage();
     }
   };
@@ -287,7 +290,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         ) : (
           visibleQuestions.map(q => (
             <div key={q.id} id={q.id} data-question-id={q.id}>
-              <QuestionCard question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} />
+              <QuestionCard question={q} value={responses[q.id]} onChange={v => handleAnswerChange(q.id, v)} detectedTrack={detectedTrack} />
             </div>
           ))
         )}
@@ -299,12 +302,13 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         </Button>
         <Button 
           onClick={() => {
-            console.log("🔴 BUTTON CLICKED - Starting handleNext");
-            console.log("🔍 CURRENT STATE:");
-            console.log("- isSubmitting:", isSubmitting);
-            console.log("- currentPage:", currentPage);
-            console.log("- Total sections:", assessmentSections.length);
-            console.log("- Total responses:", Object.keys(responses).length);
+            Logger.log("🔴 BUTTON CLICKED - Starting handleNext");
+            Logger.debug("CURRENT STATE", {
+              "isSubmitting": isSubmitting,
+              "currentPage": currentPage,
+              "Total sections": assessmentSections.length,
+              "Total responses": Object.keys(responses).length
+            });
             handleNext();
           }} 
           disabled={isSubmitting}

@@ -12,6 +12,7 @@ import {
 } from "@/types/assessment";
 import { assessmentSections } from "@/data/assessmentQuestions";
 import { useAssessment } from "@/hooks/useAssessment";
+import { Logger } from "@/utils/logger";
 
 type AppState = "welcome" | "assessment" | "results";
 
@@ -28,10 +29,10 @@ const Index = () => {
     responses: Record<string, AssessmentValue>,
     profile: OrganizationProfile
   ) => {
-    console.log("📋 INDEX - Saving assessment with", Object.keys(responses).length, "responses");
+    Logger.log("📋 INDEX - Saving assessment with", Object.keys(responses).length, "responses");
     
     if (Object.keys(responses).length === 0) {
-      console.error("🚨 CRITICAL: No responses data to save!");
+      Logger.error("🚨 CRITICAL: No responses data to save!");
       throw new Error("No responses data to save");
     }
     
@@ -39,7 +40,7 @@ const Index = () => {
     const savedSubmissionId = await saveAssessment(responses, profile);
     
     if (savedSubmissionId) {
-      console.log("✅ Assessment saved successfully, navigating to thank-you page");
+      Logger.log("✅ Assessment saved successfully, navigating to thank-you page");
       setSubmissionId(savedSubmissionId);
       
       // Navigate to thank you page using React Router
@@ -48,7 +49,7 @@ const Index = () => {
       });
       
     } else {
-      console.error("❌ Failed to save assessment - no submission ID returned");
+      Logger.error("❌ Failed to save assessment - no submission ID returned");
       throw new Error("Failed to save assessment to database");
     }
   };
