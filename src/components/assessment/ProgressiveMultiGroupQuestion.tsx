@@ -33,9 +33,15 @@ export function ProgressiveMultiGroupQuestion({
   };
 
   const handleOptionChange = (optValue: string, checked: boolean) => {
-    const set = new Set(value);
-    checked ? set.add(optValue) : set.delete(optValue);
-    onChange(Array.from(set));
+    if (checked) {
+      // Add option if not already present
+      if (!value.includes(optValue)) {
+        onChange([...value, optValue]);
+      }
+    } else {
+      // Remove option
+      onChange(value.filter(v => v !== optValue));
+    }
   };
 
   const getSelectedCountInGroup = (group: QuestionGroup): number => {
@@ -130,28 +136,28 @@ export function ProgressiveMultiGroupQuestion({
                 <CollapsibleContent>
                   <div className="px-4 pb-4 space-y-3 border-t bg-accent/20">
                     <div className="pt-3 space-y-2">
-                      {filteredOptions.map((opt) => {
-                        const optValue = typeof opt === 'string' ? opt : opt.value;
-                        const optLabel = typeof opt === 'string' ? opt : opt.label;
-                        
-                        return (
-                          <div key={optValue} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`${group.label}-${optValue}`}
-                              checked={value.includes(optValue)}
-                              onCheckedChange={(checked) => 
-                                handleOptionChange(optValue, checked as boolean)
-                              }
-                            />
-                            <Label 
-                              htmlFor={`${group.label}-${optValue}`} 
-                              className="font-normal cursor-pointer text-sm"
-                            >
-                              {optLabel}
-                            </Label>
-                          </div>
-                        );
-                      })}
+                       {filteredOptions.map((opt) => {
+                         const optValue = typeof opt === 'string' ? opt : opt.value;
+                         const optLabel = typeof opt === 'string' ? opt : opt.label;
+                         
+                         return (
+                           <div key={`${group.label}-${optValue}`} className="flex items-center space-x-2">
+                             <Checkbox
+                               id={`${group.label}-${optValue}`}
+                               checked={value.includes(optValue)}
+                               onCheckedChange={(checked) => 
+                                 handleOptionChange(optValue, checked as boolean)
+                               }
+                             />
+                             <Label 
+                               htmlFor={`${group.label}-${optValue}`} 
+                               className="font-normal cursor-pointer text-sm"
+                             >
+                               {optLabel}
+                             </Label>
+                           </div>
+                         );
+                       })}
                     </div>
                   </div>
                 </CollapsibleContent>
@@ -166,12 +172,12 @@ export function ProgressiveMultiGroupQuestion({
         <Card className="p-4 bg-primary/5 border-primary/20">
           <div className="space-y-2">
             <Label className="font-medium text-sm">Selected Tools:</Label>
-            <div className="flex flex-wrap gap-1">
-              {value.slice(0, 10).map(tool => (
-                <Badge key={tool} variant="secondary" className="text-xs">
-                  {tool}
-                </Badge>
-              ))}
+             <div className="flex flex-wrap gap-1">
+               {value.slice(0, 10).map(tool => (
+                 <Badge key={`selected-${tool}`} variant="secondary" className="text-xs">
+                   {tool}
+                 </Badge>
+               ))}
               {totalSelectedTools > 10 && (
                 <Badge variant="secondary" className="text-xs">
                   +{totalSelectedTools - 10} more

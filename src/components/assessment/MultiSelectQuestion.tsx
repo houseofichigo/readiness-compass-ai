@@ -14,20 +14,15 @@ export function MultiSelectQuestion({
   onChange 
 }: MultiSelectQuestionProps) {
   const handleOptionChange = (optionValue: string, checked: boolean) => {
-    const newValue = [...value];
-    
     if (checked) {
-      if (!newValue.includes(optionValue)) {
-        newValue.push(optionValue);
+      // Add option if not already present
+      if (!value.includes(optionValue)) {
+        onChange([...value, optionValue]);
       }
     } else {
-      const index = newValue.indexOf(optionValue);
-      if (index > -1) {
-        newValue.splice(index, 1);
-      }
+      // Remove option
+      onChange(value.filter(v => v !== optionValue));
     }
-    
-    onChange(newValue);
   };
 
   return (

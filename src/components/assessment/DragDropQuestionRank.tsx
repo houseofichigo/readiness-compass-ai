@@ -69,22 +69,22 @@ export function DragDropQuestionRank({
       </div>
       
       <div className="grid gap-3">
-        {options.map((option, index) => {
+        {options.map((option) => {
           const rank = getRankPosition(option.value);
           const isSelected = rank !== null;
           
           return (
             <Card
-              key={option.value}
+              key={`option-${option.value}`}
               className={`p-4 cursor-pointer transition-all duration-200 ${
                 isSelected 
                   ? "bg-primary/10 border-primary shadow-md" 
                   : "hover:bg-muted/50 hover:border-border"
               }`}
-              draggable
-              onDragStart={(e) => handleDragStart(e, option.value)}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, index)}
+              draggable={isSelected}
+              onDragStart={(e) => isSelected && handleDragStart(e, option.value)}
+              onDragOver={isSelected ? handleDragOver : undefined}
+              onDrop={(e) => isSelected && handleDrop(e, value.length)}
               onClick={() => handleOptionClick(option.value)}
             >
               <div className="flex items-center justify-between">
@@ -107,7 +107,7 @@ export function DragDropQuestionRank({
             {value.map((item, index) => {
               const option = options.find(opt => opt.value === item);
               return (
-                <div key={item} className="flex items-center gap-2">
+                <div key={`ranking-${item}`} className="flex items-center gap-2">
                   <Badge variant="outline">#{index + 1}</Badge>
                   <span>{option?.label}</span>
                 </div>
