@@ -52,15 +52,9 @@ export interface Question {
   showIf?: Record<string, unknown>;
   hideIf?: Record<string, unknown>;
 
-  // Scoring
-  scoreMap?: number[];
-  scorePer?: number;
-  cap?: number;
-  weight?: number[];
+  // Scoring (simplified - removed obsolete fields)
   maxRank?: number;
   maxSelect?: number;
-  scoreByCount?: Record<string, number>;
-  scoreFormula?: string;
   scoreMapByBucket?: Record<string, string[]>;
 }
 

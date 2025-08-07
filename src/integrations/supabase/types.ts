@@ -160,7 +160,6 @@ export type Database = {
       questions: {
         Row: {
           assessment_id: string
-          cap: number | null
           columns: Json | null
           created_at: string | null
           groups: Json | null
@@ -173,22 +172,16 @@ export type Database = {
           options: Json | null
           required: boolean | null
           rows: Json | null
-          score_by_count: Json | null
-          score_formula: string | null
-          score_map: Json | null
           score_map_by_bucket: Json | null
-          score_per: number | null
           section_id: string
           sequence: number
           show_if: Json | null
           text: string
           type: string
           updated_at: string | null
-          weight: Json | null
         }
         Insert: {
           assessment_id: string
-          cap?: number | null
           columns?: Json | null
           created_at?: string | null
           groups?: Json | null
@@ -201,22 +194,16 @@ export type Database = {
           options?: Json | null
           required?: boolean | null
           rows?: Json | null
-          score_by_count?: Json | null
-          score_formula?: string | null
-          score_map?: Json | null
           score_map_by_bucket?: Json | null
-          score_per?: number | null
           section_id: string
           sequence: number
           show_if?: Json | null
           text: string
           type: string
           updated_at?: string | null
-          weight?: Json | null
         }
         Update: {
           assessment_id?: string
-          cap?: number | null
           columns?: Json | null
           created_at?: string | null
           groups?: Json | null
@@ -229,18 +216,13 @@ export type Database = {
           options?: Json | null
           required?: boolean | null
           rows?: Json | null
-          score_by_count?: Json | null
-          score_formula?: string | null
-          score_map?: Json | null
           score_map_by_bucket?: Json | null
-          score_per?: number | null
           section_id?: string
           sequence?: number
           show_if?: Json | null
           text?: string
           type?: string
           updated_at?: string | null
-          weight?: Json | null
         }
         Relationships: []
       }

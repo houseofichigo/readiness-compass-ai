@@ -7,6 +7,7 @@ import './i18n';
 // Import test sync function in development
 if (import.meta.env.DEV) {
   import("./utils/testSync");
+  import("./utils/verifyStructure");
 }
 
 const container = document.getElementById('root');

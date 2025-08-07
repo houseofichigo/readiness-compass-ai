@@ -18,14 +18,8 @@ interface QuestionRow {
   groups?: any;
   show_if?: any;
   hide_if?: any;
-  score_map?: any;
-  score_per?: number;
-  cap?: number;
-  weight?: any;
   max_rank?: number;
   max_select?: number;
-  score_formula?: string;
-  score_by_count?: any;
   score_map_by_bucket?: any;
   is_add_on?: boolean;
 }
@@ -38,6 +32,7 @@ export async function syncQuestionsToSupabase() {
     
     // Process all sections and questions
     assessmentSections.forEach((section, sectionIndex) => {
+      console.log(`Processing section: ${section.id} with ${section.questions.length} questions`);
       section.questions.forEach((question, questionIndex) => {
         const questionRow: QuestionRow = {
           id: question.id,
@@ -51,21 +46,15 @@ export async function syncQuestionsToSupabase() {
           is_add_on: false,
         };
 
-        // Add all the question properties
+        // Add essential question properties only (removed obsolete scoring fields)
         if (question.options) questionRow.options = question.options;
         if (question.rows) questionRow.rows = question.rows;
         if (question.columns) questionRow.columns = question.columns;
         if (question.groups) questionRow.groups = question.groups;
         if (question.showIf) questionRow.show_if = question.showIf;
         if (question.hideIf) questionRow.hide_if = question.hideIf;
-        if (question.scoreMap) questionRow.score_map = question.scoreMap;
-        if (question.scorePer) questionRow.score_per = question.scorePer;
-        if (question.cap) questionRow.cap = question.cap;
-        if (question.weight) questionRow.weight = question.weight;
         if (question.maxRank) questionRow.max_rank = question.maxRank;
         if (question.maxSelect) questionRow.max_select = question.maxSelect;
-        if (question.scoreFormula) questionRow.score_formula = question.scoreFormula;
-        if (question.scoreByCount) questionRow.score_by_count = question.scoreByCount;
         if (question.scoreMapByBucket) questionRow.score_map_by_bucket = question.scoreMapByBucket;
 
         questionsToInsert.push(questionRow);

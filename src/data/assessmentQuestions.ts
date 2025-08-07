@@ -2,6 +2,7 @@
 
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
+import { ensureQuestionsExist } from "@/utils/autoSync";
 import type {
   Section,
   Question,
@@ -41,14 +42,8 @@ interface RawQuestion {
   }>;
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
-  score_map?: number[];
-  score_per?: number;
-  cap?: number;
-  weight?: number[];
   max_rank?: number;
   max_select?: number;
-  score_formula?: string;
-  score_by_count?: Record<string, number>;
   score_map_by_bucket?: Record<string, string[]>;
 }
 
@@ -137,14 +132,8 @@ const assessmentSections: Section[] = Object.entries(schema)
         required: q.required,
         showIf: q.show_if,
         hideIf: q.hide_if,
-        scoreMap: q.score_map,
-        scorePer: q.score_per,
-        cap: q.cap,
-        weight: q.weight,
         maxRank: q.max_rank,
         maxSelect: q.max_select,
-        scoreFormula: q.score_formula,
-        scoreByCount: q.score_by_count,
         scoreMapByBucket: q.score_map_by_bucket,
       };
 
@@ -191,14 +180,9 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     required: q.required,
     showIf: q.show_if,
     hideIf: q.hide_if,
-    scoreMap: q.score_map,
-    scorePer: q.score_per,
-    cap: q.cap,
-    weight: q.weight,
     maxRank: q.max_rank,
     maxSelect: q.max_select,
-    scoreFormula: q.score_formula,
-    scoreByCount: q.score_by_count,
+    scoreMapByBucket: q.score_map_by_bucket,
   };
 
   if (q.options)  base.options  = normalizeOptions(q.options);
@@ -223,3 +207,8 @@ export {
   assessmentAddOns,
 };
 export const assessmentMeta = schema.meta ?? {};
+
+// Ensure questions are synced to Supabase
+if (typeof window !== 'undefined') {
+  ensureQuestionsExist().catch(console.error);
+}
