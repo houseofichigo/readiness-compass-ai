@@ -90,7 +90,7 @@ try {
   };
 }
 
-// Normalize a mixed array of strings or objects into QuestionOption[]
+// Enhanced normalize function to handle both YAML and database formats
 function normalizeChoices(
   opts?: Array<string | QuestionChoice>
 ): QuestionChoice[] | undefined {
@@ -98,13 +98,14 @@ function normalizeChoices(
     if (typeof o === "string") {
       return { value: o, label: o };
     }
-    // Ensure we have both value and label
+    // Ensure we have both value and label with all new fields
     return {
       value: o.value || o.label || '',
       label: o.label || o.value || '',
       score: o.score,
       reasoning: o.reasoning,
-      model_input_context: o.model_input_context
+      model_input_context: o.model_input_context,
+      description: o.description
     };
   });
 }

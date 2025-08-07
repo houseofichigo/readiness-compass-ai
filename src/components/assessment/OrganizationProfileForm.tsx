@@ -27,20 +27,27 @@ export function OrganizationProfileForm({
 }: OrganizationProfileFormProps) {
   const { t, i18n } = useTranslation();
   
-  // Helper to find question by ID and localize it with fallback
-  const findQuestion = (id: string) => {
+  // Helper function to find a question by ID with enhanced error handling
+  const findQuestion = (id: string): Question | undefined => {
     const question = questions.find(q => q.id === id);
     if (!question) {
-      console.warn(`Question ${id} not found in questions array`);
+      console.error(`Question with ID ${id} not found in questions array`);
       return undefined;
     }
     
     try {
-      const localized = getLocalizedQuestion(question, i18n.language);
-      console.log(`Found question ${id} with ${localized.choices?.length || 0} choices`);
-      return localized;
+      const localizedQuestion = getLocalizedQuestion(question, i18n.language);
+      
+      // Debug logging for choices availability
+      if (!localizedQuestion.choices || localizedQuestion.choices.length === 0) {
+        console.warn(`Question ${id} has no choices available:`, localizedQuestion);
+      } else {
+        console.log(`Question ${id} loaded successfully with ${localizedQuestion.choices.length} choices`);
+      }
+      
+      return localizedQuestion;
     } catch (error) {
-      console.warn(`Error localizing question ${id}:`, error);
+      console.error(`Error localizing question ${id}:`, error);
       return question; // Fallback to original question
     }
   };
@@ -197,7 +204,9 @@ export function OrganizationProfileForm({
                 {renderHelper(industry)}
               </>
             ) : (
-              <div className="text-muted-foreground">Loading industry options...</div>
+              <div className="text-muted-foreground">
+                {industry ? 'Loading industry options...' : 'Industry question not found'}
+              </div>
             )}
           </div>
           
@@ -233,7 +242,9 @@ export function OrganizationProfileForm({
                 {renderHelper(country)}
               </>
             ) : (
-              <div className="text-muted-foreground">Country options not available</div>
+              <div className="text-muted-foreground">
+                {country ? 'Loading country options...' : 'Country question not found'}
+              </div>
             )}
           </div>
         </div>
