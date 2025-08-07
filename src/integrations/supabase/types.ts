@@ -288,6 +288,39 @@ export type Database = {
           },
         ]
       }
+      feedback: {
+        Row: {
+          comments: string | null
+          created_at: string
+          email: string | null
+          id: string
+          page: string | null
+          rating: number | null
+          submission_id: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          comments?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          page?: string | null
+          rating?: number | null
+          submission_id?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          comments?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          page?: string | null
+          rating?: number | null
+          submission_id?: string | null
+          user_agent?: string | null
+        }
+        Relationships: []
+      }
       organization_members: {
         Row: {
           created_at: string
