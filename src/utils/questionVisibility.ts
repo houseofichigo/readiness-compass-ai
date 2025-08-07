@@ -90,7 +90,7 @@ function evaluateStringCondition(cond: string, ctx: EvalContext): boolean {
     }
     // Fallback: check if industry is regulated
     const industry = ctx.responses.M4_industry as string;
-    const regulatedIndustries = ['Banking', 'Insurance', 'Healthcare', 'Government', 'Legal', 'Financial Services', 'Pharmaceuticals'];
+    const regulatedIndustries = getRegulatedIndustries();
     return industry && regulatedIndustries.includes(industry);
   }
   
@@ -178,9 +178,22 @@ function getTechRoles(): string[] {
 
 /** Pull regulated industries from the computed logic */
 function getRegulatedIndustries(): string[] {
-  const prof = assessmentSections.find(s => s.id === 'section_0');
-  const logic = prof?.computed?.find(c => c.id === 'regulated')?.logic || '';
-  return parseListLiteral(logic as string || "");
+  const computedField = (assessmentMeta.computed_fields as Record<string, any>)?.regulated;
+  if (computedField?.logic) {
+    return parseListLiteral(computedField.logic);
+  }
+  // Fallback to hardcoded list
+  return [
+    'Finance & Insurance',
+    'Health Care & Social Assistance', 
+    'Utilities (Electricity, Gas, Water & Waste)',
+    'Transportation & Warehousing',
+    'Manufacturing',
+    'Information & Communication Technology',
+    'Professional, Scientific & Technical Services',
+    'Administrative & Support & Waste Management Services',
+    'Accommodation & Food Services'
+  ];
 }
 
 const TECH_ROLES = getTechRoles();

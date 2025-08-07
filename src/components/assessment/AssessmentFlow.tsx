@@ -51,11 +51,34 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     Object.entries(computedFields).forEach(([id, field]) => {
       if (field.logic && typeof field.logic === 'string') {
         const logic = field.logic;
-        const industryMatch = logic.match(/M4_industry\s+in\s+\[(.*?)\]/);
-        if (industryMatch) {
-          const industries = industryMatch[1].split(',').map(i => i.trim().replace(/['"]/g, ''));
-          const userIndustry = responses.M4_industry as string;
-          computed[id] = industries.includes(userIndustry);
+        
+        if (id === 'regulated') {
+          // Handle regulated industry logic with updated industry list
+          const industryMatch = logic.match(/M4_industry\s+in\s+\[(.*?)\]/);
+          if (industryMatch) {
+            const industries = industryMatch[1].split(',').map(i => i.trim().replace(/['"]/g, ''));
+            const userIndustry = responses.M4_industry as string;
+            computed[id] = industries.includes(userIndustry);
+          }
+        } else if (id === 'track') {
+          // Handle track detection with proper role matching
+          const role = responses.M3 as string;
+          const techRoles = [
+            'CIO / CTO', 'IT Lead', 'Data / AI Lead', 'ML Engineer', 
+            'Data Engineer', 'DevOps Engineer', 'Security Architect', 'Infrastructure Manager'
+          ];
+          const regRoles = [
+            'Legal / Compliance Lead', 'Privacy Officer', 'Compliance Manager', 
+            'Risk Manager', 'Audit Lead', 'Governance Officer'
+          ];
+          
+          if (techRoles.includes(role)) {
+            computed[id] = 'TECH';
+          } else if (computed.regulated || regRoles.includes(role)) {
+            computed[id] = 'REG';
+          } else {
+            computed[id] = 'GEN';
+          }
         }
       }
     });

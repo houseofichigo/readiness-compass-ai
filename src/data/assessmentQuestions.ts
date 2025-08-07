@@ -295,6 +295,8 @@ if (schema.meta?.computed_fields) {
       id,
       type: 'computed',
       logic: (field as any)?.logic || field,
+      formula: (field as any)?.formula,
+      conditions: (field as any)?.conditions,
     };
   });
 }
