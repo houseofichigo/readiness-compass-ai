@@ -14,6 +14,7 @@ import { assessmentSections } from "@/data/assessmentQuestions";
 import { useAssessment } from "@/hooks/useAssessment";
 import { Logger } from "@/utils/logger";
 import { healthCheck } from "@/utils/healthCheck";
+import { SEO } from "@/components/SEO";
 
 type AppState = "welcome" | "assessment" | "results";
 
@@ -28,10 +29,10 @@ const Index = () => {
 
   // Production health check on mount
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       healthCheck.checkServices().then(result => {
         if (result.status !== 'healthy') {
-          Logger.warn('Health check failed:', result.details);
+          // Health issues handled silently in production
         }
       });
     }
@@ -41,7 +42,6 @@ const Index = () => {
     responses: Record<string, AssessmentValue>,
     profile: OrganizationProfile
   ) => {
-    Logger.log("📋 INDEX - Saving assessment with", Object.keys(responses).length, "responses");
     
     if (Object.keys(responses).length === 0) {
       Logger.error("🚨 CRITICAL: No responses data to save!");
@@ -52,7 +52,7 @@ const Index = () => {
     const savedSubmissionId = await saveAssessment(responses, profile);
     
     if (savedSubmissionId) {
-      Logger.log("✅ Assessment saved successfully, navigating to thank-you page");
+      
       setSubmissionId(savedSubmissionId);
       
       // Navigate to thank you page using React Router
@@ -72,21 +72,34 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-accent">
-      {appState === "assessment" && (
-        <AssessmentFlow onComplete={handleAssessmentComplete} />
-      )}
-      
-      {appState === "results" && assessmentData && (
-        <AssessmentResults
-          responses={Object.values(assessmentData.responses || {})}
-          profile={assessmentData.profile}
-          track={assessmentData.track}
-          submissionId={submissionId}
-          onRestart={handleRestart}
-        />
-      )}
-    </div>
+    <>
+      <SEO
+        title="AI Readiness Assessment | House of Ichigo"
+        description="Assess your organization's AI readiness across strategy, data, tools, automation, people, and governance."
+        canonical="https://www.ai.houseofichigo.com/"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'WebPage',
+          name: 'AI Readiness Assessment',
+          url: 'https://www.ai.houseofichigo.com/',
+          description: "Assess your organization's AI readiness across strategy, data, tools, automation, people, and governance."
+        }}
+      />
+      <div className="min-h-screen bg-gradient-accent">
+        {appState === "assessment" && (
+          <AssessmentFlow onComplete={handleAssessmentComplete} />
+        )}
+        {appState === "results" && assessmentData && (
+          <AssessmentResults
+            responses={Object.values(assessmentData.responses || {})}
+            profile={assessmentData.profile}
+            track={assessmentData.track}
+            submissionId={submissionId}
+            onRestart={handleRestart}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

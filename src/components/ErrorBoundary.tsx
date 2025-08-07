@@ -36,9 +36,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
     });
 
     // Log error to monitoring service in production
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.PROD) {
       // Replace with your error reporting service
-      console.error('Error caught by boundary:', error, errorInfo);
+      // (console output stripped in production build)
     }
   }
 
@@ -87,7 +87,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               </Button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {import.meta.env.DEV && this.state.error && (
               <details className="text-left mt-6">
                 <summary className="cursor-pointer text-sm font-medium text-muted-foreground hover:text-foreground">
                   Error Details (Development Only)

@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { OrganizationProfile, Track } from "@/types/assessment";
 import { useAssessment } from "@/hooks/useAssessment";
 import { LanguageSelector } from "@/components/language/LanguageSelector";
+import { SEO } from "@/components/SEO";
 interface ThankYouPageData {
   profile: OrganizationProfile;
   track: Track;
