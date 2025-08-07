@@ -16,6 +16,7 @@ import Index from "./pages/Index";
 import ThankYou from "./pages/ThankYou";
 import NotFound from "./pages/NotFound";
 import { useSeedAssessment } from "@/hooks/useSeedAssessment";
+import { Header } from "@/components/Header";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +32,8 @@ const App = () => {
             <Toaster />
             <Sonner />
             <BrowserRouter>
+              {/* Global public header with brand logo */}
+              <Header />
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/thank-you" element={<ThankYou />} />

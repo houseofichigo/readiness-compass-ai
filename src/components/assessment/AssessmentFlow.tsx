@@ -142,7 +142,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     setIsSubmitting(true);
     try {
       // Debug: Log assessment completion
-      Logger.log("🔍 ASSESSMENT COMPLETION - Saving", Object.keys(responses).length, "responses");
+      
       
       // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
@@ -191,13 +191,6 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     const validation = validateSectionResponses(questions, responses);
     
     // Debug validation
-    Logger.debug("ENHANCED VALIDATION DEBUG", {
-      "Visible questions": questions.length,
-      "Question IDs": questions.map(q => q.id),
-      "Validation result": validation.valid,
-      "Validation errors": validation.errors,
-      "Current responses": Object.keys(responses)
-    });
     
     return validation.valid;
   };
@@ -218,15 +211,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     if (isSubmitting) return;
 
     const onFinalStep = isAddOnPage || (isLastSection && !hasAddOns);
-    Logger.debug("BUTTON CLICK DEBUG", {
-      "Is final step": onFinalStep,
-      "Is add-on page": isAddOnPage,
-      "Is last section": isLastSection,
-      "Has add-ons": hasAddOns
-    });
 
     if (!canProceed()) {
-      Logger.log("❌ VALIDATION FAILED - Cannot proceed!");
+      
       scrollToFirstError();
       toast({
         title: "Please complete all required questions",
@@ -236,12 +223,9 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       return;
     }
 
-    Logger.log("✅ VALIDATION PASSED - Proceeding...");
     if (onFinalStep) {
-      Logger.log("🚀 CALLING completeAssessment()");
       await completeAssessment();
     } else {
-      Logger.log("➡️ Going to next page");
       goNextPage();
     }
   };
@@ -305,13 +289,6 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         </Button>
         <Button 
           onClick={() => {
-            Logger.log("🔴 BUTTON CLICKED - Starting handleNext");
-            Logger.debug("CURRENT STATE", {
-              "isSubmitting": isSubmitting,
-              "currentPage": currentPage,
-              "Total sections": assessmentSections.length,
-              "Total responses": Object.keys(responses).length
-            });
             handleNext();
           }} 
           disabled={isSubmitting}

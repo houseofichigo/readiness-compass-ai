@@ -15,6 +15,7 @@ import {
   X
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { SEO } from '@/components/SEO';
 
 const navigation = [
   { name: 'Executive Dashboard', href: '/admin', icon: LayoutDashboard, premium: true },
@@ -37,6 +38,7 @@ export function AdminLayout() {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Admin | AI Readiness Assessment" description="Administrative dashboard for AI Readiness Assessment" robots="noindex,nofollow" />
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
