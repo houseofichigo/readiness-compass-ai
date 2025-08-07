@@ -53,6 +53,9 @@ interface RawSection {
   questions?: RawQuestion[];
   consent_banner?: ConsentBanner;
   computed?: ComputedField[];
+  pillar_scores?: Record<string, unknown>;
+  pillar_options?: Record<string, unknown>;
+  pillar_logic?: Record<string, unknown>;
 }
 
 interface AssessmentYaml {
@@ -121,6 +124,9 @@ const assessmentSections: Section[] = Object.entries(schema)
       questions = [],
       consent_banner,
       computed = [],
+      pillar_scores = {},
+      pillar_options = {},
+      pillar_logic = {},
     } = rawSec ?? {};
 
     const normalizedQuestions: Question[] = questions.map((q) => {
@@ -167,6 +173,9 @@ const assessmentSections: Section[] = Object.entries(schema)
       questions: normalizedQuestions,
       ...(consent_banner ? { consentBanner: consent_banner } : {}),
       ...(computed.length ? { computed } : {}),
+      ...(Object.keys(pillar_scores).length ? { pillar_scores } : {}),
+      ...(Object.keys(pillar_options).length ? { pillar_options } : {}),
+      ...(Object.keys(pillar_logic).length ? { pillar_logic } : {}),
     };
   });
 

@@ -90,6 +90,9 @@ export interface Section {
   consentBanner?: ConsentBanner;
   computed?: ComputedField[];
   pillar_score?: number;
+  pillar_scores?: Record<string, unknown>;
+  pillar_options?: Record<string, unknown>;
+  pillar_logic?: Record<string, unknown>;
 }
 
 // Overall assessment data

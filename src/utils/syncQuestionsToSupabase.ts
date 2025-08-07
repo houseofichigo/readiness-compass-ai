@@ -72,9 +72,9 @@ export async function syncQuestionsToSupabase() {
           category: section.category || "",
           purpose: section.purpose || "",
           // Populate pillar_scores from section if available
-          pillar_scores: (section as any).pillar_scores || {},
-          pillar_options: (section as any).pillar_options || {},
-          pillar_logic: (section as any).pillar_logic || {},
+          pillar_scores: section.pillar_scores || {},
+          pillar_options: section.pillar_options || {},
+          pillar_logic: section.pillar_logic || {},
           // Initialize question-level fields
           reasoning: {},
           model_input_context: {},

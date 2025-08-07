@@ -2,6 +2,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { useAdminData } from '@/hooks/useAdminData';
 import { DataSyncButton } from './DataSyncButton';
+import { TestSyncComponent } from './TestSyncComponent';
+import { ManualSyncTrigger } from './ManualSyncTrigger';
+import { DiagnosticTest } from './DiagnosticTest';
 import { 
   FileText, 
   Building, 
@@ -84,7 +87,9 @@ export function OverviewDashboard() {
             Assessment platform performance at a glance
           </p>
         </div>
-        <DataSyncButton />
+        <div className="flex gap-2">
+          <DataSyncButton />
+        </div>
       </div>
 
       {/* Summary Cards */}
@@ -215,6 +220,23 @@ export function OverviewDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Comprehensive Test Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Data Sync Testing</CardTitle>
+          <CardDescription>
+            Test the complete YAML to database synchronization and verify all data is correctly populated
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <TestSyncComponent />
+            <ManualSyncTrigger />
+            <DiagnosticTest />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
