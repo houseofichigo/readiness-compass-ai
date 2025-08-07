@@ -24,22 +24,20 @@ export async function ensureQuestionsExist() {
       return;
     }
 
-    // If no questions exist, sync from YAML
-    if (!questionCount || questionCount.length === 0) {
-      console.log("No questions found in database, syncing from YAML...");
-      
-      syncPromise = syncAssessmentDataToSupabase();
-      const result = await syncPromise;
-      
-      if (result.success) {
-        console.log("Auto-sync completed successfully");
-      } else {
-        console.warn("Auto-sync failed:", result.error);
-      }
-      
-      syncPromise = null;
-      return result;
+    // Always sync to populate new columns (temporary for this update)
+    console.log("Syncing from YAML to populate all columns...");
+    
+    syncPromise = syncAssessmentDataToSupabase();
+    const result = await syncPromise;
+    
+    if (result.success) {
+      console.log("Auto-sync completed successfully - all columns populated");
+    } else {
+      console.warn("Auto-sync failed:", result.error);
     }
+    
+    syncPromise = null;
+    return result;
 
     console.log("Questions already exist in database");
     return { success: true, existing: true };

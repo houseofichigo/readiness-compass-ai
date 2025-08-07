@@ -8,7 +8,6 @@ import './i18n';
 if (import.meta.env.DEV) {
   import("./utils/testSync");
   import("./utils/verifyStructure");
-  import("./utils/runSync");
 }
 
 const container = document.getElementById('root');

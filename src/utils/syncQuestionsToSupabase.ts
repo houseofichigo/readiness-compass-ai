@@ -22,6 +22,18 @@ interface QuestionRow {
   max_select?: number;
   score_map_by_bucket?: any;
   is_add_on?: boolean;
+  // New database columns
+  category?: string;
+  purpose?: string;
+  pillar_scores?: any;
+  pillar_options?: any;
+  pillar_logic?: any;
+  reasoning?: any;
+  model_input_context?: any;
+  weight?: any;
+  score_per?: number;
+  cap?: number;
+  score_formula?: string;
 }
 
 export async function syncQuestionsToSupabase() {
@@ -45,10 +57,22 @@ export async function syncQuestionsToSupabase() {
           section_id: section.id,
           text: question.text,
           type: question.type,
-          helper: question.helper,
+          helper: question.helper || "",
           required: question.required ?? true,
           sequence: questionIndex + 1,
           is_add_on: false,
+          // New fields from database schema
+          category: section.category || "",
+          purpose: section.purpose || "",
+          pillar_scores: {},
+          pillar_options: {},
+          pillar_logic: {},
+          reasoning: {},
+          model_input_context: {},
+          weight: null,
+          score_per: null,
+          cap: null,
+          score_formula: null,
         };
 
         // Add all question properties with validation
