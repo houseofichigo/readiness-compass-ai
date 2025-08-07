@@ -14,6 +14,113 @@ export type Database = {
   }
   public: {
     Tables: {
+      organizations: {
+        Row: {
+          annual_revenue_exact: number | null
+          avg_overall_score: number | null
+          benchmark_percentile: number | null
+          completed_submissions: number | null
+          country: string | null
+          created_at: string
+          employee_count_exact: number | null
+          first_submission_at: string | null
+          id: string
+          industry: string | null
+          industry_other: string | null
+          is_verified: boolean
+          last_submission_at: string | null
+          linkedin_url: string | null
+          median_score: number | null
+          name: string
+          pillar_scores_avg: Json | null
+          pillar_scores_median: Json | null
+          primary_contact_email: string | null
+          region: string | null
+          regulatory_status: string | null
+          revenue_bucket: string | null
+          size_bucket: string | null
+          slug: string
+          sub_industry: string | null
+          total_submissions: number | null
+          track: string | null
+          updated_at: string
+          verification_notes: string | null
+          website: string | null
+        }
+        Insert: {
+          annual_revenue_exact?: number | null
+          avg_overall_score?: number | null
+          benchmark_percentile?: number | null
+          completed_submissions?: number | null
+          country?: string | null
+          created_at?: string
+          employee_count_exact?: number | null
+          first_submission_at?: string | null
+          id?: string
+          industry?: string | null
+          industry_other?: string | null
+          is_verified?: boolean
+          last_submission_at?: string | null
+          linkedin_url?: string | null
+          median_score?: number | null
+          name: string
+          pillar_scores_avg?: Json | null
+          pillar_scores_median?: Json | null
+          primary_contact_email?: string | null
+          region?: string | null
+          regulatory_status?: string | null
+          revenue_bucket?: string | null
+          size_bucket?: string | null
+          slug: string
+          sub_industry?: string | null
+          total_submissions?: number | null
+          track?: string | null
+          updated_at?: string
+          verification_notes?: string | null
+          website?: string | null
+        }
+        Update: {
+          annual_revenue_exact?: number | null
+          avg_overall_score?: number | null
+          benchmark_percentile?: number | null
+          completed_submissions?: number | null
+          country?: string | null
+          created_at?: string
+          employee_count_exact?: number | null
+          first_submission_at?: string | null
+          id?: string
+          industry?: string | null
+          industry_other?: string | null
+          is_verified?: boolean
+          last_submission_at?: string | null
+          linkedin_url?: string | null
+          median_score?: number | null
+          name?: string
+          pillar_scores_avg?: Json | null
+          pillar_scores_median?: Json | null
+          primary_contact_email?: string | null
+          region?: string | null
+          regulatory_status?: string | null
+          revenue_bucket?: string | null
+          size_bucket?: string | null
+          slug?: string
+          sub_industry?: string | null
+          total_submissions?: number | null
+          track?: string | null
+          updated_at?: string
+          verification_notes?: string | null
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organizations_track_fkey"
+            columns: ["track"]
+            isOneToOne: false
+            referencedRelation: "tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sections: {
         Row: {
           category: string | null
@@ -58,6 +165,36 @@ export type Database = {
           created_at?: string
           id?: string
           name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string | null
+          password_hash: string | null
+          role: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          name?: string | null
+          password_hash?: string | null
+          role?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string | null
+          password_hash?: string | null
+          role?: string | null
           updated_at?: string
         }
         Relationships: []
