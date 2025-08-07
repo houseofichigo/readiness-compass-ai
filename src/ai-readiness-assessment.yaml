@@ -56,96 +56,96 @@ section_0:
       text: "Primary role"
       type: single
       required: true
-      options:
-        - label: "Founder / CEO"
+      choices:
+        - value: "Founder / CEO"
           score: 4
           reasoning: "Senior leadership → high AI influence"
           model_input_context: "Respondent is C-level, with strong ability to steer AI strategy."
-        - label: "C-level executive"
+        - value: "C-level executive"
           score: 4
           reasoning: "Senior leadership → high AI influence"
           model_input_context: "Respondent is C-level, with strong ability to steer AI strategy."
-        - label: "Head of Marketing"
+        - value: "Head of Marketing"
           score: 2
           reasoning: "Functional leader, some AI exposure"
           model_input_context: "Respondent leads marketing—likely some AI use but not core to strategy."
-        - label: "Head of Sales"
+        - value: "Head of Sales"
           score: 2
           reasoning: "Functional leader, some AI exposure"
           model_input_context: "Respondent leads sales—likely some AI use but not core to strategy."
-        - label: "Head of Finance"
+        - value: "Head of Finance"
           score: 2
           reasoning: "Functional leader, some AI exposure"
           model_input_context: "Respondent leads finance—likely some analytical AI use, but not central."
-        - label: "Head of Operations"
+        - value: "Head of Operations"
           score: 2
           reasoning: "Functional leader, some AI exposure"
           model_input_context: "Respondent leads operations—may use process-automation AI, but not core."
-        - label: "Product Lead"
+        - value: "Product Lead"
           score: 3
           reasoning: "Product management often drives AI feature roadmaps"
           model_input_context: "Respondent leads product—likely directly engaged in AI/ML features."
-        - label: "HR Lead"
+        - value: "HR Lead"
           score: 1
           reasoning: "Low direct AI influence"
           model_input_context: "Respondent leads HR—AI use is typically more limited."
-        - label: "Customer Support Lead"
+        - value: "Customer Support Lead"
           score: 1
           reasoning: "Low direct AI influence"
           model_input_context: "Respondent leads support—may use basic AI but not strategic."
-        - label: "CIO / CTO"
+        - value: "CIO / CTO"
           score: 5
           reasoning: "Technical leadership → very high AI influence"
           model_input_context: "Respondent is CIO/CTO—primary sponsor for AI infrastructure."
-        - label: "IT Lead"
+        - value: "IT Lead"
           score: 4
           reasoning: "Senior technical role → high AI influence"
           model_input_context: "Respondent leads IT—strong role in selecting AI platforms."
-        - label: "Data / AI Lead"
+        - value: "Data / AI Lead"
           score: 5
           reasoning: "Direct AI ownership"
           model_input_context: "Respondent is Data/AI Lead—very familiar with AI use-cases."
-        - label: "ML Engineer"
+        - value: "ML Engineer"
           score: 5
           reasoning: "Hands-on AI practitioner"
           model_input_context: "Respondent is ML Engineer—deep technical AI expertise."
-        - label: "Data Engineer"
+        - value: "Data Engineer"
           score: 4
           reasoning: "Key enabler of data pipelines for AI"
           model_input_context: "Respondent is Data Engineer—critical to AI data readiness."
-        - label: "DevOps Engineer"
+        - value: "DevOps Engineer"
           score: 3
           reasoning: "Supports deployment, less direct strategy"
           model_input_context: "Respondent is DevOps—helps productionize AI but not strategic lead."
-        - label: "Security Architect"
+        - value: "Security Architect"
           score: 3
           reasoning: "Enforces governance, moderate AI role"
           model_input_context: "Respondent is Security Architect—supports safe AI deployment."
-        - label: "Infrastructure Manager"
+        - value: "Infrastructure Manager"
           score: 3
           reasoning: "Manages platforms, moderate AI role"
           model_input_context: "Respondent is Infrastructure Manager—ensures compute for AI."
-        - label: "Legal / Compliance Lead"
+        - value: "Legal / Compliance Lead"
           score: 2
           reasoning: "Governance focus, indirect AI influence"
           model_input_context: "Respondent is Legal/Compliance—ensures AI policies but not strategy."
-        - label: "Privacy Officer"
+        - value: "Privacy Officer"
           score: 2
           reasoning: "Governance focus, indirect AI influence"
           model_input_context: "Respondent is Privacy Officer—focus on data privacy over AI strategy."
-        - label: "Compliance Manager"
+        - value: "Compliance Manager"
           score: 2
           reasoning: "Governance focus, indirect AI influence"
           model_input_context: "Respondent is Compliance Manager—ensures AI compliance but not adoption lead."
-        - label: "Risk Manager"
+        - value: "Risk Manager"
           score: 1
           reasoning: "Risk oversight, limited AI adoption role"
           model_input_context: "Respondent is Risk Manager—focuses on risk rather than AI enablement."
-        - label: "Audit Lead"
+        - value: "Audit Lead"
           score: 1
           reasoning: "Audit focus, limited AI adoption role"
           model_input_context: "Respondent is Audit Lead—may audit AI but not drive adoption."
-        - label: "Governance Officer"
+        - value: "Governance Officer"
           score: 1
           reasoning: "Governance focus, limited AI adoption role"
           model_input_context: "Respondent is Governance Officer—ensures policy, not AI delivery."
@@ -154,80 +154,80 @@ section_0:
       text: "Industry & sub-sector"
       type: dropdown
       required: true
-      options:
-        - label: "Agriculture, Forestry & Fishing"
+      choices:
+        - value: "Agriculture, Forestry & Fishing"
           score: 2
           reasoning: "Early AI pilots in precision agriculture, but overall low adoption"
           model_input_context: "Respondent’s industry is Agriculture—emerging AI use in precision farming."
-        - label: "Mining & Quarrying"
+        - value: "Mining & Quarrying"
           score: 2
           reasoning: "AI used for safety and optimization, but limited breadth"
           model_input_context: "Respondent’s industry is Mining—AI adoption growing in safety/optimization."
-        - label: "Utilities (Electricity, Gas, Water & Waste)"
+        - value: "Utilities (Electricity, Gas, Water & Waste)"
           score: 4
           reasoning: "Strong use of AI for grid management, predictive maintenance"
           model_input_context: "Respondent’s industry is Utilities—advanced AI for operations and maintenance."
-        - label: "Construction"
+        - value: "Construction"
           score: 1
           reasoning: "Very low AI adoption, mostly manual workflows"
           model_input_context: "Respondent’s industry is Construction—very early AI stage."
-        - label: "Manufacturing"
+        - value: "Manufacturing"
           score: 4
           reasoning: "Extensive use of AI/automation in factories and supply chains"
           model_input_context: "Respondent’s industry is Manufacturing—high AI maturity in automation."
-        - label: "Wholesale Trade"
+        - value: "Wholesale Trade"
           score: 3
           reasoning: "Moderate AI adoption in inventory and logistics optimization"
           model_input_context: "Respondent’s industry is Wholesale—using AI for inventory forecasting."
-        - label: "Retail Trade"
+        - value: "Retail Trade"
           score: 3
           reasoning: "AI used in personalization and demand forecasting, moderate maturity"
           model_input_context: "Respondent’s industry is Retail—AI in recommendation engines and forecasting."
-        - label: "Transportation & Warehousing"
+        - value: "Transportation & Warehousing"
           score: 2
           reasoning: "Emerging AI in logistics and route optimization"
           model_input_context: "Respondent’s industry is Transportation—AI pilots in routing and warehousing."
-        - label: "Information & Communication Technology"
+        - value: "Information & Communication Technology"
           score: 5
           reasoning: "Leading AI ecosystem with rapid adoption of generative models"
           model_input_context: "Respondent’s industry is ICT—very mature AI ecosystem."
-        - label: "Finance & Insurance"
+        - value: "Finance & Insurance"
           score: 5
           reasoning: "High AI adoption in risk modeling, fraud detection"
           model_input_context: "Respondent’s industry is Finance—strong AI maturity in analytics."
-        - label: "Real Estate & Rental & Leasing"
+        - value: "Real Estate & Rental & Leasing"
           score: 2
           reasoning: "Limited AI adoption beyond property valuation"
           model_input_context: "Respondent’s industry is Real Estate—early AI use in valuations."
-        - label: "Professional, Scientific & Technical Services"
+        - value: "Professional, Scientific & Technical Services"
           score: 4
           reasoning: "Consulting and technical services heavily leverage AI"
           model_input_context: "Respondent’s industry is Professional Services—high AI usage."
-        - label: "Administrative & Support & Waste Management Services"
+        - value: "Administrative & Support & Waste Management Services"
           score: 3
           reasoning: "Moderate AI for process automation and waste analytics"
           model_input_context: "Respondent’s industry is Admin & Support—using AI for workflow automation."
-        - label: "Educational Services"
+        - value: "Educational Services"
           score: 3
           reasoning: "Growing AI in e-learning and administration"
           model_input_context: "Respondent’s industry is Education—AI in personalized learning and operations."
-        - label: "Health Care & Social Assistance"
+        - value: "Health Care & Social Assistance"
           score: 3
           reasoning: "Significant regulation but active AI in diagnostics and operations"
           model_input_context: "Respondent’s industry is Health Care—moderate AI maturity under compliance."
-        - label: "Arts, Entertainment & Recreation"
+        - value: "Arts, Entertainment & Recreation"
           score: 2
           reasoning: "Early AI in content creation, still niche"
           model_input_context: "Respondent’s industry is Arts & Entertainment—exploring AI in creative processes."
-        - label: "Accommodation & Food Services"
+        - value: "Accommodation & Food Services"
           score: 2
           reasoning: "AI pilots in demand forecasting and chatbots, limited scale"
           model_input_context: "Respondent’s industry is Accommodation—using AI intermittently in operations."
-        - label: "Public Administration"
+        - value: "Public Administration"
           score: 3
           reasoning: "AI in citizen services and analytics, moderate adoption"
           model_input_context: "Respondent’s industry is Public Admin—AI used in services and policy analysis."
-        - label: "Non-profit & NGO"
+        - value: "Non-profit & NGO"
           score: 2
           reasoning: "Limited budgets constrain AI experimentation"
           model_input_context: "Respondent’s industry is Non-profit—early AI use for analytics and fundraising."
@@ -236,7 +236,7 @@ section_0:
       text: "Country"
       type: dropdown
       required: true
-      options:
+      choices:
         - "Afghanistan"
         - "Albania"
         - "Algeria"
@@ -471,28 +471,28 @@ section_0:
       text: "Company size (FTE)"
       type: single
       required: true
-      options:
-        - label: "1–9"
+      choices:
+        - value: "1–9"
           score: 1
           reasoning: "Small companies adopt AI less frequently"
           model_input_context: "Organization is very small—limited AI resources."
-        - label: "10–49"
+        - value: "10–49"
           score: 2
           reasoning: "SMBs are starting to pilot AI"
           model_input_context: "Organization is small—early AI stage."
-        - label: "50–249"
+        - value: "50–249"
           score: 3
           reasoning: "Mid-sized firms adopt more AI"
           model_input_context: "Organization is mid-sized—moderate AI maturity."
-        - label: "250–999"
+        - value: "250–999"
           score: 4
           reasoning: "Larger organizations have dedicated AI teams"
           model_input_context: "Organization is large—higher AI maturity."
-        - label: "≥ 1 000"
+        - value: "≥ 1 000"
           score: 5
           reasoning: "Enterprise scale → strong AI capability"
           model_input_context: "Organization is enterprise—very strong AI maturity."
-        - label: "Prefer not to say"
+        - value: "Prefer not to say"
           score: 0
           reasoning: "No scoring data available"
           model_input_context: "Organization size not disclosed."
@@ -501,28 +501,28 @@ section_0:
       text: "Annual revenue"
       type: single
       required: true
-      options:
-        - label: "< €250 k"
+      choices:
+        - value: "< €250 k"
           score: 1
           reasoning: "Very limited budget for AI"
           model_input_context: "Organization’s revenue is very low—minimal AI funding."
-        - label: "€250 k–1 M"
+        - value: "€250 k–1 M"
           score: 2
           reasoning: "Small budget constraints"
           model_input_context: "Organization’s revenue is low—some AI capacity but limited."
-        - label: "€1 M–€5 M"
+        - value: "€1 M–€5 M"
           score: 3
           reasoning: "Moderate funding for pilots"
           model_input_context: "Organization’s revenue is moderate—supports AI pilots."
-        - label: "€5 M–€20 M"
+        - value: "€5 M–€20 M"
           score: 4
           reasoning: "Good budget for multiple projects"
           model_input_context: "Organization’s revenue is strong—can scale AI."
-        - label: "€20 M–€100 M"
+        - value: "€20 M–€100 M"
           score: 5
           reasoning: "High funding for enterprise-scale AI"
           model_input_context: "Organization’s revenue is very strong—enterprise AI maturity."
-        - label: "> €100 M"
+        - value: "> €100 M"
           score: 5
           reasoning: "Enterprise-level funding"
           model_input_context: "Organization’s revenue is very strong—enterprise AI maturity."
@@ -561,24 +561,24 @@ section_1:
       text: "How many AI use cases have you identified for implementation within the next 12 months?"
       type: single
       helper: "Defines your planning maturity and readiness."
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
           reasoning: "No use-cases = ad-hoc maturity"
           model_input_context: "Pre-exploration stage. No documented AI opportunities."
-        - label: "Ideas listed only"
+        - value: "Ideas listed only"
           score: 2
           reasoning: "Brainstormed but not formalised"
           model_input_context: "Early ideation stage. Informal AI discussions only."
-        - label: "1–2 documented use cases"
+        - value: "1–2 documented use cases"
           score: 3
           reasoning: "A few pilots = exploratory"
           model_input_context: "Initial documentation stage. Formal use-case docs exist."
-        - label: "3–5 prioritised with owners"
+        - value: "3–5 prioritised with owners"
           score: 4
           reasoning: "Prioritised projects with owners = defined roadmap"
           model_input_context: "Structured planning stage. Clear accountability assigned."
-        - label: "6 or more with owners and timelines"
+        - value: "6 or more with owners and timelines"
           score: 5
           reasoning: "Portfolio with owners & timelines = integrated strategy"
           model_input_context: "Portfolio management stage. Formal project management in place."
@@ -591,28 +591,28 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
-      options:
-        - label: "No formal process"
+      choices:
+        - value: "No formal process"
           score: 1
           reasoning: "No process = ad-hoc"
           model_input_context: "Ad-hoc selection. No systematic framework."
-        - label: "Ad hoc based on perceived value"
+        - value: "Ad hoc based on perceived value"
           score: 2
           reasoning: "Informal value assessment"
           model_input_context: "Uses business judgment without structured criteria."
-        - label: "Impact × Effort matrix"
+        - value: "Impact × Effort matrix"
           score: 3
           reasoning: "Simple impact–effort scoring"
           model_input_context: "Standard 2×2 prioritization matrix."
-        - label: "Impact × Effort + capacity weighting"
+        - value: "Impact × Effort + capacity weighting"
           score: 4
           reasoning: "Adds resource awareness"
           model_input_context: "Considers team capacity in prioritization."
-        - label: "ROI-driven financial model"
+        - value: "ROI-driven financial model"
           score: 5
           reasoning: "Quantitative ROI = mature planning"
           model_input_context: "Requires quantitative business case analysis."
-        - label: "Risk-adjusted prioritisation"
+        - value: "Risk-adjusted prioritisation"
           score: 5
           reasoning: "Weighs risk + return = best practice"
           model_input_context: "Integrates risk assessment into prioritization."
@@ -625,24 +625,24 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
-      options:
-        - label: "No AI KPIs/OKRs defined"
+      choices:
+        - value: "No AI KPIs/OKRs defined"
           score: 1
           reasoning: "No KPIs = no alignment"
           model_input_context: "No success criteria defined or tracked."
-        - label: "KPIs drafted but not tracked"
+        - value: "KPIs drafted but not tracked"
           score: 2
           reasoning: "Metrics exist but not monitored"
           model_input_context: "Metrics created but no monitoring systems."
-        - label: "KPIs tracked but not linked"
+        - value: "KPIs tracked but not linked"
           score: 3
           reasoning: "Monitored but isolated"
           model_input_context: "AI metrics tracked separately from business OKRs."
-        - label: "Partially aligned with departmental OKRs"
+        - value: "Partially aligned with departmental OKRs"
           score: 4
           reasoning: "Some functional linkage"
           model_input_context: "Connected to some department goals."
-        - label: "Fully embedded in executive OKRs"
+        - value: "Fully embedded in executive OKRs"
           score: 5
           reasoning: "Executive-level integration"
           model_input_context: "Tied directly to top-level objectives."
@@ -655,24 +655,24 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
-      options:
-        - label: "Don’t estimate ROI"
+      choices:
+        - value: "Don’t estimate ROI"
           score: 1
           reasoning: "No ROI modelling"
           model_input_context: "No financial analysis performed."
-        - label: "Rough experience-based estimates"
+        - value: "Rough experience-based estimates"
           score: 2
           reasoning: "Informal estimates"
           model_input_context: "Uses intuition and past experience."
-        - label: "Simple cost–benefit analysis"
+        - value: "Simple cost–benefit analysis"
           score: 3
           reasoning: "Basic structured analysis"
           model_input_context: "Compares costs against expected benefits."
-        - label: "Linked ROI to clear KPIs and goals"
+        - value: "Linked ROI to clear KPIs and goals"
           score: 4
           reasoning: "ROI tied to metrics"
           model_input_context: "Connects returns to measurable outcomes."
-        - label: "Detailed financial or risk-adjusted models"
+        - value: "Detailed financial or risk-adjusted models"
           score: 5
           reasoning: "Advanced modelling"
           model_input_context: "Sophisticated analysis with risk factors."
@@ -685,24 +685,24 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
-      options:
-        - label: "Over 12 months"
+      choices:
+        - value: "Over 12 months"
           score: 1
           reasoning: "Slow execution"
           model_input_context: "Traditional long-term project timelines."
-        - label: "6–12 months"
+        - value: "6–12 months"
           score: 2
           reasoning: "Moderate timeframe"
           model_input_context: "Standard enterprise delivery cycle."
-        - label: "3–6 months"
+        - value: "3–6 months"
           score: 3
           reasoning: "Standard pilot timeframe"
           model_input_context: "Balanced agile approach."
-        - label: "1–3 months"
+        - value: "1–3 months"
           score: 4
           reasoning: "Rapid pilot delivery"
           model_input_context: "Fast execution with existing platforms."
-        - label: "Under 30 days"
+        - value: "Under 30 days"
           score: 5
           reasoning: "Very agile"
           model_input_context: "Off-the-shelf solutions and rapid iteration."
@@ -712,24 +712,24 @@ section_1:
       text: "How do you monitor competitor or industry AI developments?"
       type: single
       helper: "Assesses market awareness."
-      options:
-        - label: "Not tracked"
+      choices:
+        - value: "Not tracked"
           score: 1
           reasoning: "No trend monitoring"
           model_input_context: "Operates without industry intelligence."
-        - label: "Occasional ad hoc research"
+        - value: "Occasional ad hoc research"
           score: 2
           reasoning: "Sporadic benchmarking"
           model_input_context: "Irregular research efforts."
-        - label: "Annual review"
+        - value: "Annual review"
           score: 3
           reasoning: "Scheduled but infrequent"
           model_input_context: "Periodic benchmarking cycle."
-        - label: "Quarterly reporting"
+        - value: "Quarterly reporting"
           score: 4
           reasoning: "Regular updates"
           model_input_context: "Consistent monitoring with reports."
-        - label: "Continuous dashboard or feed"
+        - value: "Continuous dashboard or feed"
           score: 5
           reasoning: "Real-time monitoring"
           model_input_context: "Automated continuous intelligence feed."
@@ -739,7 +739,7 @@ section_1:
       text: "Rank your top four strategic objectives for AI initiatives"
       type: rank
       helper: "Reveals strategic priorities."
-      options:
+      choices:
         - "Productivity"
         - "Cost reduction"
         - "Revenue growth"
@@ -757,24 +757,24 @@ section_1:
       text: "How aligned is your leadership team on AI strategy?"
       type: single
       helper: "Assesses executive sponsorship."
-      options:
-        - label: "No alignment"
+      choices:
+        - value: "No alignment"
           score: 1
           reasoning: "No exec support"
           model_input_context: "Leadership operates without AI alignment."
-        - label: "Occasional discussions"
+        - value: "Occasional discussions"
           score: 2
           reasoning: "Minimal engagement"
           model_input_context: "Informal executive interest only."
-        - label: "Executive interest without action"
+        - value: "Executive interest without action"
           score: 3
           reasoning: "Interest but no budget"
           model_input_context: "Understands importance but no resources."
-        - label: "Budget approved"
+        - value: "Budget approved"
           score: 4
           reasoning: "Financial commitment"
           model_input_context: "Resources allocated for AI."
-        - label: "Active executive sponsorship"
+        - value: "Active executive sponsorship"
           score: 5
           reasoning: "Executive champions"
           model_input_context: "Leadership removes barriers and advocates AI."
@@ -784,7 +784,7 @@ section_1:
       text: "Which teams are involved in defining AI use cases?"
       type: multi
       helper: "Measures cross-functional engagement."
-      options:
+      choices:
         - "Executive leadership"
         - "Product & marketing"
         - "Operations"
@@ -803,24 +803,24 @@ section_1:
       text: "How prepared is your organization to manage change from AI adoption?"
       type: single
       helper: "Assesses change-management readiness."
-      options:
-        - label: "Not prepared"
+      choices:
+        - value: "Not prepared"
           score: 1
           reasoning: "No framework"
           model_input_context: "No change management processes."
-        - label: "Ad hoc readiness"
+        - value: "Ad hoc readiness"
           score: 2
           reasoning: "Unstructured"
           model_input_context: "Occasional readiness activities."
-        - label: "Formal process for some projects"
+        - value: "Formal process for some projects"
           score: 3
           reasoning: "Partial coverage"
           model_input_context: "Selective project-level readiness."
-        - label: "Organization-wide framework"
+        - value: "Organization-wide framework"
           score: 4
           reasoning: "Standardised"
           model_input_context: "Enterprise-level change framework."
-        - label: "Continuous improvement culture"
+        - value: "Continuous improvement culture"
           score: 5
           reasoning: "Proactive culture"
           model_input_context: "Learning-driven continuous change."
@@ -833,24 +833,24 @@ section_1:
       show_if:
         S1:
           not_in: ["None", "Ideas listed only"]
-      options:
-        - label: "No clear goals"
+      choices:
+        - value: "No clear goals"
           score: 1
           reasoning: "No metrics"
           model_input_context: "No objectives defined."
-        - label: "Goals defined with no metrics"
+        - value: "Goals defined with no metrics"
           score: 2
           reasoning: "Unmeasured goals"
           model_input_context: "Objectives set but not tracked."
-        - label: "Some metrics tracked"
+        - value: "Some metrics tracked"
           score: 3
           reasoning: "Partial measurement"
           model_input_context: "Metrics for subset of goals."
-        - label: "Most goals with metrics"
+        - value: "Most goals with metrics"
           score: 4
           reasoning: "Broad measurement"
           model_input_context: "Majority of goals tracked."
-        - label: "All goals have metrics & thresholds"
+        - value: "All goals have metrics & thresholds"
           score: 5
           reasoning: "Full measurement"
           model_input_context: "Complete metrics and thresholds."
@@ -862,24 +862,24 @@ section_1:
       helper: "Assesses deployment methodology."
       hide_if:
         P2: "Conservative – pilot tests before scaling"
-      options:
-        - label: "POC only with strict compliance checks"
+      choices:
+        - value: "POC only with strict compliance checks"
           score: 1
           reasoning: "Very cautious"
           model_input_context: "Proof-of-concept only."
-        - label: "Small pilots with controlled access"
+        - value: "Small pilots with controlled access"
           score: 2
           reasoning: "Limited pilots"
           model_input_context: "Restricted pilot deployments."
-        - label: "Case-by-case security review"
+        - value: "Case-by-case security review"
           score: 3
           reasoning: "Individual reviews"
           model_input_context: "Security checks per deployment."
-        - label: "Agile testing with integrated oversight"
+        - value: "Agile testing with integrated oversight"
           score: 4
           reasoning: "Governed agility"
           model_input_context: "Rapid iterations under oversight."
-        - label: "Fast iterations with production readiness & risk mgmt"
+        - value: "Fast iterations with production readiness & risk mgmt"
           score: 5
           reasoning: "Production-grade agility"
           model_input_context: "Rapid, risk-managed production deployments."
@@ -914,24 +914,24 @@ section_2:
       text: "What is your current monthly budget for AI and data initiatives?"
       type: single
       helper: "Defines your financial commitment level."
-      options:
-        - label: "< €100"
+      choices:
+        - value: "< €100"
           score: 1
           reasoning: "Minimal experimentation"
           model_input_context: "Spends under €100 monthly."
-        - label: "€100–500"
+        - value: "€100–500"
           score: 2
           reasoning: "Basic tool coverage"
           model_input_context: "Modest budget for limited experimentation."
-        - label: "€500–2 000"
+        - value: "€500–2 000"
           score: 3
           reasoning: "Supports a few pilots"
           model_input_context: "Budget for multiple pilot projects."
-        - label: "€2 000–15 000"
+        - value: "€2 000–15 000"
           score: 4
           reasoning: "Multiple concurrent projects"
           model_input_context: "Advanced tooling and pilots."
-        - label: "Over €15 000"
+        - value: "Over €15 000"
           score: 5
           reasoning: "Scaling potential"
           model_input_context: "Strategic investment scale."
@@ -941,24 +941,24 @@ section_2:
       text: "How long can you fund your AI and data efforts without new investment or revenue?"
       type: single
       helper: "Indicates your financial runway."
-      options:
-        - label: "Less than 3 months"
+      choices:
+        - value: "Less than 3 months"
           score: 1
           reasoning: "Financial fragility"
           model_input_context: "Immediate funding pressure."
-        - label: "3–6 months"
+        - value: "3–6 months"
           score: 2
           reasoning: "Risk of interruptions"
           model_input_context: "Short-term runway."
-        - label: "6–12 months"
+        - value: "6–12 months"
           score: 3
           reasoning: "Sufficient for pilots"
           model_input_context: "Supports complete pilot cycles."
-        - label: "12–24 months"
+        - value: "12–24 months"
           score: 4
           reasoning: "Supports scaling"
           model_input_context: "Extended runway for scaling."
-        - label: "Over 24 months"
+        - value: "Over 24 months"
           score: 5
           reasoning: "Stable long-term funding"
           model_input_context: "Sustainable AI investment."
@@ -968,24 +968,24 @@ section_2:
       text: "How supportive are your board or investors of your AI initiatives?"
       type: single
       helper: "Assesses executive & investor backing."
-      options:
-        - label: "Not supportive"
+      choices:
+        - value: "Not supportive"
           score: 1
           reasoning: "Undermines projects"
           model_input_context: "No stakeholder alignment."
-        - label: "Discussion only, no commitments"
+        - value: "Discussion only, no commitments"
           score: 2
           reasoning: "Conversations without resources"
           model_input_context: "Interest without commitment."
-        - label: "Open to AI initiatives"
+        - value: "Open to AI initiatives"
           score: 3
           reasoning: "Willingness to explore"
           model_input_context: "Conditional support stage."
-        - label: "Budget approved"
+        - value: "Budget approved"
           score: 4
           reasoning: "Financial backing in place"
           model_input_context: "Board-approved budget."
-        - label: "Active championing"
+        - value: "Active championing"
           score: 5
           reasoning: "Executives champion AI"
           model_input_context: "Strategic sponsorship by board."
@@ -995,24 +995,24 @@ section_2:
       text: "Which additional regulatory or security frameworks apply to your organization?"
       type: multi
       helper: "GDPR and EU AI Act apply by default."
-      options:
-        - label: "None apply"
+      choices:
+        - value: "None apply"
           score: 1
           reasoning: "No awareness of regulations"
           model_input_context: "Regulatory blindness."
-        - label: "1–2 frameworks"
+        - value: "1–2 frameworks"
           score: 2
           reasoning: "Basic compliance awareness"
           model_input_context: "Identifies primary regulations."
-        - label: "3–4 frameworks"
+        - value: "3–4 frameworks"
           score: 3
           reasoning: "Broader coverage"
           model_input_context: "Acknowledges multiple regulations."
-        - label: "5–6 frameworks"
+        - value: "5–6 frameworks"
           score: 4
           reasoning: "Strong oversight"
           model_input_context: "Tracks most relevant requirements."
-        - label: "> 6 frameworks"
+        - value: "> 6 frameworks"
           score: 5
           reasoning: "Comprehensive compliance"
           model_input_context: "Advanced regulatory management."
@@ -1024,24 +1024,24 @@ section_2:
       text: "What level of strategic partnerships do you have for AI?"
       type: single
       helper: "Assesses ecosystem engagement."
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
           reasoning: "Isolation limits expertise"
           model_input_context: "No external partnerships."
-        - label: "Exploratory discussions"
+        - value: "Exploratory discussions"
           score: 2
           reasoning: "Early outreach"
           model_input_context: "Preliminary partnership talks."
-        - label: "One active partnership"
+        - value: "One active partnership"
           score: 3
           reasoning: "Single collaboration"
           model_input_context: "One active AI vendor relationship."
-        - label: "Multiple partnerships"
+        - value: "Multiple partnerships"
           score: 4
           reasoning: "Networked approach"
           model_input_context: "Several vendor/institution collaborations."
-        - label: "Ecosystem collaboration (R&D + vendors)"
+        - value: "Ecosystem collaboration (R&D + vendors)"
           score: 5
           reasoning: "Deep strategic collaborations"
           model_input_context: "Integrated R&D and vendor ecosystem."
@@ -1051,24 +1051,24 @@ section_2:
       text: "What percentage of your AI budget is allocated to ethics and bias mitigation?"
       type: single
       helper: "Assesses ethical investment."
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
           reasoning: "No allocation = compliance risk"
           model_input_context: "No ethics budget."
-        - label: "Planned next fiscal year"
+        - value: "Planned next fiscal year"
           score: 2
           reasoning: "Future intent"
           model_input_context: "Budget planned but not yet allocated."
-        - label: "Under 5 % of AI budget"
+        - value: "Under 5 % of AI budget"
           score: 3
           reasoning: "Modest funding"
           model_input_context: "Basic ethics activities supported."
-        - label: "5–15 % of AI budget"
+        - value: "5–15 % of AI budget"
           score: 4
           reasoning: "Dedicated funding"
           model_input_context: "Substantial ethics investment."
-        - label: "Over 15 % of AI budget"
+        - value: "Over 15 % of AI budget"
           score: 5
           reasoning: "Significant investment"
           model_input_context: "Strategic ethics commitment."
@@ -1102,7 +1102,7 @@ section_3:
       text: "Where is your most critical data primarily stored?"
       type: multi
       helper: "Critical data drives operations, decisions, and compliance."
-      options:
+      choices:
         - "Files & spreadsheets (e.g. Excel, Google Sheets, local files)"
         - "Databases (e.g. SQL, NoSQL, data warehouses)"
         - "Cloud & SaaS platforms (e.g. Google Drive, Salesforce, HubSpot)"
@@ -1117,24 +1117,24 @@ section_3:
     - id: D2
       text: "How much data does your organization generate or collect each month?"
       type: single
-      options:
-        - label: "Don’t know"
+      choices:
+        - value: "Don’t know"
           score: 1
           reasoning: "No awareness = poor data management"
           model_input_context: "Lacks visibility into data volumes."
-        - label: "< 1 GB"
+        - value: "< 1 GB"
           score: 1
           reasoning: "Tiny datasets constrain AI"
           model_input_context: "Minimal data environment."
-        - label: "1–10 GB"
+        - value: "1–10 GB"
           score: 2
           reasoning: "Limited data may inhibit modeling"
           model_input_context: "Small data volumes."
-        - label: "10–100 GB"
+        - value: "10–100 GB"
           score: 3
           reasoning: "Moderate volume supports basic models"
           model_input_context: "Standard data volumes."
-        - label: "≥ 100 GB"
+        - value: "≥ 100 GB"
           score: 4
           reasoning: "Large datasets enable sophisticated AI"
           model_input_context: "Substantial data volumes."
@@ -1149,24 +1149,24 @@ section_3:
         all_of:
           - { M6_size: "1–9" }
           - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
-      options:
-        - label: "No standards or visibility"
+      choices:
+        - value: "No standards or visibility"
           score: 1
           reasoning: "No standards = inconsistent & risky data"
           model_input_context: "No documented data processes."
-        - label: "Basic naming conventions & partial docs"
+        - value: "Basic naming conventions & partial docs"
           score: 2
           reasoning: "Minimal structure; manual processes"
           model_input_context: "Simple conventions, manual tracking."
-        - label: "Defined standards with manual processes"
+        - value: "Defined standards with manual processes"
           score: 3
           reasoning: "Standards exist but lack automation"
           model_input_context: "Standards without tool support."
-        - label: "Schema tools & automated tracking"
+        - value: "Schema tools & automated tracking"
           score: 4
           reasoning: "Automated lineage = strong governance"
           model_input_context: "Uses schema tools for lineage."
-        - label: "Version-controlled models & full lineage"
+        - value: "Version-controlled models & full lineage"
           score: 5
           reasoning: "End-to-end versioning & governance"
           model_input_context: "Comprehensive automated lineage."
@@ -1181,24 +1181,24 @@ section_3:
         all_of:
           - { M6_size: "1–9" }
           - { D1: { subset_of: ["Files & spreadsheets (e.g. Excel, Google Sheets, local files)"] } }
-      options:
-        - label: "Low – data often outdated or unreliable"
+      choices:
+        - value: "Low – data often outdated or unreliable"
           score: 1
           reasoning: "Poor quality yields unreliable AI"
           model_input_context: "Frequent data issues."
-        - label: "Medium – manual checks"
+        - value: "Medium – manual checks"
           score: 2
           reasoning: "Some QC but error-prone"
           model_input_context: "Manual quality checks."
-        - label: "High – periodic tests"
+        - value: "High – periodic tests"
           score: 3
           reasoning: "Regular tests improve trust"
           model_input_context: "Scheduled data quality tests."
-        - label: "Very high – automated alerts"
+        - value: "Very high – automated alerts"
           score: 4
           reasoning: "Proactive alerting"
           model_input_context: "Automated data issue alerts."
-        - label: "Excellent – real-time monitoring"
+        - value: "Excellent – real-time monitoring"
           score: 5
           reasoning: "Continuous validation = best practice"
           model_input_context: "Real-time quality assurance."
@@ -1208,7 +1208,7 @@ section_3:
       text: "Which security controls protect your data infrastructure?"
       type: multi
       helper: "Security controls keep data safe—encryption, access controls, monitoring."
-      options:
+      choices:
         - "Encryption at rest (e.g. data encrypted on AWS S3 or Azure Blob Storage)"
         - "TLS/HTTPS in transit (e.g. API calls over HTTPS)"
         - "Role-based access controls (e.g. Google Cloud IAM, Azure RBAC)"
@@ -1228,24 +1228,24 @@ section_3:
     - id: D6
       text: "How is data stewardship and cleaning managed?"
       type: single
-      options:
-        - label: "No owner"
+      choices:
+        - value: "No owner"
           score: 1
           reasoning: "No steward = neglect"
           model_input_context: "No designated data steward."
-        - label: "Occasional clean-ups"
+        - value: "Occasional clean-ups"
           score: 2
           reasoning: "Sporadic maintenance"
           model_input_context: "Reactive cleanup activities."
-        - label: "Assigned owner with periodic review"
+        - value: "Assigned owner with periodic review"
           score: 3
           reasoning: "Basic stewardship"
           model_input_context: "Owner assigned, periodic reviews."
-        - label: "Dedicated steward with monthly routines"
+        - value: "Dedicated steward with monthly routines"
           score: 4
           reasoning: "Regular maintenance"
           model_input_context: "Monthly stewardship routines."
-        - label: "Continuous stewardship & monitoring"
+        - value: "Continuous stewardship & monitoring"
           score: 5
           reasoning: "Ongoing oversight"
           model_input_context: "Continuous data monitoring."
@@ -1255,55 +1255,55 @@ section_3:
       text: "How prepared are you for GDPR or EU AI Act audits?"
       type: single
       helper: "Indicate readiness for compliance or security audits."
-      options:
-        - label: "None – no audit readiness"
+      choices:
+        - value: "None – no audit readiness"
           score: 1
           reasoning: "No audit capability = low trust"
           model_input_context: "No audit trails or docs."
-        - label: "Basic logs only"
+        - value: "Basic logs only"
           score: 2
           reasoning: "Minimal traceability"
           model_input_context: "Simple logging only."
-        - label: "Audit trail for critical systems"
+        - value: "Audit trail for critical systems"
           score: 3
           reasoning: "Key-system traceability"
           model_input_context: "Critical systems logged."
-        - label: "Explainability logs + scripts"
+        - value: "Explainability logs + scripts"
           score: 4
           reasoning: "Explainability built into logs"
           model_input_context: "Logs include model rationale."
-        - label: "Automated compliance checks"
+        - value: "Automated compliance checks"
           score: 5
           reasoning: "Fully automated audits"
           model_input_context: "Automated audit pipelines."
       required: true
 
     - id: D8
-      text: "How mature is your data labeling and annotation process?"
+      text: "How mature is your data valueing and annotation process?"
       type: single
       show_if:
         track: [TECH, REG]
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-          reasoning: "No labels = hampers supervised learning"
-          model_input_context: "No labeling process."
-        - label: "Ad-hoc manual labeling"
+          reasoning: "No values = hampers supervised learning"
+          model_input_context: "No valueing process."
+        - value: "Ad-hoc manual valueing"
           score: 2
-          reasoning: "Unstructured labels"
-          model_input_context: "Manual ad-hoc labeling."
-        - label: "Defined guidelines"
+          reasoning: "Unstructured values"
+          model_input_context: "Manual ad-hoc valueing."
+        - value: "Defined guidelines"
           score: 3
           reasoning: "Standard guidelines"
-          model_input_context: "Formal labeling guidelines."
-        - label: "Standard taxonomy across datasets"
+          model_input_context: "Formal valueing guidelines."
+        - value: "Standard taxonomy across datasets"
           score: 4
           reasoning: "Unified taxonomy"
           model_input_context: "Consistent taxonomy applied."
-        - label: "Automated labeling & ontology management"
+        - value: "Automated valueing & ontology management"
           score: 5
           reasoning: "Automated enrichment"
-          model_input_context: "Tool-driven labeling automation."
+          model_input_context: "Tool-driven valueing automation."
       required: true
 
     - id: D9
@@ -1311,24 +1311,24 @@ section_3:
       type: single
       show_if:
         track: TECH
-      options:
-        - label: "No"
+      choices:
+        - value: "No"
           score: 1
           reasoning: "No synthetic data = limits modelling"
           model_input_context: "No synthetic data usage."
-        - label: "Exploring options"
+        - value: "Exploring choices"
           score: 2
           reasoning: "Considering but not using"
           model_input_context: "Evaluating synthetic data."
-        - label: "Limited pilots"
+        - value: "Limited pilots"
           score: 3
           reasoning: "Initial experiments"
           model_input_context: "Small-scale pilots."
-        - label: "Regular production use"
+        - value: "Regular production use"
           score: 4
           reasoning: "Mature usage"
           model_input_context: "Production synthetic data workflows."
-        - label: "Extensive synthetic pipelines"
+        - value: "Extensive synthetic pipelines"
           score: 5
           reasoning: "Best practice"
           model_input_context: "Automated synthetic data pipelines."
@@ -1338,24 +1338,24 @@ section_3:
       text: "How developed are your AI ethics and data privacy policies?"
       type: single
       helper: "Select the maturity stage of your policies and enforcement."
-      options:
-        - label: "No formal policies"
+      choices:
+        - value: "No formal policies"
           score: 1
           reasoning: "No policies = compliance risk"
           model_input_context: "No documented policies."
-        - label: "High-level principles only"
+        - value: "High-level principles only"
           score: 2
           reasoning: "Principles exist but lack detail"
           model_input_context: "Principles without guidance."
-        - label: "Documented guidelines (no training/oversight)"
+        - value: "Documented guidelines (no training/oversight)"
           score: 3
           reasoning: "Guidelines exist but not enforced"
           model_input_context: "Docs without training."
-        - label: "Guidelines + training & oversight"
+        - value: "Guidelines + training & oversight"
           score: 4
           reasoning: "Training + oversight fosters adoption"
           model_input_context: "Workshops and reviews in place."
-        - label: "Audited & continuously improved"
+        - value: "Audited & continuously improved"
           score: 5
           reasoning: "Regular audits & updates = best practice"
           model_input_context: "Automated compliance cycles."
@@ -1394,9 +1394,9 @@ section_4:
         "7-9": 75
         ">=10": 100
       groups:
-        - label: "Performance Monitoring"
+        - value: "Performance Monitoring"
           show_if: { track: TECH }
-          options:
+          choices:
             - "New Relic"
             - "Datadog"
             - "Dynatrace"
@@ -1408,9 +1408,9 @@ section_4:
             - "Bubble"
             - "Mistral"
             - "Other performance monitoring tool (please specify)"
-        - label: "Infrastructure & Network Monitoring"
+        - value: "Infrastructure & Network Monitoring"
           show_if: { track: TECH }
-          options:
+          choices:
             - "Zabbix"
             - "Nagios"
             - "PRTG"
@@ -1421,9 +1421,9 @@ section_4:
             - "Prometheus"
             - "Checkmk"
             - "Other infrastructure monitoring tool (please specify)"
-        - label: "Cloud & DevOps Monitoring"
+        - value: "Cloud & DevOps Monitoring"
           show_if: { track: TECH }
-          options:
+          choices:
             - "AWS CloudWatch"
             - "Azure Monitor"
             - "Google Cloud Operations"
@@ -1432,9 +1432,9 @@ section_4:
             - "PagerDuty"
             - "StatusPage"
             - "Other cloud monitoring tool (please specify)"
-        - label: "Web Analytics & User Experience"
+        - value: "Web Analytics & User Experience"
           show_if: { track: TECH }
-          options:
+          choices:
             - "Google Analytics"
             - "Adobe Analytics"
             - "Hotjar"
@@ -1445,9 +1445,9 @@ section_4:
             - "Matomo"
             - "Plausible"
             - "Other web analytics tool (please specify)"
-        - label: "Data Management & ETL"
+        - value: "Data Management & ETL"
           show_if: { track: TECH }
-          options:
+          choices:
             - "Snowflake"
             - "Databricks"
             - "Fivetran"
@@ -1455,9 +1455,9 @@ section_4:
             - "Talend"
             - "Apache Airflow"
             - "Other data management tool (please specify)"
-        - label: "API Integration & Workflow Automation"
+        - value: "API Integration & Workflow Automation"
           show_if: { track: TECH }
-          options:
+          choices:
             - "Zapier"
             - "Power Automate"
             - "MuleSoft"
@@ -1466,9 +1466,9 @@ section_4:
             - "Workato"
             - "Tray.io"
             - "Other automation tool (please specify)"
-        - label: "Email Marketing & Communication"
+        - value: "Email Marketing & Communication"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Mailchimp"
             - "Constant Contact"
             - "SendGrid"
@@ -1480,9 +1480,9 @@ section_4:
             - "Brevo (Sendinblue)"
             - "AWeber"
             - "Other email marketing tool (please specify)"
-        - label: "Customer Relations & Sales Management"
+        - value: "Customer Relations & Sales Management"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Salesforce"
             - "HubSpot"
             - "Pipedrive"
@@ -1493,9 +1493,9 @@ section_4:
             - "Zendesk"
             - "Intercom"
             - "Other CRM tool (please specify)"
-        - label: "E-commerce & Payment Processing"
+        - value: "E-commerce & Payment Processing"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Shopify"
             - "WooCommerce"
             - "Stripe"
@@ -1504,9 +1504,9 @@ section_4:
             - "Magento"
             - "Square"
             - "Other e-commerce tool (please specify)"
-        - label: "Digital Advertising & Marketing"
+        - value: "Digital Advertising & Marketing"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Google Ads"
             - "Facebook Ads"
             - "LinkedIn Ads"
@@ -1515,9 +1515,9 @@ section_4:
             - "Pinterest Ads"
             - "TikTok Ads"
             - "Other advertising tool (please specify)"
-        - label: "Business Intelligence & Analytics"
+        - value: "Business Intelligence & Analytics"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Tableau"
             - "Power BI"
             - "Looker"
@@ -1526,9 +1526,9 @@ section_4:
             - "Domo"
             - "SurveyMonkey"
             - "Other BI tool (please specify)"
-        - label: "Project Management & Productivity"
+        - value: "Project Management & Productivity"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Asana"
             - "Trello"
             - "Jira"
@@ -1537,9 +1537,9 @@ section_4:
             - "Notion"
             - "ClickUp"
             - "Other productivity tool (please specify)"
-        - label: "Financial Management & Accounting"
+        - value: "Financial Management & Accounting"
           show_if: { track: GEN }
-          options:
+          choices:
             - "QuickBooks"
             - "Xero"
             - "FreshBooks"
@@ -1548,9 +1548,9 @@ section_4:
             - "Odoo"
             - "Henrri.net"
             - "Other financial tool (please specify)"
-        - label: "Business Process Management"
+        - value: "Business Process Management"
           show_if: { track: GEN }
-          options:
+          choices:
             - "Kissflow"
             - "Nintex"
             - "Pipefy"
@@ -1558,9 +1558,9 @@ section_4:
             - "Appian"
             - "Pegasystems"
             - "Other workflow tool (please specify)"
-        - label: "Data Privacy & GDPR Compliance"
+        - value: "Data Privacy & GDPR Compliance"
           show_if: { track: REG }
-          options:
+          choices:
             - "OneTrust"
             - "TrustArc"
             - "CookieYes"
@@ -1569,9 +1569,9 @@ section_4:
             - "Cookiebot"
             - "DataGrail"
             - "Other privacy tool (please specify)"
-        - label: "Security & Risk Management"
+        - value: "Security & Risk Management"
           show_if: { track: REG }
-          options:
+          choices:
             - "Qualys"
             - "Rapid7"
             - "Tenable"
@@ -1579,9 +1579,9 @@ section_4:
             - "SentinelOne"
             - "Splunk"
             - "Other security tool (please specify)"
-        - label: "Audit & Governance"
+        - value: "Audit & Governance"
           show_if: { track: REG }
-          options:
+          choices:
             - "AuditBoard"
             - "MetricStream"
             - "ServiceNow GRC"
@@ -1589,16 +1589,16 @@ section_4:
             - "LogicGate"
             - "Resolver"
             - "Other GRC tool (please specify)"
-        - label: "Industry-Specific Compliance"
+        - value: "Industry-Specific Compliance"
           show_if: { track: REG }
-          options:
+          choices:
             - "Fenergo"
             - "RegEd"
             - "Thomson Reuters"
             - "Other regulatory tool (please specify)"
-        - label: "Document & Records Management"
+        - value: "Document & Records Management"
           show_if: { track: REG }
-          options:
+          choices:
             - "SharePoint"
             - "DocuSign"
             - "Box"
@@ -1610,24 +1610,24 @@ section_4:
     - id: T1
       text: "How well are your tools and systems connected?"
       type: single
-      options:
-        - label: "Siloed – no connections"
+      choices:
+        - value: "Siloed – no connections"
           score: 1
           reasoning: "Disconnected tools = poor scaling"
           model_input_context: "No integration between systems."
-        - label: "Manual – CSV imports/exports"
+        - value: "Manual – CSV imports/exports"
           score: 2
           reasoning: "Labor-intensive, error-prone"
           model_input_context: "CSV-based manual syncs."
-        - label: "Batch – scheduled syncs"
+        - value: "Batch – scheduled syncs"
           score: 3
           reasoning: "Regular but delayed"
           model_input_context: "Scheduled batch integrations."
-        - label: "API – platform integrations"
+        - value: "API – platform integrations"
           score: 4
           reasoning: "Modern architecture"
           model_input_context: "API-driven connections."
-        - label: "Real-time – event-driven mesh"
+        - value: "Real-time – event-driven mesh"
           score: 5
           reasoning: "Event-driven mesh = highest maturity"
           model_input_context: "Real-time event-driven integrations."
@@ -1636,24 +1636,24 @@ section_4:
     - id: T2
       text: "How often do data connections fail or cause issues?"
       type: single
-      options:
-        - label: "Weekly – frequent failures"
+      choices:
+        - value: "Weekly – frequent failures"
           score: 1
           reasoning: "Frequent failures = low trust"
           model_input_context: "Systems fail weekly."
-        - label: "Monthly – occasional errors"
+        - value: "Monthly – occasional errors"
           score: 2
           reasoning: "Some reliability issues"
           model_input_context: "Systems error monthly."
-        - label: "Quarterly – rare problems"
+        - value: "Quarterly – rare problems"
           score: 3
           reasoning: "Fairly stable"
           model_input_context: "Quarterly issues."
-        - label: "Almost never – very stable"
+        - value: "Almost never – very stable"
           score: 4
           reasoning: "High reliability"
           model_input_context: "Rare issues."
-        - label: "Never – fully reliable"
+        - value: "Never – fully reliable"
           score: 5
           reasoning: "No failures = best practice"
           model_input_context: "Zero failures."
@@ -1662,24 +1662,24 @@ section_4:
     - id: T3
       text: "Who owns and maintains your system integrations?"
       type: single
-      options:
-        - label: "No clear owner"
+      choices:
+        - value: "No clear owner"
           score: 1
           reasoning: "No ownership = accountability gaps"
           model_input_context: "No integration accountability."
-        - label: "External agency/freelancer"
+        - value: "External agency/freelancer"
           score: 2
           reasoning: "Outsourced, limited internal capacity"
           model_input_context: "External manages integrations."
-        - label: "Ops/Product team"
+        - value: "Ops/Product team"
           score: 3
           reasoning: "Shared responsibility"
           model_input_context: "Ops/Product share duties."
-        - label: "Internal tech team"
+        - value: "Internal tech team"
           score: 4
           reasoning: "Dedicated capability"
           model_input_context: "Tech team owns integrations."
-        - label: "Dedicated integration team"
+        - value: "Dedicated integration team"
           score: 5
           reasoning: "Specialized → high maturity"
           model_input_context: "Integration specialists."
@@ -1689,24 +1689,24 @@ section_4:
       text: "How well are you connected to external AI services and LLMs?"
       type: single
       helper: "Indicates which LLMs you’re allowed or have in-house."
-      options:
-        - label: "Not allowed"
+      choices:
+        - value: "Not allowed"
           score: 1
           reasoning: "Bans LLMs = stifles innovation"
           model_input_context: "LLM usage prohibited."
-        - label: "Exploratory tests only"
+        - value: "Exploratory tests only"
           score: 2
           reasoning: "Sandbox tests"
           model_input_context: "LLMs tested in sandbox."
-        - label: "Pilot deployments (small projects)"
+        - value: "Pilot deployments (small projects)"
           score: 3
           reasoning: "Small-scale pilots"
           model_input_context: "Limited production pilots."
-        - label: "One API in production"
+        - value: "One API in production"
           score: 4
           reasoning: "Single integration"
           model_input_context: "One LLM API live."
-        - label: "Multiple APIs in production + internal LLM access"
+        - value: "Multiple APIs in production + internal LLM access"
           score: 5
           reasoning: "Broad integration"
           model_input_context: "Multiple APIs and internal models."
@@ -1716,24 +1716,24 @@ section_4:
       text: "What access do you have to GPU/TPU compute?"
       type: single
       show_if: { track: [TECH, REG] }
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
           reasoning: "No compute = restricts AI"
           model_input_context: "No GPU/TPU resources."
-        - label: "Colab only"
+        - value: "Colab only"
           score: 2
           reasoning: "Free/shared → early stage"
           model_input_context: "Google Colab access only."
-        - label: "On-demand cloud GPUs/TPUs"
+        - value: "On-demand cloud GPUs/TPUs"
           score: 3
           reasoning: "Pay-as-you-go"
           model_input_context: "Cloud-based compute."
-        - label: "Dedicated GPU/TPU budget"
+        - value: "Dedicated GPU/TPU budget"
           score: 4
           reasoning: "Budgeted hardware"
           model_input_context: "Allocated compute budget."
-        - label: "Managed AI compute cluster"
+        - value: "Managed AI compute cluster"
           score: 5
           reasoning: "Best practice cluster"
           model_input_context: "Dedicated AI cluster."
@@ -1743,24 +1743,24 @@ section_4:
       text: "How well is your technical or data architecture documented?"
       type: single
       show_if: { track: [TECH, REG] }
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
           reasoning: "No diagrams = ad-hoc systems"
           model_input_context: "No architecture docs."
-        - label: "High-level sketches"
+        - value: "High-level sketches"
           score: 2
           reasoning: "Rough mapping"
           model_input_context: "Basic sketches only."
-        - label: "Critical systems mapped"
+        - value: "Critical systems mapped"
           score: 3
           reasoning: "Key components documented"
           model_input_context: "Critical systems documented."
-        - label: "Full architecture diagrams"
+        - value: "Full architecture diagrams"
           score: 4
           reasoning: "Comprehensive documentation"
           model_input_context: "Detailed diagrams maintained."
-        - label: "Auto-generated & maintained docs"
+        - value: "Auto-generated & maintained docs"
           score: 5
           reasoning: "Automated up-to-date docs"
           model_input_context: "Docs auto-generated."
@@ -1770,24 +1770,24 @@ section_4:
       text: "What level of disaster recovery planning exists for data & AI?"
       type: single
       show_if: { track: [TECH, REG] }
-      options:
-        - label: "No plan"
+      choices:
+        - value: "No plan"
           score: 1
           reasoning: "No plan = high risk"
           model_input_context: "No recovery planning."
-        - label: "Backups only"
+        - value: "Backups only"
           score: 2
           reasoning: "Limited resilience"
           model_input_context: "Backups without failover."
-        - label: "Manual failover"
+        - value: "Manual failover"
           score: 3
           reasoning: "Manual recovery"
           model_input_context: "Human-driven failover."
-        - label: "Automated failover"
+        - value: "Automated failover"
           score: 4
           reasoning: "Quick recovery"
           model_input_context: "Automated failover scripts."
-        - label: "AI-aware recovery playbook"
+        - value: "AI-aware recovery playbook"
           score: 5
           reasoning: "AI scenarios covered"
           model_input_context: "Playbooks include AI failures."
@@ -1797,17 +1797,17 @@ section_4:
       text: "Which low-code or no-code platforms do you use for automation?"
       type: multi
       helper: "Select all platforms; choose None if none."
-      options:
-        - label: "None – no low-code/no-code tools"
-        - label: "Zapier – connect apps with workflows"
-        - label: "Make – multi-step automation builder"
-        - label: "n8n – self-hosted workflow automation"
-        - label: "Power Automate – Microsoft flow automation"
-        - label: "UiPath – RPA for desktop & web"
-        - label: "Workato – enterprise integration platform"
-        - label: "Airbyte – ELT data pipelines"
-        - label: "Fivetran – automated data connectors"
-        - label: "dbt – analytics engineering"
+      choices:
+        - value: "None – no low-code/no-code tools"
+        - value: "Zapier – connect apps with workflows"
+        - value: "Make – multi-step automation builder"
+        - value: "n8n – self-hosted workflow automation"
+        - value: "Power Automate – Microsoft flow automation"
+        - value: "UiPath – RPA for desktop & web"
+        - value: "Workato – enterprise integration platform"
+        - value: "Airbyte – ELT data pipelines"
+        - value: "Fivetran – automated data connectors"
+        - value: "dbt – analytics engineering"
       score_per: 1
       cap: 5
       reasoning: "More tools = higher maturity"
@@ -1840,24 +1840,24 @@ section_5:
       text: "Which three tasks would most benefit from automation in your organization?"
       type: rank
       helper: "Rank your top priorities for automation."
-      options:
-        - label: "Reporting"
+      choices:
+        - value: "Reporting"
           score: 1
-        - label: "Scheduling"
+        - value: "Scheduling"
           score: 1
-        - label: "Data entry"
+        - value: "Data entry"
           score: 1
-        - label: "FAQ handling"
+        - value: "FAQ handling"
           score: 1
-        - label: "Ticket triage"
+        - value: "Ticket triage"
           score: 1
-        - label: "Contract generation"
+        - value: "Contract generation"
           score: 1
-        - label: "Inventory management"
+        - value: "Inventory management"
           score: 1
-        - label: "Compliance checks"
+        - value: "Compliance checks"
           score: 1
-        - label: "Other (please specify)"
+        - value: "Other (please specify)"
           score: 0
       max_rank: 3
       weight: [40, 30, 20]
@@ -1876,34 +1876,34 @@ section_5:
     - id: A2
       text: "How mature are your current automation efforts?"
       type: single
-      options:
-        - label: "None – no automation"
+      choices:
+        - value: "None – no automation"
           score: 1
-        - label: "1 – ad-hoc scripts only"
+        - value: "1 – ad-hoc scripts only"
           score: 2
-        - label: "2 – basic tools with manual oversight"
+        - value: "2 – basic tools with manual oversight"
           score: 3
-        - label: "3 – integrated workflows across functions"
+        - value: "3 – integrated workflows across functions"
           score: 4
-        - label: "4 – continuous automation with monitoring"
+        - value: "4 – continuous automation with monitoring"
           score: 5
-        - label: "5 – fully autonomous processes"
+        - value: "5 – fully autonomous processes"
           score: 5
       required: true
 
     - id: A3
       text: "What is the current status of AI agents in your operations?"
       type: single
-      options:
-        - label: "None implemented – no AI agents"
+      choices:
+        - value: "None implemented – no AI agents"
           score: 1
-        - label: "Prototype built – early proof of concept"
+        - value: "Prototype built – early proof of concept"
           score: 2
-        - label: "One agent in production – single live agent"
+        - value: "One agent in production – single live agent"
           score: 3
-        - label: "Multiple agents live – several agents running"
+        - value: "Multiple agents live – several agents running"
           score: 4
-        - label: "Organization-wide deployment – agents across teams"
+        - value: "Organization-wide deployment – agents across teams"
           score: 5
       required: true
 
@@ -1911,15 +1911,15 @@ section_5:
       text: "Which tasks are you considering for AI-agent automation?"
       type: multi
       helper: "Select all that apply."
-      options:
-        - label: "Reporting"
-        - label: "Scheduling"
-        - label: "Data entry"
-        - label: "FAQ handling"
-        - label: "Ticket triage"
-        - label: "Contract generation"
-        - label: "Inventory management"
-        - label: "Compliance checks"
+      choices:
+        - value: "Reporting"
+        - value: "Scheduling"
+        - value: "Data entry"
+        - value: "FAQ handling"
+        - value: "Ticket triage"
+        - value: "Contract generation"
+        - value: "Inventory management"
+        - value: "Compliance checks"
       score_per: 10
       cap: 100
       reasoning: "Variety indicates maturity."
@@ -1930,16 +1930,16 @@ section_5:
       text: "How do you monitor and alert on your automated processes?"
       type: single
       helper: "Ensures reliability and rapid issue resolution."
-      options:
-        - label: "No monitoring"
+      choices:
+        - value: "No monitoring"
           score: 1
-        - label: "Manual checks"
+        - value: "Manual checks"
           score: 2
-        - label: "KPI dashboards"
+        - value: "KPI dashboards"
           score: 3
-        - label: "Automated alerts"
+        - value: "Automated alerts"
           score: 4
-        - label: "Full observability & logging"
+        - value: "Full observability & logging"
           score: 5
       required: true
 
@@ -1947,14 +1947,14 @@ section_5:
       text: "What are the main blockers to automating tasks and deploying AI agents?"
       type: multi
       helper: "Select all that apply."
-      options:
-        - label: "Data silos"
-        - label: "Lack of technical resources"
-        - label: "Insufficient buy-in"
-        - label: "Compliance concerns"
-        - label: "Unclear ROI"
-        - label: "Budget constraints"
-        - label: "Integration complexity"
+      choices:
+        - value: "Data silos"
+        - value: "Lack of technical resources"
+        - value: "Insufficient buy-in"
+        - value: "Compliance concerns"
+        - value: "Unclear ROI"
+        - value: "Budget constraints"
+        - value: "Integration complexity"
       score_formula: "100 - 10 * count"
       reasoning: "Fewer barriers = higher readiness."
       model_input_context: "Identifies adoption risks."
@@ -1964,14 +1964,14 @@ section_5:
       text: "Which interface do you prefer for interacting with AI agents?"
       type: multi
       helper: "Helps tailor agent UI recommendations."
-      options:
-        - label: "Chatbot (Slack/Teams)"
-        - label: "Embedded widget"
-        - label: "Dashboard"
-        - label: "Email assistant"
-        - label: "API/CLI"
-        - label: "Voice assistant"
-        - label: "Need guidance"
+      choices:
+        - value: "Chatbot (Slack/Teams)"
+        - value: "Embedded widget"
+        - value: "Dashboard"
+        - value: "Email assistant"
+        - value: "API/CLI"
+        - value: "Voice assistant"
+        - value: "Need guidance"
       score_per: 10
       cap: 100
       reasoning: "Interface diversity = higher maturity."
@@ -1982,16 +1982,16 @@ section_5:
       text: "What governance processes do you have for AI agents?"
       type: single
       helper: "Ensures safe, compliant agent operations."
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Ad-hoc spot checks"
+        - value: "Ad-hoc spot checks"
           score: 2
-        - label: "Formal review process"
+        - value: "Formal review process"
           score: 3
-        - label: "Logging with oversight"
+        - value: "Logging with oversight"
           score: 4
-        - label: "Continuous auditing"
+        - value: "Continuous auditing"
           score: 5
       hide_if:
         A3: "None implemented – no AI agents"
@@ -2001,16 +2001,16 @@ section_5:
       text: "What recovery or rollback strategy exists for failed automations or AI agents?"
       type: single
       helper: "Defines resilience and business continuity."
-      options:
-        - label: "No plan"
+      choices:
+        - value: "No plan"
           score: 1
-        - label: "Manual rollback steps"
+        - value: "Manual rollback steps"
           score: 2
-        - label: "Pre-defined failover procedures"
+        - value: "Pre-defined failover procedures"
           score: 3
-        - label: "Automated rollback"
+        - value: "Automated rollback"
           score: 4
-        - label: "Self-healing loops"
+        - value: "Self-healing loops"
           score: 5
       hide_if:
         A3: "None implemented – no AI agents"
@@ -2020,16 +2020,16 @@ section_5:
       text: "How do you track the accuracy and quality of AI agent outputs?"
       type: single
       helper: "Drives training on output validation and testing."
-      options:
-        - label: "No tracking"
+      choices:
+        - value: "No tracking"
           score: 1
-        - label: "Manual spot checks"
+        - value: "Manual spot checks"
           score: 2
-        - label: "Release testing"
+        - value: "Release testing"
           score: 3
-        - label: "Ongoing tests + spot checks"
+        - value: "Ongoing tests + spot checks"
           score: 4
-        - label: "Continuous accuracy monitoring"
+        - value: "Continuous accuracy monitoring"
           score: 5
       hide_if:
         A3: "None implemented – no AI agents"
@@ -2064,16 +2064,16 @@ section_6:
     - id: C1
       text: "How often do you and your team use AI tools in your daily work?"
       type: single
-      options:
-        - label: "Never"
+      choices:
+        - value: "Never"
           score: 1
-        - label: "Rarely"
+        - value: "Rarely"
           score: 2
-        - label: "Monthly"
+        - value: "Monthly"
           score: 3
-        - label: "Weekly"
+        - value: "Weekly"
           score: 4
-        - label: "Daily"
+        - value: "Daily"
           score: 5
       required: true
 
@@ -2086,49 +2086,49 @@ section_6:
         - "Formatting structured prompts"
         - "Designing multi-step prompt chains"
       columns:
-        - label: "No confidence"
+        - value: "No confidence"
           score: 1
-        - label: "Some confidence"
+        - value: "Some confidence"
           score: 2
-        - label: "Confident"
+        - value: "Confident"
           score: 3
-        - label: "Very confident"
+        - value: "Very confident"
           score: 4
       required: true
 
     - id: C3
       text: "How do you and your team share AI learnings internally?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Informal tips & tricks"
+        - value: "Informal tips & tricks"
           score: 2
-        - label: "Dedicated chat channel"
+        - value: "Dedicated chat channel"
           score: 3
-        - label: "Regular workshops"
+        - value: "Regular workshops"
           score: 4
-        - label: "Active Community of Practice"
+        - value: "Active Community of Practice"
           score: 5
       required: true
 
     - id: C3a
       text: "Which AI training topics should you and your team prioritize? (Rank top 3)"
       type: rank
-      options:
-        - label: "Prompt engineering"
+      choices:
+        - value: "Prompt engineering"
           score: 3
-        - label: "AI tool mastery"
+        - value: "AI tool mastery"
           score: 3
-        - label: "Data literacy"
+        - value: "Data literacy"
           score: 3
-        - label: "Model fine-tuning"
+        - value: "Model fine-tuning"
           score: 3
-        - label: "Retrieval-augmented generation"
+        - value: "Retrieval-augmented generation"
           score: 3
-        - label: "Agent orchestration"
+        - value: "Agent orchestration"
           score: 3
-        - label: "Ethics & governance"
+        - value: "Ethics & governance"
           score: 3
       max_rank: 3
       weight: [50, 30, 20]
@@ -2137,77 +2137,77 @@ section_6:
     - id: C4
       text: "What annual budget do you and your team allocate per person for AI upskilling?"
       type: single
-      options:
-        - label: "0 €"
+      choices:
+        - value: "0 €"
           score: 1
-        - label: "< €200"
+        - value: "< €200"
           score: 2
-        - label: "200–500 €"
+        - value: "200–500 €"
           score: 3
-        - label: "500–1 000 €"
+        - value: "500–1 000 €"
           score: 4
-        - label: "> 1 000 €"
+        - value: "> 1 000 €"
           score: 5
       required: true
 
     - id: C5
       text: "How many hours per month can you and your team dedicate to AI training?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "< 1 hr"
+        - value: "< 1 hr"
           score: 2
-        - label: "1–3 hrs"
+        - value: "1–3 hrs"
           score: 3
-        - label: "3–5 hrs"
+        - value: "3–5 hrs"
           score: 4
-        - label: "> 5 hrs"
+        - value: "> 5 hrs"
           score: 5
       required: true
 
     - id: C6
       text: "What format do you and your team prefer for AI training delivery?"
       type: single
-      options:
-        - label: "Text guides"
+      choices:
+        - value: "Text guides"
           score: 1
-        - label: "Short videos"
+        - value: "Short videos"
           score: 2
-        - label: "Live workshops"
+        - value: "Live workshops"
           score: 3
-        - label: "Self-paced courses"
+        - value: "Self-paced courses"
           score: 4
-        - label: "Mixed formats"
+        - value: "Mixed formats"
           score: 5
       required: true
 
     - id: C7
       text: "How often do you and your team engage external AI experts?"
       type: single
-      options:
-        - label: "None – no external support"
+      choices:
+        - value: "None – no external support"
           score: 1
-        - label: "Occasional advice"
+        - value: "Occasional advice"
           score: 2
-        - label: "Regular advisory sessions"
+        - value: "Regular advisory sessions"
           score: 3
-        - label: "Access to expert network"
+        - value: "Access to expert network"
           score: 4
-        - label: "Dedicated AI advisory board"
+        - value: "Dedicated AI advisory board"
           score: 5
       required: true
 
     - id: C8
       text: "What stops you and your team from piloting more AI projects?"
       type: multi
-      options:
-        - label: "Budget constraints"
-        - label: "Lack of skills"
-        - label: "Data silos"
-        - label: "Compliance concerns"
-        - label: "Unclear ROI"
-        - label: "Tech complexity"
+      choices:
+        - value: "Budget constraints"
+        - value: "Lack of skills"
+        - value: "Data silos"
+        - value: "Compliance concerns"
+        - value: "Unclear ROI"
+        - value: "Tech complexity"
       score_formula: "100 - 33 * count"
       reasoning: "Fewer blockers = higher readiness."
       required: true
@@ -2215,48 +2215,48 @@ section_6:
     - id: C9
       text: "How open are you and your team to piloting new AI projects?"
       type: single
-      options:
-        - label: "Resistant"
+      choices:
+        - value: "Resistant"
           score: 1
-        - label: "Cautious"
+        - value: "Cautious"
           score: 2
-        - label: "Interested"
+        - value: "Interested"
           score: 3
-        - label: "Proactive"
+        - value: "Proactive"
           score: 4
-        - label: "Active pilots"
+        - value: "Active pilots"
           score: 5
       required: true
 
     - id: C10
       text: "How frequently do you and your team collaborate across functions on AI initiatives?"
       type: single
-      options:
-        - label: "Never"
+      choices:
+        - value: "Never"
           score: 1
-        - label: "Occasionally"
+        - value: "Occasionally"
           score: 2
-        - label: "Quarterly"
+        - value: "Quarterly"
           score: 3
-        - label: "In squads"
+        - value: "In squads"
           score: 4
-        - label: "Embedded practice"
+        - value: "Embedded practice"
           score: 5
       required: true
 
     - id: C11
       text: "How safe do you and your team feel to experiment and fail with AI?"
       type: single
-      options:
-        - label: "No safety – fear of repercussions"
+      choices:
+        - value: "No safety – fear of repercussions"
           score: 1
-        - label: "Low safety – rarely comfortable"
+        - value: "Low safety – rarely comfortable"
           score: 2
-        - label: "Moderate safety – sometimes comfortable"
+        - value: "Moderate safety – sometimes comfortable"
           score: 3
-        - label: "High safety – often comfortable"
+        - value: "High safety – often comfortable"
           score: 4
-        - label: "Full safety – always encouraged"
+        - value: "Full safety – always encouraged"
           score: 5
       required: true
 section_7:
@@ -2286,96 +2286,96 @@ section_7:
     - id: G1
       text: "How mature are your processes for identifying and mitigating AI risks and biases?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Reactive fixes"
+        - value: "Reactive fixes"
           score: 2
-        - label: "Pre-release checks"
+        - value: "Pre-release checks"
           score: 3
-        - label: "Formal framework"
+        - value: "Formal framework"
           score: 4
-        - label: "AI-Act–compliant"
+        - value: "AI-Act–compliant"
           score: 5
       required: true
 
     - id: G2
       text: "How well can you explain and audit AI model decisions?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "High-risk only"
+        - value: "High-risk only"
           score: 2
-        - label: "Audit logs"
+        - value: "Audit logs"
           score: 3
-        - label: "All models"
+        - value: "All models"
           score: 4
-        - label: "Audit-ready"
+        - value: "Audit-ready"
           score: 5
       required: true
 
     - id: G3
       text: "How transparent are you with users and stakeholders about AI use?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Policy only"
+        - value: "Policy only"
           score: 2
-        - label: "Docs & FAQs"
+        - value: "Docs & FAQs"
           score: 3
-        - label: "Explain button"
+        - value: "Explain button"
           score: 4
-        - label: "Full disclosure"
+        - value: "Full disclosure"
           score: 5
       required: true
 
     - id: G4
       text: "What level of incident response planning exists for AI failures or harms?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "General IT plan"
+        - value: "General IT plan"
           score: 2
-        - label: "Manual rollback"
+        - value: "Manual rollback"
           score: 3
-        - label: "Automated rollback"
+        - value: "Automated rollback"
           score: 4
-        - label: "Playbook"
+        - value: "Playbook"
           score: 5
       required: true
 
     - id: G5
       text: "What level of human oversight do you enforce on AI outputs?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Final review"
+        - value: "Final review"
           score: 2
-        - label: "Spot checks"
+        - value: "Spot checks"
           score: 3
-        - label: "Human-in-loop"
+        - value: "Human-in-loop"
           score: 4
-        - label: "Escalation"
+        - value: "Escalation"
           score: 5
       required: true
 
     - id: G6
       text: "How deeply is privacy built into your AI development process?"
       type: single
-      options:
-        - label: "Basic compliance"
+      choices:
+        - value: "Basic compliance"
           score: 1
-        - label: "Enhanced controls"
+        - value: "Enhanced controls"
           score: 2
-        - label: "PETs"
+        - value: "PETs"
           score: 3
-        - label: "By design"
+        - value: "By design"
           score: 4
-        - label: "Automated"
+        - value: "Automated"
           score: 5
       required: true
 
@@ -2383,32 +2383,32 @@ section_7:
       text: "What is the status of independent audits for your AI systems?"
       type: single
       show_if: { track: [REG, TECH] }
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Planned"
+        - value: "Planned"
           score: 2
-        - label: "In progress"
+        - value: "In progress"
           score: 3
-        - label: "Completed"
+        - value: "Completed"
           score: 4
-        - label: "Ongoing"
+        - value: "Ongoing"
           score: 5
       required: true
 
     - id: G8
       text: "How far along are you in mapping AI risks under the EU AI Act?"
       type: single
-      options:
-        - label: "Not aware"
+      choices:
+        - value: "Not aware"
           score: 1
-        - label: "Aware"
+        - value: "Aware"
           score: 2
-        - label: "Mapping started"
+        - value: "Mapping started"
           score: 3
-        - label: "Completed"
+        - value: "Completed"
           score: 4
-        - label: "Reported"
+        - value: "Reported"
           score: 5
       required: true
 
@@ -2416,32 +2416,32 @@ section_7:
       text: "How regularly do you test your AI models for fairness?"
       type: single
       show_if: { track: [REG, TECH] }
-      options:
-        - label: "Never"
+      choices:
+        - value: "Never"
           score: 1
-        - label: "Ad-hoc"
+        - value: "Ad-hoc"
           score: 2
-        - label: "Pre-release"
+        - value: "Pre-release"
           score: 3
-        - label: "Quarterly"
+        - value: "Quarterly"
           score: 4
-        - label: "Continuous"
+        - value: "Continuous"
           score: 5
       required: true
 
     - id: G10
       text: "What governance body oversees your AI ethics and compliance?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Informal"
+        - value: "Informal"
           score: 2
-        - label: "Ad-hoc"
+        - value: "Ad-hoc"
           score: 3
-        - label: "Scheduled"
+        - value: "Scheduled"
           score: 4
-        - label: "External"
+        - value: "External"
           score: 5
       required: true
 
@@ -2477,28 +2477,28 @@ section_8:
     - id: P1
       text: "When do you plan to roll out your AI initiatives?"
       type: single
-      options:
-        - label: "Within 3 months"
+      choices:
+        - value: "Within 3 months"
           score: 5
-        - label: "3–6 months"
+        - value: "3–6 months"
           score: 4
-        - label: "6–12 months"
+        - value: "6–12 months"
           score: 3
-        - label: "Over 12 months"
+        - value: "Over 12 months"
           score: 2
       required: true
 
     - id: P2
       text: "What level of risk are you comfortable taking on AI projects?"
       type: single
-      options:
-        - label: "Conservative"
+      choices:
+        - value: "Conservative"
           score: 2
-        - label: "Cautious"
+        - value: "Cautious"
           score: 3
-        - label: "Balanced"
+        - value: "Balanced"
           score: 4
-        - label: "Bold"
+        - value: "Bold"
           score: 5
       required: true
 
@@ -2506,84 +2506,84 @@ section_8:
       text: "Which success metrics are most important for your AI work? (Select up to 3)"
       type: multi
       max_select: 3
-      options:
-        - label: "Return on Investment (ROI)"
+      choices:
+        - value: "Return on Investment (ROI)"
           score: 5
-        - label: "Cost reduction"
+        - value: "Cost reduction"
           score: 4
-        - label: "Operational efficiency"
+        - value: "Operational efficiency"
           score: 4
-        - label: "Customer experience"
+        - value: "Customer experience"
           score: 3
-        - label: "Employee productivity"
+        - value: "Employee productivity"
           score: 3
-        - label: "Innovation outcomes"
+        - value: "Innovation outcomes"
           score: 5
-        - label: "Regulatory compliance"
+        - value: "Regulatory compliance"
           score: 4
-        - label: "Sustainability impact"
+        - value: "Sustainability impact"
           score: 4
       required: true
 
     - id: P4
       text: "What is your preferred resource strategy for AI projects?"
       type: single
-      options:
-        - label: "Fully in-house build"
+      choices:
+        - value: "Fully in-house build"
           score: 5
-        - label: "Hybrid"
+        - value: "Hybrid"
           score: 4
-        - label: "Fully outsourced"
+        - value: "Fully outsourced"
           score: 2
       required: true
 
     - id: P5
       text: "Which technology architectures do you prefer for AI solutions? (Select all)"
       type: multi
-      options:
-        - label: "Cloud-native"
+      choices:
+        - value: "Cloud-native"
           score: 5
-        - label: "Hybrid/on-premise"
+        - value: "Hybrid/on-premise"
           score: 4
-        - label: "API-first"
+        - value: "API-first"
           score: 4
-        - label: "Low-code/no-code"
+        - value: "Low-code/no-code"
           score: 3
-        - label: "Open-source frameworks"
+        - value: "Open-source frameworks"
           score: 4
-        - label: "Enterprise software suites"
+        - value: "Enterprise software suites"
           score: 3
       required: true
 
     - id: P6
       text: "What level of external support do you expect for AI implementation?"
       type: single
-      options:
-        - label: "None"
+      choices:
+        - value: "None"
           score: 1
-        - label: "Occasional consulting"
+        - value: "Occasional consulting"
           score: 2
-        - label: "Ongoing advisory"
+        - value: "Ongoing advisory"
           score: 3
-        - label: "Managed services"
+        - value: "Managed services"
           score: 4
-        - label: "Full outsourcing"
+        - value: "Full outsourcing"
           score: 2
       required: true
 
     - id: P7
       text: "How significant of an organizational change are you prepared for to adopt AI?"
       type: single
-      options:
-        - label: "Minimal changes"
+      choices:
+        - value: "Minimal changes"
           score: 1
-        - label: "Minor tweaks"
+        - value: "Minor tweaks"
           score: 2
-        - label: "Moderate transformation"
+        - value: "Moderate transformation"
           score: 3
-        - label: "Major transformation"
+        - value: "Major transformation"
           score: 4
-        - label: "Continuous evolution"
+        - value: "Continuous evolution"
           score: 5
       required: true
 add_ons:
@@ -2592,16 +2592,16 @@ add_ons:
     text: "How do you deploy ML models and monitor them in production?"
     type: single
     helper: "Deployment and monitoring ensure reliability and fast issue detection."
-    options:
-      - label: "No deployment – models not in production"
+    choices:
+      - value: "No deployment – models not in production"
         score: 1
-      - label: "Manual scripts – ad-hoc launches"
+      - value: "Manual scripts – ad-hoc launches"
         score: 2
-      - label: "CI/CD pipeline – automated builds & deploys"
+      - value: "CI/CD pipeline – automated builds & deploys"
         score: 3
-      - label: "MLOps platform (e.g. Kubeflow, MLflow) with monitoring"
+      - value: "MLOps platform (e.g. Kubeflow, MLflow) with monitoring"
         score: 4
-      - label: "Fully automated blue/green deployments + rollback"
+      - value: "Fully automated blue/green deployments + rollback"
         score: 5
     required: true
 
@@ -2610,16 +2610,16 @@ add_ons:
     text: "Which mechanisms do you use for cross-border data transfers?"
     type: single
     helper: "GDPR requires lawful transfer—select your standard approach."
-    options:
-      - label: "No cross-border transfers"
+    choices:
+      - value: "No cross-border transfers"
         score: 1
-      - label: "Ad-hoc contracts"
+      - value: "Ad-hoc contracts"
         score: 2
-      - label: "Standard Contractual Clauses (SCCs)"
+      - value: "Standard Contractual Clauses (SCCs)"
         score: 3
-      - label: "Binding Corporate Rules (BCRs)"
+      - value: "Binding Corporate Rules (BCRs)"
         score: 4
-      - label: "Adequacy decision + continuous monitoring"
+      - value: "Adequacy decision + continuous monitoring"
         score: 5
     required: true
 
