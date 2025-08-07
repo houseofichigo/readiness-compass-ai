@@ -124,7 +124,7 @@ export function OrganizationProfileForm({
           </div>
           
           <div className="space-y-2">
-            {role && (
+            {role && role.options ? (
               <>
                 {renderLabel(role)}
                 <Select 
@@ -135,15 +135,15 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectRole")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {role.options?.map((opt) => {
+                    {role.options.map((opt, index) => {
                       if (!opt) return null;
-                      const val = typeof opt === "string" ? opt : opt.value;
-                      const label = typeof opt === "string" ? opt : opt.label;
+                      const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
+                      const label = typeof opt === "string" ? opt : (opt?.label || val);
                       if (!val) return null;
                       return (
                         <SelectItem 
-                          key={val} 
-                          value={val}
+                          key={`role-${index}`} 
+                          value={String(val)}
                           className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                         >
                           {label}
@@ -154,12 +154,14 @@ export function OrganizationProfileForm({
                 </Select>
                 {renderHelper(role)}
               </>
+            ) : (
+              <div className="text-muted-foreground">Role options not available</div>
             )}
           </div>
 
           {/* Row 3: Industry & sub-sector | Country */}
           <div className="space-y-2">
-            {industry && (
+            {industry && industry.options ? (
               <>
                 {renderLabel(industry)}
                 <Select 
@@ -170,15 +172,15 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectIndustry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {industry.options?.map((opt) => {
+                    {industry.options.map((opt, index) => {
                       if (!opt) return null;
-                      const val = typeof opt === "string" ? opt : opt.value;
-                      const label = typeof opt === "string" ? opt : opt.label;
+                      const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
+                      const label = typeof opt === "string" ? opt : (opt?.label || val);
                       if (!val) return null;
                       return (
                         <SelectItem 
-                          key={val} 
-                          value={val}
+                          key={`industry-${index}`} 
+                          value={String(val)}
                           className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                         >
                           {label}
@@ -189,11 +191,13 @@ export function OrganizationProfileForm({
                 </Select>
                 {renderHelper(industry)}
               </>
+            ) : (
+              <div className="text-muted-foreground">Industry options not available</div>
             )}
           </div>
           
           <div className="space-y-2">
-            {country && (
+            {country && country.options ? (
               <>
                 {renderLabel(country)}
                 <Select 
@@ -204,15 +208,15 @@ export function OrganizationProfileForm({
                     <SelectValue placeholder={t("form.selectCountry")} />
                   </SelectTrigger>
                   <SelectContent className="z-50 bg-background border border-border shadow-lg max-h-60">
-                    {country.options?.map((opt) => {
+                    {country.options.map((opt, index) => {
                       if (!opt) return null;
-                      const val = typeof opt === "string" ? opt : opt.value;
-                      const label = typeof opt === "string" ? opt : opt.label;
+                      const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
+                      const label = typeof opt === "string" ? opt : (opt?.label || val);
                       if (!val) return null;
                       return (
                         <SelectItem 
-                          key={val} 
-                          value={val}
+                          key={`country-${index}`} 
+                          value={String(val)}
                           className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                         >
                           {label}
@@ -223,6 +227,8 @@ export function OrganizationProfileForm({
                 </Select>
                 {renderHelper(country)}
               </>
+            ) : (
+              <div className="text-muted-foreground">Country options not available</div>
             )}
           </div>
         </div>
