@@ -85,7 +85,7 @@ export function AssessmentProgressBar({
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-foreground">
-          Assess your company’s AI readiness with a self-diagnostic that delivers an instant personalized report featuring AI use cases, bespoke automation pathways, agent strategies and training recommendations.
+          {t('assessment.tagline')}
         </h1>
         <div className="text-right">
           <div className="text-2xl font-bold text-primary">

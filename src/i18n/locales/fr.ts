@@ -4,7 +4,7 @@ export const frResources = {
     navigation: {
       home: "Accueil",
       assessment: "Évaluation",
-      admin: "Admin",
+      admin: "Admin", 
       login: "Connexion",
       logout: "Déconnexion",
     },
@@ -40,8 +40,9 @@ export const frResources = {
 
     // Assessment flow
     assessment: {
-      title: "Évaluation de maturité IA v2.0",
+      title: "Diagnostic de maturité Données et IA",
       subtitle: "Évaluez la maturité IA de votre organisation",
+      tagline: "Évaluez la préparation de votre entreprise à l'IA grâce à un auto-diagnostic qui génère instantanément un rapport personnalisé présentant des cas d'usage de l'IA, des parcours d'automatisation sur mesure, des stratégies d'agents et des recommandations de formation.",
       welcome: {
         title: "Bienvenue dans l'évaluation de maturité IA",
         description: "Cette évaluation complète analysera la préparation de votre organisation pour l'implémentation de l'IA à travers 8 dimensions clés.",

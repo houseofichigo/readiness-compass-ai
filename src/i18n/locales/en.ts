@@ -3,7 +3,7 @@ export const enResources = {
     // Navigation & Common UI
     navigation: {
       home: "Home",
-      assessment: "Assessment",
+      assessment: "Assessment", 
       admin: "Admin",
       login: "Login",
       logout: "Logout",
@@ -40,8 +40,9 @@ export const enResources = {
 
     // Assessment flow
     assessment: {
-      title: "AI Readiness Assessment v2.0",
+      title: "Data & AI Maturity Diagnostic",
       subtitle: "Evaluate your organization's AI readiness",
+      tagline: "Assess your company's AI readiness with a self-diagnostic that delivers an instant personalized report featuring AI use cases, bespoke automation pathways, agent strategies and training recommendations.",
       welcome: {
         title: "Welcome to the AI Readiness Assessment",
         description: "This comprehensive assessment will evaluate your organization's preparedness for AI implementation across 8 key dimensions.",
