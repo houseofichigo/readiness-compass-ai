@@ -30,10 +30,15 @@ export function OrganizationProfileForm({
   // Helper to find question by ID and localize it with fallback
   const findQuestion = (id: string) => {
     const question = questions.find(q => q.id === id);
-    if (!question) return undefined;
+    if (!question) {
+      console.warn(`Question ${id} not found in questions array`);
+      return undefined;
+    }
     
     try {
-      return getLocalizedQuestion(question, i18n.language);
+      const localized = getLocalizedQuestion(question, i18n.language);
+      console.log(`Found question ${id} with ${localized.choices?.length || 0} choices`);
+      return localized;
     } catch (error) {
       console.warn(`Error localizing question ${id}:`, error);
       return question; // Fallback to original question
@@ -192,7 +197,7 @@ export function OrganizationProfileForm({
                 {renderHelper(industry)}
               </>
             ) : (
-              <div className="text-muted-foreground">Industry options not available</div>
+              <div className="text-muted-foreground">Loading industry options...</div>
             )}
           </div>
           

@@ -94,9 +94,19 @@ try {
 function normalizeChoices(
   opts?: Array<string | QuestionChoice>
 ): QuestionChoice[] | undefined {
-  return opts?.map((o) =>
-    typeof o === "string" ? { value: o, label: o } : o
-  );
+  return opts?.map((o) => {
+    if (typeof o === "string") {
+      return { value: o, label: o };
+    }
+    // Ensure we have both value and label
+    return {
+      value: o.value || o.label || '',
+      label: o.label || o.value || '',
+      score: o.score,
+      reasoning: o.reasoning,
+      model_input_context: o.model_input_context
+    };
+  });
 }
 
 // Top-level maps for consent banners & computed logic
