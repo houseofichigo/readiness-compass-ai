@@ -53,7 +53,7 @@ export async function syncQuestionsToSupabase() {
         
         const questionRow: QuestionRow = {
           id: question.id,
-          assessment_id: "ai-readiness-v2",
+          assessment_id: "ai_readiness_v2",
           section_id: section.id,
           text: question.text,
           type: question.type,
@@ -110,7 +110,7 @@ export async function syncQuestionsToSupabase() {
     const { error: deleteError } = await supabase
       .from('questions')
       .delete()
-      .eq('assessment_id', 'ai-readiness-v2');
+      .eq('assessment_id', 'ai_readiness_v2');
 
     if (deleteError) {
       console.error("Error deleting existing questions:", deleteError);
@@ -148,7 +148,7 @@ export async function syncSectionsToSupabase() {
     
     const sectionsToInsert = assessmentSections.map((section, index) => ({
       id: section.id,
-      assessment_id: "ai-readiness-v2",
+      assessment_id: "ai_readiness_v2",
       title: section.title,
       purpose: section.purpose,
       category: section.category || null,
@@ -160,7 +160,7 @@ export async function syncSectionsToSupabase() {
     const { error: deleteError } = await supabase
       .from('sections')
       .delete()
-      .eq('assessment_id', 'ai-readiness-v2');
+      .eq('assessment_id', 'ai_readiness_v2');
 
     if (deleteError) {
       console.error("Error deleting existing sections:", deleteError);

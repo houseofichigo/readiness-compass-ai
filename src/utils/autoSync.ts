@@ -16,7 +16,7 @@ export async function ensureQuestionsExist() {
     const { count: questionCount, error } = await supabase
       .from('questions')
       .select('*', { count: 'exact', head: true })
-      .eq('assessment_id', 'ai-readiness-v2');
+      .eq('assessment_id', 'ai_readiness_v2');
 
     if (error) {
       console.warn("Could not check question count:", error);
