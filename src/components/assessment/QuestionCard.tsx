@@ -90,13 +90,13 @@ export function QuestionCard({
                 <SelectValue placeholder={t('form.pleaseSelect')} />
               </SelectTrigger>
               <SelectContent className="z-50 bg-background border border-border shadow-lg">
-                {flatOptions.map((opt) => {
-                  const val = typeof opt === "string" ? opt : opt.value;
-                  const label = typeof opt === "string" ? opt : opt.label;
+                {flatOptions.map((opt, index) => {
+                  const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
+                  const label = typeof opt === "string" ? opt : (opt?.label || val);
                   return (
                     <SelectItem 
-                      key={val} 
-                      value={val}
+                      key={`${val}-${index}`} 
+                      value={String(val)}
                       className="cursor-pointer hover:bg-accent hover:text-accent-foreground"
                     >
                       {label}
@@ -137,13 +137,14 @@ export function QuestionCard({
                     ))}
                   </div>
                 ))
-              : flatOptions.map((opt) => {
-                  const val = typeof opt === "string" ? opt : opt.value;
-                  const label = typeof opt === "string" ? opt : opt.label;
+              : flatOptions.map((opt, index) => {
+                  const val = typeof opt === "string" ? opt : (opt?.value || `option-${index}`);
+                  const label = typeof opt === "string" ? opt : (opt?.label || val);
+                  const safeId = `${localizedQuestion.id}-${index}-${String(val).replace(/[^a-zA-Z0-9]/g, '-')}`;
                   return (
-                    <div key={val} className="flex items-center space-x-2">
-                      <RadioGroupItem value={val} id={val} />
-                      <Label htmlFor={val} className="font-normal cursor-pointer">
+                    <div key={`${val}-${index}`} className="flex items-center space-x-2">
+                      <RadioGroupItem value={String(val)} id={safeId} />
+                      <Label htmlFor={safeId} className="font-normal cursor-pointer">
                         {label}
                       </Label>
                     </div>

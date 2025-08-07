@@ -44,16 +44,20 @@ export function getLocalizedQuestion(question: Question, language: string = 'en'
     return question;
   }
   
-  const localizedText = getLocalizedText(question.id, 'text', language);
-  const localizedHelper = getLocalizedText(question.id, 'helper', language);
-  const localizedOptions = getLocalizedOptions(question.id, question.options, language);
+  if (language === 'fr') {
+    const localizedText = getLocalizedText(question.id, 'text', language);
+    const localizedHelper = getLocalizedText(question.id, 'helper', language);
+    const localizedOptions = getLocalizedOptions(question.id, question.options, language);
+    
+    return {
+      ...question,
+      text: localizedText || question.text,
+      helper: localizedHelper || question.helper,
+      options: localizedOptions || question.options,
+    };
+  }
   
-  return {
-    ...question,
-    text: localizedText || question.text,
-    helper: localizedHelper || question.helper,
-    options: localizedOptions || question.options,
-  };
+  return question;
 }
 
 export function getLocalizedSection(section: Section, language: string = 'en'): Section {
