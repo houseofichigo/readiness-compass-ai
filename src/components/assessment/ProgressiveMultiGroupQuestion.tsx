@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { QuestionGroup } from "@/types/assessment";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { isQuestionVisible } from "@/utils/questionVisibility";
 interface ProgressiveMultiGroupQuestionProps {
   groups: QuestionGroup[];
   value: string[];
@@ -23,18 +24,22 @@ export function ProgressiveMultiGroupQuestion({
   const [searchTerm, setSearchTerm] = useState("");
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
-  // Filter groups based on track-based show_if conditions
-  const visibleGroups = groups.filter(group => {
-    if (!group.showIf) return true;
-    
-    // Simple track-based filtering for show_if: { track: "TECH" }
-    if (group.showIf.track) {
-      return group.showIf.track === detectedTrack;
-    }
-    
-    // More complex conditions can be handled here
-    return true;
-  });
+  // Enhanced group filtering using the same logic as questions
+  const visibleGroups = useMemo(() => {
+    return groups.filter(group => {
+      if (!group.showIf) return true;
+      
+      // Create a mock question to leverage existing visibility logic
+      const mockQuestion = {
+        id: `group_${group.label}`,
+        text: group.label,
+        type: 'checkbox' as const,
+        showIf: group.showIf
+      };
+      
+      return isQuestionVisible(mockQuestion, {}, detectedTrack, 0, {});
+    });
+  }, [groups, detectedTrack]);
 
   const handleGroupToggle = (groupLabel: string) => {
     const newExpanded = new Set(expandedGroups);

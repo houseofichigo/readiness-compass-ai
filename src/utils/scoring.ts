@@ -2,6 +2,7 @@
 
 import { assessmentSections, assessmentMeta, computedFields } from "@/data/assessmentQuestions";
 import type { Question, WeightVector } from "@/types/assessment";
+import { matchesCountRange, scoreMatrixQuestion, scoreRankingQuestion } from "./scoringHelpers";
 
 export interface ScoringResult {
   questionScores: Record<string, number>;
@@ -33,24 +34,53 @@ const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
   WeightVector
 >;
 
-/** Evaluate computed fields based on responses */
+/** Enhanced computed field evaluation supporting complex logic */
 function evaluateComputedFields(responses: Record<string, unknown>): Record<string, unknown> {
   const computed: Record<string, unknown> = {};
   
   Object.entries(computedFields).forEach(([id, field]) => {
     if (field.logic && typeof field.logic === 'string') {
-      // Handle simple logic like "M4_industry in ['Banking', 'Insurance', ...]"
-      const logic = field.logic;
-      const industryMatch = logic.match(/M4_industry\s+in\s+\[(.*?)\]/);
-      if (industryMatch) {
-        const industries = industryMatch[1].split(',').map(i => i.trim().replace(/['"]/g, ''));
-        const userIndustry = responses.M4_industry as string;
-        computed[id] = industries.includes(userIndustry);
-      }
+      computed[id] = evaluateLogicString(field.logic, responses);
+    } else if (field.conditions) {
+      // Handle object-based conditions
+      computed[id] = evaluateLogicConditions(field.conditions, responses, computed);
     }
   });
   
   return computed;
+}
+
+/** Evaluate string-based logic expressions */
+function evaluateLogicString(logic: string, responses: Record<string, unknown>): boolean {
+  // Handle "field in [value1, value2, ...]" syntax
+  const inMatch = logic.match(/(\w+(?:\.\w+)?)\s+in\s+\[(.*?)\]/);
+  if (inMatch) {
+    const fieldName = inMatch[1];
+    const valuesList = inMatch[2]
+      .split(',')
+      .map(v => v.trim().replace(/['"]/g, ''));
+    
+    const fieldValue = responses[fieldName] as string;
+    return valuesList.includes(fieldValue);
+  }
+  
+  // Handle simple boolean expressions
+  if (logic.includes('==')) {
+    const [field, value] = logic.split('==').map(s => s.trim());
+    return responses[field] === value.replace(/['"]/g, '');
+  }
+  
+  return false;
+}
+
+/** Evaluate object-based conditions */
+function evaluateLogicConditions(
+  conditions: Record<string, unknown>, 
+  responses: Record<string, unknown>,
+  computed: Record<string, unknown>
+): boolean {
+  // This can be expanded for more complex condition evaluation
+  return false;
 }
 
 export function scoreAnswers(
@@ -111,14 +141,22 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return 0;
   }
 
-  const { type, scoreMap, scorePer, cap, weight, options } = question;
+  const { type, scoreMap, scorePer, cap, weight, options, scoreByCount } = question;
+
+  // Handle scoreByCount for multi-select questions
+  if (scoreByCount && Array.isArray(answer)) {
+    const count = answer.length;
+    for (const [range, score] of Object.entries(scoreByCount)) {
+      if (matchesCountRange(count, range)) {
+        return Number(score);
+      }
+    }
+  }
 
   if (Array.isArray(answer)) {
-    // ranked
+    // Enhanced ranking scoring
     if (type === "rank" && weight) {
-      const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
-      const max = weight.reduce((a, b) => a + b, 0);
-      return max ? (used / max) * 100 : 0;
+      return scoreRankingQuestion(answer, weight, options?.map(opt => opt.value) || []);
     }
     // per-item
     if (scorePer !== undefined) {
@@ -151,11 +189,19 @@ function scoreQuestion(question: Question, answer: unknown): number {
     if (option?.score !== undefined) {
       return option.score;
     }
-    // Fallback to scoreMap
+    // Fallback to scoreMap if no score in option
     const idx = options.findIndex((opt) => opt.value === answer);
     if (idx >= 0 && scoreMap?.[idx] != null) {
       return scoreMap[idx];
     }
+  }
+
+  // Matrix question scoring
+  if (type === "matrix" && typeof answer === "object" && answer !== null) {
+    const matrixAnswer = answer as Record<string, string>;
+    const rows = question.rows || [];
+    const columns = question.columns || [];
+    return scoreMatrixQuestion(rows, columns, matrixAnswer);
   }
 
   if (typeof answer === "number") {

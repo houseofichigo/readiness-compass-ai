@@ -16,6 +16,7 @@ import { assessmentSections, assessmentAddOns, computedFields } from "@/data/ass
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
+import { validateSectionResponses } from "@/utils/assessmentValidation";
 import { useToast } from "@/hooks/use-toast";
 import { getLocalizedSection, getLocalizedQuestion } from "@/utils/assessmentUtils";
 import { Logger } from "@/utils/logger";
@@ -185,23 +186,25 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
         required: true,
       } as any);
     }
-    const ids = questions.map(q => q.id);
-    const validation = validateSection(questions, responses, ids);
+    
+    // Use enhanced validation
+    const validation = validateSectionResponses(questions, responses);
     
     // Debug validation
-    Logger.debug("VALIDATION DEBUG", {
+    Logger.debug("ENHANCED VALIDATION DEBUG", {
       "Visible questions": questions.length,
-      "Question IDs": ids,
-      "Validation result": validation.isValid,
+      "Question IDs": questions.map(q => q.id),
+      "Validation result": validation.valid,
       "Validation errors": validation.errors,
       "Current responses": Object.keys(responses)
     });
     
-    return validation.isValid;
+    return validation.valid;
   };
 
   const scrollToFirstError = () => {
-    const validation = validateSection(getVisibleQuestions(), responses, getVisibleQuestions().map(q => q.id));
+    const questions = getVisibleQuestions();
+    const validation = validateSectionResponses(questions, responses);
     const firstError = Object.keys(validation.errors)[0];
     const elem = document.getElementById(firstError);
     if (elem) {

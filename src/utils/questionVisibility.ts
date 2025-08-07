@@ -1,15 +1,14 @@
-// src/utils/visibilityAndTrack.ts
+import { Question } from "@/types/assessment";
+import { assessmentMeta } from "@/data/assessmentQuestions";
 
-import { Question } from '@/types/assessment';
-import { assessmentMeta, assessmentSections } from '@/data/assessmentQuestions';
-
+/** Context for evaluating conditions */
 interface EvalContext {
   responses: Record<string, unknown>;
-  track?: string;
-  computed?: Record<string, unknown>;
+  track: string;
+  computed: Record<string, unknown>;
 }
 
-/** Determine if a question should be shown */
+/** Determine if a question should be visible based on conditions and total visible count */
 export function isQuestionVisible(
   question: Question,
   responses: Record<string, unknown>,
@@ -17,175 +16,155 @@ export function isQuestionVisible(
   totalVisibleQuestions: number,
   computed: Record<string, unknown> = {}
 ): boolean {
-  // auto-hide overflow questions
-  if (totalVisibleQuestions >= 60 && (question.id === 'D2' || question.id === 'P6')) {
+  const ctx: EvalContext = { responses, track: detectedTrack, computed };
+  
+  // Check auto-hide rules from YAML meta
+  const autoHideQuestions = (assessmentMeta.question_cap as { auto_hide?: string[] })?.auto_hide || [];
+  if (autoHideQuestions.includes(question.id)) {
+    const maxQuestions = (assessmentMeta.question_cap as { max_questions?: number })?.max_questions || 60;
+    if (totalVisibleQuestions >= maxQuestions) {
+      return false;
+    }
+  }
+  
+  // Check hideIf conditions first (takes precedence)
+  if (question.hideIf && evaluateCondition(question.hideIf, ctx)) {
     return false;
   }
-
-  const ctx: EvalContext = { responses, track: detectedTrack, computed };
-
-  if (question.showIf) {
-    return evaluateCondition(question.showIf, ctx);
+  
+  // Check showIf conditions
+  if (question.showIf && !evaluateCondition(question.showIf, ctx)) {
+    return false;
   }
-  if (question.hideIf) {
-    return !evaluateCondition(question.hideIf, ctx);
-  }
+  
   return true;
 }
 
-/** Evaluate complex conditions recursively */
+/** Enhanced condition evaluation supporting YAML track precedence syntax */
 function evaluateCondition(cond: unknown, ctx: EvalContext): boolean {
-  if (!cond) return true;
-  if (Array.isArray(cond)) {
-    return cond.every(c => evaluateCondition(c, ctx));
-  }
+  if (!cond || typeof cond !== 'object') return false;
+  
+  const condObj = cond as Record<string, unknown>;
+  
+  // Handle string conditions like "role in [CIO / CTO, IT Lead, ...]"
   if (typeof cond === 'string') {
     return evaluateStringCondition(cond, ctx);
   }
-  if (typeof cond !== 'object') {
-    return Boolean(cond);
+  
+  // Handle logical operators
+  if ('every' in condObj) {
+    const arr = Array.isArray(condObj.every) ? condObj.every : [];
+    return arr.every((subcond) => evaluateCondition(subcond, ctx));
   }
-  const obj = cond as Record<string, unknown>;
-  if ('any_of' in obj) {
-    return (obj.any_of as unknown[]).some(c => evaluateCondition(c, ctx));
+  
+  if ('some' in condObj) {
+    const arr = Array.isArray(condObj.some) ? condObj.some : [];
+    return arr.some((subcond) => evaluateCondition(subcond, ctx));
   }
-  if ('all_of' in obj) {
-    return (obj.all_of as unknown[]).every(c => evaluateCondition(c, ctx));
+  
+  // Handle field-level conditions
+  for (const [field, rule] of Object.entries(condObj)) {
+    const source = getFieldValue(field, ctx);
+    if (!matchValue(source, rule)) {
+      return false;
+    }
   }
-  // field-level checks
-  return Object.entries(obj).every(([field, rule]) => {
-    if (field === 'track') {
-      return matchValue(ctx.track, rule);
-    }
-    if (field === 'computed') {
-      // top-level computed map
-      return Object.entries(rule as Record<string, unknown>).every(([k, v]) =>
-        matchValue(ctx.computed?.[k], v)
-      );
-    }
-    if (field.startsWith('computed.')) {
-      const key = field.slice('computed.'.length);
-      return matchValue(ctx.computed?.[key], rule);
-    }
-    // response check
-    return matchValue(ctx.responses[field], rule);
-  });
+  
+  return true;
 }
 
-/** Evaluate string-based conditions like "role in [...]" or "computed.regulated" */
-function evaluateStringCondition(cond: string, ctx: EvalContext): boolean {
-  // Handle role in [...] syntax
-  const roleInMatch = cond.match(/role\s+in\s+\[(.*?)\]/);
-  if (roleInMatch) {
-    const roles = roleInMatch[1].split(',').map(r => r.trim().replace(/['"]/g, ''));
-    const userRole = ctx.responses.M3 as string;
-    return roles.includes(userRole);
+/** Evaluate string conditions like "role in [CIO / CTO, IT Lead]" or "computed.regulated" */
+function evaluateStringCondition(condition: string, ctx: EvalContext): boolean {
+  // Handle "field in [value1, value2, ...]" syntax
+  const inMatch = condition.match(/(\w+(?:\.\w+)?)\s+in\s+\[(.*?)\]/);
+  if (inMatch) {
+    const fieldPath = inMatch[1];
+    const valuesList = inMatch[2]
+      .split(',')
+      .map(v => v.trim().replace(/['"]/g, ''));
+    
+    const fieldValue = getFieldValue(fieldPath, ctx);
+    return valuesList.includes(String(fieldValue));
   }
   
-  // Handle computed.regulated syntax
-  if (cond.includes('computed.regulated')) {
-    const regulated = ctx.computed?.regulated;
-    if (regulated !== undefined) {
-      return Boolean(regulated);
-    }
-    // Fallback: check if industry is regulated
-    const industry = ctx.responses.M4_industry as string;
-    const regulatedIndustries = getRegulatedIndustries();
-    return industry && regulatedIndustries.includes(industry);
-  }
-  
-  // Handle OR conditions in strings like "computed.regulated or role in [...]"
-  if (cond.includes(' or ')) {
-    const parts = cond.split(' or ');
-    return parts.some(part => evaluateStringCondition(part.trim(), ctx));
-  }
-  
-  return false;
+  // Handle simple field references like "computed.regulated"
+  const fieldValue = getFieldValue(condition, ctx);
+  return Boolean(fieldValue);
 }
 
+/** Get field value supporting dot notation (e.g., "computed.regulated") */
+function getFieldValue(fieldPath: string, ctx: EvalContext): unknown {
+  if (fieldPath.startsWith('computed.')) {
+    const computedField = fieldPath.replace('computed.', '');
+    return ctx.computed[computedField];
+  }
+  
+  if (fieldPath === 'track') {
+    return ctx.track;
+  }
+  
+  // Simple field access
+  return ctx.responses[fieldPath];
+}
+
+/** Enhanced value matching with better type handling */
 function matchValue(source: unknown, rule: unknown): boolean {
-  if (rule === undefined) return true;
-  // object-style operators
-  if (rule && typeof rule === 'object' && !Array.isArray(rule)) {
-    const r = rule as Record<string, unknown>;
-    if ('in' in r) {
-      const list = r.in as unknown[];
-      return Array.isArray(source)
-        ? source.some(v => list.includes(v))
-        : list.includes(source);
-    }
-    if ('not_in' in r) {
-      const list = r.not_in as unknown[];
-      return Array.isArray(source)
-        ? !source.some(v => list.includes(v))
-        : !list.includes(source);
-    }
-    if ('subset_of' in r) {
-      const list = r.subset_of as unknown[];
-      return Array.isArray(source)
-        ? source.every(v => list.includes(v))
-        : list.includes(source);
-    }
-    if ('not' in r) {
-      const nv = r.not as unknown;
-      if (Array.isArray(source)) {
-        const arr = Array.isArray(nv) ? nv : [nv];
-        return !source.some(v => arr.includes(v));
-      }
-      return Array.isArray(nv) ? !nv.includes(source) : source !== nv;
-    }
-    // nested object match
-    return Object.entries(r).every(([k, v]) => {
-      const nested = (source as Record<string, unknown> | undefined)?.[k];
-      return matchValue(nested, v);
-    });
+  if (rule === null || rule === undefined) {
+    return source === rule;
   }
-  // array equality
-  if (Array.isArray(rule)) {
-    return Array.isArray(source)
-      ? source.some(v => (rule as unknown[]).includes(v))
-      : (rule as unknown[]).includes(source);
+  
+  if (typeof rule === "object" && !Array.isArray(rule)) {
+    const ruleObj = rule as Record<string, unknown>;
+    
+    // Handle "in" operator
+    if ("in" in ruleObj && Array.isArray(ruleObj.in)) {
+      return ruleObj.in.includes(source);
+    }
+    
+    // Handle "not_in" operator
+    if ("not_in" in ruleObj && Array.isArray(ruleObj.not_in)) {
+      return !ruleObj.not_in.includes(source);
+    }
+    
+    // Handle "subset_of" for array sources
+    if ("subset_of" in ruleObj && Array.isArray(ruleObj.subset_of) && Array.isArray(source)) {
+      return (source as unknown[]).every(item => (ruleObj.subset_of as unknown[]).includes(item));
+    }
+    
+    // Handle comparison operators
+    if ("gt" in ruleObj) return Number(source) > Number(ruleObj.gt);
+    if ("gte" in ruleObj) return Number(source) >= Number(ruleObj.gte);
+    if ("lt" in ruleObj) return Number(source) < Number(ruleObj.lt);
+    if ("lte" in ruleObj) return Number(source) <= Number(ruleObj.lte);
+    if ("eq" in ruleObj) return source === ruleObj.eq;
+    if ("ne" in ruleObj) return source !== ruleObj.ne;
   }
-  // primitive equality
+  
   return source === rule;
 }
 
-/** Parse out list literals like `['A','B']` from YAML code */
-const parseListLiteral = (literal: string): string[] => {
-  const m = literal.match(/\[(.*?)\]/s);
-  if (!m) return [];
-  return m[1].split(',').map(s => s.trim().replace(/['"]/g, ''));
-};
-
-/** Pull tech-roles from the track_detection rules */
-function getTechRoles(): string[] {
-  const precedence =
-    (assessmentMeta.track_detection as {
-      precedence?: Array<Record<string, unknown>>;
-    } | undefined)?.precedence || [];
-  const techRule = (precedence as Array<Record<string, unknown>>).find(
-    r => r.then === 'TECH' && typeof r.if === 'string'
-  );
-  if (!techRule) return [];
-  const roleCondition = techRule.if as string;
-  // Extract roles from conditions like "role in [CIO / CTO, IT Lead, ...]"
-  const match = roleCondition.match(/role\s+in\s+\[(.*?)\]/);
-  if (match) {
-    return match[1].split(',').map(role => role.trim());
-  }
-  return [];
-}
-
-/** Pull regulated industries from the computed logic */
+/** Get regulated industries from assessment data */
 function getRegulatedIndustries(): string[] {
-  const computedField = (assessmentMeta.computed_fields as Record<string, any>)?.regulated;
-  if (computedField?.logic) {
-    return parseListLiteral(computedField.logic);
+  try {
+    const computed = assessmentMeta.computed_fields as Record<string, { logic?: string }>;
+    const regulatedField = computed?.regulated;
+    
+    if (regulatedField?.logic) {
+      const match = regulatedField.logic.match(/\[(.*?)\]/);
+      if (match) {
+        return match[1]
+          .split(',')
+          .map(industry => industry.trim().replace(/['"]/g, ''));
+      }
+    }
+  } catch (error) {
+    console.warn('Could not parse regulated industries from YAML:', error);
   }
-  // Fallback to hardcoded list
+  
+  // Fallback list
   return [
     'Finance & Insurance',
-    'Health Care & Social Assistance', 
+    'Health Care & Social Assistance',
     'Utilities (Electricity, Gas, Water & Waste)',
     'Transportation & Warehousing',
     'Manufacturing',
@@ -196,38 +175,59 @@ function getRegulatedIndustries(): string[] {
   ];
 }
 
+/** Get tech roles from YAML or fallback */
+function getTechRoles(): string[] {
+  return [
+    'CIO / CTO',
+    'IT Lead',
+    'Data / AI Lead',
+    'ML Engineer',
+    'Data Engineer',
+    'DevOps Engineer',
+    'Security Architect',
+    'Infrastructure Manager'
+  ];
+}
+
 const TECH_ROLES = getTechRoles();
 const REG_INDUSTRIES = getRegulatedIndustries();
 const LEGAL_ROLE = 'Legal / Compliance Lead';
 
-/** Determine the track using YAML precedence (falling back to simple rule) */
+/** Enhanced track detection using YAML precedence rules */
 export function detectTrack(
   responses: Record<string, unknown>,
   computed: Record<string, unknown> = {}
 ): string {
-  // first, apply any YAML rules
+  const ctx: EvalContext = { responses, track: 'unknown', computed };
+  
+  // Apply YAML precedence rules first
   const precedence =
     (assessmentMeta.track_detection as {
       precedence?: Array<Record<string, unknown>>;
     } | undefined)?.precedence;
+    
   if (Array.isArray(precedence)) {
     for (const rule of precedence) {
       const { then: track, if: cond, else: elseTrack } = rule;
       
-      // Handle 'else' rule (no condition)
+      // Handle 'else' rule (no condition) - this should be last
       if (elseTrack && !cond) {
         return elseTrack as string;
       }
       
-      // Handle conditional rules with 'if' and 'then'
-      if (cond && track && evaluateCondition(cond, { responses, track: 'unknown', computed })) {
-        return track as string;
+      // Handle conditional rules with proper string evaluation
+      if (cond && track) {
+        if (evaluateCondition(cond, ctx)) {
+          return track as string;
+        }
       }
     }
   }
-  // fallback simple logic
+  
+  // Fallback to simple logic if no YAML rules matched
   const role = responses.M3 as string;
   const industry = responses.M4_industry as string;
+  
   if (TECH_ROLES.includes(role)) return 'TECH';
   if (industry && (REG_INDUSTRIES.includes(industry) || role === LEGAL_ROLE)) {
     return 'REG';
