@@ -1,6 +1,6 @@
 // Production-safe logging utility
 export class Logger {
-  private static isDev = process.env.NODE_ENV === 'development';
+  private static isDev = typeof import.meta !== 'undefined' ? (import.meta as any).env?.DEV ?? true : true;
 
   static log(message: string, ...args: any[]) {
     if (this.isDev) {

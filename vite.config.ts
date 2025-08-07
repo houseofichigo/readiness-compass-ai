@@ -20,6 +20,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   assetsInclude: ['**/*.yaml', '**/*.yml'],
+  esbuild: { drop: mode === 'development' ? [] : ['console', 'debugger'] },
   build: {
     rollupOptions: {
       output: {
