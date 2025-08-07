@@ -1,13 +1,9 @@
-
-// TEMPORARY STUB - Phase 1 Cleanup
-// This file contains stub implementations to prevent TypeScript errors
-// Will be replaced with full implementation in Phase 2
-
 import { useState } from 'react';
 import { toast } from "sonner";
 import type { AssessmentValue, OrganizationProfile } from '@/types/assessment';
 import { supabase } from '@/integrations/supabase/client';
 import { assessmentSections, assessmentAddOns } from '@/data/assessmentQuestions';
+import { safeUuidV4 } from '@/utils/uuid';
 
 export function useAssessment() {
   const [isLoading, setIsLoading] = useState(false);
@@ -22,12 +18,14 @@ export function useAssessment() {
     setError(null);
 
     try {
-      // 1) Create submission (anonymous) with client-generated id to avoid RETURNING
-      const submissionId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
-        ? (globalThis.crypto as Crypto).randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      // Robust, valid UUID v4 for submission id across browsers
+      const submissionId = safeUuidV4();
+      console.log('[saveAssessment] Generated submissionId:', submissionId);
 
+      // Track UTM params from URL
       const params = new URLSearchParams(window.location.search);
+
+      console.log('[saveAssessment] Inserting submission...');
       const { error: subErr } = await supabase
         .from('submissions')
         .insert({
@@ -41,12 +39,13 @@ export function useAssessment() {
         });
 
       if (subErr) {
+        console.error('[saveAssessment] Submission insert failed:', subErr);
         setError(subErr.message || 'Failed to create submission');
         toast.error('Failed to create submission');
         return null;
       }
 
-      // 2) Insert answers in bulk (filter only real question IDs to avoid FK violations)
+      // Build set of valid question IDs to avoid FK violations
       const sectionQuestionIds = assessmentSections.flatMap(s => (s.questions || []).map(q => q.id));
       const addOnIds = (assessmentAddOns || []).map(q => q.id);
       const validIds = new Set<string>([...sectionQuestionIds, ...addOnIds]);
@@ -56,24 +55,33 @@ export function useAssessment() {
         .map(([questionId, value]) => ({
           submission_id: submissionId,
           question_id: questionId,
-          raw_response: value as any,
+          raw_response: value ?? null,
           chosen_value: typeof value === 'string' ? (value as string) : null,
         }));
 
+      console.log('[saveAssessment] Prepared answers count:', answers.length);
+
       if (answers.length > 0) {
+        console.log('[saveAssessment] Inserting answers batch...');
         const { error: ansErr } = await supabase
           .from('answers')
           .insert(answers);
+
         if (ansErr) {
+          console.error('[saveAssessment] Answers insert failed:', ansErr, { firstAnswer: answers[0] });
           setError(ansErr.message);
           toast.error('Failed to save answers');
           return null;
         }
+      } else {
+        console.warn('[saveAssessment] No valid answers to insert (all filtered or empty).');
       }
 
       toast.success('Assessment submitted');
+      console.log('[saveAssessment] Completed OK for submission:', submissionId);
       return submissionId;
     } catch (e: any) {
+      console.error('[saveAssessment] Unexpected error:', e);
       setError(e?.message || 'Unexpected error');
       toast.error('Unexpected error submitting assessment');
       return null;
