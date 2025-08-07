@@ -26,14 +26,19 @@ interface QuestionRow {
 
 export async function syncQuestionsToSupabase() {
   try {
-    console.log("Starting questions sync to Supabase...");
+    console.log("Starting comprehensive questions sync to Supabase...");
+    console.log(`Total sections to process: ${assessmentSections.length}`);
     
     const questionsToInsert: QuestionRow[] = [];
     
-    // Process all sections and questions
+    // Process all sections and questions with detailed logging
     assessmentSections.forEach((section, sectionIndex) => {
-      console.log(`Processing section: ${section.id} with ${section.questions.length} questions`);
+      console.log(`Processing section ${sectionIndex + 1}: ${section.id} - "${section.title}"`);
+      console.log(`  Category: ${section.category || 'none'}, Questions: ${section.questions.length}`);
+      
       section.questions.forEach((question, questionIndex) => {
+        console.log(`  Processing question ${questionIndex + 1}: ${question.id} - ${question.type}`);
+        
         const questionRow: QuestionRow = {
           id: question.id,
           assessment_id: "ai-readiness-v2",
@@ -46,16 +51,62 @@ export async function syncQuestionsToSupabase() {
           is_add_on: false,
         };
 
-        // Add essential question properties only (removed obsolete scoring fields)
-        if (question.options) questionRow.options = question.options;
-        if (question.rows) questionRow.rows = question.rows;
-        if (question.columns) questionRow.columns = question.columns;
-        if (question.groups) questionRow.groups = question.groups;
-        if (question.showIf) questionRow.show_if = question.showIf;
-        if (question.hideIf) questionRow.hide_if = question.hideIf;
-        if (question.maxRank) questionRow.max_rank = question.maxRank;
-        if (question.maxSelect) questionRow.max_select = question.maxSelect;
-        if (question.scoreMapByBucket) questionRow.score_map_by_bucket = question.scoreMapByBucket;
+        // Add all question properties with validation
+        if (question.options) {
+          console.log(`    Options found: ${question.options.length} options`);
+          // Log first option to verify structure
+          if (question.options.length > 0) {
+            const firstOption = question.options[0];
+            console.log(`    First option structure:`, {
+              value: firstOption.value,
+              label: firstOption.label,
+              score: firstOption.score,
+              hasReasoning: !!firstOption.reasoning,
+              hasModelContext: !!firstOption.model_input_context
+            });
+          }
+          questionRow.options = question.options;
+        }
+        
+        if (question.rows) {
+          console.log(`    Rows: ${question.rows.length}`);
+          questionRow.rows = question.rows;
+        }
+        
+        if (question.columns) {
+          console.log(`    Columns: ${question.columns.length}`);
+          questionRow.columns = question.columns;
+        }
+        
+        if (question.groups) {
+          console.log(`    Groups: ${question.groups.length}`);
+          questionRow.groups = question.groups;
+        }
+        
+        if (question.showIf) {
+          console.log(`    Has showIf conditions`);
+          questionRow.show_if = question.showIf;
+        }
+        
+        if (question.hideIf) {
+          console.log(`    Has hideIf conditions`);
+          questionRow.hide_if = question.hideIf;
+        }
+        
+        if (question.maxRank) {
+          console.log(`    Max rank: ${question.maxRank}`);
+          questionRow.max_rank = question.maxRank;
+        }
+        
+        if (question.maxSelect) {
+          console.log(`    Max select: ${question.maxSelect}`);
+          questionRow.max_select = question.maxSelect;
+        }
+        
+        if (question.scoreMapByBucket) {
+          console.log(`    Has score map by bucket`);
+          questionRow.score_map_by_bucket = question.scoreMapByBucket;
+        }
 
         questionsToInsert.push(questionRow);
       });

@@ -13,28 +13,33 @@ export function DataSyncButton() {
   const handleSync = async () => {
     setIsSyncing(true);
     try {
+      console.log("🔄 Starting comprehensive YAML to DB sync...");
       const result = await syncAssessmentDataToSupabase();
       
       if (result.success) {
         const sections = 'sections' in result ? result.sections : 0;
         const questions = 'questions' in result ? result.questions : 0;
         
+        console.log("✅ Sync completed successfully!");
+        console.log(`📊 Synced ${sections} sections and ${questions} questions`);
+        
         toast({
-          title: "Sync Successful",
-          description: `Synced ${sections} sections and ${questions} questions to Supabase`,
+          title: "✅ Comprehensive Sync Successful",
+          description: `Synced ${sections} sections and ${questions} questions with full YAML data including scores, reasoning, and model context`,
         });
       } else {
+        console.error("❌ Sync failed:", 'error' in result ? result.error : 'Unknown error');
         toast({
-          title: "Sync Failed",
-          description: "Failed to sync data to Supabase",
+          title: "❌ Sync Failed", 
+          description: "Failed to sync data to Supabase. Check console for details.",
           variant: "destructive",
         });
       }
     } catch (error) {
-      console.error("Sync error:", error);
+      console.error("💥 Sync error:", error);
       toast({
-        title: "Sync Error",
-        description: "An error occurred while syncing data",
+        title: "💥 Sync Error",
+        description: "An error occurred while syncing data. Check console for details.",
         variant: "destructive",
       });
     } finally {
