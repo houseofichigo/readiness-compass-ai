@@ -287,10 +287,23 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
   return base as Question;
 });
 
+// Process computed fields from meta
+const computedFields: Record<string, ComputedField> = {};
+if (schema.meta?.computed_fields) {
+  Object.entries(schema.meta.computed_fields).forEach(([id, field]) => {
+    computedFields[id] = {
+      id,
+      type: 'computed',
+      logic: (field as any)?.logic || field,
+    };
+  });
+}
+
 export {
   assessmentSections,
   assessmentConsentBanners,
   assessmentComputed,
   assessmentAddOns,
+  computedFields,
 };
 export const assessmentMeta = schema.meta ?? {};

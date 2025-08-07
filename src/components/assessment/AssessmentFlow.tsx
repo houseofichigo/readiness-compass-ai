@@ -12,7 +12,7 @@ import { QuestionCard } from "./QuestionCard";
 import { AssessmentProgressBar } from "./AssessmentProgressBar";
 import { ConsentBanner } from "./ConsentBanner";
 import { OrganizationProfileForm } from "./OrganizationProfileForm";
-import { assessmentSections, assessmentAddOns } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentAddOns, computedFields } from "@/data/assessmentQuestions";
 import { isQuestionVisible, detectTrack } from "@/utils/questionVisibility";
 import { Track, OrganizationProfile, ComputedField, AssessmentValue } from "@/types/assessment";
 import { validateSection } from "@/utils/validation";
@@ -44,19 +44,25 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const [showTrackInfo, setShowTrackInfo] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Profile section computed fields
-  const profileSection = assessmentSections.find(s => s.id === "section_0");
-  const evaluateComputed = (fields: ComputedField[] | undefined, rs: Record<string, any>) => {
-    const values: Record<string, any> = {};
-    fields?.forEach(f => {
-      if (f.id === "regulated") {
-        const inds = parseListLiteral(String(f.logic || "[]"));
-        values.regulated = inds.includes(rs.M4_industry as string);
+  // Evaluate computed fields using centralized logic
+  const evaluateComputed = (responses: Record<string, unknown>): Record<string, unknown> => {
+    const computed: Record<string, unknown> = {};
+    
+    Object.entries(computedFields).forEach(([id, field]) => {
+      if (field.logic && typeof field.logic === 'string') {
+        const logic = field.logic;
+        const industryMatch = logic.match(/M4_industry\s+in\s+\[(.*?)\]/);
+        if (industryMatch) {
+          const industries = industryMatch[1].split(',').map(i => i.trim().replace(/['"]/g, ''));
+          const userIndustry = responses.M4_industry as string;
+          computed[id] = industries.includes(userIndustry);
+        }
       }
     });
-    return values;
+    
+    return computed;
   };
-  const globalComputed = evaluateComputed(profileSection?.computed, responses);
+  const globalComputed = evaluateComputed(responses);
 
   // Keep detectedTrack up to date
   useEffect(() => {

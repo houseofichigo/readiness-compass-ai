@@ -1,6 +1,6 @@
 // src/utils/scoring.ts
 
-import { assessmentSections, assessmentMeta } from "@/data/assessmentQuestions";
+import { assessmentSections, assessmentMeta, computedFields } from "@/data/assessmentQuestions";
 import type { Question, WeightVector } from "@/types/assessment";
 
 export interface ScoringResult {
@@ -32,6 +32,26 @@ const WEIGHT_VECTORS = (assessmentMeta.weight_vectors ?? {}) as Record<
   string,
   WeightVector
 >;
+
+/** Evaluate computed fields based on responses */
+function evaluateComputedFields(responses: Record<string, unknown>): Record<string, unknown> {
+  const computed: Record<string, unknown> = {};
+  
+  Object.entries(computedFields).forEach(([id, field]) => {
+    if (field.logic && typeof field.logic === 'string') {
+      // Handle simple logic like "M4_industry in ['Banking', 'Insurance', ...]"
+      const logic = field.logic;
+      const industryMatch = logic.match(/M4_industry\s+in\s+\[(.*?)\]/);
+      if (industryMatch) {
+        const industries = industryMatch[1].split(',').map(i => i.trim().replace(/['"]/g, ''));
+        const userIndustry = responses.M4_industry as string;
+        computed[id] = industries.includes(userIndustry);
+      }
+    }
+  });
+  
+  return computed;
+}
 
 export function scoreAnswers(
   values: Record<string, unknown>,

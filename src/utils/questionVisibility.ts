@@ -39,6 +39,9 @@ function evaluateCondition(cond: unknown, ctx: EvalContext): boolean {
   if (Array.isArray(cond)) {
     return cond.every(c => evaluateCondition(c, ctx));
   }
+  if (typeof cond === 'string') {
+    return evaluateStringCondition(cond, ctx);
+  }
   if (typeof cond !== 'object') {
     return Boolean(cond);
   }
@@ -67,6 +70,37 @@ function evaluateCondition(cond: unknown, ctx: EvalContext): boolean {
     // response check
     return matchValue(ctx.responses[field], rule);
   });
+}
+
+/** Evaluate string-based conditions like "role in [...]" or "computed.regulated" */
+function evaluateStringCondition(cond: string, ctx: EvalContext): boolean {
+  // Handle role in [...] syntax
+  const roleInMatch = cond.match(/role\s+in\s+\[(.*?)\]/);
+  if (roleInMatch) {
+    const roles = roleInMatch[1].split(',').map(r => r.trim().replace(/['"]/g, ''));
+    const userRole = ctx.responses.M3 as string;
+    return roles.includes(userRole);
+  }
+  
+  // Handle computed.regulated syntax
+  if (cond.includes('computed.regulated')) {
+    const regulated = ctx.computed?.regulated;
+    if (regulated !== undefined) {
+      return Boolean(regulated);
+    }
+    // Fallback: check if industry is regulated
+    const industry = ctx.responses.M4_industry as string;
+    const regulatedIndustries = ['Banking', 'Insurance', 'Healthcare', 'Government', 'Legal', 'Financial Services', 'Pharmaceuticals'];
+    return industry && regulatedIndustries.includes(industry);
+  }
+  
+  // Handle OR conditions in strings like "computed.regulated or role in [...]"
+  if (cond.includes(' or ')) {
+    const parts = cond.split(' or ');
+    return parts.some(part => evaluateStringCondition(part.trim(), ctx));
+  }
+  
+  return false;
 }
 
 function matchValue(source: unknown, rule: unknown): boolean {
@@ -130,10 +164,16 @@ function getTechRoles(): string[] {
       precedence?: Array<Record<string, unknown>>;
     } | undefined)?.precedence || [];
   const techRule = (precedence as Array<Record<string, unknown>>).find(
-    r => typeof r.if === 'string' && (r.if as string).includes('-> TECH')
+    r => r.then === 'TECH' && typeof r.if === 'string'
   );
   if (!techRule) return [];
-  return parseListLiteral(techRule.if as string);
+  const roleCondition = techRule.if as string;
+  // Extract roles from conditions like "role in [CIO / CTO, IT Lead, ...]"
+  const match = roleCondition.match(/role\s+in\s+\[(.*?)\]/);
+  if (match) {
+    return match[1].split(',').map(role => role.trim());
+  }
+  return [];
 }
 
 /** Pull regulated industries from the computed logic */
@@ -159,12 +199,15 @@ export function detectTrack(
     } | undefined)?.precedence;
   if (Array.isArray(precedence)) {
     for (const rule of precedence) {
-      const { track, if: cond, ...rest } = rule;
-      const condition = (cond as unknown) ?? rest;
-      if (
-        track &&
-        evaluateCondition(condition, { responses, computed })
-      ) {
+      const { then: track, if: cond, else: elseTrack } = rule;
+      
+      // Handle 'else' rule (no condition)
+      if (elseTrack && !cond) {
+        return elseTrack as string;
+      }
+      
+      // Handle conditional rules with 'if' and 'then'
+      if (cond && track && evaluateCondition(cond, { responses, track: 'unknown', computed })) {
         return track as string;
       }
     }
