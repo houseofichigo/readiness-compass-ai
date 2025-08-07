@@ -104,11 +104,16 @@ function scoreQuestion(question: Question, answer: unknown): number {
     if (scorePer !== undefined) {
       return Math.min(answer.length * scorePer, cap ?? 100);
     }
-    // mapped choices
-    if (scoreMap && options) {
+    // Choice-based scoring for arrays
+    if (options) {
       const scores = (answer as string[]).map((val) => {
+        const option = options.find((opt) => opt.value === val);
+        if (option?.score !== undefined) {
+          return option.score;
+        }
+        // Fallback to scoreMap
         const idx = options.findIndex((opt) => opt.value === val);
-        return idx >= 0 && scoreMap[idx] != null ? scoreMap[idx] : 0;
+        return idx >= 0 && scoreMap?.[idx] != null ? scoreMap[idx] : 0;
       });
       return scores.length
         ? scores.reduce((a, b) => a + b, 0) / scores.length
@@ -120,9 +125,17 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return answer ? 100 : 0;
   }
 
-  if (scoreMap && options && typeof answer === "string") {
+  // Single choice scoring - prioritize score from choice object
+  if (options && typeof answer === "string") {
+    const option = options.find((opt) => opt.value === answer);
+    if (option?.score !== undefined) {
+      return option.score;
+    }
+    // Fallback to scoreMap
     const idx = options.findIndex((opt) => opt.value === answer);
-    if (idx >= 0 && scoreMap[idx] != null) return scoreMap[idx];
+    if (idx >= 0 && scoreMap?.[idx] != null) {
+      return scoreMap[idx];
+    }
   }
 
   if (typeof answer === "number") {

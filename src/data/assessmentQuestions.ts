@@ -25,6 +25,13 @@ const SECTION_TITLES: Record<string, string> = {
   section_8: "Implementation Horizon & Vision",
 };
 
+interface RawChoice {
+  value: string;
+  score?: number;
+  reasoning?: string;
+  model_input_context?: string;
+}
+
 interface RawQuestion {
   id: string;
   text: string;
@@ -32,6 +39,7 @@ interface RawQuestion {
   helper?: string;
   required?: boolean;
   options?: Array<string | QuestionOption>;
+  choices?: Array<string | RawChoice>;
   rows?: string[];
   columns?: string[];
   groups?: Array<{
@@ -42,6 +50,7 @@ interface RawQuestion {
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
   score_map?: number[];
+  score_map_by_bucket?: Record<string, string[]>;
   score_per?: number;
   cap?: number;
   weight?: number[];
@@ -99,6 +108,59 @@ function normalizeOptions(
   );
 }
 
+// Normalize choices from new YAML structure
+function normalizeChoices(
+  choices?: Array<string | RawChoice>
+): QuestionOption[] | undefined {
+  return choices?.map((choice) => {
+    if (typeof choice === "string") {
+      return { value: choice, label: choice };
+    } else {
+      return {
+        value: choice.value,
+        label: choice.value,
+        score: choice.score,
+        reasoning: choice.reasoning,
+        model_input_context: choice.model_input_context,
+      };
+    }
+  });
+}
+
+// Handle score_map_by_bucket for country-like questions
+function normalizeScoreMapByBucket(
+  choices?: Array<string | RawChoice>,
+  scoreMapByBucket?: Record<string, string[]>
+): QuestionOption[] | undefined {
+  if (!choices || !scoreMapByBucket) {
+    return normalizeChoices(choices);
+  }
+
+  return choices.map((choice) => {
+    const value = typeof choice === "string" ? choice : choice.value;
+    
+    // Find which bucket this value belongs to
+    for (const [score, countries] of Object.entries(scoreMapByBucket)) {
+      if (countries.includes(value) || countries.includes("*")) {
+        return {
+          value,
+          label: value,
+          score: parseInt(score),
+          reasoning: `Score ${score} based on country classification`,
+          model_input_context: `Respondent's country has score level ${score}`,
+        };
+      }
+    }
+    
+    // Default fallback
+    return {
+      value,
+      label: value,
+      score: scoreMapByBucket["2"] ? 2 : 0,
+    };
+  });
+}
+
 // Top-level maps for consent banners & computed logic
 const assessmentConsentBanners: Record<string, ConsentBanner> = {};
 const assessmentComputed: Record<string, ComputedField[]> = {};
@@ -137,7 +199,17 @@ const assessmentSections: Section[] = Object.entries(schema)
         scoreByCount: q.score_by_count,
       };
 
-      if (q.options)   base.options = normalizeOptions(q.options);
+      // Handle new choices structure or legacy options
+      if (q.choices) {
+        if (q.score_map_by_bucket) {
+          base.options = normalizeScoreMapByBucket(q.choices, q.score_map_by_bucket);
+        } else {
+          base.options = normalizeChoices(q.choices);
+        }
+      } else if (q.options) {
+        base.options = normalizeOptions(q.options);
+      }
+      
       if (q.rows)      base.rows    = [...q.rows];
       if (q.columns)   base.columns = [...q.columns];
 
@@ -190,7 +262,17 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     scoreByCount: q.score_by_count,
   };
 
-  if (q.options)  base.options  = normalizeOptions(q.options);
+  // Handle new choices structure or legacy options
+  if (q.choices) {
+    if (q.score_map_by_bucket) {
+      base.options = normalizeScoreMapByBucket(q.choices, q.score_map_by_bucket);
+    } else {
+      base.options = normalizeChoices(q.choices);
+    }
+  } else if (q.options) {
+    base.options = normalizeOptions(q.options);
+  }
+  
   if (q.rows)     base.rows     = [...q.rows];
   if (q.columns)  base.columns  = [...q.columns];
 

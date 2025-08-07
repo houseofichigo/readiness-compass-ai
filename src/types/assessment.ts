@@ -18,6 +18,9 @@ export interface QuestionOption {
   value: string;
   label: string;
   description?: string;
+  score?: number;
+  reasoning?: string;
+  model_input_context?: string;
 }
 
 // Group of options
