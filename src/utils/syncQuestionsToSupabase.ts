@@ -9,28 +9,28 @@ interface QuestionRow {
   section_id: string;
   text: string;
   type: string;
-  helper?: string;
-  required?: boolean;
+  helper: string;
+  required: boolean;
   sequence: number;
-  options?: any;
+  options: any;
   rows?: any;
   columns?: any;
   groups?: any;
-  show_if?: any;
-  hide_if?: any;
-  max_rank?: number;
-  max_select?: number;
-  score_map_by_bucket?: any;
-  is_add_on?: boolean;
-  // New database columns
-  category?: string;
-  purpose?: string;
-  pillar_scores?: any;
-  pillar_options?: any;
-  pillar_logic?: any;
+  show_if: any;
+  hide_if: any;
+  max_rank: number;
+  max_select: number;
+  score_map_by_bucket: any;
+  is_add_on: boolean;
+  // New database columns - all required by schema
+  category: string;
+  purpose: string;
+  pillar_scores: any;
+  pillar_options: any;
+  pillar_logic: any;
   reasoning?: any;
   model_input_context?: any;
-  weight?: any;
+  weight?: number[];
   score_per?: number;
   cap?: number;
   score_formula?: string;
@@ -46,7 +46,7 @@ export async function syncQuestionsToSupabase() {
     // Process all sections and questions with detailed logging
     assessmentSections.forEach((section, sectionIndex) => {
       console.log(`Processing section ${sectionIndex + 1}: ${section.id} - "${section.title}"`);
-      console.log(`  Category: ${section.category || 'none'}, Questions: ${section.questions.length}`);
+      console.log(`  Category: ${section.category || 'none'}, Purpose: ${section.purpose || 'none'}, Questions: ${section.questions.length}`);
       
       section.questions.forEach((question, questionIndex) => {
         console.log(`  Processing question ${questionIndex + 1}: ${question.id} - ${question.type}`);
@@ -61,12 +61,21 @@ export async function syncQuestionsToSupabase() {
           required: question.required ?? true,
           sequence: questionIndex + 1,
           is_add_on: false,
-          // New fields from database schema
+          // Required fields with defaults
+          options: {},
+          show_if: {},
+          hide_if: {},
+          max_rank: 0,
+          max_select: 0,
+          score_map_by_bucket: {},
+          // Populate from section data
           category: section.category || "",
           purpose: section.purpose || "",
-          pillar_scores: {},
-          pillar_options: {},
-          pillar_logic: {},
+          // Populate pillar_scores from section if available
+          pillar_scores: (section as any).pillar_scores || {},
+          pillar_options: (section as any).pillar_options || {},
+          pillar_logic: (section as any).pillar_logic || {},
+          // Initialize question-level fields
           reasoning: {},
           model_input_context: {},
           weight: null,

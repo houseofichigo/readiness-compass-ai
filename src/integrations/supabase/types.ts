@@ -42,50 +42,80 @@ export type Database = {
         Row: {
           answer_score: number | null
           answered_at: string
+          cap: number | null
+          category: string | null
           option_model_input_context: string | null
           option_reasoning: string | null
           option_score: number | null
+          pillar_logic: Json | null
+          pillar_options: Json | null
+          pillar_scores: Json | null
+          purpose: string | null
           question_helper: string | null
           question_id: string
           question_options: Json | null
           question_required: boolean | null
           question_text: string | null
           question_type: string | null
+          score_formula: string | null
+          score_map_by_bucket: Json | null
+          score_per: number | null
           section_id: string | null
           submission_id: string
           value: Json | null
+          weight: number[] | null
         }
         Insert: {
           answer_score?: number | null
           answered_at?: string
+          cap?: number | null
+          category?: string | null
           option_model_input_context?: string | null
           option_reasoning?: string | null
           option_score?: number | null
+          pillar_logic?: Json | null
+          pillar_options?: Json | null
+          pillar_scores?: Json | null
+          purpose?: string | null
           question_helper?: string | null
           question_id: string
           question_options?: Json | null
           question_required?: boolean | null
           question_text?: string | null
           question_type?: string | null
+          score_formula?: string | null
+          score_map_by_bucket?: Json | null
+          score_per?: number | null
           section_id?: string | null
           submission_id: string
           value?: Json | null
+          weight?: number[] | null
         }
         Update: {
           answer_score?: number | null
           answered_at?: string
+          cap?: number | null
+          category?: string | null
           option_model_input_context?: string | null
           option_reasoning?: string | null
           option_score?: number | null
+          pillar_logic?: Json | null
+          pillar_options?: Json | null
+          pillar_scores?: Json | null
+          purpose?: string | null
           question_helper?: string | null
           question_id?: string
           question_options?: Json | null
           question_required?: boolean | null
           question_text?: string | null
           question_type?: string | null
+          score_formula?: string | null
+          score_map_by_bucket?: Json | null
+          score_per?: number | null
           section_id?: string | null
           submission_id?: string
           value?: Json | null
+          weight?: number[] | null
         }
         Relationships: [
           {
@@ -160,69 +190,102 @@ export type Database = {
       questions: {
         Row: {
           assessment_id: string
+          cap: number | null
+          category: string
           columns: Json | null
-          created_at: string | null
+          created_at: string
           groups: Json | null
-          helper: string | null
-          hide_if: Json | null
+          helper: string
+          hide_if: Json
           id: string
-          is_add_on: boolean | null
-          max_rank: number | null
-          max_select: number | null
-          options: Json | null
-          required: boolean | null
+          is_add_on: boolean
+          max_rank: number
+          max_select: number
+          model_input_context: Json | null
+          options: Json
+          pillar_logic: Json
+          pillar_options: Json
+          pillar_scores: Json
+          purpose: string
+          reasoning: Json | null
+          required: boolean
           rows: Json | null
-          score_map_by_bucket: Json | null
+          score_formula: string | null
+          score_map_by_bucket: Json
+          score_per: number | null
           section_id: string
           sequence: number
-          show_if: Json | null
+          show_if: Json
           text: string
           type: string
-          updated_at: string | null
+          updated_at: string
+          weight: number[] | null
         }
         Insert: {
           assessment_id: string
+          cap?: number | null
+          category: string
           columns?: Json | null
-          created_at?: string | null
+          created_at?: string
           groups?: Json | null
-          helper?: string | null
-          hide_if?: Json | null
+          helper: string
+          hide_if: Json
           id: string
-          is_add_on?: boolean | null
-          max_rank?: number | null
-          max_select?: number | null
-          options?: Json | null
-          required?: boolean | null
+          is_add_on?: boolean
+          max_rank: number
+          max_select: number
+          model_input_context?: Json | null
+          options: Json
+          pillar_logic: Json
+          pillar_options: Json
+          pillar_scores: Json
+          purpose: string
+          reasoning?: Json | null
+          required?: boolean
           rows?: Json | null
-          score_map_by_bucket?: Json | null
+          score_formula?: string | null
+          score_map_by_bucket: Json
+          score_per?: number | null
           section_id: string
           sequence: number
-          show_if?: Json | null
+          show_if: Json
           text: string
           type: string
-          updated_at?: string | null
+          updated_at?: string
+          weight?: number[] | null
         }
         Update: {
           assessment_id?: string
+          cap?: number | null
+          category?: string
           columns?: Json | null
-          created_at?: string | null
+          created_at?: string
           groups?: Json | null
-          helper?: string | null
-          hide_if?: Json | null
+          helper?: string
+          hide_if?: Json
           id?: string
-          is_add_on?: boolean | null
-          max_rank?: number | null
-          max_select?: number | null
-          options?: Json | null
-          required?: boolean | null
+          is_add_on?: boolean
+          max_rank?: number
+          max_select?: number
+          model_input_context?: Json | null
+          options?: Json
+          pillar_logic?: Json
+          pillar_options?: Json
+          pillar_scores?: Json
+          purpose?: string
+          reasoning?: Json | null
+          required?: boolean
           rows?: Json | null
-          score_map_by_bucket?: Json | null
+          score_formula?: string | null
+          score_map_by_bucket?: Json
+          score_per?: number | null
           section_id?: string
           sequence?: number
-          show_if?: Json | null
+          show_if?: Json
           text?: string
           type?: string
-          updated_at?: string | null
+          updated_at?: string
+          weight?: number[] | null
         }
         Relationships: []
       }
