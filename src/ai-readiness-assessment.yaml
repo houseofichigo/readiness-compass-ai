@@ -38,7 +38,7 @@ section_0:
     text: "By proceeding, you agree to process your data for this readiness report and related communications."
     type: banner
     required: true
-  questions:
+ questions:
     - id: M0
       text: "Organization name"
       type: text
@@ -529,6 +529,49 @@ section_0:
           score: 5
           reasoning: "Enterprise-level funding"
           model_input_context: "Organization’s revenue is very strong—enterprise AI maturity."
+computed:
+  - id: regulated
+    logic: |
+      regulated_industries = [
+        "Finance & Insurance",
+        "Health Care & Social Assistance",
+        "Utilities (Electricity, Gas, Water & Waste)",
+        "Transportation & Warehousing",
+        "Manufacturing",
+        "Information & Communication Technology",
+        "Professional, Scientific & Technical Services",
+        "Administrative & Support & Waste Management Services",
+        "Accommodation & Food Services"
+      ]
+      return response["M4_industry"] in regulated_industries
+
+  - id: track
+    logic: |
+      tech_roles = [
+        "CIO / CTO",
+        "IT Lead",
+        "Data / AI Lead",
+        "ML Engineer",
+        "Data Engineer",
+        "DevOps Engineer",
+        "Security Architect",
+        "Infrastructure Manager"
+      ]
+      reg_roles = [
+        "Legal / Compliance Lead",
+        "Privacy Officer",
+        "Compliance Manager",
+        "Risk Manager",
+        "Audit Lead",
+        "Governance Officer"
+      ]
+
+      if response["M3"] in tech_roles:
+        return "TECH"
+      elif computed["regulated"] or response["M3"] in reg_roles:
+        return "REG"
+      else:
+        return "GEN"
 section_1:
   category: strategy
   purpose: "Assess strategic alignment & planning maturity."
