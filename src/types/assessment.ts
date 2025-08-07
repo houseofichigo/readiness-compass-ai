@@ -18,9 +18,6 @@ export interface QuestionOption {
   value: string;
   label: string;
   description?: string;
-  score?: number;
-  reasoning?: string;
-  model_input_context?: string;
 }
 
 // Group of options
@@ -52,10 +49,15 @@ export interface Question {
   showIf?: Record<string, unknown>;
   hideIf?: Record<string, unknown>;
 
-  // Scoring (simplified - removed obsolete fields)
+  // Scoring
+  scoreMap?: number[];
+  scorePer?: number;
+  cap?: number;
+  weight?: number[];
   maxRank?: number;
   maxSelect?: number;
-  scoreMapByBucket?: Record<string, string[]>;
+  scoreByCount?: Record<string, number>;
+  scoreFormula?: string;
 }
 
 // Banner shown in certain sections
@@ -89,10 +91,6 @@ export interface Section {
   questions: Question[];
   consentBanner?: ConsentBanner;
   computed?: ComputedField[];
-  pillar_score?: number;
-  pillar_scores?: Record<string, unknown>;
-  pillar_options?: Record<string, unknown>;
-  pillar_logic?: Record<string, unknown>;
 }
 
 // Overall assessment data

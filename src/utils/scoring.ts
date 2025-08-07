@@ -91,42 +91,38 @@ function scoreQuestion(question: Question, answer: unknown): number {
     return 0;
   }
 
-  const { type, options, scoreMapByBucket } = question;
+  const { type, scoreMap, scorePer, cap, weight, options } = question;
 
   if (Array.isArray(answer)) {
-    // For array answers (multi-select), calculate average score
-    if (options) {
+    // ranked
+    if (type === "rank" && weight) {
+      const used = weight.slice(0, answer.length).reduce((a, b) => a + b, 0);
+      const max = weight.reduce((a, b) => a + b, 0);
+      return max ? (used / max) * 100 : 0;
+    }
+    // per-item
+    if (scorePer !== undefined) {
+      return Math.min(answer.length * scorePer, cap ?? 100);
+    }
+    // mapped choices
+    if (scoreMap && options) {
       const scores = (answer as string[]).map((val) => {
-        const option = options.find((opt) => opt.value === val);
-        return option?.score ? option.score * 20 : 50;
+        const idx = options.findIndex((opt) => opt.value === val);
+        return idx >= 0 && scoreMap[idx] != null ? scoreMap[idx] : 0;
       });
       return scores.length
         ? scores.reduce((a, b) => a + b, 0) / scores.length
         : 50;
     }
-    return 50;
   }
 
   if (typeof answer === "boolean") {
     return answer ? 100 : 0;
   }
 
-  // Handle single-select answers with new option structure
-  if (options && typeof answer === "string") {
-    const option = options.find((opt) => opt.value === answer || opt.label === answer);
-    if (option?.score !== undefined) {
-      return option.score * 20; // Convert 1-5 scale to 0-100
-    }
-  }
-
-  // Handle score_map_by_bucket structure (like country scoring)
-  if (scoreMapByBucket && typeof answer === "string") {
-    for (const [scoreStr, countries] of Object.entries(scoreMapByBucket)) {
-      const score = parseInt(scoreStr);
-      if (countries.includes(answer) || countries.includes("*")) {
-        return score * 20; // Convert 1-5 scale to 0-100
-      }
-    }
+  if (scoreMap && options && typeof answer === "string") {
+    const idx = options.findIndex((opt) => opt.value === answer);
+    if (idx >= 0 && scoreMap[idx] != null) return scoreMap[idx];
   }
 
   if (typeof answer === "number") {

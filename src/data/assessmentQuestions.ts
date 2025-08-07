@@ -2,7 +2,6 @@
 
 import yaml from "js-yaml";
 import schemaRaw from "@/ai-readiness-assessment.yaml?raw";
-// Import will be done dynamically to avoid circular dependency issues
 import type {
   Section,
   Question,
@@ -42,9 +41,14 @@ interface RawQuestion {
   }>;
   show_if?: Record<string, unknown>;
   hide_if?: Record<string, unknown>;
+  score_map?: number[];
+  score_per?: number;
+  cap?: number;
+  weight?: number[];
   max_rank?: number;
   max_select?: number;
-  score_map_by_bucket?: Record<string, string[]>;
+  score_formula?: string;
+  score_by_count?: Record<string, number>;
 }
 
 interface RawSection {
@@ -53,9 +57,6 @@ interface RawSection {
   questions?: RawQuestion[];
   consent_banner?: ConsentBanner;
   computed?: ComputedField[];
-  pillar_scores?: Record<string, unknown>;
-  pillar_options?: Record<string, unknown>;
-  pillar_logic?: Record<string, unknown>;
 }
 
 interface AssessmentYaml {
@@ -94,16 +95,7 @@ function normalizeOptions(
   opts?: Array<string | QuestionOption>
 ): QuestionOption[] | undefined {
   return opts?.map((o) =>
-    typeof o === "string" 
-      ? { value: o, label: o } 
-      : {
-          value: o.value,
-          label: o.label,
-          description: o.description,
-          score: o.score,
-          reasoning: o.reasoning,
-          model_input_context: o.model_input_context,
-        }
+    typeof o === "string" ? { value: o, label: o } : o
   );
 }
 
@@ -124,9 +116,6 @@ const assessmentSections: Section[] = Object.entries(schema)
       questions = [],
       consent_banner,
       computed = [],
-      pillar_scores = {},
-      pillar_options = {},
-      pillar_logic = {},
     } = rawSec ?? {};
 
     const normalizedQuestions: Question[] = questions.map((q) => {
@@ -138,9 +127,14 @@ const assessmentSections: Section[] = Object.entries(schema)
         required: q.required,
         showIf: q.show_if,
         hideIf: q.hide_if,
+        scoreMap: q.score_map,
+        scorePer: q.score_per,
+        cap: q.cap,
+        weight: q.weight,
         maxRank: q.max_rank,
         maxSelect: q.max_select,
-        scoreMapByBucket: q.score_map_by_bucket,
+        scoreFormula: q.score_formula,
+        scoreByCount: q.score_by_count,
       };
 
       if (q.options)   base.options = normalizeOptions(q.options);
@@ -169,13 +163,10 @@ const assessmentSections: Section[] = Object.entries(schema)
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
-      category: category || "",
+      ...(category ? { category } : {}),
       questions: normalizedQuestions,
-      consentBanner: consent_banner,
-      computed,
-      pillar_scores,
-      pillar_options,
-      pillar_logic,
+      ...(consent_banner ? { consentBanner: consent_banner } : {}),
+      ...(computed.length ? { computed } : {}),
     };
   });
 
@@ -189,9 +180,14 @@ const assessmentAddOns: Question[] = (schema.add_ons ?? []).map((q) => {
     required: q.required,
     showIf: q.show_if,
     hideIf: q.hide_if,
+    scoreMap: q.score_map,
+    scorePer: q.score_per,
+    cap: q.cap,
+    weight: q.weight,
     maxRank: q.max_rank,
     maxSelect: q.max_select,
-    scoreMapByBucket: q.score_map_by_bucket,
+    scoreFormula: q.score_formula,
+    scoreByCount: q.score_by_count,
   };
 
   if (q.options)  base.options  = normalizeOptions(q.options);
@@ -216,10 +212,3 @@ export {
   assessmentAddOns,
 };
 export const assessmentMeta = schema.meta ?? {};
-
-// Ensure questions are synced to Supabase - done dynamically to avoid circular dependencies
-if (typeof window !== 'undefined') {
-  import("@/utils/autoSync")
-    .then(({ ensureQuestionsExist }) => ensureQuestionsExist())
-    .catch(console.error);
-}

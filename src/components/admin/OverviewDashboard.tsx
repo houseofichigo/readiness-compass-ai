@@ -1,12 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAdminData } from '@/hooks/useAdminData';
-import { DataSyncButton } from './DataSyncButton';
-import { TestSyncComponent } from './TestSyncComponent';
-import { ManualSyncTrigger } from './ManualSyncTrigger';
-import { DiagnosticTest } from './DiagnosticTest';
-import { ComprehensiveSync } from './ComprehensiveSync';
-import { DeploymentReadinessPanel } from './DeploymentReadinessPanel';
 import { 
   FileText, 
   Building, 
@@ -88,9 +82,6 @@ export function OverviewDashboard() {
           <p className="text-muted-foreground">
             Assessment platform performance at a glance
           </p>
-        </div>
-        <div className="flex gap-2">
-          <DataSyncButton />
         </div>
       </div>
 
@@ -219,23 +210,6 @@ export function OverviewDashboard() {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Deployment Management Section */}
-      <div className="grid grid-cols-1 gap-6">
-        <DeploymentReadinessPanel />
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>System Sync & Verification</CardTitle>
-            <CardDescription>
-              Advanced tools for data synchronization and system verification
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ComprehensiveSync />
           </CardContent>
         </Card>
       </div>
