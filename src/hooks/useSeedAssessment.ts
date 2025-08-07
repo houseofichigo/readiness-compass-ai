@@ -128,7 +128,7 @@ export function useSeedAssessment() {
         toast.success(`Seeded OK. Sections: ${sAfter ?? 0}, Questions: ${qAfter ?? 0}, Choices: ${cAfter ?? 0}`);
         seededRef.current = true;
       } catch (e) {
-        console.warn('Seed init failed:', e);
+        
         toast.error('Seed init failed');
       }
     };

@@ -37,25 +37,25 @@ export function useAdminData() {
 
   // Stub functions - will be implemented in Phase 2
   const fetchAnalytics = async () => {
-    console.warn('Database is empty - fetchAnalytics will be implemented in Phase 2');
+    // TODO: implement analytics fetch
   };
 
   const fetchSubmissions = async (filters: any = {}) => {
-    console.warn('Database is empty - fetchSubmissions will be implemented in Phase 2');
+    // TODO: implement submissions fetch
     return [];
   };
 
   const getSubmissionDetails = async (submissionId: string) => {
-    console.warn('Database is empty - getSubmissionDetails will be implemented in Phase 2');
+    // TODO: implement getSubmissionDetails
     return null;
   };
 
   const deleteSubmission = async (submissionId: string) => {
-    console.warn('Database is empty - deleteSubmission will be implemented in Phase 2');
+    // TODO: implement deleteSubmission
   };
 
   const exportToCSV = (submissions: SubmissionDetails[]) => {
-    console.warn('Database is empty - exportToCSV will be implemented in Phase 2');
+    // TODO: implement exportToCSV
   };
 
   return {

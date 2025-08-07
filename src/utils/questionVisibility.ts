@@ -158,7 +158,7 @@ function getRegulatedIndustries(): string[] {
       }
     }
   } catch (error) {
-    console.warn('Could not parse regulated industries from YAML:', error);
+    // YAML parse failed; fall back to default regulated industries list
   }
   
   // Fallback list

@@ -88,8 +88,8 @@ export function AssessmentProgressBar({
           {t('assessment.tagline')}
         </h1>
         <div className="text-right">
-          <div className="text-2xl font-bold text-primary">
-            {progressPercentage}%
+          <div className="text-2xl font-bold text-primary tabular-nums">
+            <span className="inline-block min-w-[4ch] text-right">{progressPercentage}%</span>
           </div>
           <div className="text-sm text-muted-foreground">{t('assessment.progress.complete')}</div>
         </div>

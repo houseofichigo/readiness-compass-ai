@@ -40,13 +40,13 @@ function useAuthProvider(): AuthContextType {
     try {
       const { data, error } = await supabase.rpc('get_is_admin');
       if (error) {
-        console.warn('get_is_admin error:', error.message);
+        
         setIsAdmin(false);
       } else {
         setIsAdmin(Boolean(data));
       }
     } catch (e) {
-      console.warn('get_is_admin failed:', e);
+      
       setIsAdmin(false);
     }
   };
