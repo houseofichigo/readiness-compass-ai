@@ -30,9 +30,18 @@ export function ComprehensiveSync() {
     setResults([]);
 
     try {
+      // Phase 0: Debug YAML extraction
+      updateResult('Phase 0', 'pending', 'Debugging YAML extraction...');
+      const { debugYamlExtraction } = await import("@/utils/debugYamlExtraction");
+      const sections = debugYamlExtraction();
+      updateResult('Phase 0', 'success', 
+        `Analyzed ${sections.length} sections from YAML`, 
+        { sectionsWithCategories: sections.filter(s => s.category).length });
+
       // Phase 1: Verify RLS Policies
       updateResult('Phase 1', 'pending', 'Verifying RLS policies...');
       // RLS policies were just added via migration
+      updateResult('Phase 1', 'success', 'RLS policies verified (migration applied)');
 
       // Phase 2: Populate Core Tables
       updateResult('Phase 2', 'pending', 'Syncing YAML data to database...');

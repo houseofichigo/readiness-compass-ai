@@ -169,13 +169,13 @@ const assessmentSections: Section[] = Object.entries(schema)
       id,
       title: SECTION_TITLES[id] ?? id,
       purpose,
-      ...(category ? { category } : {}),
+      category: category || "",
       questions: normalizedQuestions,
-      ...(consent_banner ? { consentBanner: consent_banner } : {}),
-      ...(computed.length ? { computed } : {}),
-      ...(Object.keys(pillar_scores).length ? { pillar_scores } : {}),
-      ...(Object.keys(pillar_options).length ? { pillar_options } : {}),
-      ...(Object.keys(pillar_logic).length ? { pillar_logic } : {}),
+      consentBanner: consent_banner,
+      computed,
+      pillar_scores,
+      pillar_options,
+      pillar_logic,
     };
   });
 

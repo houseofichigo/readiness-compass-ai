@@ -71,7 +71,7 @@ export async function syncQuestionsToSupabase() {
           // Populate from section data
           category: section.category || "",
           purpose: section.purpose || "",
-          // Populate pillar_scores from section if available
+          // Populate pillar data from section (these come from YAML)
           pillar_scores: section.pillar_scores || {},
           pillar_options: section.pillar_options || {},
           pillar_logic: section.pillar_logic || {},
