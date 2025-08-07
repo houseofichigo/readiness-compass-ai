@@ -19,5 +19,19 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  assetsInclude: ['**/*.yaml', '**/*.yml']
+  assetsInclude: ['**/*.yaml', '**/*.yml'],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-accordion', '@radix-ui/react-dialog', '@radix-ui/react-select'],
+          assessment: ['./src/components/assessment/AssessmentFlow.tsx', './src/components/assessment/QuestionCard.tsx'],
+          admin: ['./src/components/admin/AdminLayout.tsx', './src/components/admin/AnalyticsDashboard.tsx']
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000,
+    sourcemap: mode === 'development'
+  }
 }));
