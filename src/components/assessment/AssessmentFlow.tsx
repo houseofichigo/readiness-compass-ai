@@ -107,7 +107,14 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
     ? null
     : getLocalizedSection(assessmentSections[currentPage], i18n.language);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToTop = () => {
+    const el = document.getElementById('assessment-top');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   // Ensure scroll-to-top after section changes (post-render)
   useEffect(() => {
@@ -241,7 +248,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
   const progressIndex = Math.min(currentPage, assessmentSections.length - 1);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div id="assessment-top" className="max-w-4xl mx-auto p-6 space-y-6">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-3xl font-bold">{t('assessment.title')}</h1>
         <LanguageSelector />
