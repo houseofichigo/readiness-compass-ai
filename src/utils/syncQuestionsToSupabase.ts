@@ -62,13 +62,13 @@ export async function syncQuestionsToSupabase() {
           sequence: questionIndex + 1,
           is_add_on: false,
           // Required fields with defaults
-          options: {},
-          show_if: {},
-          hide_if: {},
-          max_rank: 0,
-          max_select: 0,
-          score_map_by_bucket: {},
-          // Populate from section data
+          options: question.options || {},
+          show_if: question.showIf || {},
+          hide_if: question.hideIf || {},
+          max_rank: question.maxRank || 0,
+          max_select: question.maxSelect || 0,
+          score_map_by_bucket: question.scoreMapByBucket || {},
+          // Populate from section data - CRITICAL FIX
           category: section.category || "",
           purpose: section.purpose || "",
           // Populate pillar data from section (these come from YAML)
@@ -78,67 +78,28 @@ export async function syncQuestionsToSupabase() {
           // Initialize question-level fields
           reasoning: {},
           model_input_context: {},
-          weight: null,
-          score_per: null,
-          cap: null,
-          score_formula: null,
+          weight: question.weight || null,
+          score_per: question.score_per || null,
+          cap: question.cap || null,
+          score_formula: question.score_formula || null,
         };
 
-        // Add all question properties with validation
-        if (question.options) {
-          console.log(`    Options found: ${question.options.length} options`);
-          // Log first option to verify structure
-          if (question.options.length > 0) {
-            const firstOption = question.options[0];
-            console.log(`    First option structure:`, {
-              value: firstOption.value,
-              label: firstOption.label,
-              score: firstOption.score,
-              hasReasoning: !!firstOption.reasoning,
-              hasModelContext: !!firstOption.model_input_context
-            });
+        // Validate question structure and log any issues
+        console.log(`  Question validation:`, {
+          hasOptions: !!question.options,
+          optionsCount: question.options?.length || 0,
+          hasScoreMap: !!question.scoreMapByBucket,
+          hasConditionalLogic: !!(question.showIf || question.hideIf)
+        });
+
+        // Log if this question has enriched option data
+        if (question.options && question.options.length > 0) {
+          const enrichedOptions = question.options.filter(opt => 
+            opt.score !== undefined || opt.reasoning || opt.model_input_context
+          );
+          if (enrichedOptions.length > 0) {
+            console.log(`    ✓ Found ${enrichedOptions.length}/${question.options.length} enriched options`);
           }
-          questionRow.options = question.options;
-        }
-        
-        if (question.rows) {
-          console.log(`    Rows: ${question.rows.length}`);
-          questionRow.rows = question.rows;
-        }
-        
-        if (question.columns) {
-          console.log(`    Columns: ${question.columns.length}`);
-          questionRow.columns = question.columns;
-        }
-        
-        if (question.groups) {
-          console.log(`    Groups: ${question.groups.length}`);
-          questionRow.groups = question.groups;
-        }
-        
-        if (question.showIf) {
-          console.log(`    Has showIf conditions`);
-          questionRow.show_if = question.showIf;
-        }
-        
-        if (question.hideIf) {
-          console.log(`    Has hideIf conditions`);
-          questionRow.hide_if = question.hideIf;
-        }
-        
-        if (question.maxRank) {
-          console.log(`    Max rank: ${question.maxRank}`);
-          questionRow.max_rank = question.maxRank;
-        }
-        
-        if (question.maxSelect) {
-          console.log(`    Max select: ${question.maxSelect}`);
-          questionRow.max_select = question.maxSelect;
-        }
-        
-        if (question.scoreMapByBucket) {
-          console.log(`    Has score map by bucket`);
-          questionRow.score_map_by_bucket = question.scoreMapByBucket;
         }
 
         questionsToInsert.push(questionRow);
