@@ -42,6 +42,9 @@ export type Database = {
         Row: {
           answer_score: number | null
           answered_at: string
+          option_model_input_context: string | null
+          option_reasoning: string | null
+          option_score: number | null
           question_helper: string | null
           question_id: string
           question_options: Json | null
@@ -55,6 +58,9 @@ export type Database = {
         Insert: {
           answer_score?: number | null
           answered_at?: string
+          option_model_input_context?: string | null
+          option_reasoning?: string | null
+          option_score?: number | null
           question_helper?: string | null
           question_id: string
           question_options?: Json | null
@@ -68,6 +74,9 @@ export type Database = {
         Update: {
           answer_score?: number | null
           answered_at?: string
+          option_model_input_context?: string | null
+          option_reasoning?: string | null
+          option_score?: number | null
           question_helper?: string | null
           question_id?: string
           question_options?: Json | null
@@ -167,6 +176,7 @@ export type Database = {
           score_by_count: Json | null
           score_formula: string | null
           score_map: Json | null
+          score_map_by_bucket: Json | null
           score_per: number | null
           section_id: string
           sequence: number
@@ -194,6 +204,7 @@ export type Database = {
           score_by_count?: Json | null
           score_formula?: string | null
           score_map?: Json | null
+          score_map_by_bucket?: Json | null
           score_per?: number | null
           section_id: string
           sequence: number
@@ -221,6 +232,7 @@ export type Database = {
           score_by_count?: Json | null
           score_formula?: string | null
           score_map?: Json | null
+          score_map_by_bucket?: Json | null
           score_per?: number | null
           section_id?: string
           sequence?: number
@@ -237,6 +249,7 @@ export type Database = {
           assessment_id: string | null
           category: string | null
           id: string
+          pillar_score: number | null
           purpose: string | null
           sequence: number
           title: string
@@ -245,6 +258,7 @@ export type Database = {
           assessment_id?: string | null
           category?: string | null
           id: string
+          pillar_score?: number | null
           purpose?: string | null
           sequence: number
           title: string
@@ -253,6 +267,7 @@ export type Database = {
           assessment_id?: string | null
           category?: string | null
           id?: string
+          pillar_score?: number | null
           purpose?: string | null
           sequence?: number
           title?: string
