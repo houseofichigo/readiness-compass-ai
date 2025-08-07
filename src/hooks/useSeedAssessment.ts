@@ -13,12 +13,13 @@ export function useSeedAssessment() {
     const checkAndSeed = async () => {
       try {
         // 1) Skip if already populated
-        const [{ count: qCount }, { count: sCount }] = await Promise.all([
+        const [{ count: qCount }, { count: sCount }, { count: cCount }] = await Promise.all([
           supabase.from('questions').select('*', { count: 'exact', head: true }),
           supabase.from('sections').select('*', { count: 'exact', head: true }),
+          supabase.from('question_choices').select('*', { count: 'exact', head: true }),
         ]);
 
-        if ((qCount ?? 0) > 0) {
+        if ((qCount ?? 0) > 0 && (cCount ?? 0) > 0) {
           seededRef.current = true;
           return; // already seeded
         }
@@ -46,9 +47,15 @@ export function useSeedAssessment() {
             maxRank: (q as any).maxRank ?? null,
             maxSelect: (q as any).maxSelect ?? null,
             scoreByCount: (q as any).scoreByCount ?? null,
+            options: (((q as any).options) || []).map((o: any) => ({
+              value: o.value,
+              label: o.label,
+              score: o.score ?? null,
+              reasoning: o.reasoning ?? null,
+              model_input_context: o.model_input_context ?? null,
+            })),
           })),
         }));
-
         // 3) Upsert via RPC (function is SECURITY DEFINER and bypasses RLS)
         const { error } = await supabase.rpc('seed_assessment', { _sections: payload as any });
         if (error) {

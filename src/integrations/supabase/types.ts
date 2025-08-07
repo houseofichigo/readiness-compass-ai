@@ -451,6 +451,50 @@ export type Database = {
         }
         Relationships: []
       }
+      question_choices: {
+        Row: {
+          created_at: string
+          label: string | null
+          model_input_context: string | null
+          question_id: string
+          reasoning: string | null
+          score: number | null
+          sequence: number | null
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          label?: string | null
+          model_input_context?: string | null
+          question_id: string
+          reasoning?: string | null
+          score?: number | null
+          sequence?: number | null
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          label?: string | null
+          model_input_context?: string | null
+          question_id?: string
+          reasoning?: string | null
+          score?: number | null
+          sequence?: number | null
+          updated_at?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "question_choices_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       question_scores: {
         Row: {
           question_id: string
