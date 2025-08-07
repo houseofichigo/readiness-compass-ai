@@ -882,6 +882,10 @@ export type Database = {
         Args: { _submission_id: string }
         Returns: Json
       }
+      recompute_org_stats: {
+        Args: { _org_id: string }
+        Returns: undefined
+      }
       record_analytics_event: {
         Args: {
           _submission_id: string
