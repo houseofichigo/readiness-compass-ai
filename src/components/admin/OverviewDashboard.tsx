@@ -6,6 +6,7 @@ import { TestSyncComponent } from './TestSyncComponent';
 import { ManualSyncTrigger } from './ManualSyncTrigger';
 import { DiagnosticTest } from './DiagnosticTest';
 import { ComprehensiveSync } from './ComprehensiveSync';
+import { DeploymentReadinessPanel } from './DeploymentReadinessPanel';
 import { 
   FileText, 
   Building, 
@@ -222,21 +223,22 @@ export function OverviewDashboard() {
         </Card>
       </div>
 
-      {/* Comprehensive Test Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Data Sync Testing</CardTitle>
-          <CardDescription>
-            Test the complete YAML to database synchronization and verify all data is correctly populated
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Deployment Management Section */}
+      <div className="grid grid-cols-1 gap-6">
+        <DeploymentReadinessPanel />
+        
+        <Card>
+          <CardHeader>
+            <CardTitle>System Sync & Verification</CardTitle>
+            <CardDescription>
+              Advanced tools for data synchronization and system verification
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <ComprehensiveSync />
-            <DiagnosticTest />
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
