@@ -843,6 +843,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_invalid_completed_submissions: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       compute_submission_scores: {
         Args: { _submission_id: string }
         Returns: undefined
