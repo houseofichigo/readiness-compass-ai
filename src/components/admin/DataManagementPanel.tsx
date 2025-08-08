@@ -348,11 +348,12 @@ export function DataManagementPanel() {
                     
                     <div>
                       <p className="text-sm">{submission.email}</p>
+                      <p className="text-xs text-muted-foreground">{submission.role ? `Role: ${submission.role}` : ''}</p>
                       {submission.track && getTrackBadge(submission.track)}
                     </div>
                     
                     <div>
-                      <p className="font-medium">{submission.completed ? '100' : 'N/A'}%</p>
+                      <p className="font-medium">{submission.percentage_score != null ? Math.round(submission.percentage_score) : 'N/A'}%</p>
                       {getStatusBadge(submission.completed)}
                     </div>
                     

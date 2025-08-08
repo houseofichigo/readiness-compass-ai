@@ -138,7 +138,7 @@ export function useAdminData() {
       const orgIds = [...new Set(subs.map((s: any) => s.organization_id).filter(Boolean))];
 
       // Organizations (optionally filter by track)
-      let orgQuery = supabase.from('organizations').select('id, name, track, industry, country, size_bucket, revenue_bucket');
+      let orgQuery = supabase.from('organizations').select('id, name, track, industry, country, size_bucket, revenue_bucket, regulatory_status');
       if (filters?.trackFilter) {
         orgQuery = orgQuery.eq('track', filters.trackFilter);
       }
@@ -159,37 +159,44 @@ export function useAdminData() {
         filteredSubs = subs.filter((s: any) => s.organization_id && allowedIds.has(s.organization_id));
       }
 
-      // Answers for full name (M1) and email (M2)
+      // Answers for contact (M1/M2) and role (M3)
       const ansRes = await supabase
         .from('answers')
         .select('submission_id, question_id, raw_response')
         .in('submission_id', filteredSubs.map((s) => s.id))
-        .in('question_id', ['M1', 'M2']);
+        .in('question_id', ['M1', 'M2', 'M3']);
       if (ansRes.error) throw ansRes.error;
       const nameMap = new Map<string, string>();
       const emailMap = new Map<string, string>();
+      const roleMap = new Map<string, string>();
       ansRes.data?.forEach((a: any) => {
         const v = a.raw_response ? (typeof a.raw_response === 'string' ? a.raw_response : (a.raw_response as any)['']) : '';
         if (a.question_id === 'M1') nameMap.set(a.submission_id, v ?? '');
         if (a.question_id === 'M2') emailMap.set(a.submission_id, v ?? '');
+        if (a.question_id === 'M3') roleMap.set(a.submission_id, v ?? '');
       });
 
       // Build results
       const rows: SubmissionDetails[] = filteredSubs.map((s: any) => {
         const org = s.organization_id ? orgMap.get(s.organization_id) : null;
+        const role_answer = roleMap.get(s.id) || '';
         const item: SubmissionDetails = {
           id: s.id,
           assessment_id: s.id,
           created_at: s.created_at,
           updated_at: s.updated_at,
+          completed: !!s.completed,
           submission_status: s.completed ? 'Completed' : 'In Progress',
           full_name: nameMap.get(s.id) || '',
           email: emailMap.get(s.id) || '',
+          role: role_answer,
           organization_name: org?.name || '',
           industry: org?.industry || '',
           country: org?.country || '',
           organization_size: org?.size_bucket || '',
+          company_size: org?.size_bucket || '',
           revenue_range: org?.revenue_bucket || '',
+          regulated: !!org?.regulatory_status,
           track: org?.track || '',
           percentage_score: s.percentage_score ?? null,
         };
@@ -304,12 +311,15 @@ export function useAdminData() {
       'organization_name',
       'full_name',
       'email',
+      'role',
       'track',
+      'completed',
       'submission_status',
       'created_at',
       'percentage_score',
       'industry',
       'country',
+      'company_size',
       'organization_size',
       'revenue_range',
     ];
