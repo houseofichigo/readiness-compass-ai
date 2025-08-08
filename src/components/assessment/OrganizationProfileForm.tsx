@@ -37,7 +37,7 @@ export function OrganizationProfileForm({
   const renderLabel = (question: Question) => (
     <Label className="text-sm font-medium">
       {question.text}
-      {question.required && <span className="text-red-500 ml-1">*</span>}
+      {question.required !== false && <span className="text-red-500 ml-1">*</span>}
     </Label>
   );
 
