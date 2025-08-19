@@ -886,6 +886,7 @@ export type Database = {
           pillar_scores_median: Json
           region: string
           regulatory_status: string
+          revenue_bucket: string
           size_bucket: string
           slug: string
           sub_industry: string
