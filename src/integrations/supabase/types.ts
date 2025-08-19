@@ -703,11 +703,14 @@ export type Database = {
           active_time_minutes: number | null
           completed: boolean
           completion_time_minutes: number | null
+          contact_email: string | null
+          contact_name: string | null
           created_at: string
           id: string
           ip_address: unknown | null
           max_possible_score: number | null
           organization_id: string | null
+          organization_name: string | null
           percentage_score: number | null
           pillar_scores: Json | null
           readiness_level: string | null
@@ -723,11 +726,14 @@ export type Database = {
           active_time_minutes?: number | null
           completed?: boolean
           completion_time_minutes?: number | null
+          contact_email?: string | null
+          contact_name?: string | null
           created_at?: string
           id?: string
           ip_address?: unknown | null
           max_possible_score?: number | null
           organization_id?: string | null
+          organization_name?: string | null
           percentage_score?: number | null
           pillar_scores?: Json | null
           readiness_level?: string | null
@@ -743,11 +749,14 @@ export type Database = {
           active_time_minutes?: number | null
           completed?: boolean
           completion_time_minutes?: number | null
+          contact_email?: string | null
+          contact_name?: string | null
           created_at?: string
           id?: string
           ip_address?: unknown | null
           max_possible_score?: number | null
           organization_id?: string | null
+          organization_name?: string | null
           percentage_score?: number | null
           pillar_scores?: Json | null
           readiness_level?: string | null
