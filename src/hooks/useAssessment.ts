@@ -148,30 +148,42 @@ export function useAssessment() {
     setError(null);
     
     try {
-      console.log('[loadAssessment] Loading submission via RPC:', submissionId);
+      console.log('[loadAssessment] Loading submission data:', submissionId);
       
-      // Use secure RPC to load submission data (bypasses RLS issues)
+      // For security, use the safe anonymous function for public access
       const { data: submissionData, error: rpcErr } = await supabase
-        .rpc('load_submission_data', { _submission_id: submissionId });
+        .rpc('get_anonymous_submission_safe', { _submission_id: submissionId });
 
       if (rpcErr) {
-        console.error('[loadAssessment] RPC failed:', rpcErr.message);
+        console.error('[loadAssessment] Failed to load submission:', rpcErr.message);
         setError(rpcErr.message);
         return null;
       }
 
       if (!submissionData) {
-        console.warn('[loadAssessment] No submission found for ID:', submissionId);
+        console.warn('[loadAssessment] No accessible submission found for ID:', submissionId);
         return null;
       }
 
-      // Type-safe data access with proper casting
-      const submissionObj = submissionData as any;
-      
+      // Cast to proper type
+      const submission = submissionData as any;
+
+      // Load answers separately (they have their own RLS policy)
+      const { data: answersData, error: answersErr } = await supabase
+        .from('answers')
+        .select('question_id, raw_response, chosen_value, score, pillar_scores, reasoning')
+        .eq('submission_id', submissionId);
+
+      if (answersErr) {
+        console.error('[loadAssessment] Failed to load answers:', answersErr.message);
+        setError(answersErr.message);
+        return null;
+      }
+
       // Convert answers array to responses object
       const responses: Record<string, any> = {};
-      if (submissionObj.answers && Array.isArray(submissionObj.answers)) {
-        submissionObj.answers.forEach((answer: any) => {
+      if (answersData && Array.isArray(answersData)) {
+        answersData.forEach((answer: any) => {
           responses[answer.question_id] = answer.raw_response;
         });
       }
@@ -186,19 +198,19 @@ export function useAssessment() {
 
       console.log('[loadAssessment] Loaded successfully via RPC:', {
         submissionId,
-        answersCount: submissionObj.answers?.length || 0,
+        answersCount: answersData?.length || 0,
         profileKeys: Object.keys(profile),
-        totalScore: submissionObj.total_score,
-        percentageScore: submissionObj.percentage_score
+        totalScore: submission.total_score,
+        percentageScore: submission.percentage_score
       });
 
       return {
         submissionId,
         profile,
         responses,
-        totalScore: submissionObj.total_score,
-        pillarScores: submissionObj.pillar_scores,
-        percentageScore: submissionObj.percentage_score
+        totalScore: submission.total_score,
+        pillarScores: submission.pillar_scores,
+        percentageScore: submission.percentage_score
       };
     } catch (e: any) {
       console.error('[loadAssessment] Unexpected error:', e);

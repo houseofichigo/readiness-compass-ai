@@ -988,6 +988,10 @@ export type Database = {
         }
         Returns: string
       }
+      get_anonymous_submission_safe: {
+        Args: { _submission_id: string }
+        Returns: Json
+      }
       get_is_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
