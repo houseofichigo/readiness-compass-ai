@@ -110,13 +110,6 @@ export type Database = {
             referencedRelation: "submissions"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "analytics_events_submission_id_fkey"
-            columns: ["submission_id"]
-            isOneToOne: false
-            referencedRelation: "submissions_public_safe"
-            referencedColumns: ["id"]
-          },
         ]
       }
       answers: {
@@ -193,13 +186,6 @@ export type Database = {
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "answers_submission_id_fkey"
-            columns: ["submission_id"]
-            isOneToOne: false
-            referencedRelation: "submissions_public_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -298,13 +284,6 @@ export type Database = {
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "assessment_sessions_submission_id_fkey"
-            columns: ["submission_id"]
-            isOneToOne: false
-            referencedRelation: "submissions_public_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -604,13 +583,6 @@ export type Database = {
             referencedRelation: "submissions"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "question_scores_submission_id_fkey"
-            columns: ["submission_id"]
-            isOneToOne: false
-            referencedRelation: "submissions_public_safe"
-            referencedColumns: ["id"]
-          },
         ]
       }
       questions: {
@@ -719,13 +691,6 @@ export type Database = {
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "section_scores_submission_id_fkey"
-            columns: ["submission_id"]
-            isOneToOne: false
-            referencedRelation: "submissions_public_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -938,54 +903,7 @@ export type Database = {
       }
     }
     Views: {
-      submissions_public_safe: {
-        Row: {
-          completed: boolean | null
-          contact_email: string | null
-          contact_name: string | null
-          created_at: string | null
-          id: string | null
-          max_possible_score: number | null
-          organization_id: string | null
-          organization_name: string | null
-          percentage_score: number | null
-          pillar_scores: Json | null
-          readiness_level: string | null
-          total_score: number | null
-          updated_at: string | null
-        }
-        Insert: {
-          completed?: boolean | null
-          contact_email?: never
-          contact_name?: never
-          created_at?: string | null
-          id?: string | null
-          max_possible_score?: number | null
-          organization_id?: never
-          organization_name?: never
-          percentage_score?: number | null
-          pillar_scores?: Json | null
-          readiness_level?: string | null
-          total_score?: number | null
-          updated_at?: string | null
-        }
-        Update: {
-          completed?: boolean | null
-          contact_email?: never
-          contact_name?: never
-          created_at?: string | null
-          id?: string | null
-          max_possible_score?: number | null
-          organization_id?: never
-          organization_name?: never
-          percentage_score?: number | null
-          pillar_scores?: Json | null
-          readiness_level?: string | null
-          total_score?: number | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       check_feedback_rate_limit: {
@@ -1047,6 +965,20 @@ export type Database = {
       get_safe_submission_data: {
         Args: { _submission_id: string }
         Returns: Json
+      }
+      get_safe_submission_info: {
+        Args: { _submission_id: string }
+        Returns: {
+          completed: boolean
+          created_at: string
+          id: string
+          max_possible_score: number
+          percentage_score: number
+          pillar_scores: Json
+          readiness_level: string
+          total_score: number
+          updated_at: string
+        }[]
       }
       has_role: {
         Args: {
