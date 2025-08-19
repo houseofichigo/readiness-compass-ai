@@ -75,33 +75,69 @@ function useAuthProvider(): AuthContextType {
 
   const signIn = async (email: string, password: string) => {
     setIsLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      toast.error(error.message || 'Sign in failed');
+    
+    try {
+      // Security: Log authentication attempt
+      const { SecurityUtils } = await import('@/utils/security');
+      
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      // Log the attempt
+      await SecurityUtils.logAuthAttempt(email, !error, 'login');
+      
+      if (error) {
+        toast.error(error.message || 'Sign in failed');
+        setIsLoading(false);
+        return { error };
+      }
+      
+      toast.success('Signed in');
+      setIsLoading(false);
+      return { error: null };
+    } catch (error) {
+      console.error('Sign in error:', error);
       setIsLoading(false);
       return { error };
     }
-    toast.success('Signed in');
-    setIsLoading(false);
-    return { error: null };
   };
 
   const signUp = async (email: string, password: string) => {
     setIsLoading(true);
-    const redirectUrl = `${window.location.origin}/`;
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { emailRedirectTo: redirectUrl },
-    });
-    if (error) {
-      toast.error(error.message || 'Sign up failed');
+    
+    try {
+      // Security: Validate email format
+      const { SecurityUtils } = await import('@/utils/security');
+      
+      if (!SecurityUtils.isValidEmail(email)) {
+        toast.error('Please enter a valid email address');
+        setIsLoading(false);
+        return { error: new Error('Invalid email format') };
+      }
+      
+      const redirectUrl = `${window.location.origin}/`;
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { emailRedirectTo: redirectUrl },
+      });
+      
+      // Log the attempt
+      await SecurityUtils.logAuthAttempt(email, !error, 'signup');
+      
+      if (error) {
+        toast.error(error.message || 'Sign up failed');
+        setIsLoading(false);
+        return { error };
+      }
+      
+      toast.success('Check your email to confirm your account');
+      setIsLoading(false);
+      return { error: null };
+    } catch (error) {
+      console.error('Sign up error:', error);
       setIsLoading(false);
       return { error };
     }
-    toast.success('Check your email to confirm your account');
-    setIsLoading(false);
-    return { error: null };
   };
 
   const signOut = async () => {

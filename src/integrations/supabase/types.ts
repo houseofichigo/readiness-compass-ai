@@ -321,6 +321,30 @@ export type Database = {
         }
         Relationships: []
       }
+      feedback_rate_limits: {
+        Row: {
+          first_submission_at: string | null
+          id: string
+          ip_address: unknown
+          last_submission_at: string | null
+          submission_count: number | null
+        }
+        Insert: {
+          first_submission_at?: string | null
+          id?: string
+          ip_address: unknown
+          last_submission_at?: string | null
+          submission_count?: number | null
+        }
+        Update: {
+          first_submission_at?: string | null
+          id?: string
+          ip_address?: unknown
+          last_submission_at?: string | null
+          submission_count?: number | null
+        }
+        Relationships: []
+      }
       organization_members: {
         Row: {
           created_at: string
@@ -698,6 +722,36 @@ export type Database = {
         }
         Relationships: []
       }
+      security_events: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          ip_address: unknown | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          ip_address?: unknown | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           active_time_minutes: number | null
@@ -852,6 +906,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      check_feedback_rate_limit: {
+        Args: { _ip_address: unknown }
+        Returns: boolean
+      }
       cleanup_invalid_completed_submissions: {
         Args: Record<PropertyKey, never>
         Returns: number

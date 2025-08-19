@@ -8,6 +8,7 @@ const AnalyticsDashboard = lazy(() => import('@/components/admin/AnalyticsDashbo
 const ExecutiveDashboard = lazy(() => import('@/components/admin/ExecutiveDashboard').then(module => ({ default: module.ExecutiveDashboard })));
 const AssessmentAdmin = lazy(() => import('@/components/admin/AssessmentAdmin').then(module => ({ default: module.AssessmentAdmin })));
 const SubmissionsTable = lazy(() => import('@/components/admin/SubmissionsTable').then(module => ({ default: module.SubmissionsTable })));
+const SecurityDashboard = lazy(() => import('@/components/admin/SecurityDashboard').then(module => ({ default: module.SecurityDashboard })));
 
 const LoadingFallback = () => (
   <div className="space-y-4">
@@ -26,6 +27,7 @@ export function LazyAdminRoutes() {
         <Route path="executive" element={<ExecutiveDashboard />} />
         <Route path="assessment" element={<AssessmentAdmin />} />
         <Route path="submissions" element={<SubmissionsTable />} />
+        <Route path="security" element={<SecurityDashboard />} />
       </Routes>
     </Suspense>
   );

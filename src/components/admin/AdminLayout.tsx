@@ -22,6 +22,7 @@ const navigation = [
   { name: 'Overview', href: '/admin/overview', icon: BarChart3 },
   { name: 'Submissions', href: '/admin/submissions', icon: FileText },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+  { name: 'Security', href: '/admin/security', icon: Shield },
 ];
 
 export function AdminLayout() {
