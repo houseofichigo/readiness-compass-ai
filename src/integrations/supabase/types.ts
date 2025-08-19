@@ -90,6 +90,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "analytics_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations_public_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "analytics_events_question_id_fkey"
             columns: ["question_id"]
             isOneToOne: false
@@ -273,6 +280,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "assessment_sessions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations_public_safe"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "assessment_sessions_section_id_fkey"
             columns: ["section_id"]
             isOneToOne: false
@@ -373,6 +387,13 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations_public_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -830,6 +851,13 @@ export type Database = {
             referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "submissions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations_public_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       tracks: {
@@ -903,9 +931,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      organizations_public_safe: {
+        Row: {
+          created_at: string | null
+          id: string | null
+          industry_category: string | null
+          name: string | null
+          size_category: string | null
+          slug: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string | null
+          industry_category?: never
+          name?: string | null
+          size_category?: never
+          slug?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string | null
+          industry_category?: never
+          name?: string | null
+          size_category?: never
+          slug?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      audit_organization_access: {
+        Args: { _access_type: string; _org_id: string }
+        Returns: undefined
+      }
       check_feedback_rate_limit: {
         Args: { _ip_address: unknown }
         Returns: boolean
@@ -961,6 +1019,10 @@ export type Database = {
           track: string
           updated_at: string
         }[]
+      }
+      get_organization_safe_info: {
+        Args: { _org_id: string }
+        Returns: Json
       }
       get_safe_submission_data: {
         Args: { _submission_id: string }
