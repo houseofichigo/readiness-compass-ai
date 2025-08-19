@@ -25,12 +25,20 @@ export function useAssessment() {
       // Track UTM params from URL
       const params = new URLSearchParams(window.location.search);
 
+      // Extract organization and contact info for direct storage
+      const orgName = (profile?.M0 || (responses['M0'] as string) || '').toString();
+      const contactName = (profile?.M1 || (responses['M1'] as string) || '').toString();
+      const contactEmail = (profile?.M2 || (responses['M2'] as string) || '').toString();
+
       console.log('[saveAssessment] Inserting submission...');
       const { error: subErr } = await supabase
         .from('submissions')
         .insert({
           id: submissionId,
           completed: true,
+          organization_name: orgName || null,
+          contact_name: contactName || null,
+          contact_email: contactEmail || null,
           user_agent: navigator.userAgent,
           referrer_url: document.referrer || null,
           utm_source: params.get('utm_source'),
