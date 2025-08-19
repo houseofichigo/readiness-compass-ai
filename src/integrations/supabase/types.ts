@@ -867,6 +867,33 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      get_org_basic_info: {
+        Args: { _org_id: string }
+        Returns: {
+          avg_overall_score: number
+          benchmark_percentile: number
+          completed_submissions: number
+          country: string
+          created_at: string
+          first_submission_at: string
+          id: string
+          industry: string
+          is_verified: boolean
+          last_submission_at: string
+          median_score: number
+          name: string
+          pillar_scores_avg: Json
+          pillar_scores_median: Json
+          region: string
+          regulatory_status: string
+          size_bucket: string
+          slug: string
+          sub_industry: string
+          total_submissions: number
+          track: string
+          updated_at: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -879,6 +906,10 @@ export type Database = {
         Returns: boolean
       }
       is_org_member: {
+        Args: { _org_id: string; _user_id?: string }
+        Returns: boolean
+      }
+      is_org_owner_or_manager: {
         Args: { _org_id: string; _user_id?: string }
         Returns: boolean
       }
