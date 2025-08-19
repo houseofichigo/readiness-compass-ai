@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "13.0.4"
@@ -853,12 +853,12 @@ export type Database = {
       }
       ensure_organization_and_attach_submission: {
         Args: {
-          _submission_id: string
-          _name: string
-          _industry?: string
           _country?: string
-          _size_bucket?: string
+          _industry?: string
+          _name: string
           _revenue_bucket?: string
+          _size_bucket?: string
+          _submission_id: string
           _track?: string
         }
         Returns: string
@@ -869,8 +869,8 @@ export type Database = {
       }
       has_role: {
         Args: {
-          _user_id: string
           _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
         }
         Returns: boolean
       }
@@ -892,26 +892,26 @@ export type Database = {
       }
       record_analytics_event: {
         Args: {
-          _submission_id: string
-          _event_name: string
           _event_category?: string
           _event_data?: Json
-          _section_id?: string
+          _event_name: string
           _question_id?: string
+          _section_id?: string
+          _submission_id: string
         }
         Returns: string
       }
       record_assessment_session: {
         Args: {
-          _submission_id: string
+          _completed_at?: string
           _section_id?: string
           _started_at?: string
-          _completed_at?: string
+          _submission_id: string
         }
         Returns: string
       }
       seed_assessment: {
-        Args: { _sections: Json } | { _sections: Json; _add_ons?: Json }
+        Args: { _add_ons?: Json; _sections: Json } | { _sections: Json }
         Returns: undefined
       }
       slugify: {
