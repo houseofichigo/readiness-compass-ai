@@ -42,27 +42,44 @@ const Index = () => {
     responses: Record<string, AssessmentValue>,
     profile: OrganizationProfile
   ) => {
+    console.log('[Index] handleAssessmentComplete called with:', {
+      responseCount: Object.keys(responses).length,
+      orgName: profile?.M0?.substring(0, 20) + '...',
+      track: profile?.track
+    });
     
     if (Object.keys(responses).length === 0) {
       Logger.error("🚨 CRITICAL: No responses data to save!");
       throw new Error("No responses data to save");
     }
     
-    // Save to database first
-    const savedSubmissionId = await saveAssessment(responses, profile);
+    if (!profile?.M0 || profile.M0.trim().length < 2) {
+      Logger.error("🚨 CRITICAL: Invalid organization name!");
+      throw new Error("Organization name is required and must be at least 2 characters long");
+    }
     
-    if (savedSubmissionId) {
+    try {
+      // Save to database first
+      console.log('[Index] Calling saveAssessment...');
+      const savedSubmissionId = await saveAssessment(responses, profile);
       
-      setSubmissionId(savedSubmissionId);
-      
-      // Navigate to thank you page using React Router
-      navigate(`/thank-you?submissionId=${savedSubmissionId}`, { 
-        state: { submissionId: savedSubmissionId } 
-      });
-      
-    } else {
-      Logger.error("❌ Failed to save assessment - no submission ID returned");
-      throw new Error("Failed to save assessment to database");
+      if (savedSubmissionId) {
+        console.log('[Index] Assessment saved successfully, navigating to thank you page');
+        setSubmissionId(savedSubmissionId);
+        
+        // Navigate to thank you page using React Router
+        navigate(`/thank-you?submissionId=${savedSubmissionId}`, { 
+          state: { submissionId: savedSubmissionId } 
+        });
+        
+      } else {
+        Logger.error("❌ Failed to save assessment - no submission ID returned");
+        throw new Error("Failed to save assessment to database - no submission ID returned");
+      }
+    } catch (error: any) {
+      Logger.error("❌ Assessment completion failed:", error);
+      // Re-throw with more context
+      throw new Error(error?.message || "Failed to save assessment to database");
     }
   };
 

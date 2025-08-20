@@ -18,6 +18,17 @@ export function useAssessment() {
     setError(null);
 
     try {
+      console.log('[saveAssessment] Starting assessment submission...');
+      
+      // Validate input data first
+      if (!responses || Object.keys(responses).length === 0) {
+        throw new Error('No responses provided for submission');
+      }
+      
+      if (!profile || !profile.M0) {
+        throw new Error('Organization name (M0) is required for submission');
+      }
+
       // Robust, valid UUID v4 for submission id across browsers
       const submissionId = safeUuidV4();
       console.log('[saveAssessment] Generated submissionId:', submissionId);
@@ -26,11 +37,22 @@ export function useAssessment() {
       const params = new URLSearchParams(window.location.search);
 
       // Extract organization and contact info for direct storage
-      const orgName = (profile?.M0 || (responses['M0'] as string) || '').toString();
-      const contactName = (profile?.M1 || (responses['M1'] as string) || '').toString();
-      const contactEmail = (profile?.M2 || (responses['M2'] as string) || '').toString();
+      const orgName = (profile?.M0 || (responses['M0'] as string) || '').toString().trim();
+      const contactName = (profile?.M1 || (responses['M1'] as string) || '').toString().trim();
+      const contactEmail = (profile?.M2 || (responses['M2'] as string) || '').toString().trim();
 
-      console.log('[saveAssessment] Inserting submission...');
+      // Validate required fields
+      if (!orgName || orgName.length < 2) {
+        throw new Error('Valid organization name is required');
+      }
+
+      console.log('[saveAssessment] Inserting submission with data:', {
+        submissionId,
+        orgName: orgName.substring(0, 20) + '...',
+        contactName: contactName ? contactName.substring(0, 10) + '...' : 'none',
+        hasEmail: !!contactEmail
+      });
+
       const { error: subErr } = await supabase
         .from('submissions')
         .insert({
@@ -54,7 +76,7 @@ export function useAssessment() {
           hint: (subErr as any).hint,
         });
         setError(subErr.message || 'Failed to create submission');
-        toast.error('Failed to create submission');
+        toast.error('Failed to create submission: ' + subErr.message);
         return null;
       }
 

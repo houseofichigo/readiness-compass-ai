@@ -158,17 +158,38 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
 
     setIsSubmitting(true);
     try {
-      // Debug: Log assessment completion
+      console.log('[AssessmentFlow] Starting assessment completion with profile:', {
+        orgName: profile.M0?.substring(0, 20) + '...',
+        responseCount: Object.keys(responses).length,
+        track: detectedTrack
+      });
       
+      // Validate profile data before submission
+      if (!profile.M0 || profile.M0.trim().length < 2) {
+        throw new Error("Organization name is required and must be at least 2 characters long");
+      }
+      
+      if (Object.keys(responses).length === 0) {
+        throw new Error("No assessment responses found to submit");
+      }
       
       // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
       // Navigation is handled by onComplete in Index.tsx
-    } catch (err) {
+    } catch (err: any) {
       Logger.error("🚨 Assessment completion error:", err);
+      
+      // Show a more specific error message based on the error
+      const errorMessage = err?.message || "Unknown error occurred";
+      console.error('[AssessmentFlow] Error details:', errorMessage);
+      
       toast({
-        title: "Error completing assessment",
-        description: "Please try again or contact support.",
+        title: "Assessment Submission Failed",
+        description: errorMessage.includes("Organization name") 
+          ? "Please ensure you've entered a valid organization name"
+          : errorMessage.includes("No assessment responses")
+          ? "Please answer the assessment questions before submitting"
+          : "There was an error saving your assessment. Please try again.",
         variant: "destructive",
       });
     } finally {
