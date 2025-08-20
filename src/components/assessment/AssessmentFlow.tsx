@@ -176,6 +176,7 @@ export function AssessmentFlow({ onComplete }: AssessmentFlowProps) {
       // Let Index.tsx handle the navigation - don't navigate here
       await onComplete(responses, profile);
       // Navigation is handled by onComplete in Index.tsx
+      console.log('[AssessmentFlow] Assessment completion successful');
     } catch (err: any) {
       Logger.error("🚨 Assessment completion error:", err);
       

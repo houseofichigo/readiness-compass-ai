@@ -68,9 +68,15 @@ const Index = () => {
         setSubmissionId(savedSubmissionId);
         
         // Navigate to thank you page using React Router
-        navigate(`/thank-you?submissionId=${savedSubmissionId}`, { 
-          state: { submissionId: savedSubmissionId } 
-        });
+        try {
+          navigate(`/thank-you?submissionId=${savedSubmissionId}`, { 
+            state: { submissionId: savedSubmissionId } 
+          });
+          console.log('[Index] Navigation completed successfully');
+        } catch (navError) {
+          console.error('[Index] Navigation error:', navError);
+          throw new Error(`Navigation failed: ${navError}`);
+        }
         
       } else {
         Logger.error("❌ Failed to save assessment - no submission ID returned");

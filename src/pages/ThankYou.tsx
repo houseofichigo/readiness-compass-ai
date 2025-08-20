@@ -61,13 +61,15 @@ export default function ThankYou() {
       if (submissionIdFromUrl) {
         try {
           const loadedData = await loadAssessment(submissionIdFromUrl);
-          if (loadedData) {
+          if (loadedData && loadedData.profile) {
             setAssessmentData({
               profile: loadedData.profile,
-              track: loadedData.profile.track,
-              responses: loadedData.responses,
+              track: loadedData.profile.track || "GENERAL",
+              responses: loadedData.responses || {},
               submissionId: submissionIdFromUrl
             });
+          } else {
+            console.warn('[ThankYou] Loaded data incomplete, using mock data');
           }
         } catch (error) {
           console.error('Error loading assessment data:', error);
@@ -122,7 +124,14 @@ export default function ThankYou() {
   }
 
   // Use real data if available, otherwise use mock data for preview
-  const pageData = assessmentData || data || mockData;
+  let pageData = assessmentData || data || mockData;
+  
+  // Additional safety check for data integrity
+  if (!pageData || !pageData.profile) {
+    console.error('[ThankYou] Critical: No valid page data available', { assessmentData, data, mockData });
+    // Use mock data as absolute fallback
+    pageData = { ...mockData };
+  }
   const {
     profile,
     track,
