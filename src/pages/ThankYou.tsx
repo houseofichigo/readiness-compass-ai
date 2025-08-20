@@ -28,14 +28,32 @@ export default function ThankYou() {
   const [showConfetti, setShowConfetti] = useState(true);
   const [assessmentData, setAssessmentData] = useState<ThankYouPageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 1200, height: 800 });
   
   const data = location.state as ThankYouPageData;
   const submissionIdFromUrl = searchParams.get('submissionId');
 
   useEffect(() => {
-    // Stop confetti after 5 seconds
-    const timer = setTimeout(() => setShowConfetti(false), 5000);
-    return () => clearTimeout(timer);
+    // Set mounted state and window size safely
+    setIsMounted(true);
+    if (typeof window !== 'undefined') {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+      
+      const handleResize = () => {
+        setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+      };
+      
+      window.addEventListener('resize', handleResize);
+      
+      // Stop confetti after 5 seconds
+      const timer = setTimeout(() => setShowConfetti(false), 5000);
+      
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
 
   useEffect(() => {
@@ -52,7 +70,12 @@ export default function ThankYou() {
             });
           }
         } catch (error) {
-          // Error handled silently in production
+          console.error('Error loading assessment data:', error);
+          toast({
+            title: "Notice",
+            description: "Unable to load assessment data. Using default view.",
+            variant: "default",
+          });
         }
       }
       setIsLoading(false);
@@ -124,22 +147,40 @@ export default function ThankYou() {
   const handleRetakeAssessment = () => {
     navigate("/");
   };
-  const totalQuestions = Object.keys(responses).length;
+  const totalQuestions = Object.keys(responses || {}).length;
+  
+  // Safe URL generation for SEO
+  const getCanonicalUrl = () => {
+    if (typeof window !== 'undefined') {
+      return window.location.href;
+    }
+    return submissionIdFromUrl 
+      ? `https://www.ai.houseofichigo.com/thank-you?submissionId=${submissionIdFromUrl}`
+      : 'https://www.ai.houseofichigo.com/thank-you';
+  };
   return (
     <div className="min-h-screen bg-gradient-accent">
       <SEO
         title="Thank You | AI Readiness Assessment"
         description="Thank you for completing the AI Readiness Assessment. Access your next steps and resources."
-        canonical={typeof window !== 'undefined' ? window.location.href : 'https://www.ai.houseofichigo.com/thank-you'}
+        canonical={getCanonicalUrl()}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'WebPage',
           name: 'Thank You - AI Readiness Assessment',
-          url: typeof window !== 'undefined' ? window.location.href : 'https://www.ai.houseofichigo.com/thank-you',
+          url: getCanonicalUrl(),
           description: 'Thank you for completing the AI Readiness Assessment.'
         }}
       />
-      {showConfetti && <Confetti width={window.innerWidth} height={window.innerHeight} recycle={false} numberOfPieces={200} gravity={0.1} />}
+      {showConfetti && isMounted && (
+        <Confetti 
+          width={windowSize.width} 
+          height={windowSize.height} 
+          recycle={false} 
+          numberOfPieces={200} 
+          gravity={0.1} 
+        />
+      )}
 
       {/* Language Selector */}
       <div className="absolute top-4 right-4 z-10">
@@ -344,7 +385,14 @@ export default function ThankYou() {
               {t('thankYou.actions.retake')}
             </Button>
           </Link>
-          <Button className="bg-gradient-primary hover:shadow-glow transition-all duration-300" onClick={() => window.open("https://www.houseofichigo.com", "_blank")}>
+          <Button 
+            className="bg-gradient-primary hover:shadow-glow transition-all duration-300" 
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.open("https://www.houseofichigo.com", "_blank");
+              }
+            }}
+          >
             <Globe className="w-4 h-4 mr-2" />
             {t('thankYou.actions.website')}
           </Button>
